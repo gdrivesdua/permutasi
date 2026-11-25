@@ -11,7 +11,7 @@
   ],
   "sections": [
     {
-      "anchor": "anchor-mengapa-nama-toko-gagal-diingat",
+      "anchor": "mengapa-nama-toko-gagal-diingat",
       "heading": "1. Mengapa Banyak Nama Toko Online Gagal Diingat Meski Pakai Kata \"Shop\"",
       "paragraphs": [
         "Menambahkan kata shop di depan nama usaha sering dianggap cara paling instan agar orang langsung tahu bahwa alamat web tersebut adalah toko atau kios jualan. Namun dalam praktiknya, banyak pemilik toko online, reseller, maupun pengelola kios digital yang menemui kendala saat nama domain tersebut diucapkan lewat telepon, obrolan suara, atau rekomendasi dari mulut ke mulut.",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "anchor": "anchor-perbandingan-ekstensi-dan-skor-data",
+      "anchor": "perbandingan-ekstensi-dan-skor-data",
       "heading": "2. Perbandingan Ekstensi & Skor Kualitas dari Data shop-domain.csv",
       "paragraphs": [
         "Dari total 41 domain unik pada dataset shop-domain.csv (terdiri dari 26 entri berlabel bahasa id dan 15 entri berlabel en), seluruhnya diperiksa menggunakan metode RDAP (19 auto dan 22 manual) pada rentang waktu yang sama di 25 November 2026. Rata-rata keseluruhan metrik pada sampel ini menunjukkan tingkat keterbacaan yang tinggi: rata-rata pronunciation_comfort_score 98,83, rata-rata brandability_score 97,76, dan rata-rata overall_heuristic_score 93,46.   Perbedaan paling nyata terlihat pada panjang total karakter, kecocokan ekstensi dengan bahasa (extension_lang_fit_score), serta konteks penggunaan tiap ekstensi. Pemilik toko lokal di Indonesia umumnya lebih diuntungkan oleh nama singkat berakhiran .id, sementara toko yang menargetkan pasar internasional atau ingin tampil seperti platform/store global sering mempertimbangkan .net atau ekstensi turunan .id sesuai anggaran dan kebutuhan brand."
@@ -57,7 +57,7 @@
       }
     },
     {
-      "anchor": "anchor-kurasi-domain-berdasarkan-pola-penggunaan",
+      "anchor": "kurasi-domain-berdasarkan-pola-penggunaan",
       "heading": "3. Kurasi 40 Domain Terpilih: Mana yang Cocok untuk Model Toko Anda?",
       "paragraphs": [
         "Alih-alih memilih nama berdasarkan urutan abjad semata, cara paling efektif untuk pencari nama toko atau kios adalah mencocokkan karakter nama dengan jenis barang dan cara berjualan. Domain dengan akhiran vokal + konsonan yang mengalir seperti shopal, shopar, shopel, shopem, shopen, dan shopor terasa lebih luwes saat dipadukan dengan nama lini produk atau kampanye promosi.",
@@ -138,7 +138,52 @@
           ]
         ]
       }
+    },
+    {
+      "anchor": "checklist-sebelum-beli-domain-toko",
+      "heading": "4. Checklist 4 Langkah Sebelum Mendaftarkan Domain Toko Anda",
+      "paragraphs": [
+        "Menemukan nama domain yang enak dibaca dan mendapat skor tinggi hanyalah langkah awal. Untuk toko atau kios yang akan dipakai bertahun-tahun, pastikan nama tersebut tidak menyimpan masalah historis maupun sengketa nama yang bisa menghambat pertumbuhan brand.",
+        "Anda juga dapat menguji variasi kata kunci lain—seperti toko, kios, store, atau nama kategori produk Anda—langsung di Domain Name untuk membandingkan kombinasi kata dan ekstensi sebelum memutuskan."
+      ],
+      "bullets": [
+        {
+          "label": "Verifikasi status live terbaru",
+          "text": "Ketersediaan domain di registri dapat berubah kapan saja setelah waktu pengecekan data; selalu cek ulang secara langsung sebelum pembayaran."
+        },
+        {
+          "label": "Periksa jejak masa lalu domain",
+          "text": "Tinjau arsip lama dan riwayat tautan untuk memastikan domain tidak pernah dipakai situs spam atau konten yang merugikan reputasi toko."
+        },
+        {
+          "label": "Cek potensi merek dagang",
+          "text": "Pastikan nama yang dipilih tidak melanggar atau berbenturan dengan merek terdaftar di kelas barang/jasa yang relevan."
+        },
+        {
+          "label": "Lakukan tes ucap dan dengar",
+          "text": "Sebutkan nama domain lengkap dengan ekstensinya kepada orang lain tanpa memperlihatkan tulisan, lalu perhatikan apakah mereka bisa menuliskannya dengan tepat."
+        }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Catatan Keterbatasan Data & Tanggung Jawab Registrasi",
+        "body": "Angka pada artikel ini bersumber dari **41 entri** pada \\shop-domain.csv` yang dicatat via RDAP pada 25 November 2026. Skor heuristik bersifat panduan struktur dan pelafalan, bukan jaminan peringkat mesin pencari, ketersediaan permanen, maupun kepastian hukum merek dagang.`"
+      }
     }
   ],
-  "faqs": []
+  "methodologyNote": "Data diolah dari file `shop-domain.csv` (`N = 41` domain berlabel `ecommerce`, metode `RDAP`, waktu pencatatan `25 November 2026`). Tabel kurasi menyaring `character_cleanliness_score = 100`, `pronunciation_comfort_score >= 75`, dan `overall_heuristic_score >= 80` (menghasilkan 40 domain; `shopaj.net` dengan skor `76` dibahas sebagai pembanding). Seluruh nilai tetap memerlukan pengecekan live dan audit merek dagang sebelum didaftarkan.",
+  "faqs": [
+    {
+      "q": "Mengapa artikel ini membedakan .id, .my.id, .web.id, .biz.id, dan .net untuk nama toko?",
+      "a": "Karena tiap ekstensi punya karakter panjang dan kecocokan konteks berbeda—**.id** unggul dengan panjang 9 karakter dan skor kecocokan bahasa tinggi untuk pasar Indonesia, **.my.id**, **.web.id**, dan **.biz.id** menawarkan alternatif yang sering dipilih untuk efisiensi atau identitas usaha/web, sedangkan **.net** lebih relevan untuk toko berbahasa Inggris atau lintas negara."
+    },
+    {
+      "q": "Apa alasan 1 domain (shopaj.net) tidak masuk dalam daftar 40 domain terkurasi?",
+      "a": "Pada dataset \\shop-domain.csv`, `shopaj.net` memiliki `overall_heuristic_score` 76 dan `pronunciation_comfort_score` 62 (di bawah ambang seleksi `>= 80` dan `>= 75`), sehingga lebih tepat dijadikan contoh pembanding risiko pelafalan[cite: 4, 5].`"
+    },
+    {
+      "q": "Bagaimana cara memakai artikel ini jika toko saya tidak memakai awalan \"shop\"?",
+      "a": "Gunakan pola evaluasi di artikel ini (kebersihan karakter, kenyamanan ucap, kecocokan ekstensi, serta 4 langkah *due diligence*) sebagai acuan, lalu masukkan kata kunci toko Anda sendiri ke [Domain Name](https://domainname.web.id/) untuk mengecek kandidat yang sesuai."
+    }
+  ]
 }
