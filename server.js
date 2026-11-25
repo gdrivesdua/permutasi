@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -6,6 +7,7 @@ import {
   STATIC_HTML_PAGES,
   SUPPORTED_LANGUAGES,
   ARTICLE_SECTIONS,
+  ARTICLE_SLUG_REGEX,
   loadSiteConfig,
   loadArticleManifest,
   findPublishedArticleByRoute,
@@ -40,6 +42,19 @@ import {
   revokeSessionToken,
   verifyAdminPassword
 } from './lib/admin-auth.js';
+import {
+  applyArticleSaveToManifest,
+  validateAndNormalizeArticleSave
+} from './lib/article-schema.js';
+import {
+  commitRepoFilesAtomic,
+  getGitHubConfig,
+  getRepoFileText
+} from './lib/github-articles.js';
+import {
+  buildSessionCookieHeader,
+  parseCookieValue
+} from './lib/worker-article-auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -356,6 +371,378 @@ app.post('/api/admin/lexicon/test', requireAdminAuth, express.json({ limit: '8kb
   return res.json({ ok: true, result });
 });
 
+const ARTICLES_ROOT_DIR = path.resolve(__dirname, 'content', 'articles');
+const ARTICLE_COOKIE_NAME = 'dn_article_session';
+const ARTICLE_SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+const EXPRESS_ARTICLE_SESSION_SECRET = process.env.ARTICLE_SESSION_SECRET
+  ? Buffer.from(process.env.ARTICLE_SESSION_SECRET, 'utf8')
+  : (process.env.ADMIN_SESSION_SECRET
+    ? Buffer.from(process.env.ADMIN_SESSION_SECRET, 'utf8')
+    : crypto.randomBytes(32));
+const activeArticleSessions = new Map();
+
+function isExpressHttps(req) {
+  const xfProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
+  return req.secure || xfProto === 'https';
+}
+
+function verifyExpressSameOrigin(req) {
+  const expectedHost = String(req.headers['x-forwarded-host'] || req.headers.host || '')
+    .split(',')[0].trim().toLowerCase();
+  const origin = String(req.headers.origin || '').trim();
+  if (origin) {
+    try {
+      const parsed = new URL(origin);
+      if (expectedHost && parsed.host.toLowerCase() !== expectedHost) {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  const xrw = String(req.headers['x-requested-with'] || '').trim();
+  if (!origin && !xrw) {
+    return false;
+  }
+  return true;
+}
+
+function getExpressArticleAuthState() {
+  const dedicated = String(process.env.ARTICLE_ADMIN_PASSWORD || '').trim();
+  if (dedicated) {
+    return { mode: 'env', configured: true, needsSetup: false };
+  }
+  return getAdminAuthState();
+}
+
+function verifyExpressArticlePassword(candidate) {
+  const dedicated = String(process.env.ARTICLE_ADMIN_PASSWORD || '').trim();
+  if (dedicated) {
+    const supplied = String(candidate || '');
+    if (!supplied) return false;
+    const a = crypto.createHash('sha256').update(supplied).digest();
+    const b = crypto.createHash('sha256').update(dedicated).digest();
+    return crypto.timingSafeEqual(a, b);
+  }
+  return verifyAdminPassword(candidate);
+}
+
+function issueExpressArticleSession() {
+  const jti = crypto.randomBytes(16).toString('hex');
+  const now = Date.now();
+  const exp = now + ARTICLE_SESSION_TTL_MS;
+  const payload = { sub: 'article-writer', jti, iat: now, exp };
+  const encoded = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
+  const sig = crypto.createHmac('sha256', EXPRESS_ARTICLE_SESSION_SECRET).update(encoded).digest('base64url');
+  activeArticleSessions.set(jti, exp);
+  return { token: `${encoded}.${sig}`, jti, expiresAt: exp, maxAgeSec: Math.floor(ARTICLE_SESSION_TTL_MS / 1000) };
+}
+
+function verifyExpressArticleSession(req) {
+  const token = parseCookieValue(req.headers.cookie, ARTICLE_COOKIE_NAME);
+  if (!token) return null;
+  const dotIdx = token.indexOf('.');
+  if (dotIdx <= 0) return null;
+  const encoded = token.slice(0, dotIdx);
+  const sig = token.slice(dotIdx + 1);
+  if (!encoded || !sig) return null;
+
+  const expectedSig = crypto.createHmac('sha256', EXPRESS_ARTICLE_SESSION_SECRET).update(encoded).digest('base64url');
+  const sigBuf = Buffer.from(sig, 'utf8');
+  const expectedBuf = Buffer.from(expectedSig, 'utf8');
+  if (sigBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(sigBuf, expectedBuf)) {
+    return null;
+  }
+  try {
+    const payload = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
+    if (!payload || payload.sub !== 'article-writer' || !payload.jti || typeof payload.exp !== 'number') {
+      return null;
+    }
+    if (Date.now() >= payload.exp) {
+      activeArticleSessions.delete(payload.jti);
+      return null;
+    }
+    if (!activeArticleSessions.has(payload.jti)) {
+      return null;
+    }
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+function revokeExpressArticleSession(req) {
+  const session = verifyExpressArticleSession(req);
+  if (session?.jti) {
+    activeArticleSessions.delete(session.jti);
+  }
+}
+
+function resolveConfinedArticleFile(...segments) {
+  const resolved = path.resolve(ARTICLES_ROOT_DIR, ...segments);
+  if (!resolved.startsWith(ARTICLES_ROOT_DIR + path.sep)) {
+    throw new Error('Invalid article file path.');
+  }
+  return resolved;
+}
+
+app.get(['/admin-articles', '/admin-articles/', '/admin-articles/index.html'], (req, res) => {
+  if (req.path !== '/admin-articles/') {
+    return res.redirect(301, '/admin-articles/');
+  }
+  const editorPath = path.join(__dirname, 'admin-articles.html');
+  if (!fs.existsSync(editorPath)) {
+    return res.status(404).end();
+  }
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  return res.type('html').send(fs.readFileSync(editorPath, 'utf8'));
+});
+
+app.get('/api/articles/auth', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  const authState = getExpressArticleAuthState();
+  const githubCfg = getGitHubConfig(process.env);
+  const session = verifyExpressArticleSession(req);
+  return res.json({
+    ok: true,
+    configured: authState.configured,
+    needsSetup: authState.needsSetup,
+    authenticated: Boolean(session),
+    expiresAt: session?.exp || null,
+    storageMode: githubCfg.configured ? 'github' : 'local',
+    githubConfigured: githubCfg.configured,
+    branch: githubCfg.branch
+  });
+});
+
+app.post('/api/articles/auth', express.json({ limit: '4kb' }), (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+
+  if (req.body?.action === 'logout') {
+    revokeExpressArticleSession(req);
+    res.setHeader('Set-Cookie', buildSessionCookieHeader('', isExpressHttps(req), 0));
+    return res.json({ ok: true, authenticated: false });
+  }
+
+  const rate = checkLoginRateLimit(req.ip);
+  if (!rate.allowed) {
+    return res.status(429).json({ ok: false, error: `Too many failed attempts. Try again in ${rate.retryAfterSec}s.` });
+  }
+
+  const authState = getExpressArticleAuthState();
+  if (req.body?.action === 'setup') {
+    if (!authState.needsSetup) {
+      return res.status(409).json({ ok: false, error: 'Password is already configured.' });
+    }
+    const setupRes = claimInitialAdminPassword(req.body?.password);
+    if (!setupRes.ok) {
+      recordFailedLogin(req.ip);
+      return res.status(setupRes.status).json({ ok: false, error: setupRes.error });
+    }
+    clearFailedLogins(req.ip);
+    const session = issueExpressArticleSession();
+    const githubCfg = getGitHubConfig(process.env);
+    res.setHeader('Set-Cookie', buildSessionCookieHeader(session.token, isExpressHttps(req), session.maxAgeSec));
+    return res.json({
+      ok: true,
+      authenticated: true,
+      expiresAt: session.expiresAt,
+      storageMode: githubCfg.configured ? 'github' : 'local',
+      githubConfigured: githubCfg.configured,
+      branch: githubCfg.branch
+    });
+  }
+
+  if (authState.needsSetup) {
+    return res.status(409).json({ ok: false, needsSetup: true, error: 'Initial admin password must be set first.' });
+  }
+
+  if (!verifyExpressArticlePassword(req.body?.password)) {
+    recordFailedLogin(req.ip);
+    return res.status(401).json({ ok: false, error: 'Invalid password.' });
+  }
+
+  clearFailedLogins(req.ip);
+  const session = issueExpressArticleSession();
+  const githubCfg = getGitHubConfig(process.env);
+  res.setHeader('Set-Cookie', buildSessionCookieHeader(session.token, isExpressHttps(req), session.maxAgeSec));
+  return res.json({
+    ok: true,
+    authenticated: true,
+    expiresAt: session.expiresAt,
+    storageMode: githubCfg.configured ? 'github' : 'local',
+    githubConfigured: githubCfg.configured,
+    branch: githubCfg.branch
+  });
+});
+
+app.delete('/api/articles/auth', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+  revokeExpressArticleSession(req);
+  res.setHeader('Set-Cookie', buildSessionCookieHeader('', isExpressHttps(req), 0));
+  return res.json({ ok: true, authenticated: false });
+});
+
+app.get('/api/articles', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized.' });
+  }
+
+  const githubCfg = getGitHubConfig(process.env);
+  const articleId = String(req.query?.id || '').trim().toLowerCase();
+  const lang = String(req.query?.lang || '').trim().toLowerCase();
+
+  try {
+    if (githubCfg.configured) {
+      const manifestFile = await getRepoFileText(githubCfg, 'content/articles/manifest.json');
+      const manifest = manifestFile
+        ? JSON.parse(manifestFile.text)
+        : { schemaVersion: 1, sections: [...ARTICLE_SECTIONS], articles: [] };
+
+      if (!articleId) {
+        const hubsFile = await getRepoFileText(githubCfg, 'content/articles/hubs.json');
+        const hubs = hubsFile ? JSON.parse(hubsFile.text) : { sections: {} };
+        return res.json({ ok: true, storageMode: 'github', branch: githubCfg.branch, manifest, hubs });
+      }
+      if (!ARTICLE_SLUG_REGEX.test(articleId)) {
+        return res.status(400).json({ ok: false, error: 'Invalid article id.' });
+      }
+      const article = manifest.articles?.find((a) => a.id === articleId);
+      if (!article) {
+        return res.status(404).json({ ok: false, error: `Article "${articleId}" not found.` });
+      }
+      const targetLang = SUPPORTED_LANGUAGES.includes(lang) ? lang : 'en';
+      const contentPath = `content/articles/${article.section}/${article.id}/${targetLang}.json`;
+      const contentFile = await getRepoFileText(githubCfg, contentPath);
+      return res.json({
+        ok: true,
+        storageMode: 'github',
+        article,
+        lang: targetLang,
+        contentPath,
+        content: contentFile ? JSON.parse(contentFile.text) : null
+      });
+    }
+
+    const manifest = loadArticleManifest(__dirname);
+    if (!articleId) {
+      const hubsPath = resolveConfinedArticleFile('hubs.json');
+      const hubs = fs.existsSync(hubsPath) ? JSON.parse(fs.readFileSync(hubsPath, 'utf8')) : { sections: {} };
+      return res.json({ ok: true, storageMode: 'local', branch: 'local', manifest, hubs });
+    }
+    if (!ARTICLE_SLUG_REGEX.test(articleId)) {
+      return res.status(400).json({ ok: false, error: 'Invalid article id.' });
+    }
+    const article = manifest.articles?.find((a) => a.id === articleId);
+    if (!article || !ARTICLE_SECTIONS.includes(article.section)) {
+      return res.status(404).json({ ok: false, error: `Article "${articleId}" not found.` });
+    }
+    const targetLang = SUPPORTED_LANGUAGES.includes(lang) ? lang : 'en';
+    const contentFilePath = resolveConfinedArticleFile(article.section, article.id, `${targetLang}.json`);
+    const content = fs.existsSync(contentFilePath) ? JSON.parse(fs.readFileSync(contentFilePath, 'utf8')) : null;
+    return res.json({
+      ok: true,
+      storageMode: 'local',
+      article,
+      lang: targetLang,
+      contentPath: `content/articles/${article.section}/${article.id}/${targetLang}.json`,
+      content
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Failed to load articles.' });
+  }
+});
+
+app.post('/api/articles/save', express.json({ limit: '256kb' }), async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized. Please sign in again.' });
+  }
+
+  const validation = validateAndNormalizeArticleSave(req.body);
+  if (!validation.ok) {
+    return res.status(400).json({ ok: false, error: validation.errors[0], errors: validation.errors });
+  }
+
+  const githubCfg = getGitHubConfig(process.env);
+  try {
+    if (githubCfg.configured) {
+      const manifestFile = await getRepoFileText(githubCfg, 'content/articles/manifest.json');
+      const existingManifest = manifestFile
+        ? JSON.parse(manifestFile.text)
+        : { schemaVersion: 1, sections: [...ARTICLE_SECTIONS], articles: [] };
+      const merged = applyArticleSaveToManifest(existingManifest, validation.normalized);
+      if (!merged.ok) {
+        return res.status(409).json({ ok: false, error: merged.errors[0], errors: merged.errors });
+      }
+      const actionVerb = validation.normalized.localeMeta.published ? 'publish' : 'save draft';
+      const commitMsg = `docs(articles): ${actionVerb} ${merged.article.section}/${merged.article.id} (${validation.normalized.lang})`;
+      const commitResult = await commitRepoFilesAtomic(
+        githubCfg,
+        [
+          { path: 'content/articles/manifest.json', content: JSON.stringify(merged.manifest, null, 2) + '\n' },
+          { path: merged.contentRepoPath, content: JSON.stringify(merged.contentJson, null, 2) + '\n' }
+        ],
+        commitMsg
+      );
+      return res.json({
+        ok: true,
+        storageMode: 'github',
+        article: merged.article,
+        lang: validation.normalized.lang,
+        contentPath: merged.contentRepoPath,
+        content: merged.contentJson,
+        commit: commitResult
+      });
+    }
+
+    const existingManifest = loadArticleManifest(__dirname);
+    const merged = applyArticleSaveToManifest(existingManifest, validation.normalized);
+    if (!merged.ok) {
+      return res.status(409).json({ ok: false, error: merged.errors[0], errors: merged.errors });
+    }
+    const manifestPath = resolveConfinedArticleFile('manifest.json');
+    const contentPath = resolveConfinedArticleFile(
+      merged.article.section,
+      merged.article.id,
+      `${validation.normalized.lang}.json`
+    );
+    fs.mkdirSync(path.dirname(contentPath), { recursive: true });
+    fs.writeFileSync(manifestPath, JSON.stringify(merged.manifest, null, 2) + '\n', 'utf8');
+    fs.writeFileSync(contentPath, JSON.stringify(merged.contentJson, null, 2) + '\n', 'utf8');
+
+    return res.json({
+      ok: true,
+      storageMode: 'local',
+      article: merged.article,
+      lang: validation.normalized.lang,
+      contentPath: merged.contentRepoPath,
+      content: merged.contentJson,
+      commit: null
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Failed to save article.' });
+  }
+});
+
 app.get(['/public/doku.writing.md', '/public/doku.article.md'], (req, res) => {
   const filename = path.basename(req.path);
   const filePath = path.join(__dirname, 'public', filename);
@@ -366,6 +753,16 @@ app.get(['/public/doku.writing.md', '/public/doku.article.md'], (req, res) => {
   res.setHeader('Content-Disposition', 'inline');
   res.setHeader('Cache-Control', 'no-store');
   return res.sendFile(filePath);
+});
+
+app.get('/public/doku.writer.html', (_req, res) => {
+  const filePath = path.join(__dirname, 'public', 'doku.writer.html');
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).type('text/plain; charset=utf-8').send('Not found');
+  }
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.setHeader('Cache-Control', 'no-store');
+  return res.type('html').sendFile(filePath);
 });
 
 app.get(['/doku.writing.md', '/doku.article.md'], (req, res) => {

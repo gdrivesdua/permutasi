@@ -1249,6 +1249,22 @@ export function buildCloudflareHeaders() {
     '  Content-Type: text/plain; charset=utf-8',
     '  Content-Disposition: inline',
     '  Cache-Control: public, max-age=300',
+    '',
+    '/public/doku.writer.html',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: public, max-age=300',
+    '',
+    '/admin-articles',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
+    '',
+    '/admin-articles/*',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
+    '',
+    '/api/articles/*',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
     ''
   ].join('\n');
 }
@@ -1265,6 +1281,8 @@ export function buildRobotsTxt(config) {
   return [
     'User-agent: *',
     'Allow: /',
+    'Disallow: /admin-articles/',
+    'Disallow: /api/articles/',
     '',
     `Sitemap: ${config.siteUrl}/sitemap.xml`,
     ''

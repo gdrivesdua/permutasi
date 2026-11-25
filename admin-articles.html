@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Article Studio — Editorial CMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('preferredTheme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <a href="/" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">&larr; Situs Utama</a>
+                <span class="text-slate-300 dark:text-slate-700">/</span>
+                <span class="text-sm sm:text-base font-bold tracking-tight truncate">Article Studio</span>
+                <span id="storageModeBadge" class="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                    Memeriksa...
+                </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="/public/doku.writer.html" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    Panduan Penulis
+                </a>
+                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    Tema
+                </button>
+                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900/70 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors">
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login View (Password Only, No Username) -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <section id="authSection" class="max-w-md mx-auto mt-8 sm:mt-14 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 shadow-sm space-y-5">
+            <div id="authLoading" class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                Memeriksa sesi editorial...
+            </div>
+
+            <div id="authUnconfiguredBox" class="hidden space-y-3 text-sm">
+                <h1 class="text-lg font-bold text-slate-900 dark:text-white">Editor Belum Dikonfigurasi</h1>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Secret password server (<code class="font-mono">ARTICLE_ADMIN_PASSWORD</code> atau <code class="font-mono">ADMIN_PASSWORD</code>) belum diatur di Cloudflare Pages / Environment Variables. Silakan konfigurasi secret terlebih dahulu sebelum login.
+                </p>
+            </div>
+
+            <form id="setupForm" class="hidden space-y-4">
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900 dark:text-white">Inisialisasi Password Lokal</h1>
+                    <p class="mt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Mode preview lokal belum memiliki password admin. Buat password awal (minimal 8 karakter).
+                    </p>
+                </div>
+                <div>
+                    <label for="setupPassword" class="block text-xs font-semibold mb-1.5">Password Baru</label>
+                    <input id="setupPassword" type="password" minlength="8" maxlength="128" required autocomplete="new-password"
+                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="setupPasswordConfirm" class="block text-xs font-semibold mb-1.5">Konfirmasi Password</label>
+                    <input id="setupPasswordConfirm" type="password" minlength="8" maxlength="128" required autocomplete="new-password"
+                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <p id="setupError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+                <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
+                    Simpan Password &amp; Masuk
+                </button>
+            </form>
+
+            <form id="loginForm" class="hidden space-y-4">
+                <div class="space-y-1">
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Masuk ke Editor Artikel</h1>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        Masukkan password editorial untuk menulis, menyimpan draft, atau menerbitkan artikel.
+                    </p>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-xs font-semibold mb-1.5 text-slate-700 dark:text-slate-300">Password</label>
+                    <input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Masukkan password editor..."
+                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <p id="loginError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+                <button id="loginSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
+                    Masuk ke Workspace
+                </button>
+            </form>
+        </section>
+
+        <!-- Dashboard: All Articles List -->
+        <section id="listSection" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Semua Artikel</h1>
+                    <p id="listSubtitle" class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+                        Kelola artikel lintas 8 bahasa. Setiap penyimpanan ke GitHub otomatis memicu build statis di Cloudflare Pages.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <button id="refreshListBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        Muat Ulang
+                    </button>
+                    <button id="newArticleBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors shadow-sm">
+                        + Tulis Artikel Baru
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div class="sm:col-span-2">
+                    <label for="searchArticlesInput" class="sr-only">Cari Artikel</label>
+                    <input id="searchArticlesInput" type="search" placeholder="Cari judul, ID/slug, atau kata kunci..."
+                        class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="filterSectionSelect" class="sr-only">Filter Section</label>
+                    <select id="filterSectionSelect" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua Section</option>
+                        <option value="guides">Guides / Articles (/guides/)</option>
+                        <option value="research">Research (/research/)</option>
+                        <option value="tools">Tools (/tools/)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="articlesListBanner" class="hidden rounded-xl border p-3.5 text-xs sm:text-sm"></div>
+
+            <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+                        <thead class="bg-slate-50 dark:bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            <tr>
+                                <th class="px-4 py-3 text-left">Judul &amp; ID</th>
+                                <th class="px-4 py-3 text-left">Section</th>
+                                <th class="px-4 py-3 text-left">Status Bahasa</th>
+                                <th class="px-4 py-3 text-left whitespace-nowrap">Diperbarui</th>
+                                <th class="px-4 py-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesTableBody" class="divide-y divide-slate-200 dark:divide-slate-800"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- WordPress-Style Editor Workspace -->
+        <section id="editorSection" class="hidden space-y-5">
+            <!-- Editor Top Bar -->
+            <div class="sticky top-14 z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <button id="backToListBtn" type="button" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        &larr; Daftar Artikel
+                    </button>
+                    <span id="editorStatusPill" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300">
+                        Draft
+                    </span>
+                    <span id="editorDirtyIndicator" class="hidden text-xs text-slate-500 dark:text-slate-400">Belum disimpan</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button id="previewBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        Pratinjau
+                    </button>
+                    <button id="saveDraftBtn" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 transition-colors">
+                        Save Draft
+                    </button>
+                    <button id="publishBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors shadow-sm">
+                        Publish
+                    </button>
+                </div>
+            </div>
+
+            <div id="saveResultBanner" class="hidden rounded-xl border p-4 text-xs sm:text-sm"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left Main Canvas (WordPress Block-Style Content) -->
+                <div class="lg:col-span-8 space-y-5">
+                    <!-- Title & Slug Card -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
+                        <div>
+                            <label for="fieldH1" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Judul Artikel (H1)</label>
+                            <input id="fieldH1" type="text" placeholder="Tulis judul artikel yang jelas dan spesifik..."
+                                class="w-full px-3.5 py-2.5 text-lg sm:text-xl font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="fieldId" class="text-xs font-semibold text-slate-700 dark:text-slate-300">ID / Default Slug</label>
+                                    <span id="idLockHint" class="text-[11px] text-slate-400">Otomatis dari judul</span>
+                                </div>
+                                <input id="fieldId" type="text" placeholder="mis. strategi-domain-umkm"
+                                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="fieldLangSlug" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Slug Khusus Bahasa Ini (Opsional)</label>
+                                </div>
+                                <input id="fieldLangSlug" type="text" placeholder="Kosongkan untuk pakai default slug"
+                                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-50 dark:bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 break-all">
+                            URL Publik: <span id="permalinkPreview" class="text-blue-600 dark:text-blue-400 font-semibold">/guides/artikel-baru/</span>
+                        </div>
+                    </div>
+
+                    <!-- SEO & Summary Card -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
+                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Ringkasan &amp; Metadata SEO</h2>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="fieldTitle" class="text-xs font-semibold text-slate-700 dark:text-slate-300">SEO Title (&lt;title&gt;)</label>
+                                <span id="titleCharCount" class="text-[11px] font-mono text-slate-500">0 / 62</span>
+                            </div>
+                            <input id="fieldTitle" type="text" placeholder="Judul ringkas di hasil pencarian Google (ideal 40–62 karakter)"
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="fieldMetaDesc" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Meta Description</label>
+                                <span id="metaDescCharCount" class="text-[11px] font-mono text-slate-500">0 / 155</span>
+                            </div>
+                            <textarea id="fieldMetaDesc" rows="2" placeholder="Ringkasan 115–155 karakter yang menjelaskan nilai artikel bagi pembaca..."
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="fieldExcerpt" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ringkasan Pembuka / Kartu Hub (Excerpt)</label>
+                            <textarea id="fieldExcerpt" rows="2" placeholder="1–2 kalimat subjudul di atas artikel dan deskripsi kartu pada halaman hub..."
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="sm:col-span-2">
+                                <label for="fieldKeywords" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kata Kunci (Keywords, pisahkan koma)</label>
+                                <input id="fieldKeywords" type="text" placeholder="strategi domain, riset nama brand, rfc 1035"
+                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="fieldBreadcrumb" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Label Breadcrumb</label>
+                                <input id="fieldBreadcrumb" type="text" maxlength="60" placeholder="Singkat (<= 45 char)"
+                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Widget Notice (Tools) -->
+                    <div id="widgetNoticeCard" class="hidden rounded-xl border border-blue-200 dark:border-blue-900/70 bg-blue-50/50 dark:bg-blue-950/20 p-5 space-y-2 shadow-sm">
+                        <label for="fieldWidgetNotice" class="block text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300">Kotak Info Alat Interaktif (Section Tools)</label>
+                        <textarea id="fieldWidgetNotice" rows="2" placeholder="Penjelasan singkat cara kerja alat dan sumber data pembanding..."
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <!-- Key Takeaways -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
+                        <div class="flex items-center justify-between gap-2">
+                            <div>
+                                <h2 class="text-sm font-bold text-slate-900 dark:text-white">Poin Inti (Key Takeaways)</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Tampilkan 3–5 ringkasan temuan utama di bagian atas artikel.</p>
+                            </div>
+                            <button id="addTakeawayBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                + Tambah Poin
+                            </button>
+                        </div>
+                        <div id="takeawaysContainer" class="space-y-2"></div>
+                    </div>
+
+                    <!-- Content Sections (WordPress Blocks) -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900 dark:text-white">Isi Artikel per Bagian (Sections &amp; Paragraf)</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Tulis sebagai teks biasa tanpa tag HTML mentah. Pisahkan paragraf dengan satu baris kosong (Enter 2x).</p>
+                            </div>
+                            <button id="addSectionBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:opacity-90 transition-opacity shrink-0">
+                                + Tambah Bagian (H2)
+                            </button>
+                        </div>
+                        <div id="sectionsContainer" class="space-y-4"></div>
+                    </div>
+
+                    <!-- Methodology Note -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2 shadow-sm">
+                        <label for="fieldMethodology" class="block text-sm font-bold text-slate-900 dark:text-white">Catatan Metodologi &amp; Transparansi (Opsional)</label>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Jelaskan sumber data, periode pengecekan, dan batasan klaim (mis. bukan nasihat hukum merek dagang).</p>
+                        <textarea id="fieldMethodology" rows="3" placeholder="Contoh: Data diambil dari agregasi pengecekan RDAP/NS..."
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <!-- FAQs Builder -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h2 class="text-sm font-bold text-slate-900 dark:text-white">FAQ Artikel</h2>
+                                <p id="faqSchemaStatus" class="text-xs text-slate-500 dark:text-slate-400">Minimal 2 tanya-jawab untuk mengaktifkan Schema.org FAQPage otomatis.</p>
+                            </div>
+                            <button id="addFaqBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                + Tambah FAQ
+                            </button>
+                        </div>
+                        <div id="faqsContainer" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar (WordPress Document Inspector) -->
+                <aside class="lg:col-span-4 space-y-5 lg:sticky lg:top-32">
+                    <!-- Language & Publication Settings -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
+                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Pengaturan Publikasi &amp; Bahasa</h2>
+
+                        <div>
+                            <label for="fieldLang" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Bahasa yang Sedang Diedit</label>
+                            <select id="fieldLang" class="w-full px-3 py-2 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="id">ID — Indonesia</option>
+                                <option value="en">EN — English</option>
+                                <option value="es">ES — Español</option>
+                                <option value="pt">PT — Português</option>
+                                <option value="fr">FR — Français</option>
+                                <option value="de">DE — Deutsch</option>
+                                <option value="ru">RU — Русский</option>
+                                <option value="ja">JA — 日本語</option>
+                            </select>
+                            <div id="localeStatusStrip" class="mt-2 flex flex-wrap gap-1.5"></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="fieldSection" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Section</label>
+                                <select id="fieldSection" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="guides">guides (Articles)</option>
+                                    <option value="research">research (Riset)</option>
+                                    <option value="tools">tools (Alat)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="fieldArticleType" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipe Schema</label>
+                                <select id="fieldArticleType" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="TechArticle">TechArticle</option>
+                                    <option value="Article">Article</option>
+                                    <option value="WebApplication">WebApplication</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="fieldDatePublished" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tanggal Terbit</label>
+                                <input id="fieldDatePublished" type="date" class="w-full px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="fieldDateModified" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Diperbarui (Sitemap)</label>
+                                    <button id="setTodayDateBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Hari ini</button>
+                                </div>
+                                <input id="fieldDateModified" type="date" class="w-full px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 items-end">
+                            <div>
+                                <label for="fieldChangefreq" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Changefreq Sitemap</label>
+                                <select id="fieldChangefreq" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                    <option value="monthly">monthly</option>
+                                    <option value="weekly">weekly</option>
+                                    <option value="daily">daily</option>
+                                    <option value="yearly">yearly</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="fieldReadingTime" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Waktu Baca (mnt)</label>
+                                    <button id="autoReadTimeBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Hitung</button>
+                                </div>
+                                <input id="fieldReadingTime" type="number" min="1" max="120" value="5" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            </div>
+                        </div>
+
+                        <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 cursor-pointer select-none pt-1">
+                            <input id="fieldIsPillar" type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                            <span>Tandai sebagai Pillar Article (prioritas sitemap 0.8)</span>
+                        </label>
+                    </div>
+
+                    <!-- Author & E-E-A-T Snapshot -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
+                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Penulis &amp; Snapshot Data E-E-A-T</h2>
+                        <div>
+                            <label for="fieldAuthorName" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Penulis / Tim</label>
+                            <input id="fieldAuthorName" type="text" value="Domain Name Editorial" class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label for="fieldAuthorRole" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Peran / Kredensial</label>
+                                <input id="fieldAuthorRole" type="text" value="Domain Research &amp; DNS Strategy" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            </div>
+                            <div>
+                                <label for="fieldAuthorUrl" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">URL Profil</label>
+                                <input id="fieldAuthorUrl" type="text" value="/about.html" class="w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Snapshot Dataset D1 (Opsional)</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input id="fieldSnapSample" type="number" min="0" placeholder="Jumlah sampel (N)" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                <input id="fieldSnapRange" type="text" placeholder="Rentang tgl (2026-10..)" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Articles -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2.5 shadow-sm">
+                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Artikel Terkait (Related IDs)</h2>
+                        <div id="relatedIdsContainer" class="max-h-40 overflow-y-auto space-y-1.5 pr-1 text-xs"></div>
+                    </div>
+
+                    <!-- Pre-Publish Quality Checklist -->
+                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-sm font-bold text-slate-900 dark:text-white">Checklist Kualitas</h2>
+                            <span id="liveWordCountBadge" class="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">0 kata</span>
+                        </div>
+                        <ul id="checklistItems" class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300"></ul>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <!-- Safe Live Preview Modal -->
+    <div id="previewModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm p-3 sm:p-6 overflow-y-auto">
+        <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Pratinjau Artikel (Simulasi Tampilan Terbit)</span>
+                <button id="closePreviewBtn" type="button" class="px-3 py-1 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    Tutup
+                </button>
+            </div>
+            <div id="previewBody" class="p-6 sm:p-8 space-y-6 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const SUPPORTED_LANGS = ['en', 'id', 'es', 'pt', 'fr', 'de', 'ru', 'ja'];
+            const SECTION_LABELS = { guides: 'Articles / Guides', research: 'Research', tools: 'Tools' };
+
+            const state = {
+                authenticated: false,
+                needsSetup: false,
+                configured: true,
+                storageMode: 'local',
+                branch: 'main',
+                manifest: { schemaVersion: 1, sections: ['guides', 'research', 'tools'], articles: [] },
+                hubs: { sections: {} },
+                isNewArticle: true,
+                slugManuallyEdited: false,
+                dirty: false,
+                draft: null
+            };
+
+            const els = {
+                authSection: document.getElementById('authSection'),
+                authLoading: document.getElementById('authLoading'),
+                authUnconfiguredBox: document.getElementById('authUnconfiguredBox'),
+                setupForm: document.getElementById('setupForm'),
+                setupPassword: document.getElementById('setupPassword'),
+                setupPasswordConfirm: document.getElementById('setupPasswordConfirm'),
+                setupError: document.getElementById('setupError'),
+                loginForm: document.getElementById('loginForm'),
+                loginPassword: document.getElementById('loginPassword'),
+                loginError: document.getElementById('loginError'),
+                loginSubmitBtn: document.getElementById('loginSubmitBtn'),
+                logoutBtn: document.getElementById('logoutBtn'),
+                storageModeBadge: document.getElementById('storageModeBadge'),
+                listSection: document.getElementById('listSection'),
+                articlesListBanner: document.getElementById('articlesListBanner'),
+                articlesTableBody: document.getElementById('articlesTableBody'),
+                searchArticlesInput: document.getElementById('searchArticlesInput'),
+                filterSectionSelect: document.getElementById('filterSectionSelect'),
+                refreshListBtn: document.getElementById('refreshListBtn'),
+                newArticleBtn: document.getElementById('newArticleBtn'),
+                editorSection: document.getElementById('editorSection'),
+                backToListBtn: document.getElementById('backToListBtn'),
+                editorStatusPill: document.getElementById('editorStatusPill'),
+                editorDirtyIndicator: document.getElementById('editorDirtyIndicator'),
+                saveResultBanner: document.getElementById('saveResultBanner'),
+                previewBtn: document.getElementById('previewBtn'),
+                saveDraftBtn: document.getElementById('saveDraftBtn'),
+                publishBtn: document.getElementById('publishBtn'),
+                fieldH1: document.getElementById('fieldH1'),
+                fieldId: document.getElementById('fieldId'),
+                idLockHint: document.getElementById('idLockHint'),
+                fieldLangSlug: document.getElementById('fieldLangSlug'),
+                permalinkPreview: document.getElementById('permalinkPreview'),
+                fieldTitle: document.getElementById('fieldTitle'),
+                titleCharCount: document.getElementById('titleCharCount'),
+                fieldMetaDesc: document.getElementById('fieldMetaDesc'),
+                metaDescCharCount: document.getElementById('metaDescCharCount'),
+                fieldExcerpt: document.getElementById('fieldExcerpt'),
+                fieldKeywords: document.getElementById('fieldKeywords'),
+                fieldBreadcrumb: document.getElementById('fieldBreadcrumb'),
+                widgetNoticeCard: document.getElementById('widgetNoticeCard'),
+                fieldWidgetNotice: document.getElementById('fieldWidgetNotice'),
+                takeawaysContainer: document.getElementById('takeawaysContainer'),
+                addTakeawayBtn: document.getElementById('addTakeawayBtn'),
+                sectionsContainer: document.getElementById('sectionsContainer'),
+                addSectionBtn: document.getElementById('addSectionBtn'),
+                fieldMethodology: document.getElementById('fieldMethodology'),
+                faqsContainer: document.getElementById('faqsContainer'),
+                addFaqBtn: document.getElementById('addFaqBtn'),
+                faqSchemaStatus: document.getElementById('faqSchemaStatus'),
+                fieldLang: document.getElementById('fieldLang'),
+                localeStatusStrip: document.getElementById('localeStatusStrip'),
+                fieldSection: document.getElementById('fieldSection'),
+                fieldArticleType: document.getElementById('fieldArticleType'),
+                fieldDatePublished: document.getElementById('fieldDatePublished'),
+                fieldDateModified: document.getElementById('fieldDateModified'),
+                setTodayDateBtn: document.getElementById('setTodayDateBtn'),
+                fieldChangefreq: document.getElementById('fieldChangefreq'),
+                fieldReadingTime: document.getElementById('fieldReadingTime'),
+                autoReadTimeBtn: document.getElementById('autoReadTimeBtn'),
+                fieldIsPillar: document.getElementById('fieldIsPillar'),
+                fieldAuthorName: document.getElementById('fieldAuthorName'),
+                fieldAuthorRole: document.getElementById('fieldAuthorRole'),
+                fieldAuthorUrl: document.getElementById('fieldAuthorUrl'),
+                fieldSnapSample: document.getElementById('fieldSnapSample'),
+                fieldSnapRange: document.getElementById('fieldSnapRange'),
+                relatedIdsContainer: document.getElementById('relatedIdsContainer'),
+                liveWordCountBadge: document.getElementById('liveWordCountBadge'),
+                checklistItems: document.getElementById('checklistItems'),
+                previewModal: document.getElementById('previewModal'),
+                previewBody: document.getElementById('previewBody'),
+                closePreviewBtn: document.getElementById('closePreviewBtn')
+            };
+
+            function todayIso() {
+                return new Date().toISOString().slice(0, 10);
+            }
+
+            function slugify(val) {
+                return String(val || '')
+                    .normalize('NFKD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '')
+                    .replace(/-{2,}/g, '-')
+                    .slice(0, 96);
+            }
+
+            async function apiFetch(url, options = {}) {
+                const res = await fetch(url, {
+                    credentials: 'same-origin',
+                    ...options,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+                        ...(options.headers || {})
+                    }
+                });
+                const data = await res.json().catch(() => ({ ok: false, error: 'Respons server tidak valid.' }));
+                if (!res.ok) {
+                    const err = new Error(data?.error || `HTTP ${res.status}`);
+                    err.status = res.status;
+                    err.data = data;
+                    throw err;
+                }
+                return data;
+            }
+
+            function setStorageModeBadge(mode, branch) {
+                if (mode === 'github') {
+                    els.storageModeBadge.textContent = `GitHub Auto-Deploy (${branch || 'main'})`;
+                    els.storageModeBadge.className = 'hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800';
+                } else if (mode === 'local') {
+                    els.storageModeBadge.textContent = 'Preview Lokal (Disk)';
+                    els.storageModeBadge.className = 'hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800';
+                } else {
+                    els.storageModeBadge.textContent = 'GitHub Belum Diset';
+                    els.storageModeBadge.className = 'hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono rounded-md bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800';
+                }
+            }
+
+            function createBlankDraft(lang = 'id') {
+                const today = todayIso();
+                return {
+                    previousId: '',
+                    id: '',
+                    defaultSlug: '',
+                    langSlug: '',
+                    section: 'guides',
+                    articleType: 'TechArticle',
+                    isPillar: true,
+                    changefreq: 'monthly',
+                    datePublished: today,
+                    dateModified: today,
+                    lang,
+                    published: false,
+                    author: {
+                        name: 'Domain Name Editorial',
+                        role: 'Domain Research & DNS Strategy',
+                        url: '/about.html'
+                    },
+                    dataSnapshot: { sampleSize: '', dateRange: '', table: 'available_domains' },
+                    relatedIds: [],
+                    localeMeta: {
+                        title: '',
+                        metaDesc: '',
+                        keywords: '',
+                        h1: '',
+                        excerpt: ''
+                    },
+                    content: {
+                        readingTimeMinutes: 5,
+                        breadcrumbLabel: '',
+                        interactiveWidgetNotice: '',
+                        keyTakeaways: [''],
+                        sections: [
+                            {
+                                anchor: 'pendahuluan',
+                                heading: '1. Pendahuluan',
+                                paragraphsText: '',
+                                bulletsText: '',
+                                calloutTone: 'info',
+                                calloutTitle: '',
+                                calloutBody: '',
+                                tableCaption: '',
+                                tableHeadersText: '',
+                                tableRowsText: '',
+                                codeCaption: '',
+                                codeText: '',
+                                subsections: []
+                            }
+                        ],
+                        methodologyNote: '',
+                        faqs: [
+                            { q: '', a: '' },
+                            { q: '', a: '' }
+                        ]
+                    }
+                };
+            }
+
+            function markDirty(flag = true) {
+                state.dirty = flag;
+                els.editorDirtyIndicator.classList.toggle('hidden', !flag);
+            }
+
+            function showBanner(el, type, message, extraLinkUrl, extraLinkLabel) {
+                el.textContent = '';
+                el.className = 'rounded-xl border p-4 text-xs sm:text-sm ';
+                if (type === 'success') {
+                    el.className += 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200';
+                } else if (type === 'error') {
+                    el.className += 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200';
+                } else {
+                    el.className += 'bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200';
+                }
+                const span = document.createElement('span');
+                span.textContent = message;
+                el.appendChild(span);
+                if (extraLinkUrl) {
+                    const space = document.createTextNode(' ');
+                    const a = document.createElement('a');
+                    a.href = extraLinkUrl;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.className = 'font-semibold underline ml-1';
+                    a.textContent = extraLinkLabel || extraLinkUrl;
+                    el.appendChild(space);
+                    el.appendChild(a);
+                }
+                el.classList.remove('hidden');
+            }
+
+            function hideBanner(el) {
+                el.classList.add('hidden');
+            }
+
+            async function checkAuth() {
+                els.authLoading.classList.remove('hidden');
+                els.loginForm.classList.add('hidden');
+                els.setupForm.classList.add('hidden');
+                els.authUnconfiguredBox.classList.add('hidden');
+                try {
+                    const info = await apiFetch('/api/articles/auth');
+                    state.authenticated = Boolean(info.authenticated);
+                    state.needsSetup = Boolean(info.needsSetup);
+                    state.configured = Boolean(info.configured);
+                    state.storageMode = info.storageMode || 'local';
+                    state.branch = info.branch || 'main';
+                    setStorageModeBadge(state.storageMode, state.branch);
+
+                    els.authLoading.classList.add('hidden');
+                    if (state.authenticated) {
+                        enterWorkspace();
+                    } else if (state.needsSetup) {
+                        els.setupForm.classList.remove('hidden');
+                    } else if (!state.configured) {
+                        els.authUnconfiguredBox.classList.remove('hidden');
+                    } else {
+                        els.loginForm.classList.remove('hidden');
+                        els.loginPassword.focus();
+                    }
+                } catch (err) {
+                    els.authLoading.textContent = err.message || 'Gagal menghubungi server.';
+                }
+            }
+
+            async function enterWorkspace() {
+                els.authSection.classList.add('hidden');
+                els.logoutBtn.classList.remove('hidden');
+                els.editorSection.classList.add('hidden');
+                els.listSection.classList.remove('hidden');
+                await loadArticlesList();
+            }
+
+            async function loadArticlesList() {
+                hideBanner(els.articlesListBanner);
+                els.articlesTableBody.textContent = '';
+                const loadingRow = document.createElement('tr');
+                const loadingTd = document.createElement('td');
+                loadingTd.colSpan = 5;
+                loadingTd.className = 'px-4 py-8 text-center text-sm text-slate-500';
+                loadingTd.textContent = 'Memuat daftar artikel...';
+                loadingRow.appendChild(loadingTd);
+                els.articlesTableBody.appendChild(loadingRow);
+
+                try {
+                    const data = await apiFetch('/api/articles');
+                    state.storageMode = data.storageMode || state.storageMode;
+                    state.branch = data.branch || state.branch;
+                    setStorageModeBadge(state.storageMode, state.branch);
+                    state.manifest = data.manifest || { schemaVersion: 1, sections: ['guides', 'research', 'tools'], articles: [] };
+                    state.hubs = data.hubs || { sections: {} };
+                    renderArticlesTable();
+                } catch (err) {
+                    if (err.status === 401) {
+                        state.authenticated = false;
+                        els.listSection.classList.add('hidden');
+                        els.authSection.classList.remove('hidden');
+                        els.loginForm.classList.remove('hidden');
+                        els.logoutBtn.classList.add('hidden');
+                        return;
+                    }
+                    showBanner(els.articlesListBanner, 'error', err.message || 'Gagal memuat daftar artikel.');
+                    els.articlesTableBody.textContent = '';
+                }
+            }
+
+            function renderArticlesTable() {
+                const query = els.searchArticlesInput.value.trim().toLowerCase();
+                const sectionFilter = els.filterSectionSelect.value;
+                const articles = Array.isArray(state.manifest.articles) ? state.manifest.articles : [];
+
+                const filtered = articles.filter((art) => {
+                    if (sectionFilter !== 'all' && art.section !== sectionFilter) return false;
+                    if (!query) return true;
+                    const haystack = [
+                        art.id,
+                        art.defaultSlug,
+                        ...SUPPORTED_LANGS.map((l) => art.locales?.[l]?.h1 || art.locales?.[l]?.title || '')
+                    ].join(' ').toLowerCase();
+                    return haystack.includes(query);
+                });
+
+                els.articlesTableBody.textContent = '';
+                if (filtered.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.colSpan = 5;
+                    td.className = 'px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400';
+                    td.textContent = 'Belum ada artikel yang cocok dengan filter ini.';
+                    emptyRow.appendChild(td);
+                    els.articlesTableBody.appendChild(emptyRow);
+                    return;
+                }
+
+                for (const art of filtered) {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors';
+
+                    const primaryLocale = art.locales?.id || art.locales?.en || Object.values(art.locales || {})[0] || {};
+                    const tdTitle = document.createElement('td');
+                    tdTitle.className = 'px-4 py-3.5 align-top';
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'font-semibold text-slate-900 dark:text-white';
+                    titleEl.textContent = primaryLocale.h1 || primaryLocale.title || art.id;
+                    const idEl = document.createElement('div');
+                    idEl.className = 'text-xs font-mono text-slate-500 mt-0.5';
+                    idEl.textContent = art.id;
+                    tdTitle.appendChild(titleEl);
+                    tdTitle.appendChild(idEl);
+
+                    const tdSec = document.createElement('td');
+                    tdSec.className = 'px-4 py-3.5 align-top whitespace-nowrap';
+                    const secBadge = document.createElement('span');
+                    secBadge.className = 'inline-flex px-2 py-0.5 text-xs font-medium rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300';
+                    secBadge.textContent = SECTION_LABELS[art.section] || art.section;
+                    tdSec.appendChild(secBadge);
+
+                    const tdLangs = document.createElement('td');
+                    tdLangs.className = 'px-4 py-3.5 align-top';
+                    const strip = document.createElement('div');
+                    strip.className = 'flex flex-wrap gap-1';
+                    for (const l of SUPPORTED_LANGS) {
+                        const loc = art.locales?.[l];
+                        if (!loc) continue;
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = loc.published === true
+                            ? 'px-1.5 py-0.5 text-[11px] font-mono font-semibold rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:ring-1 hover:ring-emerald-500'
+                            : 'px-1.5 py-0.5 text-[11px] font-mono font-semibold rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 hover:ring-1 hover:ring-amber-500';
+                        btn.textContent = `${l.toUpperCase()}${loc.published ? '' : '*'}`;
+                        btn.title = loc.published ? `${l.toUpperCase()}: Published` : `${l.toUpperCase()}: Draft`;
+                        btn.addEventListener('click', () => openArticleEditor(art.id, l));
+                        strip.appendChild(btn);
+                    }
+                    tdLangs.appendChild(strip);
+
+                    const tdDate = document.createElement('td');
+                    tdDate.className = 'px-4 py-3.5 align-top whitespace-nowrap text-xs font-mono text-slate-600 dark:text-slate-400';
+                    tdDate.textContent = art.dateModified || art.datePublished || '-';
+
+                    const tdAct = document.createElement('td');
+                    tdAct.className = 'px-4 py-3.5 align-top whitespace-nowrap text-right space-x-2';
+                    const defaultLang = art.locales?.id ? 'id' : (art.locales?.en ? 'en' : (Object.keys(art.locales || {})[0] || 'id'));
+                    const editBtn = document.createElement('button');
+                    editBtn.type = 'button';
+                    editBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors';
+                    editBtn.textContent = 'Edit';
+                    editBtn.addEventListener('click', () => openArticleEditor(art.id, defaultLang));
+                    tdAct.appendChild(editBtn);
+
+                    if (art.locales?.[defaultLang]?.published === true) {
+                        const slug = art.slugByLang?.[defaultLang] || art.defaultSlug || art.id;
+                        const livePath = defaultLang === 'en' ? `/${art.section}/${slug}/` : `/${defaultLang}/${art.section}/${slug}/`;
+                        const viewLink = document.createElement('a');
+                        viewLink.href = livePath;
+                        viewLink.target = '_blank';
+                        viewLink.rel = 'noopener';
+                        viewLink.className = 'inline-block px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
+                        viewLink.textContent = 'Lihat';
+                        tdAct.appendChild(viewLink);
+                    }
+
+                    tr.appendChild(tdTitle);
+                    tr.appendChild(tdSec);
+                    tr.appendChild(tdLangs);
+                    tr.appendChild(tdDate);
+                    tr.appendChild(tdAct);
+                    els.articlesTableBody.appendChild(tr);
+                }
+            }
+
+            async function openArticleEditor(articleId, lang) {
+                hideBanner(els.saveResultBanner);
+                if (!articleId) {
+                    state.isNewArticle = true;
+                    state.slugManuallyEdited = false;
+                    state.draft = createBlankDraft(lang || 'id');
+                    showEditorView();
+                    return;
+                }
+
+                try {
+                    const data = await apiFetch(`/api/articles?id=${encodeURIComponent(articleId)}&lang=${encodeURIComponent(lang || 'id')}`);
+                    const art = data.article;
+                    const loc = art.locales?.[data.lang] || {};
+                    const rawContent = data.content || {};
+
+                    state.isNewArticle = false;
+                    state.slugManuallyEdited = true;
+                    state.draft = {
+                        previousId: art.id,
+                        id: art.id,
+                        defaultSlug: art.defaultSlug || art.id,
+                        langSlug: art.slugByLang?.[data.lang] || '',
+                        section: art.section || 'guides',
+                        articleType: art.articleType || 'TechArticle',
+                        isPillar: Boolean(art.isPillar || art.section === 'guides'),
+                        changefreq: art.changefreq || 'monthly',
+                        datePublished: art.datePublished || todayIso(),
+                        dateModified: art.dateModified || art.datePublished || todayIso(),
+                        lang: data.lang,
+                        published: loc.published === true,
+                        author: {
+                            name: art.author?.name || 'Domain Name Editorial',
+                            role: art.author?.role || 'Domain Research & DNS Strategy',
+                            url: art.author?.url || '/about.html'
+                        },
+                        dataSnapshot: {
+                            table: art.dataSnapshot?.table || 'available_domains',
+                            sampleSize: art.dataSnapshot?.sampleSize ? String(art.dataSnapshot.sampleSize) : '',
+                            dateRange: art.dataSnapshot?.dateRange || ''
+                        },
+                        relatedIds: Array.isArray(art.relatedIds) ? [...art.relatedIds] : [],
+                        localeMeta: {
+                            title: loc.title || '',
+                            metaDesc: loc.metaDesc || '',
+                            keywords: loc.keywords || '',
+                            h1: loc.h1 || '',
+                            excerpt: loc.excerpt || ''
+                        },
+                        content: {
+                            readingTimeMinutes: rawContent.readingTimeMinutes || 5,
+                            breadcrumbLabel: rawContent.breadcrumbLabel || '',
+                            interactiveWidgetNotice: rawContent.interactiveWidgetNotice || '',
+                            keyTakeaways: Array.isArray(rawContent.keyTakeaways) && rawContent.keyTakeaways.length > 0
+                                ? [...rawContent.keyTakeaways]
+                                : [''],
+                            sections: Array.isArray(rawContent.sections) && rawContent.sections.length > 0
+                                ? rawContent.sections.map((s) => ({
+                                    anchor: s.anchor || '',
+                                    heading: s.heading || '',
+                                    paragraphsText: Array.isArray(s.paragraphs) ? s.paragraphs.join('\n\n') : '',
+                                    bulletsText: Array.isArray(s.bullets)
+                                        ? s.bullets.map((b) => (b && typeof b === 'object' && b.label ? `${b.label}: ${b.text || ''}` : String(b || ''))).join('\n')
+                                        : '',
+                                    calloutTone: s.callout?.tone === 'warning' ? 'warning' : 'info',
+                                    calloutTitle: s.callout?.title || '',
+                                    calloutBody: s.callout?.body || '',
+                                    tableCaption: s.table?.caption || '',
+                                    tableHeadersText: Array.isArray(s.table?.headers) ? s.table.headers.join(' | ') : '',
+                                    tableRowsText: Array.isArray(s.table?.rows) ? s.table.rows.map((r) => r.join(' | ')).join('\n') : '',
+                                    codeCaption: s.codeBlock?.caption || '',
+                                    codeText: s.codeBlock?.code || '',
+                                    subsections: Array.isArray(s.subsections)
+                                        ? s.subsections.map((sub) => ({
+                                            heading: sub.heading || '',
+                                            paragraphsText: Array.isArray(sub.paragraphs) ? sub.paragraphs.join('\n\n') : ''
+                                        }))
+                                        : []
+                                }))
+                                : createBlankDraft(data.lang).content.sections,
+                            methodologyNote: rawContent.methodologyNote || '',
+                            faqs: Array.isArray(rawContent.faqs) && rawContent.faqs.length > 0
+                                ? rawContent.faqs.map((f) => ({ q: f.q || '', a: f.a || '' }))
+                                : [{ q: '', a: '' }]
+                        }
+                    };
+                    showEditorView();
+                } catch (err) {
+                    showBanner(els.articlesListBanner, 'error', err.message || 'Gagal membuka artikel.');
+                }
+            }
+
+            function showEditorView() {
+                els.listSection.classList.add('hidden');
+                els.editorSection.classList.remove('hidden');
+                syncDraftToForm();
+                markDirty(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function syncDraftToForm() {
+                const d = state.draft;
+                els.fieldH1.value = d.localeMeta.h1;
+                els.fieldId.value = state.isNewArticle ? d.id : d.defaultSlug;
+                els.fieldId.disabled = false;
+                els.idLockHint.textContent = state.isNewArticle ? 'Otomatis dari judul' : 'Default Slug URL';
+                els.fieldLangSlug.value = d.langSlug;
+                els.fieldTitle.value = d.localeMeta.title;
+                els.fieldMetaDesc.value = d.localeMeta.metaDesc;
+                els.fieldExcerpt.value = d.localeMeta.excerpt;
+                els.fieldKeywords.value = d.localeMeta.keywords;
+                els.fieldBreadcrumb.value = d.content.breadcrumbLabel;
+                els.fieldWidgetNotice.value = d.content.interactiveWidgetNotice;
+                els.fieldMethodology.value = d.content.methodologyNote;
+
+                els.fieldLang.value = d.lang;
+                els.fieldSection.value = d.section;
+                els.fieldSection.disabled = !state.isNewArticle;
+                els.fieldArticleType.value = d.articleType;
+                els.fieldDatePublished.value = d.datePublished;
+                els.fieldDateModified.value = d.dateModified;
+                els.fieldChangefreq.value = d.changefreq;
+                els.fieldReadingTime.value = d.content.readingTimeMinutes;
+                els.fieldIsPillar.checked = d.isPillar;
+
+                els.fieldAuthorName.value = d.author.name;
+                els.fieldAuthorRole.value = d.author.role;
+                els.fieldAuthorUrl.value = d.author.url;
+                els.fieldSnapSample.value = d.dataSnapshot.sampleSize;
+                els.fieldSnapRange.value = d.dataSnapshot.dateRange;
+
+                els.widgetNoticeCard.classList.toggle('hidden', d.section !== 'tools');
+                updateStatusPill();
+                renderLocaleStatusStrip();
+                renderTakeawaysList();
+                renderSectionsList();
+                renderFaqsList();
+                renderRelatedIds();
+                updateLiveCounters();
+            }
+
+            function updateStatusPill() {
+                const pub = Boolean(state.draft?.published);
+                els.editorStatusPill.textContent = pub ? 'Published' : 'Draft';
+                els.editorStatusPill.className = pub
+                    ? 'px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300'
+                    : 'px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300';
+                els.publishBtn.textContent = pub ? 'Update Published' : 'Publish';
+            }
+
+            function renderLocaleStatusStrip() {
+                els.localeStatusStrip.textContent = '';
+                const existingArt = state.isNewArticle
+                    ? null
+                    : (state.manifest.articles || []).find((a) => a.id === state.draft.previousId);
+
+                for (const l of SUPPORTED_LANGS) {
+                    const loc = existingArt?.locales?.[l];
+                    const isCurrent = l === state.draft.lang;
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    let cls = 'px-2 py-0.5 text-[11px] font-mono rounded border transition-colors ';
+                    if (isCurrent) {
+                        cls += 'bg-blue-600 text-white border-blue-600 font-bold';
+                    } else if (loc?.published === true) {
+                        cls += 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
+                    } else if (loc) {
+                        cls += 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800';
+                    } else {
+                        cls += 'bg-slate-50 dark:bg-slate-900 text-slate-400 border-slate-200 dark:border-slate-800';
+                    }
+                    btn.className = cls;
+                    btn.textContent = l.toUpperCase();
+                    btn.addEventListener('click', () => switchEditorLanguage(l));
+                    els.localeStatusStrip.appendChild(btn);
+                }
+            }
+
+            async function switchEditorLanguage(targetLang) {
+                if (!targetLang || targetLang === state.draft.lang) return;
+                if (state.dirty && !window.confirm('Perubahan di bahasa ini belum disimpan. Pindah bahasa tanpa menyimpan?')) {
+                    els.fieldLang.value = state.draft.lang;
+                    return;
+                }
+                if (state.isNewArticle) {
+                    state.draft.lang = targetLang;
+                    renderLocaleStatusStrip();
+                    updateLiveCounters();
+                    return;
+                }
+                await openArticleEditor(state.draft.previousId, targetLang);
+            }
+
+            function renderTakeawaysList() {
+                els.takeawaysContainer.textContent = '';
+                state.draft.content.keyTakeaways.forEach((item, idx) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center gap-2';
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = item;
+                    input.placeholder = `Poin inti ${idx + 1}...`;
+                    input.className = 'flex-1 px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    input.addEventListener('input', (e) => {
+                        state.draft.content.keyTakeaways[idx] = e.target.value;
+                        markDirty();
+                        updateLiveCounters();
+                    });
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.className = 'px-2.5 py-2 text-xs font-medium rounded-lg border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50';
+                    delBtn.textContent = 'Hapus';
+                    delBtn.addEventListener('click', () => {
+                        state.draft.content.keyTakeaways.splice(idx, 1);
+                        if (state.draft.content.keyTakeaways.length === 0) state.draft.content.keyTakeaways.push('');
+                        renderTakeawaysList();
+                        markDirty();
+                        updateLiveCounters();
+                    });
+                    row.appendChild(input);
+                    row.appendChild(delBtn);
+                    els.takeawaysContainer.appendChild(row);
+                });
+            }
+
+            function renderSectionsList() {
+                els.sectionsContainer.textContent = '';
+                state.draft.content.sections.forEach((sec, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm';
+
+                    const headBar = document.createElement('div');
+                    headBar.className = 'flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800';
+                    const label = document.createElement('span');
+                    label.className = 'text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400';
+                    label.textContent = `Bagian #${idx + 1}`;
+                    const controls = document.createElement('div');
+                    controls.className = 'flex items-center gap-1.5';
+
+                    if (idx > 0) {
+                        const upBtn = document.createElement('button');
+                        upBtn.type = 'button';
+                        upBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
+                        upBtn.textContent = 'Naik';
+                        upBtn.addEventListener('click', () => {
+                            const arr = state.draft.content.sections;
+                            [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+                            renderSectionsList();
+                            markDirty();
+                        });
+                        controls.appendChild(upBtn);
+                    }
+                    if (idx < state.draft.content.sections.length - 1) {
+                        const downBtn = document.createElement('button');
+                        downBtn.type = 'button';
+                        downBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
+                        downBtn.textContent = 'Turun';
+                        downBtn.addEventListener('click', () => {
+                            const arr = state.draft.content.sections;
+                            [arr[idx + 1], arr[idx]] = [arr[idx], arr[idx + 1]];
+                            renderSectionsList();
+                            markDirty();
+                        });
+                        controls.appendChild(downBtn);
+                    }
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'px-2.5 py-1 text-xs font-medium rounded border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50';
+                    removeBtn.textContent = 'Hapus Bagian';
+                    removeBtn.addEventListener('click', () => {
+                        if (state.draft.content.sections.length <= 1) return;
+                        state.draft.content.sections.splice(idx, 1);
+                        renderSectionsList();
+                        markDirty();
+                        updateLiveCounters();
+                    });
+                    controls.appendChild(removeBtn);
+
+                    headBar.appendChild(label);
+                    headBar.appendChild(controls);
+                    card.appendChild(headBar);
+
+                    // Heading & Anchor
+                    const headGrid = document.createElement('div');
+                    headGrid.className = 'grid grid-cols-1 sm:grid-cols-3 gap-3';
+                    const hWrap = document.createElement('div');
+                    hWrap.className = 'sm:col-span-2';
+                    const hLab = document.createElement('label');
+                    hLab.className = 'block text-xs font-semibold mb-1';
+                    hLab.textContent = 'Sub-Judul Bagian (H2)';
+                    const hInp = document.createElement('input');
+                    hInp.type = 'text';
+                    hInp.value = sec.heading;
+                    hInp.placeholder = 'mis. 1. Mengapa Panjang Domain Penting';
+                    hInp.className = 'w-full px-3 py-2 text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    hWrap.appendChild(hLab);
+                    hWrap.appendChild(hInp);
+
+                    const aWrap = document.createElement('div');
+                    const aLab = document.createElement('label');
+                    aLab.className = 'block text-xs font-semibold mb-1';
+                    aLab.textContent = 'Anchor TOC';
+                    const aInp = document.createElement('input');
+                    aInp.type = 'text';
+                    aInp.value = sec.anchor;
+                    aInp.placeholder = 'otomatis-dari-heading';
+                    aInp.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    aWrap.appendChild(aLab);
+                    aWrap.appendChild(aInp);
+
+                    hInp.addEventListener('input', (e) => {
+                        sec.heading = e.target.value;
+                        if (!sec._anchorManual) {
+                            sec.anchor = slugify(e.target.value) || `section-${idx + 1}`;
+                            aInp.value = sec.anchor;
+                        }
+                        markDirty();
+                        updateLiveCounters();
+                    });
+                    aInp.addEventListener('input', (e) => {
+                        sec._anchorManual = true;
+                        sec.anchor = slugify(e.target.value);
+                        markDirty();
+                    });
+
+                    headGrid.appendChild(hWrap);
+                    headGrid.appendChild(aWrap);
+                    card.appendChild(headGrid);
+
+                    // Paragraphs
+                    const pWrap = document.createElement('div');
+                    const pLab = document.createElement('label');
+                    pLab.className = 'block text-xs font-semibold mb-1';
+                    pLab.textContent = 'Paragraf Isi (pisahkan tiap paragraf dengan baris kosong)';
+                    const pTxt = document.createElement('textarea');
+                    pTxt.rows = 5;
+                    pTxt.value = sec.paragraphsText;
+                    pTxt.placeholder = 'Tulis paragraf pertama...\n\nTulis paragraf kedua...';
+                    pTxt.className = 'w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    pTxt.addEventListener('input', (e) => {
+                        sec.paragraphsText = e.target.value;
+                        markDirty();
+                        updateLiveCounters();
+                    });
+                    pWrap.appendChild(pLab);
+                    pWrap.appendChild(pTxt);
+                    card.appendChild(pWrap);
+
+                    // Optional advanced blocks (Bullets, Callout, Table, Code)
+                    const details = document.createElement('details');
+                    details.className = 'rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 p-3';
+                    if (sec.bulletsText || sec.calloutBody || sec.tableHeadersText || sec.codeText) {
+                        details.open = true;
+                    }
+                    const summary = document.createElement('summary');
+                    summary.className = 'text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none';
+                    summary.textContent = 'Blok Opsional (Daftar Poin, Callout, Tabel Data, Kode)';
+                    details.appendChild(summary);
+
+                    const optBody = document.createElement('div');
+                    optBody.className = 'mt-3 space-y-3';
+
+                    // Bullets
+                    const bLab = document.createElement('label');
+                    bLab.className = 'block text-xs font-semibold';
+                    bLab.textContent = 'Daftar Poin / Bullets (1 poin per baris; gunakan "Label: Penjelasan" untuk label tebal)';
+                    const bTxt = document.createElement('textarea');
+                    bTxt.rows = 3;
+                    bTxt.value = sec.bulletsText;
+                    bTxt.className = 'w-full mt-1 px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    bTxt.addEventListener('input', (e) => { sec.bulletsText = e.target.value; markDirty(); updateLiveCounters(); });
+                    optBody.appendChild(bLab);
+                    optBody.appendChild(bTxt);
+
+                    // Callout
+                    const callGrid = document.createElement('div');
+                    callGrid.className = 'grid grid-cols-1 sm:grid-cols-3 gap-2';
+                    const cTone = document.createElement('select');
+                    cTone.className = 'px-2.5 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    const optInfo = document.createElement('option');
+                    optInfo.value = 'info';
+                    optInfo.textContent = 'Callout: Info (Biru)';
+                    const optWarn = document.createElement('option');
+                    optWarn.value = 'warning';
+                    optWarn.textContent = 'Callout: Peringatan (Kuning)';
+                    cTone.appendChild(optInfo);
+                    cTone.appendChild(optWarn);
+                    cTone.value = sec.calloutTone || 'info';
+                    cTone.addEventListener('change', (e) => { sec.calloutTone = e.target.value; markDirty(); });
+                    const cTitle = document.createElement('input');
+                    cTitle.type = 'text';
+                    cTitle.value = sec.calloutTitle;
+                    cTitle.placeholder = 'Judul Callout (opsional)';
+                    cTitle.className = 'sm:col-span-2 px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    cTitle.addEventListener('input', (e) => { sec.calloutTitle = e.target.value; markDirty(); });
+                    callGrid.appendChild(cTone);
+                    callGrid.appendChild(cTitle);
+                    const cBody = document.createElement('textarea');
+                    cBody.rows = 2;
+                    cBody.value = sec.calloutBody;
+                    cBody.placeholder = 'Isi kotak sorotan (callout)...';
+                    cBody.className = 'w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    cBody.addEventListener('input', (e) => { sec.calloutBody = e.target.value; markDirty(); updateLiveCounters(); });
+                    optBody.appendChild(callGrid);
+                    optBody.appendChild(cBody);
+
+                    // Table
+                    const tCap = document.createElement('input');
+                    tCap.type = 'text';
+                    tCap.value = sec.tableCaption;
+                    tCap.placeholder = 'Judul Tabel (Caption, opsional)';
+                    tCap.className = 'w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    tCap.addEventListener('input', (e) => { sec.tableCaption = e.target.value; markDirty(); });
+                    const tHead = document.createElement('input');
+                    tHead.type = 'text';
+                    tHead.value = sec.tableHeadersText;
+                    tHead.placeholder = 'Header Tabel (pisahkan dengan | mis: Ekstensi | Jumlah | Skor Rata-rata)';
+                    tHead.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    tHead.addEventListener('input', (e) => { sec.tableHeadersText = e.target.value; markDirty(); });
+                    const tRows = document.createElement('textarea');
+                    tRows.rows = 3;
+                    tRows.value = sec.tableRowsText;
+                    tRows.placeholder = 'Baris Tabel (1 baris per line, pisahkan kolom dengan | mis: .com | 1.240 | 84.5)';
+                    tRows.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    tRows.addEventListener('input', (e) => { sec.tableRowsText = e.target.value; markDirty(); updateLiveCounters(); });
+                    optBody.appendChild(tCap);
+                    optBody.appendChild(tHead);
+                    optBody.appendChild(tRows);
+
+                    // Code Block
+                    const codeCap = document.createElement('input');
+                    codeCap.type = 'text';
+                    codeCap.value = sec.codeCaption;
+                    codeCap.placeholder = 'Keterangan Blok Kode / Query SQL (opsional)';
+                    codeCap.className = 'w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    codeCap.addEventListener('input', (e) => { sec.codeCaption = e.target.value; markDirty(); });
+                    const codeTxt = document.createElement('textarea');
+                    codeTxt.rows = 2;
+                    codeTxt.value = sec.codeText;
+                    codeTxt.placeholder = 'Potongan kode atau query SQL (opsional)...';
+                    codeTxt.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    codeTxt.addEventListener('input', (e) => { sec.codeText = e.target.value; markDirty(); });
+                    optBody.appendChild(codeCap);
+                    optBody.appendChild(codeTxt);
+
+                    details.appendChild(optBody);
+                    card.appendChild(details);
+                    els.sectionsContainer.appendChild(card);
+                });
+            }
+
+            function renderFaqsList() {
+                els.faqsContainer.textContent = '';
+                state.draft.content.faqs.forEach((faq, idx) => {
+                    const box = document.createElement('div');
+                    box.className = 'p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-2';
+                    const topRow = document.createElement('div');
+                    topRow.className = 'flex items-center justify-between gap-2';
+                    const lab = document.createElement('span');
+                    lab.className = 'text-xs font-semibold text-slate-500';
+                    lab.textContent = `FAQ #${idx + 1}`;
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.className = 'text-xs text-rose-600 dark:text-rose-400 hover:underline';
+                    delBtn.textContent = 'Hapus';
+                    delBtn.addEventListener('click', () => {
+                        state.draft.content.faqs.splice(idx, 1);
+                        renderFaqsList();
+                        markDirty();
+                        updateLiveCounters();
+                    });
+                    topRow.appendChild(lab);
+                    topRow.appendChild(delBtn);
+
+                    const qInp = document.createElement('input');
+                    qInp.type = 'text';
+                    qInp.value = faq.q;
+                    qInp.placeholder = 'Pertanyaan...';
+                    qInp.className = 'w-full px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    qInp.addEventListener('input', (e) => { faq.q = e.target.value; markDirty(); updateLiveCounters(); });
+
+                    const aTxt = document.createElement('textarea');
+                    aTxt.rows = 2;
+                    aTxt.value = faq.a;
+                    aTxt.placeholder = 'Jawaban ringkas dan jelas...';
+                    aTxt.className = 'w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    aTxt.addEventListener('input', (e) => { faq.a = e.target.value; markDirty(); updateLiveCounters(); });
+
+                    box.appendChild(topRow);
+                    box.appendChild(qInp);
+                    box.appendChild(aTxt);
+                    els.faqsContainer.appendChild(box);
+                });
+            }
+
+            function renderRelatedIds() {
+                els.relatedIdsContainer.textContent = '';
+                const others = (state.manifest.articles || []).filter((a) => a.id !== state.draft.id);
+                if (others.length === 0) {
+                    const p = document.createElement('p');
+                    p.className = 'text-slate-400';
+                    p.textContent = 'Belum ada artikel lain di manifest.';
+                    els.relatedIdsContainer.appendChild(p);
+                    return;
+                }
+                for (const art of others) {
+                    const lbl = document.createElement('label');
+                    lbl.className = 'flex items-start gap-2 cursor-pointer py-0.5';
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.checked = state.draft.relatedIds.includes(art.id);
+                    cb.className = 'mt-0.5 rounded border-slate-300 text-blue-600';
+                    cb.addEventListener('change', () => {
+                        if (cb.checked) {
+                            if (!state.draft.relatedIds.includes(art.id)) state.draft.relatedIds.push(art.id);
+                        } else {
+                            state.draft.relatedIds = state.draft.relatedIds.filter((x) => x !== art.id);
+                        }
+                        markDirty();
+                    });
+                    const txt = document.createElement('span');
+                    txt.className = 'text-slate-700 dark:text-slate-300 leading-snug';
+                    const locTitle = art.locales?.[state.draft.lang]?.h1 || art.locales?.en?.h1 || art.id;
+                    txt.textContent = `${locTitle} (${art.id})`;
+                    lbl.appendChild(cb);
+                    lbl.appendChild(txt);
+                    els.relatedIdsContainer.appendChild(lbl);
+                }
+            }
+
+            function buildApiPayloadFromState(publishFlag) {
+                const d = state.draft;
+                const cleanId = slugify(els.fieldId.value || d.localeMeta.h1);
+                const sections = d.content.sections.map((s, idx) => {
+                    const paragraphs = String(s.paragraphsText || '')
+                        .split(/\n\s*\n+/)
+                        .map((p) => p.trim())
+                        .filter(Boolean);
+                    const bullets = String(s.bulletsText || '')
+                        .split(/\n+/)
+                        .map((line) => line.trim())
+                        .filter(Boolean)
+                        .map((line) => {
+                            const colonIdx = line.indexOf(':');
+                            if (colonIdx > 1 && colonIdx < 48) {
+                                return { label: line.slice(0, colonIdx).trim(), text: line.slice(colonIdx + 1).trim() };
+                            }
+                            return line;
+                        });
+                    const out = {
+                        anchor: slugify(s.anchor || s.heading || `section-${idx + 1}`) || `section-${idx + 1}`,
+                        heading: s.heading.trim(),
+                        paragraphs
+                    };
+                    if (bullets.length > 0) out.bullets = bullets;
+                    if (s.calloutBody && s.calloutBody.trim()) {
+                        out.callout = {
+                            tone: s.calloutTone === 'warning' ? 'warning' : 'info',
+                            title: (s.calloutTitle || '').trim(),
+                            body: s.calloutBody.trim()
+                        };
+                    }
+                    const headers = String(s.tableHeadersText || '').split('|').map((x) => x.trim()).filter(Boolean);
+                    const rows = String(s.tableRowsText || '')
+                        .split(/\n+/)
+                        .map((line) => line.split('|').map((cell) => cell.trim()))
+                        .filter((r) => r.some(Boolean));
+                    if (headers.length > 0 && rows.length > 0) {
+                        out.table = { caption: (s.tableCaption || '').trim(), headers, rows };
+                    }
+                    if (s.codeText && s.codeText.trim()) {
+                        out.codeBlock = { caption: (s.codeCaption || '').trim(), code: s.codeText.trimEnd() };
+                    }
+                    if (Array.isArray(s.subsections) && s.subsections.length > 0) {
+                        out.subsections = s.subsections.map((sub) => ({
+                            heading: (sub.heading || '').trim(),
+                            paragraphs: String(sub.paragraphsText || '').split(/\n\s*\n+/).map((p) => p.trim()).filter(Boolean)
+                        })).filter((sub) => sub.heading || sub.paragraphs.length > 0);
+                    }
+                    return out;
+                });
+
+                const sampleNum = Number(els.fieldSnapSample.value);
+                const snapRange = els.fieldSnapRange.value.trim();
+
+                return {
+                    previousId: state.isNewArticle ? '' : d.previousId,
+                    id: state.isNewArticle ? cleanId : d.previousId,
+                    defaultSlug: cleanId || d.previousId,
+                    langSlug: slugify(els.fieldLangSlug.value),
+                    section: els.fieldSection.value,
+                    lang: els.fieldLang.value,
+                    published: publishFlag,
+                    articleType: els.fieldArticleType.value,
+                    isPillar: els.fieldIsPillar.checked,
+                    changefreq: els.fieldChangefreq.value,
+                    datePublished: els.fieldDatePublished.value || todayIso(),
+                    dateModified: els.fieldDateModified.value || todayIso(),
+                    author: {
+                        name: els.fieldAuthorName.value.trim() || 'Domain Name Editorial',
+                        role: els.fieldAuthorRole.value.trim() || 'Domain Research & DNS Strategy',
+                        url: els.fieldAuthorUrl.value.trim() || '/about.html'
+                    },
+                    dataSnapshot: (sampleNum > 0 || snapRange)
+                        ? { table: 'available_domains', sampleSize: sampleNum > 0 ? sampleNum : undefined, dateRange: snapRange }
+                        : null,
+                    relatedIds: d.relatedIds,
+                    localeMeta: {
+                        title: els.fieldTitle.value.trim(),
+                        metaDesc: els.fieldMetaDesc.value.trim(),
+                        keywords: els.fieldKeywords.value.trim(),
+                        h1: els.fieldH1.value.trim(),
+                        excerpt: els.fieldExcerpt.value.trim()
+                    },
+                    content: {
+                        readingTimeMinutes: Number(els.fieldReadingTime.value) || 5,
+                        breadcrumbLabel: els.fieldBreadcrumb.value.trim(),
+                        interactiveWidgetNotice: els.fieldWidgetNotice.value.trim(),
+                        keyTakeaways: d.content.keyTakeaways.map((k) => k.trim()).filter(Boolean),
+                        sections,
+                        methodologyNote: els.fieldMethodology.value.trim(),
+                        faqs: d.content.faqs.filter((f) => f.q.trim() && f.a.trim())
+                    }
+                };
+            }
+
+            function countDraftWords() {
+                const payload = buildApiPayloadFromState(false);
+                const parts = [
+                    payload.localeMeta.title,
+                    payload.localeMeta.h1,
+                    payload.localeMeta.excerpt,
+                    payload.content.methodologyNote,
+                    ...(payload.content.keyTakeaways || [])
+                ];
+                for (const s of payload.content.sections || []) {
+                    parts.push(s.heading, ...(s.paragraphs || []));
+                    if (s.callout) parts.push(s.callout.title, s.callout.body);
+                }
+                for (const f of payload.content.faqs || []) {
+                    parts.push(f.q, f.a);
+                }
+                const txt = parts.filter(Boolean).join(' ').trim();
+                return txt ? txt.split(/\s+/).length : 0;
+            }
+
+            function updateLiveCounters() {
+                const titleLen = els.fieldTitle.value.trim().length;
+                els.titleCharCount.textContent = `${titleLen} / 62`;
+                els.titleCharCount.className = titleLen >= 40 && titleLen <= 62
+                    ? 'text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold'
+                    : 'text-[11px] font-mono text-slate-500';
+
+                const descLen = els.fieldMetaDesc.value.trim().length;
+                els.metaDescCharCount.textContent = `${descLen} / 155`;
+                els.metaDescCharCount.className = descLen >= 115 && descLen <= 155
+                    ? 'text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold'
+                    : 'text-[11px] font-mono text-slate-500';
+
+                const activeSlug = slugify(els.fieldLangSlug.value) || slugify(els.fieldId.value) || 'artikel-baru';
+                const lang = els.fieldLang.value;
+                const sec = els.fieldSection.value;
+                els.permalinkPreview.textContent = lang === 'en' ? `/${sec}/${activeSlug}/` : `/${lang}/${sec}/${activeSlug}/`;
+
+                const validFaqs = state.draft.content.faqs.filter((f) => f.q.trim() && f.a.trim()).length;
+                els.faqSchemaStatus.textContent = validFaqs >= 2
+                    ? `Schema.org FAQPage aktif (${validFaqs} pertanyaan siap).`
+                    : `Saat ini ${validFaqs} FAQ terisi (tambahkan minimal 2 untuk Schema.org FAQPage).`;
+
+                const words = countDraftWords();
+                els.liveWordCountBadge.textContent = `${words} kata`;
+
+                const checks = [
+                    { ok: Boolean(els.fieldH1.value.trim()), label: 'Judul H1 terisi' },
+                    { ok: titleLen >= 30 && titleLen <= 70, label: 'SEO Title ringkas (30–70 char)' },
+                    { ok: descLen >= 80 && descLen <= 165, label: 'Meta Description informatif' },
+                    { ok: state.draft.content.sections.filter((s) => s.heading.trim() && s.paragraphsText.trim()).length >= 2, label: 'Minimal 2 bagian H2 + isi' },
+                    { ok: validFaqs >= 2, label: 'Minimal 2 FAQ (Schema FAQPage)' },
+                    { ok: words >= 800, label: 'Kedalaman artikel (>= 800 kata)' }
+                ];
+                els.checklistItems.textContent = '';
+                for (const item of checks) {
+                    const li = document.createElement('li');
+                    li.className = item.ok ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-slate-500 dark:text-slate-400';
+                    li.textContent = `${item.ok ? '✓' : '○'} ${item.label}`;
+                    els.checklistItems.appendChild(li);
+                }
+            }
+
+            async function handleSave(publishFlag) {
+                hideBanner(els.saveResultBanner);
+                if (publishFlag) {
+                    els.fieldDateModified.value = todayIso();
+                }
+                const payload = buildApiPayloadFromState(publishFlag);
+                els.saveDraftBtn.disabled = true;
+                els.publishBtn.disabled = true;
+                try {
+                    const res = await apiFetch('/api/articles/save', {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                    state.isNewArticle = false;
+                    state.draft.previousId = res.article.id;
+                    state.draft.id = res.article.id;
+                    state.draft.defaultSlug = res.article.defaultSlug || res.article.id;
+                    state.draft.published = Boolean(res.article?.locales?.[res.lang]?.published);
+
+                    // Update local manifest cache
+                    const idx = state.manifest.articles.findIndex((a) => a.id === res.article.id);
+                    if (idx >= 0) state.manifest.articles[idx] = res.article;
+                    else state.manifest.articles.unshift(res.article);
+
+                    updateStatusPill();
+                    renderLocaleStatusStrip();
+                    markDirty(false);
+
+                    const slug = res.article.slugByLang?.[res.lang] || res.article.defaultSlug || res.article.id;
+                    const liveUrl = res.lang === 'en' ? `/${res.article.section}/${slug}/` : `/${res.lang}/${res.article.section}/${slug}/`;
+                    if (res.commit?.commitUrl) {
+                        const msg = publishFlag
+                            ? `Berhasil dipublikasikan & di-commit ke GitHub (${res.commit.commitSha.slice(0, 7)}). Auto-build Cloudflare sedang berjalan (~1–2 menit).`
+                            : `Draft tersimpan ke GitHub (${res.commit.commitSha.slice(0, 7)}).`;
+                        showBanner(els.saveResultBanner, 'success', msg, res.commit.commitUrl, 'Lihat Commit GitHub');
+                    } else {
+                        const msg = publishFlag
+                            ? `Artikel dipublikasikan di penyimpanan lokal (${res.contentPath}).`
+                            : `Draft disimpan di penyimpanan lokal (${res.contentPath}).`;
+                        showBanner(els.saveResultBanner, 'success', msg, publishFlag ? liveUrl : '', publishFlag ? 'Buka Halaman Preview' : '');
+                    }
+                } catch (err) {
+                    showBanner(els.saveResultBanner, 'error', err.message || 'Gagal menyimpan artikel.');
+                } finally {
+                    els.saveDraftBtn.disabled = false;
+                    els.publishBtn.disabled = false;
+                }
+            }
+
+            function renderPreviewModal() {
+                const payload = buildApiPayloadFromState(state.draft.published);
+                els.previewBody.textContent = '';
+
+                const header = document.createElement('header');
+                header.className = 'border-b border-slate-200 dark:border-slate-800 pb-4 space-y-2';
+                const cat = document.createElement('p');
+                cat.className = 'text-xs uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400';
+                cat.textContent = SECTION_LABELS[payload.section] || payload.section;
+                const h1 = document.createElement('h1');
+                h1.className = 'text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white';
+                h1.textContent = payload.localeMeta.h1 || '(Tanpa Judul)';
+                const exc = document.createElement('p');
+                exc.className = 'text-sm sm:text-base text-slate-600 dark:text-slate-300';
+                exc.textContent = payload.localeMeta.excerpt || payload.localeMeta.metaDesc || '';
+                const meta = document.createElement('p');
+                meta.className = 'text-xs text-slate-500';
+                meta.textContent = `${payload.author.name} · Terbit ${payload.datePublished} · Diperbarui ${payload.dateModified} · ${payload.content.readingTimeMinutes} mnt baca`;
+                header.appendChild(cat);
+                header.appendChild(h1);
+                header.appendChild(exc);
+                header.appendChild(meta);
+                els.previewBody.appendChild(header);
+
+                if (payload.content.keyTakeaways.length > 0) {
+                    const box = document.createElement('div');
+                    box.className = 'p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2';
+                    const ktTitle = document.createElement('h2');
+                    ktTitle.className = 'text-sm font-bold text-slate-900 dark:text-white';
+                    ktTitle.textContent = 'Poin Inti';
+                    const ul = document.createElement('ul');
+                    ul.className = 'list-disc pl-5 space-y-1 text-sm';
+                    for (const item of payload.content.keyTakeaways) {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        ul.appendChild(li);
+                    }
+                    box.appendChild(ktTitle);
+                    box.appendChild(ul);
+                    els.previewBody.appendChild(box);
+                }
+
+                for (const sec of payload.content.sections) {
+                    const secEl = document.createElement('section');
+                    secEl.className = 'space-y-3';
+                    if (sec.heading) {
+                        const h2 = document.createElement('h2');
+                        h2.className = 'text-xl font-bold text-slate-900 dark:text-white pt-2';
+                        h2.textContent = sec.heading;
+                        secEl.appendChild(h2);
+                    }
+                    for (const para of sec.paragraphs) {
+                        const p = document.createElement('p');
+                        p.textContent = para;
+                        secEl.appendChild(p);
+                    }
+                    if (Array.isArray(sec.bullets) && sec.bullets.length > 0) {
+                        const ul = document.createElement('ul');
+                        ul.className = 'list-disc pl-5 space-y-1.5';
+                        for (const b of sec.bullets) {
+                            const li = document.createElement('li');
+                            if (b && typeof b === 'object' && b.label) {
+                                const st = document.createElement('strong');
+                                st.textContent = `${b.label}: `;
+                                li.appendChild(st);
+                                li.appendChild(document.createTextNode(b.text || ''));
+                            } else {
+                                li.textContent = String(b || '');
+                            }
+                            ul.appendChild(li);
+                        }
+                        secEl.appendChild(ul);
+                    }
+                    if (sec.callout?.body) {
+                        const aside = document.createElement('aside');
+                        aside.className = sec.callout.tone === 'warning'
+                            ? 'p-4 rounded-xl border bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-sm'
+                            : 'p-4 rounded-xl border bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 text-sm';
+                        if (sec.callout.title) {
+                            const ct = document.createElement('p');
+                            ct.className = 'font-semibold mb-1';
+                            ct.textContent = sec.callout.title;
+                            aside.appendChild(ct);
+                        }
+                        const cb = document.createElement('p');
+                        cb.textContent = sec.callout.body;
+                        aside.appendChild(cb);
+                        secEl.appendChild(aside);
+                    }
+                    if (sec.table?.headers?.length && sec.table?.rows?.length) {
+                        const wrap = document.createElement('div');
+                        wrap.className = 'overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800';
+                        const tbl = document.createElement('table');
+                        tbl.className = 'min-w-full border-collapse text-xs sm:text-sm';
+                        const thead = document.createElement('thead');
+                        const htr = document.createElement('tr');
+                        for (const thTxt of sec.table.headers) {
+                            const th = document.createElement('th');
+                            th.className = 'px-3 py-2 text-left font-semibold bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700';
+                            th.textContent = thTxt;
+                            htr.appendChild(th);
+                        }
+                        thead.appendChild(htr);
+                        const tbody = document.createElement('tbody');
+                        for (const row of sec.table.rows) {
+                            const rtr = document.createElement('tr');
+                            for (const cell of row) {
+                                const td = document.createElement('td');
+                                td.className = 'px-3 py-2 border-b border-slate-200 dark:border-slate-800';
+                                td.textContent = cell;
+                                rtr.appendChild(td);
+                            }
+                            tbody.appendChild(rtr);
+                        }
+                        tbl.appendChild(thead);
+                        tbl.appendChild(tbody);
+                        wrap.appendChild(tbl);
+                        secEl.appendChild(wrap);
+                    }
+                    if (sec.codeBlock?.code) {
+                        const pre = document.createElement('pre');
+                        pre.className = 'p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto';
+                        const code = document.createElement('code');
+                        code.textContent = sec.codeBlock.code;
+                        pre.appendChild(code);
+                        secEl.appendChild(pre);
+                    }
+                    els.previewBody.appendChild(secEl);
+                }
+
+                if (payload.content.faqs.length > 0) {
+                    const faqSec = document.createElement('section');
+                    faqSec.className = 'pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5';
+                    const fh2 = document.createElement('h2');
+                    fh2.className = 'text-lg font-bold text-slate-900 dark:text-white';
+                    fh2.textContent = 'FAQ';
+                    faqSec.appendChild(fh2);
+                    for (const f of payload.content.faqs) {
+                        const det = document.createElement('details');
+                        det.open = true;
+                        det.className = 'p-3.5 rounded-xl border border-slate-200 dark:border-slate-800';
+                        const sum = document.createElement('summary');
+                        sum.className = 'font-semibold text-sm';
+                        sum.textContent = f.q;
+                        const ans = document.createElement('p');
+                        ans.className = 'mt-1.5 text-sm text-slate-600 dark:text-slate-300';
+                        ans.textContent = f.a;
+                        det.appendChild(sum);
+                        det.appendChild(ans);
+                        faqSec.appendChild(det);
+                    }
+                    els.previewBody.appendChild(faqSec);
+                }
+
+                els.previewModal.classList.remove('hidden');
+            }
+
+            // Event Bindings
+            document.getElementById('themeToggleBtn').addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                try { localStorage.setItem('preferredTheme', isDark ? 'dark' : 'light'); } catch (e) {}
+            });
+
+            els.setupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                els.setupError.classList.add('hidden');
+                if (els.setupPassword.value !== els.setupPasswordConfirm.value) {
+                    els.setupError.textContent = 'Konfirmasi password tidak cocok.';
+                    els.setupError.classList.remove('hidden');
+                    return;
+                }
+                try {
+                    const info = await apiFetch('/api/articles/auth', {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'setup', password: els.setupPassword.value })
+                    });
+                    state.authenticated = true;
+                    state.storageMode = info.storageMode || state.storageMode;
+                    state.branch = info.branch || state.branch;
+                    setStorageModeBadge(state.storageMode, state.branch);
+                    els.setupPassword.value = '';
+                    els.setupPasswordConfirm.value = '';
+                    await enterWorkspace();
+                } catch (err) {
+                    els.setupError.textContent = err.message;
+                    els.setupError.classList.remove('hidden');
+                }
+            });
+
+            els.loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                els.loginError.classList.add('hidden');
+                els.loginSubmitBtn.disabled = true;
+                try {
+                    const info = await apiFetch('/api/articles/auth', {
+                        method: 'POST',
+                        body: JSON.stringify({ password: els.loginPassword.value })
+                    });
+                    state.authenticated = true;
+                    state.storageMode = info.storageMode || state.storageMode;
+                    state.branch = info.branch || state.branch;
+                    setStorageModeBadge(state.storageMode, state.branch);
+                    els.loginPassword.value = '';
+                    await enterWorkspace();
+                } catch (err) {
+                    els.loginError.textContent = err.message;
+                    els.loginError.classList.remove('hidden');
+                } finally {
+                    els.loginSubmitBtn.disabled = false;
+                }
+            });
+
+            els.logoutBtn.addEventListener('click', async () => {
+                try {
+                    await apiFetch('/api/articles/auth', { method: 'DELETE' });
+                } catch {}
+                state.authenticated = false;
+                state.draft = null;
+                els.editorSection.classList.add('hidden');
+                els.listSection.classList.add('hidden');
+                els.logoutBtn.classList.add('hidden');
+                els.authSection.classList.remove('hidden');
+                els.loginForm.classList.remove('hidden');
+                els.loginPassword.focus();
+            });
+
+            els.searchArticlesInput.addEventListener('input', renderArticlesTable);
+            els.filterSectionSelect.addEventListener('change', renderArticlesTable);
+            els.refreshListBtn.addEventListener('click', loadArticlesList);
+            els.newArticleBtn.addEventListener('click', () => openArticleEditor('', 'id'));
+            els.backToListBtn.addEventListener('click', async () => {
+                if (state.dirty && !window.confirm('Perubahan belum disimpan. Kembali ke daftar artikel?')) return;
+                els.editorSection.classList.add('hidden');
+                els.listSection.classList.remove('hidden');
+                await loadArticlesList();
+            });
+
+            els.fieldH1.addEventListener('input', () => {
+                state.draft.localeMeta.h1 = els.fieldH1.value;
+                if (state.isNewArticle && !state.slugManuallyEdited) {
+                    const generated = slugify(els.fieldH1.value);
+                    state.draft.id = generated;
+                    state.draft.defaultSlug = generated;
+                    els.fieldId.value = generated;
+                }
+                if (!els.fieldTitle.value.trim()) {
+                    // Keep title placeholder helpful without forcing overwrite
+                }
+                markDirty();
+                updateLiveCounters();
+            });
+
+            els.fieldId.addEventListener('input', () => {
+                state.slugManuallyEdited = true;
+                const clean = slugify(els.fieldId.value);
+                if (state.isNewArticle) state.draft.id = clean;
+                state.draft.defaultSlug = clean;
+                markDirty();
+                updateLiveCounters();
+            });
+
+            els.fieldLangSlug.addEventListener('input', () => {
+                state.draft.langSlug = slugify(els.fieldLangSlug.value);
+                markDirty();
+                updateLiveCounters();
+            });
+
+            [els.fieldTitle, els.fieldMetaDesc, els.fieldExcerpt, els.fieldKeywords, els.fieldBreadcrumb, els.fieldWidgetNotice, els.fieldMethodology]
+                .forEach((el) => el.addEventListener('input', () => { markDirty(); updateLiveCounters(); }));
+
+            els.fieldLang.addEventListener('change', (e) => switchEditorLanguage(e.target.value));
+            els.fieldSection.addEventListener('change', () => {
+                state.draft.section = els.fieldSection.value;
+                els.widgetNoticeCard.classList.toggle('hidden', els.fieldSection.value !== 'tools');
+                if (els.fieldSection.value === 'guides') {
+                    els.fieldIsPillar.checked = true;
+                    els.fieldArticleType.value = 'TechArticle';
+                } else if (els.fieldSection.value === 'tools') {
+                    els.fieldArticleType.value = 'WebApplication';
+                } else {
+                    els.fieldArticleType.value = 'Article';
+                }
+                markDirty();
+                updateLiveCounters();
+            });
+
+            [els.fieldArticleType, els.fieldDatePublished, els.fieldDateModified, els.fieldChangefreq, els.fieldReadingTime, els.fieldIsPillar, els.fieldAuthorName, els.fieldAuthorRole, els.fieldAuthorUrl, els.fieldSnapSample, els.fieldSnapRange]
+                .forEach((el) => el.addEventListener('change', () => markDirty()));
+
+            els.setTodayDateBtn.addEventListener('click', () => {
+                els.fieldDateModified.value = todayIso();
+                markDirty();
+            });
+
+            els.autoReadTimeBtn.addEventListener('click', () => {
+                const words = countDraftWords();
+                els.fieldReadingTime.value = Math.max(1, Math.ceil(words / 200));
+                markDirty();
+            });
+
+            els.addTakeawayBtn.addEventListener('click', () => {
+                state.draft.content.keyTakeaways.push('');
+                renderTakeawaysList();
+                markDirty();
+            });
+
+            els.addSectionBtn.addEventListener('click', () => {
+                const n = state.draft.content.sections.length + 1;
+                state.draft.content.sections.push({
+                    anchor: `bagian-${n}`,
+                    heading: `${n}. Sub-Judul Bagian`,
+                    paragraphsText: '',
+                    bulletsText: '',
+                    calloutTone: 'info',
+                    calloutTitle: '',
+                    calloutBody: '',
+                    tableCaption: '',
+                    tableHeadersText: '',
+                    tableRowsText: '',
+                    codeCaption: '',
+                    codeText: '',
+                    subsections: []
+                });
+                renderSectionsList();
+                markDirty();
+                updateLiveCounters();
+            });
+
+            els.addFaqBtn.addEventListener('click', () => {
+                state.draft.content.faqs.push({ q: '', a: '' });
+                renderFaqsList();
+                markDirty();
+                updateLiveCounters();
+            });
+
+            els.saveDraftBtn.addEventListener('click', () => handleSave(false));
+            els.publishBtn.addEventListener('click', () => handleSave(true));
+            els.previewBtn.addEventListener('click', renderPreviewModal);
+            els.closePreviewBtn.addEventListener('click', () => els.previewModal.classList.add('hidden'));
+            els.previewModal.addEventListener('click', (e) => {
+                if (e.target === els.previewModal) els.previewModal.classList.add('hidden');
+            });
+
+            checkAuth();
+        })();
+    </script>
+</body>
+</html>

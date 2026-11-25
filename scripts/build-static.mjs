@@ -128,16 +128,24 @@ if (fs.existsSync(assetsSrcDir)) {
   console.log('Copied dist/assets');
 }
 
+const adminArticlesSrc = path.join(rootDir, 'admin-articles.html');
+if (fs.existsSync(adminArticlesSrc)) {
+  const adminArticlesOut = path.join(distDir, 'admin-articles', 'index.html');
+  fs.mkdirSync(path.dirname(adminArticlesOut), { recursive: true });
+  fs.copyFileSync(adminArticlesSrc, adminArticlesOut);
+  console.log('Generated dist/admin-articles/index.html');
+}
+
 const publicSrcDir = path.join(rootDir, 'public');
 if (fs.existsSync(publicSrcDir)) {
-  const publicMdFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md'));
-  if (publicMdFiles.length > 0) {
+  const publicDocFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md') || name === 'doku.writer.html');
+  if (publicDocFiles.length > 0) {
     const publicDestDir = path.join(distDir, 'public');
     fs.mkdirSync(publicDestDir, { recursive: true });
-    for (const fileName of publicMdFiles) {
+    for (const fileName of publicDocFiles) {
       fs.copyFileSync(path.join(publicSrcDir, fileName), path.join(publicDestDir, fileName));
     }
-    console.log(`Copied dist/public markdown docs (${publicMdFiles.join(', ')})`);
+    console.log(`Copied dist/public docs (${publicDocFiles.join(', ')})`);
   }
 }
 

@@ -573,3 +573,38 @@ Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, d
   - Selama `userChangedStatusFilter === false`, setiap pemanggilan `generateDomains()` menjaga filter pada `"available_or_check"`.
   - Begitu pengguna mengganti dropdown secara manual (`onchange`) atau mengklik tombol toggle `Available Only`, `userChangedStatusFilter` menjadi `true` sehingga pilihan pengguna tetap dipertahankan saat generate ulang.
   - Tombol **Start Over / Mulai Ulang (`resetToHome`)** mereset `userChangedStatusFilter = false` dan mengembalikan filter ke `"available_or_check"`.
+
+---
+
+### H. Online Article Editor (`/admin-articles/`) & Auto-Commit GitHub
+
+Bagian ini mendokumentasikan arsitektur sistem editor artikel berbasis web bergaya WordPress yang dapat diakses online (Cloudflare Pages + Pages Functions) maupun lokal/preview (`server.js`), beserta mekanisme commit atomik ke GitHub untuk memicu auto-build statis.
+
+#### 1. Struktur File & Kompatibilitas Dual-Runtime
+| Komponen | Lokasi | Peran Teknis |
+| --- | --- | --- |
+| **UI Editor Web** | `admin-articles.html` -> `dist/admin-articles/index.html` | Antarmuka WordPress-like (login 1 kolom Password, daftar artikel lintas 8 bahasa, editor blok `sections[]`, tabel, callout, FAQ, live SEO meter, pratinjau aman berbasis DOM API). Memakai `<meta name="robots" content="noindex, nofollow">` dan tidak masuk `sitemap.xml`. |
+| **Panduan Penulis** | `public/doku.writer.html` -> `dist/public/doku.writer.html` | Buku pegangan penulis non-teknis (`noindex, nofollow`) yang dapat dibaca langsung di `/public/doku.writer.html`. |
+| **Validasi & Normalisasi** | `lib/article-schema.js` | Modul ESM murni (`validateAndNormalizeArticleSave`, `applyArticleSaveToManifest`) yang menyamakan aturan validasi `scripts/site-builder.mjs` (`slug` `^[a-z0-9]+(?:-[a-z0-9]+)*$`, `section`, `articleType`, `dateModified >= datePublished`, `published: true` wajib punya `title`/`metaDesc`/`h1` dan min. 1 section, bebas tabrakan rute). |
+| **Klien GitHub Atomik** | `lib/github-articles.js` | Memakai Web `fetch()` standar (`getRepoFileText`, `commitRepoFilesAtomic`) dengan **Git Data API** (`git/ref` -> `git/commits` -> `git/blobs` -> `git/trees` -> `git/commits` -> `PATCH git/refs`) sehingga perubahan `content/articles/manifest.json` dan `content/articles/<section>/<id>/<lang>.json` masuk dalam **1 commit atomik** (mencegah 2 build bertumpuk atau error *race condition* di Cloudflare Pages). |
+| **Auth & Sesi Edge** | `lib/worker-article-auth.js` | Autentikasi password-only (SHA-256 constant-time), verifikasi `Origin`/`X-Requested-With` anti-CSRF, rate limiter IP, cookie **`HttpOnly; SameSite=None; Secure; Partitioned`** (`dn_article_session`), serta tabel D1 `article_editor_sessions` (auto-bootstrap saat login) untuk pelacakan & pencabutan sesi sisi server. |
+| **Cloudflare Pages Functions** | `functions/api/articles/auth.js`, `index.js`, `save.js` | Endpoint produksi `/api/articles/auth` (`GET`/`POST`/`DELETE`), `/api/articles` (`GET`), dan `/api/articles/save` (`POST`). |
+| **Preview Express Lokal** | `server.js` | Melayani `/admin-articles/` dan `/api/articles/*`: otomatis memakai mode GitHub bila `GITHUB_TOKEN`/`GITHUB_OWNER`/`GITHUB_REPO` terisi, atau membaca/menulis ke disk `content/articles/` dengan pengecekan batas direktori (`resolveConfinedArticleFile`) bila berjalan lokal tanpa token GitHub. |
+
+#### 2. Perlindungan SEO, Keamanan & Sesi
+- **Tidak Terindeks Search Engine**: `scripts/site-builder.mjs` menambahkan `Disallow: /admin-articles/` dan `Disallow: /api/articles/` pada `robots.txt`, serta header `X-Robots-Tag: noindex, nofollow` + `Cache-Control: no-store` pada `_headers` dan `server.js`.
+- **Zero Secret di Browser**: Password editor, `ARTICLE_SESSION_SECRET`, dan `GITHUB_TOKEN` hanya dibaca di server/Pages Function. Token sesi tidak pernah ditulis ke `localStorage`/`sessionStorage`, melainkan disimpan sebagai cookie `HttpOnly` bertanda tangan HMAC-SHA256 dengan validasi `jti` di D1 (`article_editor_sessions`) / memori server Express.
+- **Proteksi CSRF**: Semua endpoint mutasi (`POST`/`DELETE` `/api/articles/auth`, `POST` `/api/articles/save`) memvalidasi kesesuaian header `Origin` dengan `Host`/`X-Forwarded-Host` serta header `X-Requested-With`.
+
+#### 3. Environment Variables / Secrets Cloudflare yang Diperlukan
+Tambahkan variabel berikut di **Cloudflare Pages -> Settings -> Environment variables** sebelum menguji login dan publish dari `/admin-articles/`:
+
+| Variabel | Tipe | Keterangan |
+| --- | --- | --- |
+| `ARTICLE_ADMIN_PASSWORD` | **Secret** | Password login tunggal untuk `/admin-articles/`. Bila dikosongkan, backend memakai fallback `ADMIN_PASSWORD`. |
+| `ARTICLE_SESSION_SECRET` | **Secret** *(Disarankan)* | String acak min. 32 karakter untuk menandatangani cookie sesi HMAC-SHA256 di Cloudflare Workers. |
+| `GITHUB_TOKEN` | **Secret** | Fine-grained Personal Access Token GitHub dengan izin **Contents: Read & Write** khusus ke repositori proyek ini. |
+| `GITHUB_OWNER` | Text (Plaintext) | Username atau nama organisasi GitHub pemilik repositori. |
+| `GITHUB_REPO` | Text (Plaintext) | Nama repositori GitHub tempat kode dan `content/articles/` berada. |
+| `GITHUB_BRANCH` | Text (Opsional) | Nama branch target auto-deploy Cloudflare Pages (default: `main`). |
+
