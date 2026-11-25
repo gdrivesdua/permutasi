@@ -17,11 +17,18 @@
       "datePublished": "2026-11-25",
       "dateModified": "2026-11-25",
       "author": {
-        "name": "Domain Name Editorial",
-        "role": "Domain Research & DNS Strategy",
+        "name": "Roy Wikan - Domain Name Specialist",
+        "role": "Domain Research & Naming Strategy",
         "url": "/about.html"
       },
-      "relatedIds": [],
+      "dataSnapshot": {
+        "table": "available_domains",
+        "sampleSize": 41,
+        "dateRange": "25 November 2026"
+      },
+      "relatedIds": [
+        "rfc-1035-domain-compliance"
+      ],
       "locales": {
         "id": {
           "published": false,
