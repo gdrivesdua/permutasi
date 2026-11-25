@@ -118,16 +118,22 @@
                 <ul class="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700 dark:text-slate-300">
                     <li><strong>Judul Artikel (H1) &amp; Slug URL</strong>: Ketik judul utama artikel, maka <em>ID / Default Slug</em> otomatis terbentuk rapi dengan huruf kecil dan tanda hubung (mis. <code class="font-mono text-xs">strategi-domain-umkm</code>). Anda tetap dapat mengedit slug secara manual sebelum atau sesudah terbit, serta dapat membuat slug berbeda per bahasa pada kolom <em>Slug Khusus Bahasa Ini</em>.</li>
                     <li><strong>SEO Title &amp; Meta Description</strong>: Gunakan indikator penghitung karakter di sebelah kanan label. Usahakan <strong>SEO Title 40–62 karakter</strong> dan <strong>Meta Description 115–155 karakter</strong> agar tampil utuh di hasil pencarian Google.</li>
-                    <li><strong>Poin Inti (Key Takeaways)</strong>: Tambahkan 3–5 poin ringkasan temuan atau kesimpulan penting yang muncul di kotak sorotan atas artikel.</li>
-                    <li><strong>Isi Artikel per Bagian (H2)</strong>: Klik <strong>+ Tambah Bagian (H2)</strong> untuk menambah sub-bab baru. Tulis isi paragraf sebagai <strong>teks biasa</strong> (jangan mengetik tag HTML seperti <code class="font-mono text-xs">&lt;p&gt;</code> atau <code class="font-mono text-xs">&lt;b&gt;</code>). Untuk memisahkan antar-paragraf, cukup tekan <strong>Enter dua kali</strong> (beri 1 baris kosong).</li>
+                    <li><strong>Poin Inti (Key Takeaways)</strong>: Tambahkan 3–5 poin ringkasan temuan atau kesimpulan penting yang muncul di kotak sorotan atas artikel (mendukung format Markdown inline seperti <code class="font-mono text-xs">**tebal**</code>, <code class="font-mono text-xs">*miring*</code>, <code class="font-mono text-xs">`kode`</code>, dan <code class="font-mono text-xs">[tautan](https://...)</code>).</li>
+                    <li><strong>Isi Artikel per Bagian (H2) &amp; Sintaks Markdown</strong>: Klik <strong>+ Tambah Bagian (H2)</strong> untuk menambah sub-bab baru. Kolom bertanda lencana <code class="font-mono text-xs">MD</code> (paragraf, key takeaways, callout, catatan metodologi, dan jawaban FAQ) mendukung format <strong>Markdown standar</strong> (jangan mengetik tag HTML mentah seperti <code class="font-mono text-xs">&lt;script&gt;</code> atau <code class="font-mono text-xs">&lt;iframe&gt;</code> karena otomatis di-escape demi keamanan). Untuk memisahkan antar-paragraf, cukup tekan <strong>Enter dua kali</strong> (beri 1 baris kosong). Format yang didukung:
+                        <ul class="list-circle pl-5 mt-1.5 space-y-1 text-sm">
+                            <li><strong>Inline</strong>: <code class="font-mono text-xs">**tebal**</code>, <code class="font-mono text-xs">*miring*</code>, <code class="font-mono text-xs">`kode inline`</code>, dan <code class="font-mono text-xs">[teks tautan](https://contoh.com)</code>.</li>
+                            <li><strong>Daftar &amp; Kutipan</strong>: awali baris dengan <code class="font-mono text-xs">- item</code> (daftar poin), <code class="font-mono text-xs">1. langkah</code> (daftar bernomor), atau <code class="font-mono text-xs">&gt; kutipan</code> (blockquote).</li>
+                            <li><strong>Tabel Pipe Markdown</strong>: <code class="font-mono text-xs">| Kolom A | Kolom B |</code> diikuti baris pemisah <code class="font-mono text-xs">| --- | --- |</code> dan baris data.</li>
+                        </ul>
+                    </li>
                     <li><strong>Blok Opsional di Dalam Bagian</strong>: Setiap bagian H2 memiliki panel lipat <em>Blok Opsional</em> untuk menambahkan:
                         <ul class="list-circle pl-5 mt-1.5 space-y-1 text-sm">
-                            <li><em>Daftar Poin (Bullets)</em>: 1 poin per baris. Pakai tanda titik dua (<code class="font-mono text-xs">Label: Penjelasan</code>) agar bagian sebelum titik dua otomatis tercetak tebal.</li>
-                            <li><em>Callout</em>: Kotak info biru atau kotak peringatan kuning.</li>
+                            <li><em>Daftar Poin (Bullets)</em>: 1 poin per baris. Pakai tanda titik dua (<code class="font-mono text-xs">Label: Penjelasan</code>) agar bagian sebelum titik dua otomatis tercetak tebal; teks juga mendukung Markdown inline.</li>
+                            <li><em>Callout</em>: Kotak info biru atau kotak peringatan kuning (mendukung Markdown).</li>
                             <li><em>Tabel Data</em>: Pisahkan tiap kolom dengan simbol garis vertikal <code class="font-mono text-xs">|</code> (contoh: <code class="font-mono text-xs">.com | 1.250 | 84.2</code>), 1 baris data per baris teks.</li>
                         </ul>
                     </li>
-                    <li><strong>FAQ Artikel</strong>: Tambahkan tanya-jawab relevan di bagian bawah. Jika terisi <strong>minimal 2 FAQ</strong>, sistem otomatis menghasilkan markup <em>Schema.org FAQPage</em> untuk Google.</li>
+                    <li><strong>FAQ Artikel</strong>: Tambahkan tanya-jawab relevan di bagian bawah (jawaban mendukung Markdown, dan teks untuk Google Schema otomatis dibersihkan ke teks rapi). Jika terisi <strong>minimal 2 FAQ</strong>, sistem otomatis menghasilkan markup <em>Schema.org FAQPage</em> untuk Google.</li>
                 </ul>
             </section>
 

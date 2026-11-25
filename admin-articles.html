@@ -277,17 +277,33 @@
 
                     <!-- Interactive Widget Notice (Tools) -->
                     <div id="widgetNoticeCard" class="hidden rounded-xl border border-blue-200 dark:border-blue-900/70 bg-blue-50/50 dark:bg-blue-950/20 p-5 space-y-2 shadow-sm">
-                        <label for="fieldWidgetNotice" class="block text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300">Kotak Info Alat Interaktif (Section Tools)</label>
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label for="fieldWidgetNotice" class="block text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300">Kotak Info Alat Interaktif (Section Tools)</label>
+                            <span class="inline-flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                                <span class="px-1.5 py-0.5 rounded bg-blue-100/80 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-semibold">MD</span>
+                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">**bold**</code>
+                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">*italic*</code>
+                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">`code`</code>
+                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">[link](url)</code>
+                            </span>
+                        </div>
                         <textarea id="fieldWidgetNotice" rows="2" placeholder="Penjelasan singkat cara kerja alat dan sumber data pembanding..."
                             class="w-full px-3 py-2 text-sm rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
 
                     <!-- Key Takeaways -->
                     <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <div class="flex items-center justify-between gap-2">
-                            <div>
+                        <div class="flex flex-wrap items-start justify-between gap-2">
+                            <div class="space-y-1">
                                 <h2 class="text-sm font-bold text-slate-900 dark:text-white">Poin Inti (Key Takeaways)</h2>
                                 <p class="text-xs text-slate-500 dark:text-slate-400">Tampilkan 3–5 ringkasan temuan utama di bagian atas artikel.</p>
+                                <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-0.5">
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD</span>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](https://...)</code>
+                                </div>
                             </div>
                             <button id="addTakeawayBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                                 + Tambah Poin
@@ -298,10 +314,21 @@
 
                     <!-- Content Sections (WordPress Blocks) -->
                     <div class="space-y-3">
-                        <div class="flex items-center justify-between gap-2">
-                            <div>
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div class="space-y-1.5">
                                 <h2 class="text-base font-bold text-slate-900 dark:text-white">Isi Artikel per Bagian (Sections &amp; Paragraf)</h2>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Tulis sebagai teks biasa tanpa tag HTML mentah. Pisahkan paragraf dengan satu baris kosong (Enter 2x).</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Mendukung format <strong>Markdown</strong> standar (tag HTML mentah seperti &lt;script&gt; otomatis di-escape). Pisahkan paragraf dengan satu baris kosong (Enter 2x).</p>
+                                <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-600 dark:text-slate-300">
+                                    <span class="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-semibold">Markdown</span>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">**bold**</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">*italic*</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">`code`</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">[link](https://...)</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">- list</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">1. list</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">&gt; kutipan</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">| kol | kol |</code>
+                                </div>
                             </div>
                             <button id="addSectionBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:opacity-90 transition-opacity shrink-0">
                                 + Tambah Bagian (H2)
@@ -312,18 +339,36 @@
 
                     <!-- Methodology Note -->
                     <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2 shadow-sm">
-                        <label for="fieldMethodology" class="block text-sm font-bold text-slate-900 dark:text-white">Catatan Metodologi &amp; Transparansi (Opsional)</label>
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label for="fieldMethodology" class="block text-sm font-bold text-slate-900 dark:text-white">Catatan Metodologi &amp; Transparansi (Opsional)</label>
+                            <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                                <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD</span>
+                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
+                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
+                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
+                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](url)</code>
+                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">- / 1. / &gt; / |</code>
+                            </div>
+                        </div>
                         <p class="text-xs text-slate-500 dark:text-slate-400">Jelaskan sumber data, periode pengecekan, dan batasan klaim (mis. bukan nasihat hukum merek dagang).</p>
-                        <textarea id="fieldMethodology" rows="3" placeholder="Contoh: Data diambil dari agregasi pengecekan RDAP/NS..."
+                        <textarea id="fieldMethodology" rows="3" placeholder="Contoh: Data diambil dari agregasi **pengecekan RDAP/NS** pada `/api/log-available-domain`..."
                             class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
 
                     <!-- FAQs Builder -->
                     <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <div>
+                        <div class="flex flex-wrap items-start justify-between gap-2">
+                            <div class="space-y-1">
                                 <h2 class="text-sm font-bold text-slate-900 dark:text-white">FAQ Artikel</h2>
                                 <p id="faqSchemaStatus" class="text-xs text-slate-500 dark:text-slate-400">Minimal 2 tanya-jawab untuk mengaktifkan Schema.org FAQPage otomatis.</p>
+                                <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-0.5">
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD Jawaban</span>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](url)</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">- / 1. / &gt; / |</code>
+                                </div>
                             </div>
                             <button id="addFaqBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                                 + Tambah FAQ
@@ -470,6 +515,7 @@
         </div>
     </div>
 
+    <script src="/assets/article-markdown.js"></script>
     <script>
         (function() {
             const SUPPORTED_LANGS = ['en', 'id', 'es', 'pt', 'fr', 'de', 'ru', 'ja'];
@@ -577,6 +623,25 @@
                     .replace(/^-+|-+$/g, '')
                     .replace(/-{2,}/g, '-')
                     .slice(0, 96);
+            }
+
+            function createMarkdownBadgeStrip(mode) {
+                const wrap = document.createElement('span');
+                wrap.className = 'inline-flex flex-wrap items-center gap-1 text-[10px] font-mono text-slate-500 dark:text-slate-400';
+                const tag = document.createElement('span');
+                tag.className = 'px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-semibold';
+                tag.textContent = 'MD';
+                wrap.appendChild(tag);
+                const symbols = mode === 'full'
+                    ? ['**B**', '*I*', '`code`', '[link](url)', '- list', '1. list', '> quote', '| tbl |']
+                    : ['**B**', '*I*', '`code`', '[link](url)'];
+                for (const sym of symbols) {
+                    const code = document.createElement('code');
+                    code.className = 'px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800';
+                    code.textContent = sym;
+                    wrap.appendChild(code);
+                }
+                return wrap;
             }
 
             async function apiFetch(url, options = {}) {
@@ -1215,20 +1280,24 @@
 
                     // Paragraphs
                     const pWrap = document.createElement('div');
+                    const pHeader = document.createElement('div');
+                    pHeader.className = 'flex flex-wrap items-center justify-between gap-2 mb-1';
                     const pLab = document.createElement('label');
-                    pLab.className = 'block text-xs font-semibold mb-1';
-                    pLab.textContent = 'Paragraf Isi (pisahkan tiap paragraf dengan baris kosong)';
+                    pLab.className = 'block text-xs font-semibold';
+                    pLab.textContent = 'Paragraf Isi (pisahkan tiap blok/paragraf dengan baris kosong)';
+                    pHeader.appendChild(pLab);
+                    pHeader.appendChild(createMarkdownBadgeStrip('full'));
                     const pTxt = document.createElement('textarea');
                     pTxt.rows = 5;
                     pTxt.value = sec.paragraphsText;
-                    pTxt.placeholder = 'Tulis paragraf pertama...\n\nTulis paragraf kedua...';
+                    pTxt.placeholder = 'Tulis paragraf **tebal**, *miring*, `kode`, [tautan](https://...), daftar (- / 1.), > kutipan, atau | tabel |...';
                     pTxt.className = 'w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     pTxt.addEventListener('input', (e) => {
                         sec.paragraphsText = e.target.value;
                         markDirty();
                         updateLiveCounters();
                     });
-                    pWrap.appendChild(pLab);
+                    pWrap.appendChild(pHeader);
                     pWrap.appendChild(pTxt);
                     card.appendChild(pWrap);
 
@@ -1247,18 +1316,31 @@
                     optBody.className = 'mt-3 space-y-3';
 
                     // Bullets
+                    const bHeader = document.createElement('div');
+                    bHeader.className = 'flex flex-wrap items-center justify-between gap-2';
                     const bLab = document.createElement('label');
                     bLab.className = 'block text-xs font-semibold';
-                    bLab.textContent = 'Daftar Poin / Bullets (1 poin per baris; gunakan "Label: Penjelasan" untuk label tebal)';
+                    bLab.textContent = 'Daftar Poin / Bullets (1 poin per baris; gunakan "Label: Penjelasan")';
+                    bHeader.appendChild(bLab);
+                    bHeader.appendChild(createMarkdownBadgeStrip('inline'));
                     const bTxt = document.createElement('textarea');
                     bTxt.rows = 3;
                     bTxt.value = sec.bulletsText;
                     bTxt.className = 'w-full mt-1 px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     bTxt.addEventListener('input', (e) => { sec.bulletsText = e.target.value; markDirty(); updateLiveCounters(); });
-                    optBody.appendChild(bLab);
+                    optBody.appendChild(bHeader);
                     optBody.appendChild(bTxt);
 
                     // Callout
+                    const callHeader = document.createElement('div');
+                    callHeader.className = 'flex flex-wrap items-center justify-between gap-2 pt-1';
+                    const callLabel = document.createElement('span');
+                    callLabel.className = 'text-xs font-semibold';
+                    callLabel.textContent = 'Kotak Sorotan (Callout)';
+                    callHeader.appendChild(callLabel);
+                    callHeader.appendChild(createMarkdownBadgeStrip('full'));
+                    optBody.appendChild(callHeader);
+
                     const callGrid = document.createElement('div');
                     callGrid.className = 'grid grid-cols-1 sm:grid-cols-3 gap-2';
                     const cTone = document.createElement('select');
@@ -1276,7 +1358,7 @@
                     const cTitle = document.createElement('input');
                     cTitle.type = 'text';
                     cTitle.value = sec.calloutTitle;
-                    cTitle.placeholder = 'Judul Callout (opsional)';
+                    cTitle.placeholder = 'Judul Callout (opsional, mendukung MD inline)';
                     cTitle.className = 'sm:col-span-2 px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     cTitle.addEventListener('input', (e) => { sec.calloutTitle = e.target.value; markDirty(); });
                     callGrid.appendChild(cTone);
@@ -1284,13 +1366,22 @@
                     const cBody = document.createElement('textarea');
                     cBody.rows = 2;
                     cBody.value = sec.calloutBody;
-                    cBody.placeholder = 'Isi kotak sorotan (callout)...';
+                    cBody.placeholder = 'Isi kotak sorotan (mendukung Markdown: **bold**, *italic*, `code`, [link](url), list, kutipan)...';
                     cBody.className = 'w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     cBody.addEventListener('input', (e) => { sec.calloutBody = e.target.value; markDirty(); updateLiveCounters(); });
                     optBody.appendChild(callGrid);
                     optBody.appendChild(cBody);
 
                     // Table
+                    const tblHeader = document.createElement('div');
+                    tblHeader.className = 'flex flex-wrap items-center justify-between gap-2 pt-1';
+                    const tblLabel = document.createElement('span');
+                    tblLabel.className = 'text-xs font-semibold';
+                    tblLabel.textContent = 'Tabel Data Terstruktur (Opsional)';
+                    tblHeader.appendChild(tblLabel);
+                    tblHeader.appendChild(createMarkdownBadgeStrip('inline'));
+                    optBody.appendChild(tblHeader);
+
                     const tCap = document.createElement('input');
                     tCap.type = 'text';
                     tCap.value = sec.tableCaption;
@@ -1323,7 +1414,7 @@
                     const codeTxt = document.createElement('textarea');
                     codeTxt.rows = 2;
                     codeTxt.value = sec.codeText;
-                    codeTxt.placeholder = 'Potongan kode atau query SQL (opsional)...';
+                    codeTxt.placeholder = 'Potongan kode atau query SQL (ditampilkan apa adanya)...';
                     codeTxt.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     codeTxt.addEventListener('input', (e) => { sec.codeText = e.target.value; markDirty(); });
                     optBody.appendChild(codeCap);
@@ -1341,10 +1432,14 @@
                     const box = document.createElement('div');
                     box.className = 'p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-2';
                     const topRow = document.createElement('div');
-                    topRow.className = 'flex items-center justify-between gap-2';
+                    topRow.className = 'flex flex-wrap items-center justify-between gap-2';
+                    const labWrap = document.createElement('div');
+                    labWrap.className = 'flex flex-wrap items-center gap-2';
                     const lab = document.createElement('span');
                     lab.className = 'text-xs font-semibold text-slate-500';
                     lab.textContent = `FAQ #${idx + 1}`;
+                    labWrap.appendChild(lab);
+                    labWrap.appendChild(createMarkdownBadgeStrip('full'));
                     const delBtn = document.createElement('button');
                     delBtn.type = 'button';
                     delBtn.className = 'text-xs text-rose-600 dark:text-rose-400 hover:underline';
@@ -1355,7 +1450,7 @@
                         markDirty();
                         updateLiveCounters();
                     });
-                    topRow.appendChild(lab);
+                    topRow.appendChild(labWrap);
                     topRow.appendChild(delBtn);
 
                     const qInp = document.createElement('input');
@@ -1368,7 +1463,7 @@
                     const aTxt = document.createElement('textarea');
                     aTxt.rows = 2;
                     aTxt.value = faq.a;
-                    aTxt.placeholder = 'Jawaban ringkas dan jelas...';
+                    aTxt.placeholder = 'Jawaban ringkas (mendukung Markdown: **bold**, *italic*, `code`, [link](url), list, kutipan, tabel)...';
                     aTxt.className = 'w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     aTxt.addEventListener('input', (e) => { faq.a = e.target.value; markDirty(); updateLiveCounters(); });
 
@@ -1427,9 +1522,9 @@
                         .map((line) => line.trim())
                         .filter(Boolean)
                         .map((line) => {
-                            const colonIdx = line.indexOf(':');
-                            if (colonIdx > 1 && colonIdx < 48) {
-                                return { label: line.slice(0, colonIdx).trim(), text: line.slice(colonIdx + 1).trim() };
+                            const match = line.match(/^([^[\]`()]{2,48}):\s+(.+)$/);
+                            if (match && !match[1].includes('://')) {
+                                return { label: match[1].trim(), text: match[2].trim() };
                             }
                             return line;
                         });
@@ -1512,22 +1607,40 @@
 
             function countDraftWords() {
                 const payload = buildApiPayloadFromState(false);
+                const md = window.__ARTICLE_MARKDOWN__;
+                const stripMd = (val) => (md && typeof md.stripMarkdownToPlainText === 'function'
+                    ? md.stripMarkdownToPlainText(val)
+                    : String(val ?? '').trim());
                 const parts = [
                     payload.localeMeta.title,
                     payload.localeMeta.h1,
                     payload.localeMeta.excerpt,
-                    payload.content.methodologyNote,
-                    ...(payload.content.keyTakeaways || [])
+                    stripMd(payload.content.interactiveWidgetNotice),
+                    stripMd(payload.content.methodologyNote),
+                    ...(payload.content.keyTakeaways || []).map(stripMd)
                 ];
                 for (const s of payload.content.sections || []) {
-                    parts.push(s.heading, ...(s.paragraphs || []));
-                    if (s.callout) parts.push(s.callout.title, s.callout.body);
+                    parts.push(s.heading, ...(s.paragraphs || []).map(stripMd));
+                    for (const b of s.bullets || []) {
+                        if (b && typeof b === 'object') parts.push(stripMd(b.label), stripMd(b.text));
+                        else parts.push(stripMd(b));
+                    }
+                    if (s.callout) parts.push(stripMd(s.callout.title), stripMd(s.callout.body));
+                    if (s.table) {
+                        parts.push(stripMd(s.table.caption), ...(s.table.headers || []).map(stripMd));
+                        for (const row of s.table.rows || []) {
+                            for (const cell of row || []) parts.push(stripMd(cell));
+                        }
+                    }
+                    for (const sub of s.subsections || []) {
+                        parts.push(sub.heading, ...(sub.paragraphs || []).map(stripMd));
+                    }
                 }
                 for (const f of payload.content.faqs || []) {
-                    parts.push(f.q, f.a);
+                    parts.push(f.q, stripMd(f.a));
                 }
                 const txt = parts.filter(Boolean).join(' ').trim();
-                return txt ? txt.split(/\s+/).length : 0;
+                return txt ? txt.split(/\s+/).filter(Boolean).length : 0;
             }
 
             function updateLiveCounters() {
@@ -1622,6 +1735,137 @@
                 }
             }
 
+            function appendInlineTokensDom(parentEl, tokens) {
+                for (const tok of tokens) {
+                    if (tok.type === 'text') {
+                        parentEl.appendChild(document.createTextNode(tok.value));
+                    } else if (tok.type === 'code') {
+                        const code = document.createElement('code');
+                        code.className = 'px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-[0.875em] text-slate-900 dark:text-slate-100';
+                        code.textContent = tok.value;
+                        parentEl.appendChild(code);
+                    } else if (tok.type === 'bold') {
+                        const strong = document.createElement('strong');
+                        strong.className = 'font-semibold text-slate-900 dark:text-white';
+                        appendInlineTokensDom(strong, tok.children || []);
+                        parentEl.appendChild(strong);
+                    } else if (tok.type === 'italic') {
+                        const em = document.createElement('em');
+                        em.className = 'italic';
+                        appendInlineTokensDom(em, tok.children || []);
+                        parentEl.appendChild(em);
+                    } else if (tok.type === 'boldItalic') {
+                        const strong = document.createElement('strong');
+                        strong.className = 'font-semibold text-slate-900 dark:text-white';
+                        const em = document.createElement('em');
+                        em.className = 'italic';
+                        appendInlineTokensDom(em, tok.children || []);
+                        strong.appendChild(em);
+                        parentEl.appendChild(strong);
+                    } else if (tok.type === 'link') {
+                        const a = document.createElement('a');
+                        a.href = tok.href;
+                        if (tok.external) {
+                            a.target = '_blank';
+                            a.rel = 'noopener noreferrer';
+                        }
+                        a.className = 'text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-700 dark:hover:text-blue-300 break-words';
+                        appendInlineTokensDom(a, tok.children || []);
+                        parentEl.appendChild(a);
+                    }
+                }
+            }
+
+            function appendInlineMarkdownDom(parentEl, text) {
+                const md = window.__ARTICLE_MARKDOWN__;
+                if (!md || typeof md.parseInlineTokens !== 'function') {
+                    parentEl.appendChild(document.createTextNode(String(text || '')));
+                    return;
+                }
+                appendInlineTokensDom(parentEl, md.parseInlineTokens(text));
+            }
+
+            function appendMarkdownBlocksDom(parentEl, text) {
+                const md = window.__ARTICLE_MARKDOWN__;
+                if (!md || typeof md.parseMarkdownBlocks !== 'function') {
+                    const p = document.createElement('p');
+                    p.textContent = String(text || '');
+                    parentEl.appendChild(p);
+                    return;
+                }
+                const blocks = md.parseMarkdownBlocks(text);
+                renderParsedBlocksDom(parentEl, blocks);
+            }
+
+            function renderParsedBlocksDom(parentEl, blocks) {
+                for (const blk of blocks) {
+                    if (blk.type === 'paragraph') {
+                        const p = document.createElement('p');
+                        appendInlineMarkdownDom(p, blk.text);
+                        parentEl.appendChild(p);
+                    } else if (blk.type === 'ul') {
+                        const ul = document.createElement('ul');
+                        ul.className = 'list-disc pl-5 space-y-1.5';
+                        for (const item of blk.items) {
+                            const li = document.createElement('li');
+                            appendInlineMarkdownDom(li, item);
+                            ul.appendChild(li);
+                        }
+                        parentEl.appendChild(ul);
+                    } else if (blk.type === 'ol') {
+                        const ol = document.createElement('ol');
+                        ol.className = 'list-decimal pl-5 space-y-1.5';
+                        if (blk.start !== 1) ol.start = blk.start;
+                        for (const item of blk.items) {
+                            const li = document.createElement('li');
+                            appendInlineMarkdownDom(li, item);
+                            ol.appendChild(li);
+                        }
+                        parentEl.appendChild(ol);
+                    } else if (blk.type === 'blockquote') {
+                        const bq = document.createElement('blockquote');
+                        bq.className = 'border-l-4 border-blue-500 dark:border-blue-400 pl-4 py-1 my-2 text-slate-600 dark:text-slate-300 italic bg-slate-50/70 dark:bg-slate-800/40 rounded-r-lg space-y-2';
+                        renderParsedBlocksDom(bq, blk.blocks || []);
+                        parentEl.appendChild(bq);
+                    } else if (blk.type === 'table') {
+                        const wrap = document.createElement('div');
+                        wrap.className = 'overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800';
+                        const tbl = document.createElement('table');
+                        tbl.className = 'min-w-full border-collapse text-xs sm:text-sm';
+                        const thead = document.createElement('thead');
+                        const htr = document.createElement('tr');
+                        blk.headers.forEach((h, idx) => {
+                            const align = (blk.alignments && blk.alignments[idx]) || 'left';
+                            const alignCls = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
+                            const th = document.createElement('th');
+                            th.scope = 'col';
+                            th.className = `px-3.5 py-2.5 ${alignCls} text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 whitespace-nowrap`;
+                            appendInlineMarkdownDom(th, h);
+                            htr.appendChild(th);
+                        });
+                        thead.appendChild(htr);
+                        const tbody = document.createElement('tbody');
+                        for (const row of blk.rows) {
+                            const rtr = document.createElement('tr');
+                            rtr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40';
+                            row.forEach((cell, idx) => {
+                                const align = (blk.alignments && blk.alignments[idx]) || 'left';
+                                const alignCls = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
+                                const td = document.createElement('td');
+                                td.className = `px-3.5 py-2.5 ${alignCls} text-xs sm:text-sm text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800`;
+                                appendInlineMarkdownDom(td, cell);
+                                rtr.appendChild(td);
+                            });
+                            tbody.appendChild(rtr);
+                        }
+                        tbl.appendChild(thead);
+                        tbl.appendChild(tbody);
+                        wrap.appendChild(tbl);
+                        parentEl.appendChild(wrap);
+                    }
+                }
+            }
+
             function renderPreviewModal() {
                 const payload = buildApiPayloadFromState(state.draft.published);
                 els.previewBody.textContent = '';
@@ -1646,6 +1890,13 @@
                 header.appendChild(meta);
                 els.previewBody.appendChild(header);
 
+                if (payload.content.interactiveWidgetNotice) {
+                    const widgetBox = document.createElement('aside');
+                    widgetBox.className = 'p-4 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-200';
+                    appendInlineMarkdownDom(widgetBox, payload.content.interactiveWidgetNotice);
+                    els.previewBody.appendChild(widgetBox);
+                }
+
                 if (payload.content.keyTakeaways.length > 0) {
                     const box = document.createElement('div');
                     box.className = 'p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2';
@@ -1653,10 +1904,10 @@
                     ktTitle.className = 'text-sm font-bold text-slate-900 dark:text-white';
                     ktTitle.textContent = 'Poin Inti';
                     const ul = document.createElement('ul');
-                    ul.className = 'list-disc pl-5 space-y-1 text-sm';
+                    ul.className = 'list-disc pl-5 space-y-1.5 text-sm';
                     for (const item of payload.content.keyTakeaways) {
                         const li = document.createElement('li');
-                        li.textContent = item;
+                        appendInlineMarkdownDom(li, item);
                         ul.appendChild(li);
                     }
                     box.appendChild(ktTitle);
@@ -1666,7 +1917,7 @@
 
                 for (const sec of payload.content.sections) {
                     const secEl = document.createElement('section');
-                    secEl.className = 'space-y-3';
+                    secEl.className = 'space-y-4';
                     if (sec.heading) {
                         const h2 = document.createElement('h2');
                         h2.className = 'text-xl font-bold text-slate-900 dark:text-white pt-2';
@@ -1674,9 +1925,7 @@
                         secEl.appendChild(h2);
                     }
                     for (const para of sec.paragraphs) {
-                        const p = document.createElement('p');
-                        p.textContent = para;
-                        secEl.appendChild(p);
+                        appendMarkdownBlocksDom(secEl, para);
                     }
                     if (Array.isArray(sec.bullets) && sec.bullets.length > 0) {
                         const ul = document.createElement('ul');
@@ -1685,11 +1934,13 @@
                             const li = document.createElement('li');
                             if (b && typeof b === 'object' && b.label) {
                                 const st = document.createElement('strong');
-                                st.textContent = `${b.label}: `;
+                                st.className = 'text-slate-900 dark:text-white';
+                                appendInlineMarkdownDom(st, b.label);
+                                st.appendChild(document.createTextNode(': '));
                                 li.appendChild(st);
-                                li.appendChild(document.createTextNode(b.text || ''));
+                                appendInlineMarkdownDom(li, b.text || '');
                             } else {
-                                li.textContent = String(b || '');
+                                appendInlineMarkdownDom(li, String(b || ''));
                             }
                             ul.appendChild(li);
                         }
@@ -1698,17 +1949,15 @@
                     if (sec.callout?.body) {
                         const aside = document.createElement('aside');
                         aside.className = sec.callout.tone === 'warning'
-                            ? 'p-4 rounded-xl border bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-sm'
-                            : 'p-4 rounded-xl border bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 text-sm';
+                            ? 'p-4 rounded-xl border bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-sm space-y-2'
+                            : 'p-4 rounded-xl border bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 text-sm space-y-2';
                         if (sec.callout.title) {
                             const ct = document.createElement('p');
                             ct.className = 'font-semibold mb-1';
-                            ct.textContent = sec.callout.title;
+                            appendInlineMarkdownDom(ct, sec.callout.title);
                             aside.appendChild(ct);
                         }
-                        const cb = document.createElement('p');
-                        cb.textContent = sec.callout.body;
-                        aside.appendChild(cb);
+                        appendMarkdownBlocksDom(aside, sec.callout.body);
                         secEl.appendChild(aside);
                     }
                     if (sec.table?.headers?.length && sec.table?.rows?.length) {
@@ -1716,12 +1965,18 @@
                         wrap.className = 'overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800';
                         const tbl = document.createElement('table');
                         tbl.className = 'min-w-full border-collapse text-xs sm:text-sm';
+                        if (sec.table.caption) {
+                            const cap = document.createElement('caption');
+                            cap.className = 'text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-3 py-2';
+                            appendInlineMarkdownDom(cap, sec.table.caption);
+                            tbl.appendChild(cap);
+                        }
                         const thead = document.createElement('thead');
                         const htr = document.createElement('tr');
                         for (const thTxt of sec.table.headers) {
                             const th = document.createElement('th');
-                            th.className = 'px-3 py-2 text-left font-semibold bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700';
-                            th.textContent = thTxt;
+                            th.className = 'px-3.5 py-2.5 text-left text-xs font-semibold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700';
+                            appendInlineMarkdownDom(th, thTxt);
                             htr.appendChild(th);
                         }
                         thead.appendChild(htr);
@@ -1730,8 +1985,8 @@
                             const rtr = document.createElement('tr');
                             for (const cell of row) {
                                 const td = document.createElement('td');
-                                td.className = 'px-3 py-2 border-b border-slate-200 dark:border-slate-800';
-                                td.textContent = cell;
+                                td.className = 'px-3.5 py-2.5 border-b border-slate-200 dark:border-slate-800';
+                                appendInlineMarkdownDom(td, cell);
                                 rtr.appendChild(td);
                             }
                             tbody.appendChild(rtr);
@@ -1742,14 +1997,52 @@
                         secEl.appendChild(wrap);
                     }
                     if (sec.codeBlock?.code) {
+                        const preWrap = document.createElement('div');
+                        if (sec.codeBlock.caption) {
+                            const capEl = document.createElement('p');
+                            capEl.className = 'text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5';
+                            capEl.textContent = sec.codeBlock.caption;
+                            preWrap.appendChild(capEl);
+                        }
                         const pre = document.createElement('pre');
                         pre.className = 'p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto';
                         const code = document.createElement('code');
                         code.textContent = sec.codeBlock.code;
                         pre.appendChild(code);
-                        secEl.appendChild(pre);
+                        preWrap.appendChild(pre);
+                        secEl.appendChild(preWrap);
+                    }
+                    if (Array.isArray(sec.subsections)) {
+                        for (const sub of sec.subsections) {
+                            const subEl = document.createElement('div');
+                            subEl.className = 'space-y-2.5 pt-1';
+                            if (sub.heading) {
+                                const h3 = document.createElement('h3');
+                                h3.className = 'text-base sm:text-lg font-semibold text-slate-900 dark:text-white';
+                                h3.textContent = sub.heading;
+                                subEl.appendChild(h3);
+                            }
+                            for (const sp of sub.paragraphs || []) {
+                                appendMarkdownBlocksDom(subEl, sp);
+                            }
+                            secEl.appendChild(subEl);
+                        }
                     }
                     els.previewBody.appendChild(secEl);
+                }
+
+                if (payload.content.methodologyNote) {
+                    const methSec = document.createElement('section');
+                    methSec.className = 'p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2';
+                    const mh2 = document.createElement('h2');
+                    mh2.className = 'text-sm font-bold text-slate-900 dark:text-white';
+                    mh2.textContent = 'Catatan Metodologi';
+                    const mBody = document.createElement('div');
+                    mBody.className = 'space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed';
+                    appendMarkdownBlocksDom(mBody, payload.content.methodologyNote);
+                    methSec.appendChild(mh2);
+                    methSec.appendChild(mBody);
+                    els.previewBody.appendChild(methSec);
                 }
 
                 if (payload.content.faqs.length > 0) {
@@ -1764,11 +2057,11 @@
                         det.open = true;
                         det.className = 'p-3.5 rounded-xl border border-slate-200 dark:border-slate-800';
                         const sum = document.createElement('summary');
-                        sum.className = 'font-semibold text-sm';
+                        sum.className = 'font-semibold text-sm text-slate-900 dark:text-white cursor-pointer';
                         sum.textContent = f.q;
-                        const ans = document.createElement('p');
-                        ans.className = 'mt-1.5 text-sm text-slate-600 dark:text-slate-300';
-                        ans.textContent = f.a;
+                        const ans = document.createElement('div');
+                        ans.className = 'mt-2 space-y-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed';
+                        appendMarkdownBlocksDom(ans, f.a);
                         det.appendChild(sum);
                         det.appendChild(ans);
                         faqSec.appendChild(det);

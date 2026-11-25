@@ -2,12 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import '../assets/trust-i18n.js';
+import '../assets/article-markdown.js';
 
 const __builderFilename = fileURLToPath(import.meta.url);
 const __builderDirname = path.dirname(__builderFilename);
 const DEFAULT_ROOT_DIR = path.resolve(__builderDirname, '..');
 
 const trustI18n = globalThis.__TRUST_I18N__;
+const articleMarkdown = globalThis.__ARTICLE_MARKDOWN__;
 const EDU_FAQ_BY_LANG = JSON.parse(
   fs.readFileSync(new URL('./edu-faq-i18n.json', import.meta.url), 'utf8')
 );
@@ -1791,15 +1793,16 @@ function renderArticleSectionsHtml(sections) {
     }
     if (Array.isArray(sec?.paragraphs)) {
       for (const p of sec.paragraphs) {
-        parts.push(`<p>${escapeHtmlText(p)}</p>`);
+        const rendered = articleMarkdown.renderMarkdownBlocksHtml(p);
+        if (rendered) parts.push(rendered);
       }
     }
     if (Array.isArray(sec?.bullets) && sec.bullets.length > 0) {
       const items = sec.bullets.map((b) => {
         if (b && typeof b === 'object' && b.label) {
-          return `<li><strong class="text-slate-900 dark:text-white">${escapeHtmlText(b.label)}:</strong> ${escapeHtmlText(b.text || '')}</li>`;
+          return `<li><strong class="text-slate-900 dark:text-white">${articleMarkdown.renderInlineMarkdownHtml(b.label)}:</strong> ${articleMarkdown.renderInlineMarkdownHtml(b.text || '')}</li>`;
         }
-        return `<li>${escapeHtmlText(b)}</li>`;
+        return `<li>${articleMarkdown.renderInlineMarkdownHtml(b)}</li>`;
       }).join('');
       parts.push(`<ul class="list-disc pl-5 space-y-2">${items}</ul>`);
     }
@@ -1808,9 +1811,10 @@ function renderArticleSectionsHtml(sections) {
         ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/70 text-amber-900 dark:text-amber-100'
         : 'bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800/70 text-blue-950 dark:text-blue-100';
       const titleHtml = sec.callout.title
-        ? `<p class="font-semibold text-sm mb-1">${escapeHtmlText(sec.callout.title)}</p>`
+        ? `<p class="font-semibold text-sm mb-1">${articleMarkdown.renderInlineMarkdownHtml(sec.callout.title)}</p>`
         : '';
-      parts.push(`<aside class="p-4 rounded-xl border ${tone} text-sm leading-relaxed">${titleHtml}<p>${escapeHtmlText(sec.callout.body)}</p></aside>`);
+      const bodyHtml = articleMarkdown.renderMarkdownBlocksHtml(sec.callout.body);
+      parts.push(`<aside class="p-4 rounded-xl border ${tone} text-sm leading-relaxed space-y-2">${titleHtml}${bodyHtml}</aside>`);
     }
     if (sec?.codeBlock && sec.codeBlock.code) {
       const codeCaption = sec.codeBlock.caption
@@ -1820,14 +1824,14 @@ function renderArticleSectionsHtml(sections) {
     }
     if (sec?.table && Array.isArray(sec.table.headers) && Array.isArray(sec.table.rows)) {
       const captionHtml = sec.table.caption
-        ? `<caption class="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 pb-2">${escapeHtmlText(sec.table.caption)}</caption>`
+        ? `<caption class="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 pb-2">${articleMarkdown.renderInlineMarkdownHtml(sec.table.caption)}</caption>`
         : '';
       const thHtml = sec.table.headers
-        .map((h) => `<th scope="col" class="px-3.5 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 whitespace-nowrap">${escapeHtmlText(h)}</th>`)
+        .map((h) => `<th scope="col" class="px-3.5 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 whitespace-nowrap">${articleMarkdown.renderInlineMarkdownHtml(h)}</th>`)
         .join('');
       const trHtml = sec.table.rows.map((row) => {
         const tds = (Array.isArray(row) ? row : [])
-          .map((cell) => `<td class="px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800">${escapeHtmlText(cell)}</td>`)
+          .map((cell) => `<td class="px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800">${articleMarkdown.renderInlineMarkdownHtml(cell)}</td>`)
           .join('');
         return `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">${tds}</tr>`;
       }).join('');
@@ -1841,11 +1845,12 @@ function renderArticleSectionsHtml(sections) {
         }
         if (Array.isArray(sub?.paragraphs)) {
           for (const sp of sub.paragraphs) {
-            parts.push(`<p>${escapeHtmlText(sp)}</p>`);
+            const spHtml = articleMarkdown.renderMarkdownBlocksHtml(sp);
+            if (spHtml) parts.push(spHtml);
           }
         }
         if (Array.isArray(sub?.bullets) && sub.bullets.length > 0) {
-          const sItems = sub.bullets.map((b) => `<li>${escapeHtmlText(b)}</li>`).join('');
+          const sItems = sub.bullets.map((b) => `<li>${articleMarkdown.renderInlineMarkdownHtml(b)}</li>`).join('');
           parts.push(`<ul class="list-disc pl-5 space-y-1.5">${sItems}</ul>`);
         }
         parts.push('</div>');
@@ -1923,7 +1928,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   const keyTakeawaysHtml = Array.isArray(content.keyTakeaways) && content.keyTakeaways.length > 0
     ? `<section aria-label="${escapeHtmlAttr(labels.keyTakeawaysTitle)}" class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2.5">
         <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.keyTakeawaysTitle)}</h2>
-        <ul class="list-disc pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">${content.keyTakeaways.map((k) => `<li>${escapeHtmlText(k)}</li>`).join('')}</ul>
+        <ul class="list-disc pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">${content.keyTakeaways.map((k) => `<li>${articleMarkdown.renderInlineMarkdownHtml(k)}</li>`).join('')}</ul>
       </section>`
     : '';
 
@@ -1943,7 +1948,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   const methodologyNoteHtml = content.methodologyNote
     ? `<section class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
         <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.methodologyTitle)}</h2>
-        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${escapeHtmlText(content.methodologyNote)}</p>
+        <div class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(content.methodologyNote)}</div>
       </section>`
     : '';
 
@@ -1951,7 +1956,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   const faqsHtml = faqsList.length > 0
     ? `<section class="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
         <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.faqTitle)}</h2>
-        <div class="space-y-3">${faqsList.map((f) => `<details class="group p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40"><summary class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white cursor-pointer">${escapeHtmlText(f.q)}</summary><p class="mt-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${escapeHtmlText(f.a)}</p></details>`).join('')}</div>
+        <div class="space-y-3">${faqsList.map((f) => `<details class="group p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40"><summary class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white cursor-pointer">${escapeHtmlText(f.q)}</summary><div class="mt-2.5 space-y-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(f.a)}</div></details>`).join('')}</div>
       </section>`
     : '';
 
@@ -2034,7 +2039,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
         name: f.q,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: f.a
+          text: articleMarkdown.stripMarkdownToPlainText(f.a)
         }
       }))
     });
@@ -2068,7 +2073,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     ARTICLE_EXCERPT: escapeHtmlText(localeMeta.excerpt || localeMeta.metaDesc),
     EEAT_META_BAR: eeatMetaBar,
     INTERACTIVE_WIDGET_HTML: content.interactiveWidgetNotice
-      ? `<aside class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-200">${escapeHtmlText(content.interactiveWidgetNotice)}</aside>`
+      ? `<aside class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-200">${articleMarkdown.renderInlineMarkdownHtml(content.interactiveWidgetNotice)}</aside>`
       : '',
     KEY_TAKEAWAYS_HTML: keyTakeawaysHtml,
     ADSENSE_SLOT_1: adSlot1,
