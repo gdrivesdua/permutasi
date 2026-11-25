@@ -419,7 +419,7 @@
                         </div>
                         <div class="flex flex-col gap-2 min-w-0">
                             <label for="extInput" id="uiExtLabel" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Extensions (e.g. .com, .io):</label>
-                            <input type="text" id="extInput" value=".com, .net, .co, .org, .io, .ai, .app, .us" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); generateDomains()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#de3723]" placeholder=".com, .net, .co, .org, .io, .ai, .app, .us">
+                            <input type="text" id="extInput" value=".com, .net, .co" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); generateDomains()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#de3723]" placeholder=".com, .net, .co">
                         </div>
                     </div>
 
@@ -1141,8 +1141,8 @@
                 kw1Placeholder: 'Contoh: calc, shop',
                 kw2Placeholder: 'Contoh: pro, online',
                 kw3Placeholder: 'Contoh: app, hub',
-                extPlaceholder: '.com, .id, .my.id, .web.id',
-                defaultExts: '.com, .net, .id, .my.id, .web.id',
+                extPlaceholder: '.my.id, .web.id, .biz.id, .id, .com',
+                defaultExts: '.my.id, .web.id, .biz.id, .id, .com',
                 formulaPlaceholder: 'Misal: [primary] + [angka]',
                 outputLabel: 'Daftar Permutasi Domain',
                 eduAriaLabel: 'Panduan, Strategi SEO, dan Validasi Domain',
@@ -1332,8 +1332,8 @@
                 kw1Placeholder: 'Example: calc, shop',
                 kw2Placeholder: 'Example: pro, online',
                 kw3Placeholder: 'Example: app, hub',
-                extPlaceholder: '.com, .net, .co, .org, .io, .ai, .app, .us',
-                defaultExts: '.com, .net, .co, .org, .io, .ai, .app, .us',
+                extPlaceholder: '.com, .net, .co',
+                defaultExts: '.com, .net, .co',
                 formulaPlaceholder: 'e.g. [primary] + [number]',
                 outputLabel: 'Generated Domain Permutation List',
                 eduAriaLabel: 'Domain SEO Guide, Strategy & Validation',
@@ -2634,7 +2634,7 @@
         const uiExtraDict = {
             en: {
                 navGen: 'Generator', navResults: 'Results', navGuide: 'Guide', navFaq: 'FAQ',
-                kw1Placeholder: 'e.g. business, coffee, ai', extPlaceholder: '.com, .net, .co, .org, .io, .ai, .app, .us',
+                kw1Placeholder: 'e.g. business, coffee, ai', extPlaceholder: '.com, .net, .co',
                 genMicrocopy: '✓ RFC 1035 compliant · ✓ No tracking · ✓ Runs offline in browser',
                 advOptionsLabel: 'Advanced Options',
                 advOptionsHint: '(Secondary, Tertiary, Shuffle, Pattern, Name Styles)',
@@ -7346,7 +7346,7 @@
             if (kw1) kw1.value = 'business';
             if (kw2) kw2.value = '';
             if (kw3) kw3.value = '';
-            if (extEl) extEl.value = t.defaultExts || '.com, .net, .co, .org, .io, .ai, .app, .us';
+            if (extEl) extEl.value = t.defaultExts || '.com, .net, .co';
             if (formulaEl) formulaEl.value = t.defaultFormula || '[any] + [vowel] + [consonant]';
 
             const fullWordPermEl = document.getElementById('fullWordPermCheckbox');
