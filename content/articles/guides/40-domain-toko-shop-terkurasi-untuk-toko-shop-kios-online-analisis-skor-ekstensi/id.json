@@ -8,41 +8,7 @@
     {
       "anchor": "pendahuluan",
       "heading": "1. Pendahuluan",
-      "paragraphs": [
-        "Memilih nama domain untuk toko online, shop, atau kios digital sering kali terjebak pada dua masalah klasik: nama toko idaman sudah diambil orang lain, atau kombinasi kata yang dibuat terburu-buru justru sulit dieja dan terdengar kaku saat disebut di percakapan maupun iklan audio.",
-        "Artikel ini mengulas 40 domain berawalan shop (sld 6 huruf, panjang total domain 9–13 karakter) yang seluruhnya terfilter dengan character_cleanliness_score = 100, pronunciation_comfort_score >= 75, dan overall_heuristic_score >= 80 dari dataset shop-domain.csv (N = 41 entri berlabel ecommerce, diperiksa via RDAP pada 25 November 2026; 1 entri shopaj.net dengan skor 76 dan pelafalan 62 dikecualikan dari kurasi utama dan dibahas sebagai pembanding risiko). Tujuannya membantu pemilik toko fashion, lifestyle, marketplace kecil, hingga kios lokal memilih nama yang ringkas, mudah diingat, dan selaras dengan target pasarnya.",
-        "1. Karakteristik Niche Toko, Shop & Kios Online serta Kriteria Seleksi:",
-        "Bagi pelaku usaha ritel digital—mulai dari online shop produk kurasi, toko khusus kategori tertentu, hingga kios layanan lokal—nama domain yang baik harus memenuhi dua fungsi sekaligus: menunjukkan konteks jual-beli (shop) dan mudah dilafalkan tanpa salah ketik.",
-        "Pada dataset shop-domain.csv, seluruh 41 kandidat menggunakan awalan shop (4 huruf) diikuti akhiran 2 huruf (sld 6 huruf), dengan tag ecommerce. Untuk menjaga standar kurasi editorial agar tidak sekadar menyajikan daftar mentah,",
-        "domain yang masuk ke tabel kurasi utama wajib memenuhi syarat berikut:",
-        "character_cleanliness_score = 100: Bebas karakter aneh, tanda hubung ganda, atau angka tempelan yang mengganggu pengetikan.",
-        "pronunciation_comfort_score >= 75: Mudah diucapkan dan jelas batas sukunya.",
-        "overall_heuristic_score >= 80: \nMemiliki keseimbangan yang kuat antara brandability_score, structure_length_score, extension_lang_fit_score, dan emd_pmd_score.",
-        "Menariknya, rata-rata skor keseluruhan pada dataset shop-domain.csv sangat tinggi (93,46 untuk seluruh 41 baris, dengan rata-rata pronunciation_comfort_score 98,83 dan brandability_score 97,76).",
-        "Hal ini menunjukkan bahwa struktur shop + kombinasi vokal/konsonan penutup yang alami cenderung menghasilkan ritme baca yang mulus.",
-        "2. Analisis Pola Nama, Ekstensi & Risiko Penamaan di Niche Toko:",
-        "Jika kita mengurai pola pada 41 baris di shop-domain.csv, ada tiga pelajaran praktis yang relevan bagi pencari nama toko atau kios online:",
-        "Kombinasi shop + Suku Kata Penutup Ringkas (-al, -am, -ar, -el, -em, -en, -il, -ir, -or, -ur)\nAkhiran dengan vokal + konsonan cair/nasal/likuida (seperti shopal, shopar, shopel, shopem, shopen, shopor) mencatat pronunciation_comfort_score 100 dan brandability_score 96–100.",
-        "Dalam konteks toko online, nama seperti ini terasa seperti brand ritel modern yang ringkas dan tidak terlalu kaku dibanding frasa panjang tiga kata.",
-        "Perbandingan Ekstensi .id vs Turunan .id (my.id, web.id, biz.id) vs .net",
-        ".id (14 domain, panjang 9 karakter):",
-        "Meraih rata-rata overall_heuristic_score tertinggi (94,71) karena extension_lang_fit_score mencapai 98 pada bahasa id. Cocok untuk toko atau kios yang menargetkan pembeli Indonesia dengan nama singkat 9 huruf.",
-        ".my.id, .web.id, dan .biz.id (masing-masing 4 domain, panjang 12–13 karakter): Seluruhnya meraih overall_heuristic_score 93 dengan brandability_score 100 dan pronunciation_comfort_score 100. Ekstensi ini sering dilirik UMKM atau kios rintisan karena biaya registrasinya umumnya terjangkau dan maknanya cukup jelas (web.id untuk kehadiran web, biz.id untuk usaha).",
-        ".net (15 domain, panjang 10 karakter): Memiliki rata-rata overall_heuristic_score 92,67 (dan extension_lang_fit_score 91 pada en). Cocok untuk shop berbahasa Inggris atau toko digital lintas negara yang ingin alternatif selain .com.",
-        "Pelajaran dari Kasus Pengecualian (shopaj.net)\nSatu-satunya entri dengan skor di bawah 80 pada file adalah shopaj.net (overall_heuristic_score 76, pronunciation_comfort_score 62, brandability_score 76, emd_pmd_score 54, tipe up). Akhiran -aj pada konteks bahasa Inggris terasa kurang lazim secara fonetik dibandingkan akhiran seperti -al, -el, atau -or, sehingga skor pelafalan dan brandability-nya ikut turun. Ini menjadi pengingat bahwa tidak semua permutasi huruf berawalan shop otomatis nyaman diucapkan.",
-        "3. Tabel Kurasi 40 Domain Toko (\"shop...\") Terkelompok",
-        "Berikut 40 domain terkurasi dari shop-domain.csv (seluruhnya berstatus cek RDAP pada 25 November 2026) yang dikelompokkan berdasarkan karakteristik penggunaan agar lebih mudah dipindai sesuai model toko atau kios Anda."
-      ],
-      "bullets": [
-        {
-          "label": "Poin Inti (Key Takeaways)",
-          "text": ""
-        },
-        "Kualitas sangat konsisten di akhiran shop + 2 huruf bersih: Dari 41 domain pada dataset shop-domain.csv, 40 domain meraih overall_heuristic_score antara 93 hingga 95 dan pronunciation_comfort_score 95 hingga 100 dengan pola np (natural PMD).",
-        "Ekstensi .id mencatat skor gabungan tertinggi (94,71) pada data ini: Pada sampel berlabel id, .id unggul di extension_lang_fit_score (98) dan panjang total 9 karakter, sedangkan .biz.id, .my.id, dan .web.id berada di 93 dengan panjang 12–13 karakter.",
-        "Ekstensi .net unggul untuk jangkauan lintas bahasa (en): Sebanyak 15 domain .net pada dataset memiliki panjang 10 karakter dengan rata-rata overall_heuristic_score 92,67 (dan 93,86 jika shopaj.net dikeluarkan).",
-        "Akurasi status dan merek dagang tetap wajib dicek ulang: Status RDAP pada file berasal dari snapshot 25 November 2026 dan dapat berubah sewaktu-waktu, sehingga verifikasi live serta cek merek dagang (seperti DJKI di Indonesia) wajib dilakukan sebelum pendaftaran."
-      ]
+      "paragraphs": []
     }
   ],
   "faqs": []
