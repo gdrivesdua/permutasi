@@ -1,0 +1,68 @@
+{
+  "id": "no-tracking-privacy-architecture",
+  "lang": "es",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Sin Rastreo",
+  "keyTakeaways": [
+    "Domain Name no instala cookies de seguimiento, no usa cuentas de usuario ni activa analítica de comportamiento.",
+    "Las permutaciones de palabras clave y puntuaciones se procesan al 100% en el navegador sin enviar sus ideas al pulsar teclas.",
+    "Solo se guardan preferencias locales funcionales (tema, idioma y domainAvailabilityCacheV1) en localStorage.",
+    "Con total transparencia, las consultas en vivo conectan directo con DoH/RDAP públicos y solo los dominios disponibles <= 25 caracteres registran métricas anónimas."
+  ],
+  "sections": [
+    {
+      "anchor": "que-significa-sin-rastreo",
+      "heading": "1. Qué Significa Técnicamente 'Sin Rastreo'",
+      "paragraphs": [
+        "Muchas plataformas de dominios registran cada palabra clave que usted escribe o instalan cookies publicitarias. Domain Name funciona sin cuentas, sin cookies de rastreo y sin perfiles de usuario.",
+        "Todas las permutaciones, filtros y cálculos de pronunciación se ejecutan directamente en la memoria de su navegador."
+      ],
+      "table": {
+        "caption": "Inventario Transparente de Datos y Red",
+        "headers": ["Mecanismo", "Datos Guardados o Enviados", "¿Rastreo Personal?"],
+        "rows": [
+          ["Cookies HTTP", "Ninguna generada por la herramienta", "No (0 cookies de rastreo)"],
+          ["localStorage", "preferredTheme, preferredLang, domainAvailabilityCacheV1", "No — permanece en su dispositivo"],
+          ["Consultas DoH/RDAP", "Peticiones directas a Cloudflare/Google DoH y servidores RDAP", "Consultas DNS/RDAP estándar desde el navegador"],
+          ["Catálogo D1 anónimo", "Métricas no personales solo si un dominio <= 25 car. está libre", "No — sin cookies, usuario ni IP guardada"]
+        ]
+      }
+    },
+    {
+      "anchor": "transparencia-red",
+      "heading": "2. Transparencia Total en LocalStorage y Consultas Externas",
+      "paragraphs": [
+        "localStorage guarda únicamente el tema visual, el idioma y una caché de disponibilidad de 6 horas para no saturar los registros. Al verificar disponibilidad, el navegador consulta directamente servidores públicos DoH y RDAP listados por IANA.",
+        "Cuando un dominio corto (<= 25 caracteres) resulta 'available', se envían métricas no personales de calidad a /api/log-available-domain sin cookies ni direcciones IP."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Sin Scripts de Analítica Activos",
+        "body": "En site.config.json tanto Google Analytics como Auto Ads permanecen desactivados."
+      }
+    },
+    {
+      "anchor": "auditoria-devtools",
+      "heading": "3. Cómo Auditarlo Usted Mismo en DevTools",
+      "paragraphs": [
+        "Puede comprobarlo en menos de un minuto desde las herramientas de desarrollo de su navegador:"
+      ],
+      "bullets": [
+        { "label": "Cookies", "text": "En Application -> Cookies confirme que no existe ninguna cookie de seguimiento." },
+        { "label": "Local Storage", "text": "Verifique que solo aparecen preferredTheme, preferredLang y domainAvailabilityCacheV1." },
+        { "label": "Red (Network)", "text": "Genere combinaciones con el modo Offline activo para ver que no se realiza ninguna petición al generar ideas." }
+      ]
+    }
+  ],
+  "methodologyNote": "Basado exactamente en la implementación cliente de index.html, site.config.json y functions/api/log-available-domain.js.",
+  "faqs": [
+    {
+      "q": "¿Alguien puede ver las palabras clave que pruebo?",
+      "a": "No se envía ninguna lista privada durante la generación ni en dominios ocupados. Solo los dominios confirmados como disponibles de hasta 25 caracteres registran estadísticas anónimas sin usuario ni IP."
+    },
+    {
+      "q": "¿Por qué usar localStorage si no hay rastreo?",
+      "a": "Para recordar el tema, el idioma y la caché local de disponibilidad sin enviar encabezados al servidor como hacen las cookies."
+    }
+  ]
+}

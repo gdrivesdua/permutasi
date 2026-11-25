@@ -1,0 +1,68 @@
+{
+  "id": "no-tracking-privacy-architecture",
+  "lang": "de",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Kein Tracking",
+  "keyTakeaways": [
+    "Domain Name setzt null Tracking-Cookies, benötigt keine Konten und lädt keine Verhaltens-Analytics.",
+    "Keyword-Permutationen und Aussprache-Scores laufen zu 100 % lokal im Browser ohne Übertragung bei Tasteneingabe.",
+    "Nur funktionale Einstellungen (Theme, Sprache, domainAvailabilityCacheV1) verbleiben im lokalen Browser-Storage.",
+    "Vollständig transparent: Live-Checks fragen direkt öffentliche DoH/RDAP-Server ab; nur freie Domains <= 25 Zeichen melden anonyme Metriken."
+  ],
+  "sections": [
+    {
+      "anchor": "trackingfreie-architektur",
+      "heading": "1. Was „Kein Tracking“ technisch bedeutet",
+      "paragraphs": [
+        "Viele Domain-Tools protokollieren jede Keyword-Eingabe oder setzen Werbe-Cookies. Domain Name arbeitet ohne Nutzerkonten, ohne Tracking-Cookies und ohne Analyse-Skripte.",
+        "Sämtliche Permutationen, Filter und Sprachbewertungen werden ausschließlich lokal in Ihrem Browser berechnet."
+      ],
+      "table": {
+        "caption": "Transparente Übersicht zu Speicher & Netzwerk",
+        "headers": ["Komponente", "Gespeicherte / Gesendete Daten", "Personenbezug?"],
+        "rows": [
+          ["HTTP-Cookies", "Keine durch das Tool gesetzten Cookies", "Nein (0 Tracking-Cookies)"],
+          ["localStorage", "preferredTheme, preferredLang, domainAvailabilityCacheV1", "Nein — verbleibt auf Ihrem Gerät"],
+          ["Live-Checks", "Direkte Anfragen an Cloudflare/Google DoH & RDAP", "Standardmäßige DNS/RDAP-Abfragen vom Browser"],
+          ["Anonymer Katalog", "Nicht-personalisierte Metrik nur bei frei <= 25 Zeichen", "Nein — ohne Cookies, Nutzer-ID oder IP"]
+        ]
+      }
+    },
+    {
+      "anchor": "volle-transparenz",
+      "heading": "2. Offene Erklärung zu localStorage & DoH/RDAP",
+      "paragraphs": [
+        "localStorage speichert ausschließlich Design-Theme, Sprache und einen 6-Stunden-Cache für Verfügbarkeitsprüfungen. Für Live-Checks kontaktiert der Browser direkt öffentliche DoH- und IANA-RDAP-Endpunkte.",
+        "Wird eine kurze Domain (<= 25 Zeichen) als frei bestätigt, wird lediglich ein anonymer Statistikdatensatz ohne Cookies oder IP-Speicherung an /api/log-available-domain übermittelt."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Keine aktiven Analytics-Skripte",
+        "body": "Sowohl Google Analytics als auch Auto Ads sind in site.config.json deaktiviert."
+      }
+    },
+    {
+      "anchor": "devtools-pruefung",
+      "heading": "3. Datenschutz selbst in den Browser-DevTools prüfen",
+      "paragraphs": [
+        "Überprüfen Sie alle Angaben in unter einer Minute in den Entwicklertools:"
+      ],
+      "bullets": [
+        { "label": "Cookies prüfen", "text": "Unter Application -> Cookies bestätigen, dass keine Tracking-Cookies gesetzt sind." },
+        { "label": "Local Storage prüfen", "text": "Kontrollieren, dass nur preferredTheme, preferredLang und domainAvailabilityCacheV1 gespeichert sind." },
+        { "label": "Netzwerk-Tab beobachten", "text": "Offline-Modus aktivieren und Domains generieren: Es gehen keinerlei Anfragen während der Generierung heraus." }
+      ]
+    }
+  ],
+  "methodologyNote": "Diese Übersicht basiert direkt auf dem Browser-Code in index.html, site.config.json und functions/api/log-available-domain.js.",
+  "faqs": [
+    {
+      "q": "Können Dritte meine eingegebenen Brand-Keywords sehen?",
+      "a": "Während der Generierung oder bei belegten Domains wird nichts an unseren Server gesendet. Nur bestätigte freie Domains bis 25 Zeichen übermitteln anonyme Qualitätsdaten ohne Nutzer-ID oder IP."
+    },
+    {
+      "q": "Warum wird localStorage genutzt, wenn kein Tracking stattfindet?",
+      "a": "Nur für Theme, Sprache und lokalen RDAP-Cache – anders als Cookies wird localStorage niemals automatisch in HTTP-Headern mitgesendet."
+    }
+  ]
+}

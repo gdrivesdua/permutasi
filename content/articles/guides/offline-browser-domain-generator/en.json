@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "en",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Offline Browser Processing",
+  "keyTakeaways": [
+    "After the initial page load, all domain permutations, pattern expansions, RFC 1035 checks, natural spelling scores, sorting, filtering, and exports run offline in client-side JavaScript.",
+    "Previously checked domains remain readable offline for up to 6 hours via the browser's domainAvailabilityCacheV1 entry in localStorage.",
+    "Only initial asset fetching (no Service Worker is registered) and live DNS/RDAP availability queries (DoH/RDAP) or external WM/BL/GG links require an active internet connection.",
+    "You can verify offline generation yourself by enabling Offline mode in Chrome or Firefox DevTools -> Network after loading the page."
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. Why the Generator Works Offline After Page Load",
+      "paragraphs": [
+        "Many domain name tools send every keystroke to remote API servers just to join two words together. Domain Name compiles its combinatorial engine, preset bank, natural spelling scorer, and RFC 1035 validator into plain client-side JavaScript that runs inside your browser tab's memory.",
+        "Once your browser finishes loading the page, typing keywords, switching pronounceable presets, expanding custom patterns such as [primary][dash][secondary], re-sorting by Score or Chars, and exporting results to .txt or Markdown require zero round-trips to our server."
+      ],
+      "table": {
+        "caption": "Exact Split: Offline-Capable vs. Online-Only Capabilities",
+        "headers": ["Feature / Operation", "Works Offline After Load?", "Technical Mechanism"],
+        "rows": [
+          ["Keyword permutations & word order shuffle", "Yes (100% offline)", "In-memory JavaScript permuteWords() & buildWordOrderVariants()"],
+          ["Custom pattern expansion & presets", "Yes (100% offline)", "Client-side token expansion ([primary], [vowel], [consonant], [number])"],
+          ["RFC 1035 syntax validation", "Yes (100% offline)", "Client-side sanitizeKeywordToken() & validateRfc1035Domain()"],
+          ["Brandability & natural spelling score", "Yes (100% offline)", "Client-side calculateSpellingNaturalness() & computeDomainScores()"],
+          ["Table sorting, filtering, Copy & .txt export", "Yes (100% offline)", "DOM rendering + Blob / Clipboard API inside browser"],
+          ["Cached availability statuses", "Yes (6h TTL offline)", "Readable from localStorage key domainAvailabilityCacheV1"],
+          ["Initial page load (first visit)", "Requires internet", "Standard web page request (no Service Worker registered yet)"],
+          ["Live availability checks (Auto-24 / Bulk / Check)", "Requires internet", "Live queries to Cloudflare/Google DoH & IANA/Registry RDAP"],
+          ["External BL / WM / GG audit tabs", "Requires internet", "Opens external Ahrefs, Wayback Machine, or Google Search URLs"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. Honest Boundaries: Live DNS/RDAP & Initial Load",
+      "paragraphs": [
+        "Transparency matters: 'Runs offline in browser' describes the domain generation, scoring, sorting, filtering, and export engine once the page is open in your browser. Because no browser Service Worker is currently registered to cache HTML offline across browser restarts, you still need an internet connection to open the site initially.",
+        "Likewise, live registry availability is inherently global real-time state. When you disconnect from Wi-Fi, the 24 automatic checks and manual Check / Bulk Check requests cannot reach Cloudflare DoH, Google DoH, or RDAP servers, so uncached rows gracefully remain in 'Check' or 'Retry' state without freezing or breaking the generator."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "6-Hour Local Availability Cache",
+        "body": "Domains you already verified while online stay cached in domainAvailabilityCacheV1 (6 hours for Available/Taken, 5 minutes for ambiguous Check statuses), so you can continue filtering and exporting verified lists offline on a plane or train."
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. How to Test Offline Mode Yourself in 30 Seconds",
+      "paragraphs": [
+        "You can verify client-side execution directly in Chrome, Edge, or Firefox without turning off your computer's Wi-Fi:"
+      ],
+      "bullets": [
+        { "label": "Step 1 — Open DevTools Network Tab", "text": "Press F12 (or Ctrl+Shift+I / Cmd+Opt+I), click the Network tab, and wait for the initial page load to settle." },
+        { "label": "Step 2 — Switch Throttling to Offline", "text": "Change the Network throttling dropdown from 'No throttling' to 'Offline'." },
+        { "label": "Step 3 — Generate, Score & Export", "text": "Type new words into Primary Keyword, toggle Pronounceable Styles, sort the table by Score or Chars, and click Copy MD or Export .txt. Notice every generated idea and score updates instantaneously with zero network traffic." }
+      ]
+    }
+  ],
+  "methodologyNote": "Offline execution claims correspond directly to client-side JavaScript functions in index.html, while live lookup dependencies reflect fetch() calls to DoH/RDAP resolvers and /api/log-available-domain.",
+  "faqs": [
+    {
+      "q": "Why does live availability checking stop when I go offline?",
+      "a": "Determining whether someone registered a domain seconds ago requires querying authoritative DNS (DoH) and RDAP registry servers over the internet. Permutations, validation, scoring, sorting, and exports all continue working locally offline."
+    },
+    {
+      "q": "Can I still export my generated shortlist while disconnected?",
+      "a": "Yes. Copy, Copy MD, and Export .txt generate plain text and Blob downloads purely inside your browser tab, requiring zero internet connectivity."
+    },
+    {
+      "q": "Does Domain Name install a Service Worker for cold offline reloads?",
+      "a": "No Service Worker is currently registered, so closing and reopening the tab while completely offline requires a connection. Keep the loaded tab open—or inspect cached results in localStorage—when working offline."
+    }
+  ]
+}

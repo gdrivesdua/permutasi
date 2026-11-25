@@ -1,0 +1,72 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "fr",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Norme RFC 1035",
+  "keyTakeaways": [
+    "Chaque candidat passe par sanitizeKeywordToken() et validateRfc1035Domain() avant tout affichage.",
+    "Les étiquettes n'acceptent que les caractères ASCII LDH (a-z, 0-9 et tirets internes -) sans tiret aux extrémités.",
+    "Chaque étiquette est plafonnée à 63 caractères et le nom complet est rejeté au-delà de 253 caractères.",
+    "Vous pouvez tester ces règles en direct en saisissant des espaces, symboles ou chaînes de 70 caractères."
+  ],
+  "sections": [
+    {
+      "anchor": "exigences-rfc-1035",
+      "heading": "1. Ce que Spécifie Réellement la Norme DNS RFC 1035",
+      "paragraphs": [
+        "Publiée par l'IETF en 1987, la RFC 1035 définit la syntaxe fondamentale des noms de domaine utilisée par les serveurs DNS et registres. Sa section 2.3.1 impose le jeu LDH (lettres, chiffres, tiret) avec des étiquettes commençant et finissant par un caractère alphanumérique et ne dépassant pas 63 octets.",
+        "Sans filtrage côté navigateur, les générateurs produisent facilement des chaînes invalides lorsqu'un utilisateur colle des espaces, accents ou ponctuations. Domain Name nettoie et valide chaque candidat avant affichage."
+      ],
+      "table": {
+        "caption": "Règles RFC 1035 et Implémentation dans le Générateur",
+        "headers": ["Règle DNS", "Norme RFC 1035", "Contrôle Effectué"],
+        "rows": [
+          ["Jeu de caractères", "Lettres a-z, chiffres 0-9, tiret -", "Suppression hors [a-z0-9-] et passage en minuscules"],
+          ["Bords d'étiquette", "Début et fin alphanumériques", "Suppression des tirets de bord via /^-+|-+$/g"],
+          ["Taille par étiquette", "63 octets max (Section 2.3.4)", "Toute étiquette > 63 caractères renvoie null"],
+          ["Longueur totale", "255 octets (~253 caractères ASCII)", "Tout FQDN > 253 caractères est rejeté"],
+          ["Validité du TLD", "Étiquette d'extension valide", "Chaque segment du TLD exige au moins un caractère alphanumérique"]
+        ]
+      }
+    },
+    {
+      "anchor": "validation-deux-etapes",
+      "heading": "2. Notre Chaîne de Validation en Deux Étapes",
+      "paragraphs": [
+        "D'abord, sanitizeKeywordToken() normalise les mots-clés saisis en remplaçant les espaces par des tirets et en supprimant les caractères illégaux. Ensuite, validateRfc1035Domain(pat, ext) vérifie chaque label jusqu'à 63 caractères et contrôle le plafond global de 253 caractères."
+      ],
+      "codeBlock": {
+        "caption": "Extrait de validation exécuté dans validateRfc1035Domain(pat, ext)",
+        "code": "const cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "tester-en-direct",
+      "heading": "3. Vérifier la Conformité RFC 1035 en 30 Secondes",
+      "paragraphs": [
+        "Testez ces cas limites directement dans le champ Mot-clé Principal :"
+      ],
+      "bullets": [
+        { "label": "Espaces et symboles", "text": "Saisissez '--Café & Thé!! 2026--' pour observer la normalisation LDH sans tiret final." },
+        { "label": "Plafond de 63 caractères", "text": "Collez un mot de 65 lettres : les candidats dépassant 63 caractères par étiquette sont écartés." },
+        { "label": "Modèles personnalisés", "text": "Dans les Options Avancées, testez une formule terminée par '[dash]'. Le validateur supprime le tiret final afin d'éviter un nom invalide." }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Périmètre Technique",
+        "body": "La conformité RFC 1035 garantit une syntaxe ASCII LDH valide pour le DNS. Les caractères non ASCII sont filtrés plutôt que convertis en Punycode (xn--), et les politiques spécifiques de chaque registre restent applicables."
+      }
+    }
+  ],
+  "methodologyNote": "Les règles présentées reflètent directement les fonctions JavaScript sanitizeKeywordToken() et validateRfc1035Domain() exécutées dans le navigateur.",
+  "faqs": [
+    {
+      "q": "Pourquoi limiter à 253 caractères au lieu de 255 ?",
+      "a": "Au format binaire DNS (RFC 1035 Section 2.3.4), chaque étiquette inclut son octet de longueur plus l'octet racine final, ce qui correspond à 253 caractères ASCII maximum sans point final."
+    },
+    {
+      "q": "Un nom conforme RFC 1035 est-il forcément enregistrable ?",
+      "a": "Il est syntaxiquement valide pour le DNS, mais il faut toujours vérifier la disponibilité via RDAP/NS, les conditions du registre TLD et les droits de marque."
+    }
+  ]
+}

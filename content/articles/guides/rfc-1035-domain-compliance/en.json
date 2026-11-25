@@ -1,0 +1,77 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "en",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "RFC 1035 Compliance",
+  "keyTakeaways": [
+    "Every domain candidate passes through sanitizeKeywordToken() and validateRfc1035Domain() before rendering in the results table.",
+    "Labels are restricted to lowercase ASCII LDH characters (a-z, 0-9, and internal hyphens -) with zero leading or trailing hyphens.",
+    "Each label is capped at 63 characters and the full hostname is rejected if it exceeds 253 characters.",
+    "You can verify the sanitizer live by typing spaces, symbols, leading hyphens, or 70-character strings in the Primary Keyword field."
+  ],
+  "sections": [
+    {
+      "anchor": "what-rfc-1035-requires",
+      "heading": "1. What RFC 1035 Actually Specifies for Domain Syntax",
+      "paragraphs": [
+        "Published by the IETF in November 1987, RFC 1035 (Domain Names — Implementation and Specification) defines the core syntax rules that DNS resolvers, name servers, and domain registries still rely on today. Section 2.3.1 establishes the preferred LDH (Letters, Digits, Hyphen) syntax: labels must start and end with a letter or digit, contain only ASCII letters, digits, or hyphens internally, and never exceed 63 octets per label.",
+        "Without client-side sanitization, domain brainstorming tools routinely output invalid strings when users paste phrases with spaces, accented characters, punctuation marks, or accidental hyphens. Domain Name eliminates broken candidates before they ever appear in your results list."
+      ],
+      "table": {
+        "caption": "RFC 1035 Rules vs. Domain Name Implementation",
+        "headers": ["DNS Constraint", "RFC 1035 Rule", "Enforced in Generator"],
+        "rows": [
+          ["Allowed Characters", "ASCII letters a-z, digits 0-9, hyphen -", "Non-[a-z0-9-] chars stripped; uppercase folded to lowercase"],
+          ["Label Boundaries", "Must start and end with letter or digit", "Leading/trailing hyphens removed per label via /^-+|-+$/g"],
+          ["Single Label Length", "Maximum 63 octets (Section 2.3.4)", "Any pattern or TLD label > 63 chars returns null (excluded)"],
+          ["Total Hostname Length", "255 wire octets (~253 ASCII chars)", "Assembled FQDN > 253 chars rejected automatically"],
+          ["Extension Safety", "Valid non-empty TLD label", "Every extension label requires >= 1 alphanumeric character"]
+        ]
+      }
+    },
+    {
+      "anchor": "two-stage-sanitizer-pipeline",
+      "heading": "2. Our Two-Stage Validation Pipeline in the Browser",
+      "paragraphs": [
+        "Compliance happens deterministically in two steps inside your browser tab. First, sanitizeKeywordToken() cleans user keyword inputs immediately: it folds uppercase letters to lowercase, converts whitespace runs into single hyphens, strips characters outside a-z, 0-9, and -, and removes hyphens from the start or end.",
+        "Second, after combining permutations or expanding custom patterns such as [primary][dash][secondary], validateRfc1035Domain(pat, ext) splits both the generated hostname pattern and the extension by dots, validates each DNS label independently against the 63-character ceiling, verifies that extension labels contain at least one alphanumeric character, and rejects any assembled domain longer than 253 characters."
+      ],
+      "codeBlock": {
+        "caption": "Core validation rules enforced inside validateRfc1035Domain(pat, ext)",
+        "code": "// Per-label sanitization & 63-char RFC 1035 cap\nconst cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\n// Full hostname 253-char limit (RFC 1035 Section 2.3.4)\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "verify-it-yourself",
+      "heading": "3. How You Can Verify RFC 1035 Compliance in 30 Seconds",
+      "paragraphs": [
+        "You do not have to take the badge on faith—you can test edge cases directly in the generator input box right now:"
+      ],
+      "bullets": [
+        { "label": "Whitespace & punctuation test", "text": "Type '--Coffee & Tea!! 2026--' into Primary Keyword. The generator normalizes it cleanly into 'coffee-tea-2026' without trailing hyphens or illegal symbols." },
+        { "label": "63-character label limit test", "text": "Paste a 65-letter string into Primary Keyword. Notice that candidates exceeding 63 characters in a single label are automatically suppressed rather than generating invalid DNS names." },
+        { "label": "Custom pattern boundary test", "text": "Expand Advanced Options and enter a custom pattern ending in '[dash]' such as '[primary][dash]'. Because validateRfc1035Domain trims boundary hyphens per label, invalid trailing hyphens such as 'brand-.com' never reach the table." }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Scope Note: ASCII LDH vs. IDN & Registry Policies",
+        "body": "RFC 1035 syntax compliance ensures valid ASCII hostnames (LDH). Non-ASCII scripts are stripped rather than Punycode-encoded (xn--), and syntax compliance does not override registry-specific rules such as reserved single-letter .com labels or document requirements on .co.id."
+      }
+    }
+  ],
+  "methodologyNote": "Every technical rule described on this page mirrors the active client-side JavaScript functions sanitizeKeywordToken() and validateRfc1035Domain() executing directly in the Domain Name web application.",
+  "faqs": [
+    {
+      "q": "Why is the total hostname capped at 253 characters instead of 255?",
+      "a": "In DNS wire format (RFC 1035 Section 2.3.4), each label includes a 1-byte length prefix plus a trailing zero-length root byte, meaning a 255-octet wire representation corresponds to a maximum of 253 ASCII text characters without a trailing dot."
+    },
+    {
+      "q": "Does RFC 1035 allow consecutive hyphens like a--b.com?",
+      "a": "Syntactically RFC 1035 permits internal hyphens, though modern IDN specs (RFC 5891) reserve 'xn--' in positions 3–4 for Punycode. Our heuristic cleanliness scorer penalizes awkward repeated dashes and characters so cleaner brandable names rank higher."
+    },
+    {
+      "q": "If a domain passes RFC 1035, is it guaranteed to be registrable?",
+      "a": "Syntax validity only proves the name obeys DNS naming mechanics. You still need live RDAP/NS availability checks, registry policy compliance (for example, minimum length rules on certain ccTLDs), and trademark due diligence."
+    }
+  ]
+}

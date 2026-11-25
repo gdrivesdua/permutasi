@@ -1,0 +1,72 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "ja",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "RFC 1035準拠",
+  "keyTakeaways": [
+    "生成されたすべての候補は表示前に sanitizeKeywordToken() と validateRfc1035Domain() を通過します。",
+    "ラベルは小文字ASCIIのLDH文字（a-z、0-9、途中のハイフン -）のみに制限され、先頭・末尾ハイフンは除去されます。",
+    "1ラベル最大63文字、完全修飾ドメイン名合計253文字を超えると自動的に除外されます。",
+    "スペース・記号・先頭ハイフン・70文字の文字列を入力すれば、30秒で動作を直接確認できます。"
+  ],
+  "sections": [
+    {
+      "anchor": "rfc-1035-specification",
+      "heading": "1. RFC 1035 が定めるドメイン構文ルール",
+      "paragraphs": [
+        "1987年にIETFが策定したRFC 1035は、現在のDNSリゾルバやレジストリが準拠する基本仕様です。第2.3.1項のLDHルールにより、各ラベルは英数字で始まり英数字で終わる必要があり、使用できるのはASCII英数字と内部ハイフンのみで、1ラベル63オクテット以内と定められています。",
+        "ブラウザ側の検証がない生成ツールでは、スペースや記号を含むキーワードから不正なドメイン名が出力されがちです。当サイトでは不正候補を表に出す前に厳格に除外しています。"
+      ],
+      "table": {
+        "caption": "RFC 1035の仕様とジェネレーターでの実装状況",
+        "headers": ["DNS制約", "RFC 1035 規定", "ジェネレーターの検証処理"],
+        "rows": [
+          ["使用可能文字", "ASCII a-z・数字 0-9・ハイフン -", "[a-z0-9-] 以外を削除し小文字へ統一"],
+          ["ラベル先頭・末尾", "英数字のみ許可", "/^-+|-+$/g により境界ハイフンを除去"],
+          ["1ラベル最大長", "63オクテット以下 (Section 2.3.4)", "63文字超のラベルは null を返して除外"],
+          ["ホスト名全長", "255オクテット (ASCII約253文字)", "結合後253文字超のFQDNを自動拒否"],
+          ["TLD妥当性", "空でない有効な拡張子", "拡張子ラベルに最低1つの英数字を必須化"]
+        ]
+      }
+    },
+    {
+      "anchor": "two-stage-sanitizer",
+      "heading": "2. ブラウザ内での2段階サニタイズ処理",
+      "paragraphs": [
+        "第1段階として sanitizeKeywordToken() が入力直後の空白をハイフンへ変換し、不正文字を除去します。第2段階として validateRfc1035Domain(pat, ext) が結合済みラベルごとに63文字制限と253文字上限を検証します。"
+      ],
+      "codeBlock": {
+        "caption": "validateRfc1035Domain(pat, ext) の中核検証ロジック",
+        "code": "const cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "verify-yourself",
+      "heading": "3. 30秒でできるセルフ検証方法",
+      "paragraphs": [
+        "メインキーワード欄に以下の値を入力すると、RFC 1035フィルタをその場で確認できます。"
+      ],
+      "bullets": [
+        { "label": "空白・記号テスト", "text": "'--Coffee & Tea!! 2026--' と入力すると、記号と前後のハイフンが取り除かれた正規ラベルのみが生成されます。" },
+        { "label": "63文字上限テスト", "text": "65文字以上の英字を貼り付けると、1ラベル63文字を超える候補は自動的に除外されます。" },
+        { "label": "カスタムパターンテスト", "text": "詳細オプションで末尾が '[dash]' となる式を入力しても、境界ハイフンが除去されるため不正なドメインは生成されません。" }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "適用範囲についての補足",
+        "body": "RFC 1035準拠チェックはASCIIのLDHホスト名構文を対象としています。非ASCII文字はPunycode（xn--）変換ではなく除去され、各TLDレジストリ固有の登録条件（最短文字数制限など）は別途適用されます。"
+      }
+    }
+  ],
+  "methodologyNote": "本記事の仕様は、Domain Name アプリ内で実行されている sanitizeKeywordToken() および validateRfc1035Domain() の実装に基づいています。",
+  "faqs": [
+    {
+      "q": "なぜ全長の上限が255文字ではなく253文字なのですか？",
+      "a": "DNSのバイナリ形式（RFC 1035 Section 2.3.4）では各ラベルの長さバイトとルートラベルの終端バイトが含まれるため、末尾ドットなしのASCII文字列上限は253文字になります。"
+    },
+    {
+      "q": "RFC 1035に準拠していれば必ず登録できますか？",
+      "a": "DNS構文上有効であることを意味します。実際の登録可否はRDAP/NS空き状況、各TLDの最小文字数規定、商標権の確認が必要です。"
+    }
+  ]
+}

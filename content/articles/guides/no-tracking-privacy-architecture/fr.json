@@ -1,0 +1,68 @@
+{
+  "id": "no-tracking-privacy-architecture",
+  "lang": "fr",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Sans Suivi",
+  "keyTakeaways": [
+    "Domain Name ne dépose aucun cookie traceur, n'utilise aucun compte utilisateur et désactive l'analytique comportementale.",
+    "Les permutations et scores linguistiques tournent à 100% dans votre navigateur sans transmettre vos idées lors de la saisie.",
+    "Seules des préférences fonctionnelles (thème, langue et domainAvailabilityCacheV1) restent dans localStorage.",
+    "En toute transparence, les vérifications en direct interrogent DoH/RDAP publics et seuls les domaines libres <= 25 car. enregistrent des métriques anonymes."
+  ],
+  "sections": [
+    {
+      "anchor": "architecture-sans-suivi",
+      "heading": "1. Ce que « Sans Suivi » Signifie Techniquement",
+      "paragraphs": [
+        "Contrairement aux plateformes qui journalisent vos recherches ou posent des cookies publicitaires, Domain Name fonctionne sans compte utilisateur, sans cookie de suivi et sans profilage.",
+        "Toute la génération de combinaisons et l'évaluation phonétique s'exécutent localement dans votre onglet."
+      ],
+      "table": {
+        "caption": "Inventaire Transparent des Données et Requêtes",
+        "headers": ["Mécanisme", "Données Stockées ou Envoyées", "Suivi Personnel ?"],
+        "rows": [
+          ["Cookies HTTP", "Aucun cookie posé par l'outil", "Non (0 cookie traceur)"],
+          ["localStorage", "preferredTheme, preferredLang, domainAvailabilityCacheV1", "Non — reste sur votre appareil"],
+          ["Requêtes DoH/RDAP", "Appels directs vers Cloudflare/Google DoH et serveurs RDAP", "Requêtes DNS/RDAP standard depuis le navigateur"],
+          ["Catalogue D1 anonyme", "Statistiques anonymes uniquement si libre <= 25 car.", "Non — sans cookie, compte ni IP"]
+        ]
+      }
+    },
+    {
+      "anchor": "transparence-reseau",
+      "heading": "2. Transparence sur localStorage et les Requêtes Réseau",
+      "paragraphs": [
+        "localStorage mémorise uniquement le thème, la langue et un cache local de 6 heures. Lors des vérifications de disponibilité, le navigateur interroge directement les résolveurs publics DoH et RDAP répertoriés par l'IANA.",
+        "Lorsqu'un domaine court (<= 25 caractères) est confirmé libre, des métriques non personnelles sont envoyées à /api/log-available-domain sans cookie ni adresse IP."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Aucun Script Analytique Actif",
+        "body": "Google Analytics et Auto Ads sont désactivés dans site.config.json."
+      }
+    },
+    {
+      "anchor": "audit-devtools",
+      "heading": "3. Auditer la Confidentialité via DevTools",
+      "paragraphs": [
+        "Vérifiez ces garanties en moins d'une minute avec les outils de développement :"
+      ],
+      "bullets": [
+        { "label": "Cookies", "text": "Dans Application -> Cookies, vérifiez l'absence totale de cookies traceurs." },
+        { "label": "Local Storage", "text": "Constatez que seuls preferredTheme, preferredLang et domainAvailabilityCacheV1 sont présents." },
+        { "label": "Onglet Réseau", "text": "Passez en mode Hors ligne et générez des domaines : aucune requête sortante n'a lieu pendant le calcul." }
+      ]
+    }
+  ],
+  "methodologyNote": "Ce descriptif correspond exactement au code client de index.html, à site.config.json et à functions/api/log-available-domain.js.",
+  "faqs": [
+    {
+      "q": "Mes mots-clés saisis sont-ils visibles par des tiers ?",
+      "a": "Aucune liste privée n'est transmise lors de la génération ou pour les domaines pris. Seuls les domaines libres jusqu'à 25 caractères envoient des métriques anonymes sans compte ni IP."
+    },
+    {
+      "q": "Pourquoi utiliser localStorage sans suivi ?",
+      "a": "Pour mémoriser votre thème, langue et cache RDAP localement sans jamais transmettre ces données dans les en-têtes HTTP."
+    }
+  ]
+}

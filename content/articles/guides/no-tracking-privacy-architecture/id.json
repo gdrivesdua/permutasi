@@ -1,0 +1,73 @@
+{
+  "id": "no-tracking-privacy-architecture",
+  "lang": "id",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Tanpa Pelacakan",
+  "keyTakeaways": [
+    "Domain Name tidak menanam cookie pelacakan, tidak memakai akun pengguna, dan tidak menyuntikkan skrip analitik perilaku.",
+    "Permutasi kata kunci, pola kustom, dan skor pelafalan berjalan 100% di browser tanpa mengirim draf ide bisnis Anda saat mengetik.",
+    "Hanya preferensi fungsi lokal (tema, bahasa, dan cache ketersediaan domainAvailabilityCacheV1) yang disimpan di localStorage perangkat Anda.",
+    "Secara transparan, cek status live menghubungi resolver publik DoH/RDAP langsung dari browser, dan domain available <= 25 karakter mencatat statistik agregat anonim tanpa cookie/IP."
+  ],
+  "sections": [
+    {
+      "anchor": "arti-tanpa-pelacakan",
+      "heading": "1. Makna Teknis 'Tanpa Pelacakan' di Aplikasi Ini",
+      "paragraphs": [
+        "Banyak situs pencarian domain diam-diam mencatat setiap kata kunci yang Anda ketik atau menanam cookie pelacakan untuk melacak minat pengguna. Domain Name dibangun dengan prinsip sebaliknya: tanpa login akun, tanpa cookie pelacakan, tanpa piksel retargeting, dan tanpa skrip analitik perilaku.",
+        "Saat Anda mengetik ide nama brand, mengacak kata kunci, atau menguji gaya pelafalan, seluruh komputasi terjadi di dalam tab browser Anda. Ide yang belum dicek maupun domain yang sudah terdaftar (Taken) tidak pernah dikirim ke backend kami."
+      ],
+      "table": {
+        "caption": "Audit Penyimpanan & Komunikasi Data Domain Name",
+        "headers": ["Komponen", "Data yang Disimpan atau Dikirim", "Ada Pelacakan / ID Pengguna?"],
+        "rows": [
+          ["HTTP Cookies", "Tidak ada cookie yang dibuat aplikasi utama", "Tidak (0 cookie pelacakan)"],
+          ["localStorage Browser", "preferredTheme, preferredLang, domainAvailabilityCacheV1, domainAvailabilityCacheTtlMs", "Tidak — seluruhnya tetap di perangkat Anda"],
+          ["Cek Status Live", "Browser menghubungi Cloudflare DoH, Google DoH & RDAP IANA/Registri", "Permintaan DNS/RDAP standar langsung dari browser"],
+          ["Katalog Domain Tersedia", "Statistik non-personal domain 'available' <= 25 kar. ke /api/log-available-domain", "Tidak — tanpa cookie, user ID, maupun alamat IP di D1"]
+        ]
+      }
+    },
+    {
+      "anchor": "transparansi-jaringan-penuh",
+      "heading": "2. Keterbukaan Penuh: LocalStorage, DoH/RDAP & Log Katalog Anonim",
+      "paragraphs": [
+        "Kepercayaan lahir dari kejujuran atas apa yang benar-benar terjadi di jaringan. Pertama, localStorage hanya menyimpan tema gelap/terang, bahasa pilihan, serta cache hasil cek ketersediaan (domainAvailabilityCacheV1) selama 6 jam agar browser tidak berulang kali membebani server registri.",
+        "Kedua, ketika pengecekan status berjalan (24 domain teratas otomatis atau klik tombol Check), browser menghubungi langsung server publik DNS-over-HTTPS (cloudflare-dns.com dan dns.google) serta server RDAP resmi dari peta data.iana.org. Permintaan DNS/RDAP itu dilakukan langsung dari browser Anda sebagaimana pengecekan DNS biasa.",
+        "Ketiga, apabila pengecekan menemukan domain pendek (<= 25 karakter) berstatus 'available', aplikasi mengirim metadata non-personal (nama domain, ekstensi, skor kualitas heuristik, kode bahasa, dan waktu cek) ke /api/log-available-domain untuk riset statistik kualitas penamaan—tanpa cookie, sesi, maupun penyimpanan IP. Keyword untuk domain yang 'Taken' atau proses generate offline tidak pernah dikirim."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Nol Skrip Analitik Pihak Ketiga",
+        "body": "Pada konfigurasi site.config.json saat ini, Google Analytics (measurementId) dan Auto Ads AdSense (enableAutoAdsScript) sama-sama dalam keadaan nonaktif sehingga sesi riset Anda bebas dari pelacak perilaku pihak ketiga."
+      }
+    },
+    {
+      "anchor": "cara-audit-devtools",
+      "heading": "3. Cara Memeriksa Sendiri Lewat Developer Tools (DevTools)",
+      "paragraphs": [
+        "Anda dapat memverifikasi klaim ini sendiri kurang dari 1 menit memakai DevTools bawaan browser:"
+      ],
+      "bullets": [
+        { "label": "Langkah 1 — Periksa Tab Cookies", "text": "Buka DevTools -> Application (atau Storage) -> Cookies. Pastikan tidak ada cookie pelacakan yang terpasang pada domainname.web.id." },
+        { "label": "Langkah 2 — Periksa Local Storage", "text": "Pada Application -> Local Storage, pastikan hanya tersimpan preferensi tampilan (preferredTheme, preferredLang) dan cache status (domainAvailabilityCacheV1)." },
+        { "label": "Langkah 3 — Pantau Tab Network", "text": "Buka tab Network, aktifkan mode Offline atau uji generate domain > 30 karakter, lalu ketik ide brand rahasia Anda. Terbukti nol request keluar saat permutasi dibuat." }
+      ]
+    }
+  ],
+  "methodologyNote": "Rincian privasi ini disusun sesuai implementasi kode aktual di index.html, konfigurasi site.config.json, serta endpoint functions/api/log-available-domain.js.",
+  "faqs": [
+    {
+      "q": "Apakah orang lain bisa melihat kata kunci bisnis yang saya ketik?",
+      "a": "Daftar permutasi dan kata kunci yang sudah diambil (Taken) tidak dikirim ke server kami. Pengiriman metadata anonim ke D1 hanya terjadi jika domain <= 25 karakter terkonfirmasi 'available', tanpa identitas pengguna, cookie, atau alamat IP."
+    },
+    {
+      "q": "Mengapa tetap memakai localStorage jika tanpa pelacakan?",
+      "a": "localStorage hanya dipakai menyimpan pilihan tema, bahasa, dan cache RDAP lokal agar aplikasi responsif. Tidak seperti cookie, data localStorage tidak pernah dikirim otomatis melalui header HTTP."
+    },
+    {
+      "q": "Bagaimana cara menghapus semua data tersimpan di browser?",
+      "a": "Buka DevTools -> Application -> Local Storage -> klik Clear, atau bersihkan data situs di pengaturan browser Anda."
+    }
+  ]
+}

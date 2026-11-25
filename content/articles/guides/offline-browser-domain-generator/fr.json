@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "fr",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Exécution Hors Ligne",
+  "keyTakeaways": [
+    "Après le chargement initial de la page, toutes les permutations, modèles personnalisés, contrôles RFC 1035, scores orthographiques, tris, filtres et exports tournent hors ligne en JavaScript.",
+    "Les statuts de disponibilité déjà vérifiés restent lisibles hors ligne pendant 6 heures via localStorage (domainAvailabilityCacheV1).",
+    "Seuls le chargement initial (aucun Service Worker enregistré), les requêtes DNS/RDAP en direct et les liens externes BL/WM/GG exigent un accès internet.",
+    "Vous pouvez le vérifier en 30 secondes via le mode Hors ligne (Offline) dans DevTools -> Réseau."
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. Pourquoi le Générateur Fonctionne Hors Ligne Après Chargement",
+      "paragraphs": [
+        "Beaucoup d’outils envoient chaque frappe au serveur pour assembler deux mots. Domain Name exécute son moteur combinatoire, ses styles prononçables, son score linguistique et son validateur RFC 1035 en pur JavaScript côté client.",
+        "Une fois la page ouverte, saisir de nouveaux mots-clés, utiliser des formules comme [primary][dash][secondary], trier par Score ou Longueur et exporter en .txt ou Markdown ne déclenche aucune requête serveur."
+      ],
+      "table": {
+        "caption": "Répartition Exacte : Fonctions Hors Ligne vs. En Ligne",
+        "headers": ["Fonction / Opération", "Fonctionne Hors Ligne ?", "Mécanisme Technique"],
+        "rows": [
+          ["Permutations et mélange des mots", "Oui (100% hors ligne)", "JavaScript local permuteWords() et buildWordOrderVariants()"],
+          ["Modèles personnalisés et styles", "Oui (100% hors ligne)", "Expansion locale des balises ([primary], [voyelle], [nombre])"],
+          ["Validation de syntaxe RFC 1035", "Oui (100% hors ligne)", "Fonctions locales sanitizeKeywordToken() et validateRfc1035Domain()"],
+          ["Score de marque et naturel orthographique", "Oui (100% hors ligne)", "Calcul local calculateSpellingNaturalness() et computeDomainScores()"],
+          ["Tri, filtres, Copier et Export .txt", "Oui (100% hors ligne)", "Rendu DOM + API Clipboard / Blob dans le navigateur"],
+          ["Cache des vérifications précédentes", "Oui (TTL 6 heures)", "Lecture depuis localStorage domainAvailabilityCacheV1"],
+          ["Ouverture initiale de la page", "Internet requis", "Requête HTTP standard (aucun Service Worker installé)"],
+          ["Vérification DNS/RDAP en direct (Auto-24 / Check)", "Internet requis", "Requêtes directes vers Cloudflare/Google DoH et RDAP IANA"],
+          ["Raccourcis externes BL / WM / GG", "Internet requis", "Ouvre des onglets externes Ahrefs, Wayback Machine ou Google"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. Limites Honnêtes : Ce Qui Dépend Toujours du Réseau",
+      "paragraphs": [
+        "La mention « Fonctionne hors ligne » désigne toute la chaîne de génération, validation RFC 1035, calcul de score, tri, filtrage et exportation une fois l’onglet chargé. Aucun Service Worker n’étant enregistré pour les rechargements à froid, l’accès initial requiert une connexion.",
+        "De même, la disponibilité d’un domaine est une donnée mondiale temps réel : hors connexion, les vérifications DoH/RDAP sont simplement laissées à l’état « Check » ou « Réessayer » sans bloquer le tableau."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Cache Local de 6 Heures",
+        "body": "Les statuts déjà contrôlés en ligne restent disponibles dans domainAvailabilityCacheV1 (6 heures pour Disponible/Pris, 5 minutes pour Check), permettant de filtrer et d’exporter vos sélections même dans l’avion."
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. Tester le Mode Hors Ligne en 30 Secondes",
+      "paragraphs": [
+        "Vérifiez l’exécution locale dans Chrome, Edge ou Firefox sans couper le Wi-Fi :"
+      ],
+      "bullets": [
+        { "label": "Étape 1 — Ouvrez l’onglet Réseau (Network)", "text": "Appuyez sur F12, ouvrez Réseau et attendez la fin du chargement initial." },
+        { "label": "Étape 2 — Passez en mode Hors ligne (Offline)", "text": "Sélectionnez « Hors ligne / Offline » dans le menu de limitation réseau." },
+        { "label": "Étape 3 — Générez, triez et exportez", "text": "Saisissez de nouveaux mots-clés, triez par Score ou Caractères et exportez en Markdown ou .txt : tout répond instantanément sans réseau." }
+      ]
+    }
+  ],
+  "methodologyNote": "Les capacités hors ligne correspondent au code JavaScript client dans index.html ; les appels réseau se limitent aux résolveurs DoH/RDAP et à /api/log-available-domain.",
+  "faqs": [
+    {
+      "q": "Pourquoi le bouton Check ne répond-il plus hors connexion ?",
+      "a": "Vérifier si un domaine vient d’être enregistré exige d’interroger les serveurs DNS (DoH) et RDAP sur Internet. La génération, les scores, les filtres et l’export restent 100 % fonctionnels hors ligne."
+    },
+    {
+      "q": "Puis-je exporter mes résultats en .txt ou Markdown sans connexion ?",
+      "a": "Oui. Copier, Copier MD et Exporter .txt fonctionnent entièrement en mémoire dans le navigateur."
+    },
+    {
+      "q": "Le site utilise-t-il un Service Worker pour être ouvert à froid sans réseau ?",
+      "a": "Non, aucun Service Worker n’est actuellement enregistré. Tant que la page est ouverte dans votre onglet, le générateur fonctionne pleinement hors ligne."
+    }
+  ]
+}

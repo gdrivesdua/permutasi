@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "id",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Berjalan Offline di Browser",
+  "keyTakeaways": [
+    "Setelah halaman terbuka, seluruh permutasi kata, ekspansi pola kustom, validasi RFC 1035, skor ejaan natural, sortir, filter, hingga ekspor file berjalan 100% offline di JavaScript browser.",
+    "Status ketersediaan domain yang sudah dicek tetap tersimpan lokal hingga 6 jam di localStorage (domainAvailabilityCacheV1).",
+    "Hanya pemuatan halaman awal (belum ada Service Worker) serta pengecekan live DNS/RDAP dan tautan eksternal BL/WM/GG yang membutuhkan koneksi internet.",
+    "Anda dapat mengujinya sendiri dalam 30 detik dengan mengaktifkan mode Offline di DevTools -> Network."
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. Mengapa Generator Bisa Berjalan Offline di Browser",
+      "paragraphs": [
+        "Banyak situs pencari domain mengirim setiap ketukan tombol ke server backend hanya untuk menggabungkan dua kata kunci. Sebaliknya, Domain Name menjalankan mesin kombinatorial, daftar preset gaya nama, penilai pelafalan natural, serta validator RFC 1035 sepenuhnya melalui JavaScript di sisi klien.",
+        "Begitu halaman selesai dimuat di browser Anda, mengetik kata kunci baru, mencoba preset gaya nama, memakai pola seperti [primary][dash][secondary], menyortir kolom Skor atau Karakter, hingga menyalin maupun mengunduh .txt / Markdown tidak membutuhkan satu pun request ke server."
+      ],
+      "table": {
+        "caption": "Pemetaan Jujur: Fitur Offline vs. Fitur Online",
+        "headers": ["Fitur / Proses", "Berjalan Offline Setelah Muat?", "Mekanisme Teknis"],
+        "rows": [
+          ["Permutasi kata kunci & acak urutan", "Ya (100% offline)", "Fungsi JS lokal permuteWords() & buildWordOrderVariants()"],
+          ["Pola kustom & preset gaya nama", "Ya (100% offline)", "Ekspansi token lokal ([primary], [vokal], [konsonan], [angka])"],
+          ["Validasi sintaks RFC 1035", "Ya (100% offline)", "Fungsi lokal sanitizeKeywordToken() & validateRfc1035Domain()"],
+          ["Skor brandability & ejaan natural", "Ya (100% offline)", "Fungsi lokal calculateSpellingNaturalness() & computeDomainScores()"],
+          ["Sortir tabel, filter, Salin & Ekspor .txt", "Ya (100% offline)", "Render DOM + Clipboard / Blob API langsung di browser"],
+          ["Cache status ketersediaan sebelumnya", "Ya (TTL 6 jam)", "Dibaca dari kunci localStorage domainAvailabilityCacheV1"],
+          ["Membuka situs pertama kali (muat awal)", "Butuh internet", "Request web standar (belum memakai Service Worker)"],
+          ["Cek ketersediaan live (Auto-24 / Bulk / Check)", "Butuh internet", "Query langsung ke Cloudflare/Google DoH & IANA/Registry RDAP"],
+          ["Pintasan eksternal BL / WM / GG", "Butuh internet", "Membuka tab baru ke Ahrefs, Wayback Machine, atau Google Search"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. Batas Transparan: Kapan Internet Tetap Dibutuhkan",
+      "paragraphs": [
+        "Klaim 'Berjalan offline di browser' merujuk pada mesin pembuat ide, validator RFC 1035, kalkulator skor, sortir tabel, filter, dan ekspor hasil setelah halaman termuat di tab browser. Karena saat ini situs belum mendaftarkan Service Worker untuk menyimpan cache HTML saat tab ditutup total, akses internet tetap diperlukan ketika membuka halaman pertama kali.",
+        "Selain itu, status apakah suatu domain sudah didaftarkan orang lain adalah data global real-time. Saat Anda sedang offline, pengecekan otomatis 24 domain teratas maupun tombol Check / Bulk Check tidak dapat menghubungi server DoH atau RDAP, sehingga baris yang belum ter-cache tetap aman berstatus 'Check' atau 'Ulangi' tanpa membuat tabel macet."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Cache Lokal 6 Jam Saat Offline",
+        "body": "Domain yang sempat Anda cek selagi online otomatis tersimpan sementara di domainAvailabilityCacheV1 (6 jam untuk Available/Taken, 5 menit untuk status Check), sehingga Anda tetap bisa memfilter dan mengekspor daftar kandidat secara offline."
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. Cara Membuktikan Sendiri Mode Offline dalam 30 Detik",
+      "paragraphs": [
+        "Anda dapat menguji eksekusi lokal langsung di Chrome, Edge, atau Firefox tanpa harus mematikan Wi-Fi perangkat:"
+      ],
+      "bullets": [
+        { "label": "Langkah 1 — Buka Tab Network di DevTools", "text": "Tekan F12 (atau Ctrl+Shift+I / Cmd+Opt+I), pilih tab Network, dan biarkan halaman utama selesai dimuat." },
+        { "label": "Langkah 2 — Aktifkan Throttling Offline", "text": "Ubah dropdown throttling dari 'No throttling' menjadi 'Offline'." },
+        { "label": "Langkah 3 — Generate, Urutkan & Ekspor", "text": "Ketik kata kunci baru di Keyword Utama, pilih gaya nama, klik header Skor/Karakter untuk menyortir, lalu tekan Salin MD atau Ekspor .txt. Semua hasil dan skor langsung berubah seketika tanpa koneksi jaringan." }
+      ]
+    }
+  ],
+  "methodologyNote": "Penjelasan pemrosesan offline merujuk langsung pada fungsi JavaScript sisi klien di index.html, sedangkan ketergantungan jaringan merujuk pada pemanggilan fetch() ke DoH/RDAP dan /api/log-available-domain.",
+  "faqs": [
+    {
+      "q": "Mengapa cek ketersediaan domain berhenti saat koneksi diputus?",
+      "a": "Mengetahui apakah domain baru saja didaftarkan detik ini membutuhkan kueri langsung ke server DNS (DoH) dan RDAP registri di internet. Sementara itu, pembuatan kombinasi nama, validasi RFC 1035, skor, sortir, dan ekspor tetap berjalan penuh secara offline."
+    },
+    {
+      "q": "Apakah tombol Salin dan Ekspor .txt tetap jalan saat offline?",
+      "a": "Ya. Salin, Salin MD, dan Ekspor .txt memproses teks dan membuat file Blob sepenuhnya di memori browser tanpa memerlukan koneksi internet."
+    },
+    {
+      "q": "Apakah situs memakai Service Worker agar bisa dibuka ulang dari nol tanpa sinyal?",
+      "a": "Belum. Saat ini belum ada Service Worker yang didaftarkan, sehingga membuka ulang tab baru dari nol tetap butuh internet. Selama tab halaman sudah terbuka, seluruh generator dan hasil yang ter-cache tetap berjalan mulus secara offline."
+    }
+  ]
+}

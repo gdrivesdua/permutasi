@@ -1067,7 +1067,9 @@ function localizeIndexHtml(rawHtml, lang, config) {
       uiExtLabel: atf.extLabel,
       uiGenBtn: atf.genBtn,
       uiAdvGenBtn: atf.genBtn,
-      uiGenMicrocopy: atf.genMicrocopy,
+      uiMicroRfc: eduFaqPack.proofClaimRfc,
+      uiMicroNoTrack: eduFaqPack.proofClaimNoTrack,
+      uiMicroOffline: eduFaqPack.proofClaimOffline,
       uiResetFormLabel: atf.resetBtn,
       uiResetAdvLabel: atf.resetBtn,
       uiResetAnalysisLabel: atf.resetBtn,
@@ -1166,14 +1168,14 @@ function localizeIndexHtml(rawHtml, lang, config) {
   }
 
   const hubChromeByLang = {
-    en: { heroSlogan: 'Find the name that brings your idea to life.', resources: 'Resources', guides: 'Guides', research: 'Research', tools: 'Tools' },
-    id: { heroSlogan: 'Temukan nama terbaik untuk memulai langkah besarmu.', resources: 'Sumber Daya', guides: 'Panduan', research: 'Riset', tools: 'Alat' },
-    es: { heroSlogan: 'Encuentra el nombre que dará vida a tu próximo proyecto.', resources: 'Recursos', guides: 'Guías', research: 'Estudios', tools: 'Herramientas' },
-    pt: { heroSlogan: 'Encontre o nome ideal para tirar sua ideia do papel.', resources: 'Recursos', guides: 'Guias', research: 'Pesquisas', tools: 'Ferramentas' },
-    fr: { heroSlogan: 'Trouvez le nom qui donnera vie à votre projet.', resources: 'Ressources', guides: 'Guides', research: 'Études', tools: 'Outils' },
-    de: { heroSlogan: 'Finde den Domainnamen, der deine Idee zum Leben erweckt.', resources: 'Ressourcen', guides: 'Ratgeber', research: 'Studien', tools: 'Tools' },
-    ru: { heroSlogan: 'Найдите имя, с которого начнётся ваш проект.', resources: 'Ресурсы', guides: 'Гайды', research: 'Исследования', tools: 'Инструменты' },
-    ja: { heroSlogan: 'アイデアを形にする、最初の名前を見つけよう。', resources: 'リソース', guides: 'ガイド', research: 'リサーチ', tools: 'ツール' }
+    en: { heroSlogan: 'Find the name that brings your idea to life.', resources: 'Resources', guides: 'Articles', research: 'Research', tools: 'Tools' },
+    id: { heroSlogan: 'Temukan nama terbaik untuk memulai langkah besarmu.', resources: 'Sumber Daya', guides: 'Artikel', research: 'Riset', tools: 'Alat' },
+    es: { heroSlogan: 'Encuentra el nombre que dará vida a tu próximo proyecto.', resources: 'Recursos', guides: 'Artículos', research: 'Estudios', tools: 'Herramientas' },
+    pt: { heroSlogan: 'Encontre o nome ideal para tirar sua ideia do papel.', resources: 'Recursos', guides: 'Artigos', research: 'Pesquisas', tools: 'Ferramentas' },
+    fr: { heroSlogan: 'Trouvez le nom qui donnera vie à votre projet.', resources: 'Ressources', guides: 'Articles', research: 'Études', tools: 'Outils' },
+    de: { heroSlogan: 'Finde den Domainnamen, der deine Idee zum Leben erweckt.', resources: 'Ressourcen', guides: 'Artikel', research: 'Studien', tools: 'Tools' },
+    ru: { heroSlogan: 'Найдите имя, с которого начнётся ваш проект.', resources: 'Ресурсы', guides: 'Статьи', research: 'Исследования', tools: 'Инструменты' },
+    ja: { heroSlogan: 'アイデアを形にする、最初の名前を見つけよう。', resources: 'リソース', guides: '記事', research: 'リサーチ', tools: 'ツール' }
   };
   const hubLabels = hubChromeByLang[lang];
   if (hubLabels) {
@@ -1192,6 +1194,10 @@ function localizeIndexHtml(rawHtml, lang, config) {
   html = html.replace(
     /<a\s+href="\/(guides|research|tools)\/"([^>]*data-hub-section="\1"[^>]*)>/gi,
     (_m, sec, rest) => `<a href="${escapeHtmlAttr(getHubPath(sec, lang))}"${rest}>`
+  );
+  html = html.replace(
+    /<a\s+href="\/guides\/([a-z0-9-]+)\/"([^>]*data-article-section="guides"[^>]*data-article-slug="\1"[^>]*)>/gi,
+    (_m, slug, rest) => `<a href="${escapeHtmlAttr(getArticlePath('guides', slug, lang))}"${rest}>`
   );
   html = html.replace(
     /href="\/(guide|faq)\.html"/gi,
@@ -1410,7 +1416,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Table of Contents',
     methodologyTitle: 'Methodology & Data Limitations',
     faqTitle: 'Frequently Asked Questions',
-    relatedTitle: 'Related Guides & Research',
+    relatedTitle: 'Related Articles & Research',
     ctaTitle: 'Test Naming Patterns Live',
     ctaDesc: 'Combine keywords, suffixes, and RFC 1035 rules directly in our multilingual permutation workspace.',
     ctaButton: 'Open Domain Generator'
@@ -1425,7 +1431,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Daftar Isi',
     methodologyTitle: 'Catatan Metodologi & Keterbatasan Data',
     faqTitle: 'Pertanyaan yang Sering Diajukan (FAQ)',
-    relatedTitle: 'Baca Juga & Riset Terkait',
+    relatedTitle: 'Artikel & Riset Terkait',
     ctaTitle: 'Uji Pola Nama Domain Secara Langsung',
     ctaDesc: 'Gabungkan kata kunci, akhiran, dan validasi RFC 1035 langsung di generator permutasi domain kami.',
     ctaButton: 'Buka Generator Domain'
@@ -1440,7 +1446,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Índice',
     methodologyTitle: 'Metodología y Limitaciones de Datos',
     faqTitle: 'Preguntas Frecuentes',
-    relatedTitle: 'Guías y Estudios Relacionados',
+    relatedTitle: 'Artículos y Estudios Relacionados',
     ctaTitle: 'Pruebe Patrones de Dominio en Vivo',
     ctaDesc: 'Combine palabras clave y reglas RFC 1035 directamente en nuestro generador multilingüe.',
     ctaButton: 'Abrir Generador de Dominios'
@@ -1455,7 +1461,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Índice',
     methodologyTitle: 'Metodologia e Limitações dos Dados',
     faqTitle: 'Perguntas Frequentes',
-    relatedTitle: 'Guias e Pesquisas Relacionadas',
+    relatedTitle: 'Artigos e Pesquisas Relacionadas',
     ctaTitle: 'Teste Padrões de Domínio Agora',
     ctaDesc: 'Combine palavras-chave e regras RFC 1035 diretamente em nosso gerador multilíngue.',
     ctaButton: 'Abrir Gerador de Domínios'
@@ -1470,7 +1476,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Sommaire',
     methodologyTitle: 'Méthodologie et Limites des Données',
     faqTitle: 'Questions Fréquentes',
-    relatedTitle: 'Guides & Études Associés',
+    relatedTitle: 'Articles & Études Associés',
     ctaTitle: 'Tester Vos Combinaisons en Direct',
     ctaDesc: 'Combinez mots-clés et règles RFC 1035 directement dans notre générateur multilingue.',
     ctaButton: 'Ouvrir le Générateur'
@@ -1485,7 +1491,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Inhaltsverzeichnis',
     methodologyTitle: 'Methodik & Datenlimitationen',
     faqTitle: 'Häufig gestellte Fragen',
-    relatedTitle: 'Weiterführende Ratgeber & Studien',
+    relatedTitle: 'Weiterführende Artikel & Studien',
     ctaTitle: 'Domain-Muster Direkt Testen',
     ctaDesc: 'Kombinieren Sie Keywords und RFC-1035-Regeln direkt in unserem Domain-Generator.',
     ctaButton: 'Domain-Generator öffnen'
@@ -1500,7 +1506,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: 'Содержание',
     methodologyTitle: 'Методология и ограничения данных',
     faqTitle: 'Часто задаваемые вопросы',
-    relatedTitle: 'Похожие гайды и исследования',
+    relatedTitle: 'Связанные статьи и исследования',
     ctaTitle: 'Проверьте комбинации доменов',
     ctaDesc: 'Объединяйте ключевые слова и правила RFC 1035 прямо в нашем генераторе доменов.',
     ctaButton: 'Открыть генератор'
@@ -1515,7 +1521,7 @@ const EDITORIAL_LABELS_BY_LANG = {
     tocTitle: '目次',
     methodologyTitle: '調査手法とデータの制約',
     faqTitle: 'よくある質問 (FAQ)',
-    relatedTitle: '関連ガイド・リサーチ',
+    relatedTitle: '関連記事・リサーチ',
     ctaTitle: 'ドメインパターンを今すぐ試す',
     ctaDesc: 'キーワードとRFC 1035ルールを組み合わせて、ブランドドメイン候補を即座に生成できます。',
     ctaButton: 'ジェネレーターを開く'
@@ -2200,6 +2206,7 @@ export function renderGuidePage(rootDir, lang = 'en', config = loadSiteConfig(ro
   const templatePath = path.join(rootDir, 'templates', 'guide.html');
   const rawTemplate = fs.readFileSync(templatePath, 'utf8');
   const hubsData = loadArticleHubs(rootDir);
+  const manifest = loadArticleManifest(rootDir);
   const chrome = trustI18n.CHROME[targetLang] || trustI18n.CHROME.en;
   const pack = EDU_FAQ_BY_LANG[targetLang] || EDU_FAQ_BY_LANG.en;
   const extPack = EXT_STRATEGY_BY_LANG[targetLang] || EXT_STRATEGY_BY_LANG.en;
@@ -2222,6 +2229,40 @@ export function renderGuidePage(rootDir, lang = 'en', config = loadSiteConfig(ro
     config,
     (code) => trustI18n.localizeInternalHref('guide.html', code)
   );
+
+  const trustClaims = [
+    { id: 'rfc-1035-domain-compliance', badge: pack.proofClaimRfc || '✓ RFC 1035 compliant' },
+    { id: 'no-tracking-privacy-architecture', badge: pack.proofClaimNoTrack || '✓ No tracking' },
+    { id: 'offline-browser-domain-generator', badge: pack.proofClaimOffline || '✓ Runs offline in browser' }
+  ];
+  const trustProofCards = trustClaims.map((claim) => {
+    const article = manifest.articles.find((a) => a.id === claim.id && a?.locales?.[targetLang]?.published === true);
+    if (!article) return '';
+    const meta = article.locales[targetLang];
+    const href = getArticlePath(article.section, resolveArticleSlug(article, targetLang), targetLang);
+    return `<article class="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-3.5">
+      <div class="space-y-2">
+        <p class="text-[11px] font-mono font-semibold text-emerald-700 dark:text-emerald-400">${escapeHtmlText(claim.badge)}</p>
+        <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug"><a href="${escapeHtmlAttr(href)}" class="hover:text-blue-600 dark:hover:text-blue-400">${escapeHtmlText(meta.h1 || meta.title)}</a></h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${escapeHtmlText(meta.excerpt || meta.metaDesc)}</p>
+      </div>
+      <div>
+        <a href="${escapeHtmlAttr(href)}" class="inline-flex items-center text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">${escapeHtmlText(pack.proofReadBtn || 'Read Verification Article →')}</a>
+      </div>
+    </article>`;
+  }).filter(Boolean).join('\n');
+  const trustProofSectionHtml = trustProofCards
+    ? `<section aria-labelledby="trustProofHeading" class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-5">
+      <div class="space-y-1.5">
+        <p class="text-[11px] uppercase tracking-wider font-semibold text-emerald-700 dark:text-emerald-400">${escapeHtmlText(pack.proofEyebrow || 'Technical Verification')}</p>
+        <h2 id="trustProofHeading" class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${escapeHtmlText(pack.proofTitle || 'Verify Our 3 Core Guarantees')}</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">${escapeHtmlText(pack.proofIntro || '')}</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        ${trustProofCards}
+      </div>
+    </section>`
+    : '';
 
   const steps = Array.isArray(pack.guideSteps) ? pack.guideSteps : [];
   const guideStepsHtml = steps.map((step, idx) => {
@@ -2350,6 +2391,7 @@ export function renderGuidePage(rootDir, lang = 'en', config = loadSiteConfig(ro
     GUIDE_EYEBROW: escapeHtmlText(pack.guideEyebrow),
     GUIDE_H1: escapeHtmlText(pack.guideH1),
     GUIDE_INTRO: escapeHtmlText(pack.guideIntro),
+    TRUST_PROOF_SECTION_HTML: trustProofSectionHtml,
     GUIDE_STEPS_TITLE: escapeHtmlText(pack.guideTitle),
     GUIDE_STEPS_HTML: guideStepsHtml,
     STRAT_TITLE: escapeHtmlText(pack.stratTitle),

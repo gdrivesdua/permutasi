@@ -1,0 +1,77 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "id",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Standar RFC 1035",
+  "keyTakeaways": [
+    "Setiap kandidat domain melewati fungsi sanitizeKeywordToken() dan validateRfc1035Domain() sebelum ditampilkan di tabel hasil.",
+    "Label hanya mengizinkan karakter ASCII LDH huruf kecil (a-z, 0-9, dan tanda hubung internal -) tanpa tanda hubung di awal maupun akhir.",
+    "Setiap label dibatasi maksimal 63 karakter dan panjang hostname penuh ditolak otomatis bila melampaui 253 karakter.",
+    "Anda dapat mengujinya langsung dengan mengetik spasi, simbol, tanda hubung berlebih, atau teks 70 karakter di kolom Keyword Utama."
+  ],
+  "sections": [
+    {
+      "anchor": "aturan-inti-rfc-1035",
+      "heading": "1. Aturan Teknis yang Ditetapkan Standar DNS RFC 1035",
+      "paragraphs": [
+        "Diterbitkan IETF pada November 1987, RFC 1035 (Domain Names — Implementation and Specification) menjadi fondasi aturan penamaan yang masih digunakan resolver DNS, name server, dan registri domain modern. Bagian 2.3.1 menetapkan standar LDH (Letters, Digits, Hyphen): setiap label wajib diawali dan diakhiri huruf atau angka, hanya memuat huruf ASCII, angka, atau tanda hubung di tengah, serta tidak melebihi 63 oktet per label.",
+        "Tanpa sanitasi di sisi generator, alat kombinasi nama sering menghasilkan string rusak ketika pengguna menempelkan frasa berspasi, simbol baca, atau tanda hubung berlebih. Domain Name menyaring seluruh kandidat cacat tersebut sebelum muncul di tabel analisis."
+      ],
+      "table": {
+        "caption": "Perbandingan Aturan RFC 1035 vs Implementasi Generator",
+        "headers": ["Batasan DNS", "Ketentuan RFC 1035", "Implementasi di Generator"],
+        "rows": [
+          ["Karakter Diizinkan", "Huruf ASCII a-z, angka 0-9, tanda hubung -", "Karakter di luar [a-z0-9-] dihapus; huruf besar diubah ke kecil"],
+          ["Batas Awal/Akhir Label", "Wajib diawali & diakhiri huruf/angka", "Tanda hubung awal/akhir dibersihkan lewat /^-+|-+$/g"],
+          ["Panjang 1 Label", "Maksimal 63 oktet (Bagian 2.3.4)", "Label pola atau TLD > 63 karakter langsung mengembalikan null"],
+          ["Panjang Total Domain", "255 oktet wire (~253 karakter teks)", "FQDN gabungan > 253 karakter otomatis ditolak"],
+          ["Validitas Ekstensi", "Label TLD tidak kosong & valid", "Setiap label ekstensi wajib punya minimal 1 huruf/angka"]
+        ]
+      }
+    },
+    {
+      "anchor": "alur-sanitasi-dua-tahap",
+      "heading": "2. Alur Validasi Dua Tahap di Browser Anda",
+      "paragraphs": [
+        "Validasi berjalan deterministik dalam dua tahap di tab browser Anda. Tahap pertama melalui sanitizeKeywordToken() langsung membersihkan input kata kunci: mengubah huruf kapital ke huruf kecil, mengubah rangkaian spasi menjadi tanda hubung, membuang simbol di luar a-z, 0-9, dan -, serta menghapus tanda hubung di tepi awal dan akhir.",
+        "Tahap kedua melalui validateRfc1035Domain(pat, ext) bekerja setelah permutasi atau pola kustom seperti [primary][dash][secondary] dirangkai. Fungsi ini memecah label pola dan ekstensi berdasarkan titik (.), memvalidasi batas 63 karakter pada tiap segmen, memastikan segmen TLD mengandung karakter alfanumerik, lalu menolak nama domain gabungan bila melebihi 253 karakter."
+      ],
+      "codeBlock": {
+        "caption": "Logika validasi inti pada fungsi validateRfc1035Domain(pat, ext)",
+        "code": "// Sanitasi per label & batas 63 karakter RFC 1035\nconst cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\n// Batas total hostname 253 karakter (RFC 1035 Bagian 2.3.4)\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "cara-uji-mandiri",
+      "heading": "3. Cara Membuktikan Sendiri Kepatuhan RFC 1035 dalam 30 Detik",
+      "paragraphs": [
+        "Anda tidak perlu sekadar memercayai klaim teks—uji langsung kasus ekstrem berikut pada kotak input generator:"
+      ],
+      "bullets": [
+        { "label": "Uji spasi & simbol ilegal", "text": "Ketik '--Kopi & Teh!! 2026--' pada Keyword Utama. Generator otomatis menormalkannya menjadi 'kopi-teh-2026' tanpa simbol maupun tanda hubung di pinggir." },
+        { "label": "Uji batas 63 karakter per label", "text": "Tempelkan 65 huruf berturut-turut di Keyword Utama. Kandidat yang melampaui 63 karakter dalam satu label otomatis disingkirkan agar tidak menciptakan nama DNS ilegal." },
+        { "label": "Uji batas tanda hubung di pola kustom", "text": "Buka Opsi Lanjutan dan isi pola kustom yang diakhiri '[dash]', misalnya '[primary][dash]'. Karena validateRfc1035Domain memangkas tanda hubung tepi di tiap label, bentuk cacat seperti 'brand-.id' tidak akan pernah muncul." }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Catatan Cakupan: ASCII LDH vs IDN & Kebijakan Registri",
+        "body": "Kepatuhan RFC 1035 menjamin struktur hostname ASCII (LDH) yang sah secara teknis DNS. Karakter non-ASCII dibersihkan alih-alih diubah ke Punycode (xn--), dan validitas sintaks tidak menggantikan syarat administratif registri tertentu seperti dokumen legalitas pada .co.id."
+      }
+    }
+  ],
+  "methodologyNote": "Seluruh aturan teknis yang dijelaskan di halaman ini merujuk langsung pada fungsi JavaScript sanitizeKeywordToken() dan validateRfc1035Domain() yang aktif di aplikasi web Domain Name.",
+  "faqs": [
+    {
+      "q": "Mengapa batas panjang total dibatasi 253 karakter dan bukan 255?",
+      "a": "Pada format wire DNS (RFC 1035 Bagian 2.3.4), setiap label membawa 1 byte panjang label plus 1 byte root label di akhir, sehingga kapasitas 255 oktet wire setara dengan maksimal 253 karakter teks ASCII tanpa titik penutup."
+    },
+    {
+      "q": "Apakah tanda hubung ganda seperti a--b.id lolos RFC 1035?",
+      "a": "Secara sintaks dasar RFC 1035 masih mengizinkan tanda hubung internal, meski standar IDN modern (RFC 5891) memesan awalan 'xn--' untuk Punycode. Sistem skoring kebersihan karakter kami tetap memberi penalti pada pengulangan karakter atau tanda hubung berlebih agar nama yang rapi tampil lebih atas."
+    },
+    {
+      "q": "Jika lolos RFC 1035, apakah domain pasti bisa didaftarkan?",
+      "a": "Lolos RFC 1035 berarti nama tersebut valid secara sintaks DNS. Pendaftaran tetap memerlukan pengecekan ketersediaan RDAP/NS, aturan minimal karakter masing-masing registri TLD, serta audit merek dagang."
+    }
+  ]
+}

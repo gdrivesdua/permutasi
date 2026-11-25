@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "ja",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "読み込み後のオフライン動作",
+  "keyTakeaways": [
+    "ページ読み込み後は、キーワード置換・独自パターン展開・RFC 1035検証・発音スコア・並び替え・絞り込み・エクスポートのすべてがクライアント側JavaScriptでオフライン完結します。",
+    "オンライン中に確認済みの空き状況は localStorage（domainAvailabilityCacheV1）に最大6時間保持され、オフラインでも閲覧・絞り込みが可能です。",
+    "初回ページ取得（Service Workerは未登録）およびリアルタイムのDNS/RDAP照会・外部リンク（BL/WM/GG）のみインターネット接続が必要です。",
+    "DevToolsの「Network」タブで「Offline」に切り替えるだけで、30秒で動作を直接確認できます。"
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. ページ読み込み後にオフラインで動作する理由",
+      "paragraphs": [
+        "多くのドメイン検索サイトは、2つの単語を組み合わせるだけでも入力のたびにサーバーへ送信します。Domain Name は組み合わせ生成エンジン、スタイルプリセット、自然さスコア計算、RFC 1035検証ロジックをブラウザ内のJavaScriptだけで完結させています。",
+        "ページが一度読み込まれれば、新しいキーワードの入力、[primary][dash][secondary] のような独自パターンの展開、スコア順や文字数順の並び替え、.txt や Markdown 出力にサーバー通信は一切発生しません。"
+      ],
+      "table": {
+        "caption": "正確な機能境界：オフライン動作 vs. オンライン必須",
+        "headers": ["機能・処理内容", "読込後のオフライン動作", "技術的な仕組み"],
+        "rows": [
+          ["キーワード置換・語順シャッフル", "可能（100%オフライン）", "ローカルJS permuteWords() / buildWordOrderVariants()"],
+          ["独自パターン展開・名前スタイル", "可能（100%オフライン）", "クライアント側トークン置換 ([primary], [母音], [数字])"],
+          ["RFC 1035 構文バリデーション", "可能（100%オフライン）", "ローカル関数 sanitizeKeywordToken() / validateRfc1035Domain()"],
+          ["ブランド・スペル自然さスコア", "可能（100%オフライン）", "ローカル関数 calculateSpellingNaturalness() / computeDomainScores()"],
+          ["テーブル並び替え・絞り込み・出力", "可能（100%オフライン）", "ブラウザ内DOM描画 + Clipboard / Blob API"],
+          ["直近の空き状況キャッシュ参照", "可能（最大6時間）", "localStorage の domainAvailabilityCacheV1 を参照"],
+          ["初回ページアクセス（コールドロード）", "通信が必要", "通常のHTML取得（Service Workerは未登録）"],
+          ["リアルタイムDNS/RDAP空き確認", "通信が必要", "Cloudflare / Google DoH・IANA RDAPへの直接照会"],
+          ["外部調査リンク（BL / WM / GG）", "通信が必要", "Ahrefs・Wayback Machine・Google検索の外部タブ表示"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. 正直な境界線：インターネットが必要な機能",
+      "paragraphs": [
+        "「読み込み後はオフライン動作」とは、ページを開いた状態での候補生成・RFC 1035検証・スコア算出・並び替え・フィルタ・エクスポートがブラウザ単体で完結することを指します。現在、ブラウザ再起動後もオフラインで開ける Service Worker は登録していないため、初回アクセスには通信が必要です。",
+        "また、ドメインが今この瞬間に登録済みかどうかの判定は外部ネットワークに依存します。オフライン時は上位24件の自動チェックや手動 Check / Bulk Check が外部サーバーに到達できないため、未キャッシュ行は画面を止めずに「Check」や「再試行」のまま保持されます。"
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "ブラウザ内の6時間ローカルキャッシュ",
+        "body": "オンライン時に確認した空き状況は domainAvailabilityCacheV1（取得可能/登録済は6時間、Checkは5分）に保存されるため、機内モードや移動中でも絞り込みやリスト出力を継続できます。"
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. 30秒でオフライン動作を自分で検証する方法",
+      "paragraphs": [
+        "PCのWi-Fiを切らなくても、Chrome・Edge・Firefoxの開発者ツールですぐに検証できます："
+      ],
+      "bullets": [
+        { "label": "手順1 — DevToolsのNetworkタブを開く", "text": "F12キーを押して「Network」タブを開き、最初のページ読み込みが完了するまで待ちます。" },
+        { "label": "手順2 — スロットリングを「Offline」に変更", "text": "通信速度設定（No throttling）のプルダウンから「Offline」を選択します。" },
+        { "label": "手順3 — 生成・並び替え・出力を試す", "text": "メインキーワードに新しい単語を入力し、スコアや文字数で並び替え、MDコピーや.txt保存を実行してください。通信ゼロで瞬時に結果が更新されます。" }
+      ]
+    }
+  ],
+  "methodologyNote": "オフライン実行の説明は index.html 内のクライアントJavaScriptに直接基づいており、ネットワーク通信はDoH/RDAP照会および /api/log-available-domain に限定されます。",
+  "faqs": [
+    {
+      "q": "オフラインにするとリアルタイム空き状況チェックが止まるのはなぜですか？",
+      "a": "ドメインが現在取得可能かどうかは、インターネット上の公開DNS（DoH）およびレジストリRDAPサーバーへリアルタイムで問い合わせる必要があるためです。生成・検証・スコア計算・エクスポートはオフラインでも動作し続けます。"
+    },
+    {
+      "q": "オフライン中に .txt や Markdown でエクスポートできますか？",
+      "a": "はい。コピー、MDコピー、.txt保存はいずれもブラウザのメモリ上で処理されるため、通信なしで利用できます。"
+    },
+    {
+      "q": "Service Workerを使ってオフライン状態からページを新規起動できますか？",
+      "a": "現在 Service Worker は登録していないため、タブを閉じた状態からの初回読み込みには通信が必要です。ページを開いたままにしておけば、生成やエクスポートはオフラインで継続利用できます。"
+    }
+  ]
+}

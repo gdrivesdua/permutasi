@@ -1,0 +1,72 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "es",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Norma RFC 1035",
+  "keyTakeaways": [
+    "Cada candidato pasa por sanitizeKeywordToken() y validateRfc1035Domain() antes de aparecer en la tabla de resultados.",
+    "Las etiquetas solo admiten caracteres ASCII LDH (a-z, 0-9 y guiones internos -) sin guiones iniciales ni finales.",
+    "Cada etiqueta tiene un límite estricto de 63 caracteres y el nombre completo se rechaza si supera los 253 caracteres.",
+    "Puede verificarlo en 30 segundos escribiendo espacios, símbolos, guiones en los bordes o una cadena de 70 caracteres."
+  ],
+  "sections": [
+    {
+      "anchor": "que-exige-rfc-1035",
+      "heading": "1. Qué Exige Realmente la Norma RFC 1035 para Sintaxis DNS",
+      "paragraphs": [
+        "Publicada por el IETF en 1987, la especificación RFC 1035 define las reglas sintácticas fundamentales que utilizan los servidores DNS y registros de dominios. Su sección 2.3.1 establece la sintaxis LDH (letras, dígitos y guion): cada etiqueta debe comenzar y terminar con letra o dígito, contener únicamente caracteres ASCII válidos y no superar los 63 octetos.",
+        "Sin validación en el cliente, muchos generadores producen nombres rotos cuando el usuario pega espacios, tildes o signos de puntuación. Domain Name filtra y corrige cada etiqueta antes de mostrarla."
+      ],
+      "table": {
+        "caption": "Reglas de RFC 1035 frente a la Implementación en el Generador",
+        "headers": ["Límite DNS", "Regla RFC 1035", "Control en el Generador"],
+        "rows": [
+          ["Caracteres Permitidos", "Letras a-z, dígitos 0-9, guion -", "Se eliminan caracteres fuera de [a-z0-9-] y se pasa a minúsculas"],
+          ["Bordes de Etiqueta", "Inicio y fin con letra o número", "Se recortan guiones extremos con /^-+|-+$/g"],
+          ["Longitud de Etiqueta", "Máximo 63 octetos (Sección 2.3.4)", "Cualquier etiqueta > 63 caracteres devuelve null y se descarta"],
+          ["Longitud Total", "255 octetos (~253 caracteres ASCII)", "Un FQDN ensamblado > 253 caracteres se rechaza automáticamente"],
+          ["Validez del TLD", "Etiqueta de extensión no vacía", "Cada etiqueta del TLD exige al menos un carácter alfanumérico"]
+        ]
+      }
+    },
+    {
+      "anchor": "flujo-validacion-dos-fases",
+      "heading": "2. Nuestro Flujo de Validación en Dos Fases",
+      "paragraphs": [
+        "En primer lugar, sanitizeKeywordToken() normaliza las palabras clave introducidas por el usuario, transformando espacios en guiones y eliminando símbolos incompatibles. A continuación, validateRfc1035Domain(pat, ext) divide el patrón generado y la extensión por puntos para comprobar individualmente el tope de 63 caracteres por etiqueta y el límite global de 253 caracteres."
+      ],
+      "codeBlock": {
+        "caption": "Reglas principales aplicadas en validateRfc1035Domain(pat, ext)",
+        "code": "const cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "verificacion-practica",
+      "heading": "3. Cómo Verificarlo Usted Mismo en 30 Segundos",
+      "paragraphs": [
+        "Pruebe estos casos límite directamente en el campo de palabra clave principal:"
+      ],
+      "bullets": [
+        { "label": "Espacios y símbolos", "text": "Escriba '--Café & Té!! 2026--'. El motor lo normaliza en una cadena LDH válida sin símbolos ni guiones en los extremos." },
+        { "label": "Tope de 63 caracteres", "text": "Pegue una palabra de 65 letras; los candidatos que excedan 63 caracteres por etiqueta quedarán excluidos automáticamente." },
+        { "label": "Patrones personalizados", "text": "En Opciones Avanzadas, pruebe una fórmula terminada en '[dash]'. El validador recorta el guion sobrante para no generar dominios inválidos como 'marca-.es'." }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Alcance Técnico",
+        "body": "El cumplimiento RFC 1035 valida nombres ASCII LDH correctos en DNS. Los caracteres no ASCII se eliminan en lugar de convertirse a Punycode (xn--), y la validez sintáctica no sustituye requisitos propios de cada registro ccTLD."
+      }
+    }
+  ],
+  "methodologyNote": "Todas las reglas descritas corresponden directamente a las funciones sanitizeKeywordToken() y validateRfc1035Domain() ejecutadas en su navegador.",
+  "faqs": [
+    {
+      "q": "¿Por qué el máximo es de 253 caracteres y no 255?",
+      "a": "En el formato binario DNS (RFC 1035 Sección 2.3.4), cada etiqueta incluye su byte de longitud más el byte raíz final, por lo que 255 octetos equivalen a 253 caracteres ASCII imprimibles."
+    },
+    {
+      "q": "¿Un dominio válido según RFC 1035 está libre para registrarse?",
+      "a": "No necesariamente. RFC 1035 garantiza validez sintáctica en DNS; la disponibilidad real requiere consultar DNS/RDAP y revisar posibles marcas registradas."
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "pt",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Padrão RFC 1035",
+  "keyTakeaways": [
+    "Cada domínio candidato passa por sanitizeKeywordToken() e validateRfc1035Domain() antes de aparecer na tabela.",
+    "Os rótulos aceitam apenas caracteres ASCII LDH (a-z, 0-9 e hífen interno -), sem hífens no início ou fim.",
+    "Cada rótulo tem teto de 63 caracteres e o hostname completo é rejeitado se ultrapassar 253 caracteres.",
+    "Você pode testar em 30 segundos digitando espaços, símbolos, hífens nas pontas ou uma palavra com 70 letras."
+  ],
+  "sections": [
+    {
+      "anchor": "o-que-exige-rfc-1035",
+      "heading": "1. O Que a Norma RFC 1035 Exige na Sintaxe DNS",
+      "paragraphs": [
+        "Publicada pela IETF em 1987, a RFC 1035 define as regras de sintaxe usadas por resolvedores DNS e registros oficiais. A Seção 2.3.1 estabelece o formato LDH (letras, dígitos e hífen): todo rótulo deve iniciar e terminar com letra ou número e não pode ultrapassar 63 octetos.",
+        "Sem higienização no navegador, geradores comuns acabam produzindo domínios inválidos quando o usuário cola frases com espaços, acentos ou símbolos. O Domain Name bloqueia qualquer candidato fora do padrão antes de exibi-lo."
+      ],
+      "table": {
+        "caption": "Regras da RFC 1035 vs. Implementação no Gerador",
+        "headers": ["Regra DNS", "Especificação RFC 1035", "Validação Aplicada"],
+        "rows": [
+          ["Caracteres Permitidos", "Letras a-z, dígitos 0-9 e hífen -", "Caracteres fora de [a-z0-9-] removidos e texto convertido em minúsculas"],
+          ["Extremidades do Rótulo", "Início e fim com letra ou dígito", "Hífens iniciais e finais removidos via /^-+|-+$/g"],
+          ["Tamanho por Rótulo", "Máximo de 63 octetos (Seção 2.3.4)", "Rótulos com mais de 63 caracteres retornam null"],
+          ["Tamanho Total", "255 octetos (~253 caracteres ASCII)", "FQDN acima de 253 caracteres é descartado automaticamente"],
+          ["Validade do TLD", "Rótulo de extensão válido", "Cada segmento da extensão exige ao menos um caractere alfanumérico"]
+        ]
+      }
+    },
+    {
+      "anchor": "validacao-em-duas-etapas",
+      "heading": "2. Pipeline de Validação em Duas Etapas no Navegador",
+      "paragraphs": [
+        "Primeiro, sanitizeKeywordToken() normaliza as palavras digitadas, substituindo espaços por hífens e removendo símbolos inválidos. Em seguida, validateRfc1035Domain(pat, ext) divide padrão e extensão pelos pontos, valida cada rótulo até 63 caracteres e aplica o limite total de 253 caracteres."
+      ],
+      "codeBlock": {
+        "caption": "Trecho central executado em validateRfc1035Domain(pat, ext)",
+        "code": "const cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "como-testar-agora",
+      "heading": "3. Como Testar na Prática em 30 Segundos",
+      "paragraphs": [
+        "Faça estes testes rápidos diretamente no campo de Palavra-chave Principal:"
+      ],
+      "bullets": [
+        { "label": "Espaços e pontuação", "text": "Digite '--Café & Loja!! 2026--' e veja o sistema limpar símbolos e hífens extras automaticamente." },
+        { "label": "Limite de 63 caracteres", "text": "Cole uma palavra de 65 letras; candidatos acima de 63 caracteres por rótulo são suprimidos." },
+        { "label": "Fórmulas personalizadas", "text": "Em Opções Avançadas, teste um padrão terminando em '[dash]'. O validador remove o hífen da borda para evitar domínios inválidos." }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Nota de Escopo",
+        "body": "A conformidade RFC 1035 verifica sintaxe ASCII LDH válida para DNS. Caracteres não ASCII são removidos em vez de convertidos para Punycode (xn--), e regras específicas de cada registro continuam aplicáveis."
+      }
+    }
+  ],
+  "methodologyNote": "Todas as regras descritas refletem diretamente as funções sanitizeKeywordToken() e validateRfc1035Domain() executadas no código do aplicativo.",
+  "faqs": [
+    {
+      "q": "Por que o limite total é 253 caracteres e não 255?",
+      "a": "No formato binário de pacotes DNS (RFC 1035 Seção 2.3.4), cada rótulo usa um byte de comprimento mais o byte nulo final da raiz, limitando o texto ASCII sem ponto final a 253 caracteres."
+    },
+    {
+      "q": "Passar na RFC 1035 garante que o domínio pode ser registrado?",
+      "a": "Garante validade sintática no DNS. A disponibilidade depende das consultas RDAP/NS, das regras do registro da extensão escolhida e de verificação de marca."
+    }
+  ]
+}

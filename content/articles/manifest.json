@@ -1,5 +1,264 @@
 {
   "schemaVersion": 1,
   "sections": ["guides", "research", "tools"],
-  "articles": []
+  "articles": [
+    {
+      "id": "rfc-1035-domain-compliance",
+      "section": "guides",
+      "defaultSlug": "rfc-1035-domain-compliance",
+      "slugByLang": {},
+      "articleType": "TechArticle",
+      "isPillar": true,
+      "changefreq": "monthly",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "author": {
+        "name": "Domain Name Engineering",
+        "role": "DNS Syntax & Domain Architecture",
+        "url": "/about.html"
+      },
+      "relatedIds": [
+        "no-tracking-privacy-architecture",
+        "offline-browser-domain-generator"
+      ],
+      "locales": {
+        "en": {
+          "published": true,
+          "title": "RFC 1035 Domain Validation Explained — Domain Name",
+          "metaDesc": "How Domain Name enforces RFC 1035 LDH character limits, 63-char label bounds, 253-char hostname limits, and boundary hyphen sanitization.",
+          "keywords": "RFC 1035 compliant, domain syntax validation, DNS label limit, LDH hostname rule",
+          "h1": "How We Enforce RFC 1035 Domain Syntax Compliance",
+          "excerpt": "A transparent look at the exact character filtering, 63-octet label caps, hyphen boundary rules, and 253-character FQDN checks running in our generator."
+        },
+        "id": {
+          "published": true,
+          "title": "Bukti Kepatuhan Standar Domain RFC 1035 — Domain Name",
+          "metaDesc": "Cara Domain Name menerapkan aturan karakter LDH RFC 1035, batas 63 karakter per label, batas 253 karakter domain, serta pembersihan tanda hubung.",
+          "keywords": "standar RFC 1035, validasi sintaks domain, batas label DNS, aturan hostname LDH",
+          "h1": "Cara Kerja Validasi Kepatuhan Standar DNS RFC 1035",
+          "excerpt": "Bedah teknis filter karakter a-z0-9-, batas 63 karakter per label, aturan tanda hubung, dan batas panjang total 253 karakter di generator kami."
+        },
+        "es": {
+          "published": true,
+          "title": "Validación de Dominios RFC 1035 Explicada — Domain Name",
+          "metaDesc": "Cómo aplicamos las reglas LDH de RFC 1035, el límite de 63 caracteres por etiqueta, el tope de 253 caracteres y la limpieza de guiones.",
+          "keywords": "cumple RFC 1035, validación sintaxis dominio, límite etiqueta DNS, regla LDH",
+          "h1": "Cómo Garantizamos el Cumplimiento de la Norma DNS RFC 1035",
+          "excerpt": "Análisis técnico del filtrado a-z0-9-, el límite de 63 caracteres por etiqueta, los guiones en bordes y el máximo de 253 caracteres en el generador."
+        },
+        "pt": {
+          "published": true,
+          "title": "Validação de Domínios RFC 1035 na Prática — Domain Name",
+          "metaDesc": "Como aplicamos as regras LDH da RFC 1035, limite de 63 caracteres por rótulo, teto de 253 caracteres e higienização de hífens.",
+          "keywords": "padrão RFC 1035, validação de domínio, limite rótulo DNS, sintaxe hostname LDH",
+          "h1": "Como Garantimos a Conformidade com o Padrão DNS RFC 1035",
+          "excerpt": "Explicação técnica do filtro a-z0-9-, limite de 63 caracteres por rótulo, hífens nas extremidades e limite total de 253 caracteres no gerador."
+        },
+        "fr": {
+          "published": true,
+          "title": "Validation des Domaines RFC 1035 Expliquée — Domain Name",
+          "metaDesc": "Comment nous appliquons les règles LDH RFC 1035, la limite de 63 caractères par étiquette, le plafond de 253 caractères et le nettoyage des tirets.",
+          "keywords": "conforme RFC 1035, validation syntaxe domaine, limite étiquette DNS, règle LDH",
+          "h1": "Comment Nous Appliquons la Conformité DNS RFC 1035",
+          "excerpt": "Détail technique du filtrage a-z0-9-, des limites de 63 caractères par label, des tirets aux extrémités et du plafond total de 253 caractères."
+        },
+        "de": {
+          "published": true,
+          "title": "RFC-1035-Domainvalidierung im Detail — Domain Name",
+          "metaDesc": "Wie wir RFC-1035-LDH-Regeln, das 63-Zeichen-Label-Limit, die 253-Zeichen-Obergrenze und Bindestrich-Bereinigung technisch durchsetzen.",
+          "keywords": "RFC 1035 konform, Domain Syntax Validierung, DNS Label Limit, LDH Regel",
+          "h1": "Wie wir die RFC-1035-Konformität für Domains sicherstellen",
+          "excerpt": "Technischer Einblick in die a-z0-9--Filterung, das 63-Zeichen-Label-Limit, Bindestrich-Regeln und die 253-Zeichen-Prüfung im Generator."
+        },
+        "ru": {
+          "published": true,
+          "title": "Проверка синтаксиса доменов по RFC 1035 — Domain Name",
+          "metaDesc": "Как мы обеспечиваем стандарт RFC 1035: символы a-z0-9-, лимит 63 символа на метку, общий предел 253 символа и удаление крайних дефисов.",
+          "keywords": "стандарт RFC 1035, валидация доменов, ограничение меток DNS, синтаксис LDH",
+          "h1": "Как работает проверка доменов на соответствие RFC 1035",
+          "excerpt": "Технический разбор фильтрации символов a-z0-9-, ограничения 63 символа на метку, правил для дефисов и лимита 253 символа в генераторе."
+        },
+        "ja": {
+          "published": true,
+          "title": "RFC 1035ドメイン構文検証の仕組み — Domain Name",
+          "metaDesc": "RFC 1035に基づくLDH文字制限、1ラベル63文字上限、ホスト名253文字上限、先頭・末尾ハイフン除去の実装仕様を詳しく解説します。",
+          "keywords": "RFC 1035準拠, ドメイン構文チェック, DNSラベル上限, LDHホスト名規約",
+          "h1": "RFC 1035準拠のドメイン検証はどのように機能するか",
+          "excerpt": "a-z0-9-の正規化、1ラベル63文字制限、ハイフン境界ルール、合計253文字上限をブラウザ側で厳格に検証する仕組みを公開します。"
+        }
+      }
+    },
+    {
+      "id": "no-tracking-privacy-architecture",
+      "section": "guides",
+      "defaultSlug": "no-tracking-privacy-architecture",
+      "slugByLang": {},
+      "articleType": "TechArticle",
+      "isPillar": true,
+      "changefreq": "monthly",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "author": {
+        "name": "Domain Name Engineering",
+        "role": "Privacy & Client-Side Architecture",
+        "url": "/about.html"
+      },
+      "relatedIds": [
+        "rfc-1035-domain-compliance",
+        "offline-browser-domain-generator"
+      ],
+      "locales": {
+        "en": {
+          "published": true,
+          "title": "No Tracking Architecture: Cookies, Storage & Network Audits",
+          "metaDesc": "Verify our zero-cookie privacy architecture: what stays in browser localStorage, what DoH/RDAP sees, and how to audit requests in DevTools.",
+          "keywords": "no tracking domain generator, zero tracking cookies, domain privacy DevTools, client-side privacy",
+          "h1": "No Tracking: Transparent Breakdown of Cookies, Storage & Requests",
+          "excerpt": "Zero tracking cookies or behavioral analytics—plus an honest audit of localStorage keys, DoH/RDAP lookups, and how to verify it yourself in DevTools."
+        },
+        "id": {
+          "published": true,
+          "title": "Tanpa Pelacakan: Audit Cookie, LocalStorage & Trafik Jaringan",
+          "metaDesc": "Bukti arsitektur tanpa cookie pelacakan: data yang tetap di localStorage browser, perilaku cek DoH/RDAP, dan cara mengauditnya lewat DevTools.",
+          "keywords": "generator domain tanpa pelacakan, tanpa cookie pelacakan, privasi riset domain, audit DevTools",
+          "h1": "Tanpa Pelacakan: Penjelasan Transparan Cookie, Storage & Jaringan",
+          "excerpt": "Nol cookie pelacakan dan analitik perilaku—lengkap dengan rincian transparan localStorage, koneksi DoH/RDAP, dan langkah verifikasi mandiri di DevTools."
+        },
+        "es": {
+          "published": true,
+          "title": "Sin Rastreo: Auditoría de Cookies, Storage y Red en DevTools",
+          "metaDesc": "Compruebe nuestra arquitectura sin cookies de seguimiento: qué guarda localStorage, qué envían las consultas DoH/RDAP y cómo auditarlo en DevTools.",
+          "keywords": "sin rastreo dominios, cero cookies de seguimiento, privacidad en navegador, auditoría DevTools",
+          "h1": "Sin Rastreo: Desglose Transparente de Cookies, Almacenamiento y Red",
+          "excerpt": "Cero cookies de rastreo ni perfiles de usuario, junto con una explicación honesta de localStorage, consultas DoH/RDAP y verificación en DevTools."
+        },
+        "pt": {
+          "published": true,
+          "title": "Sem Rastreamento: Auditoria de Cookies, Storage e Rede",
+          "metaDesc": "Verifique nossa arquitetura sem cookies de rastreamento: o que fica no localStorage, o que consultas DoH/RDAP acessam e como auditar no DevTools.",
+          "keywords": "sem rastreamento, zero cookies de rastreamento, privacidade gerador de domínios, auditoria DevTools",
+          "h1": "Sem Rastreamento: Detalhamento Transparente de Cookies, Storage e Rede",
+          "excerpt": "Zero cookies de rastreamento ou perfis comportamentais—com explicação honesta do localStorage, consultas DoH/RDAP e passos de auditoria no DevTools."
+        },
+        "fr": {
+          "published": true,
+          "title": "Sans Suivi : Audit des Cookies, Stockage Local et Requêtes Réseau",
+          "metaDesc": "Vérifiez notre architecture sans cookie traceur : données conservées dans localStorage, requêtes DoH/RDAP et méthode de contrôle dans DevTools.",
+          "keywords": "sans suivi générateur domaine, zéro cookie traceur, confidentialité navigateur, audit DevTools",
+          "h1": "Sans Suivi : Détail Transparent des Cookies, Stockage et Connexions",
+          "excerpt": "Aucun cookie publicitaire ni suivi comportemental—avec transparence complète sur localStorage, les requêtes DoH/RDAP et la vérification via DevTools."
+        },
+        "de": {
+          "published": true,
+          "title": "Kein Tracking: Audit zu Cookies, Storage & Netzwerkanfragen",
+          "metaDesc": "Prüfen Sie unsere Cookie-freie Architektur: Was im localStorage bleibt, was DoH/RDAP überträgt und wie Sie alles selbst in DevTools testen.",
+          "keywords": "kein Tracking Domain Generator, keine Tracking Cookies, Datenschutz Browser, DevTools Audit",
+          "h1": "Kein Tracking: Transparente Übersicht zu Cookies, Storage & Netzwerk",
+          "excerpt": "Keine Tracking-Cookies oder Nutzerprofile – inklusive ehrlicher Offenlegung von localStorage-Einträgen, DoH/RDAP-Abfragen und DevTools-Anleitung."
+        },
+        "ru": {
+          "published": true,
+          "title": "Без отслеживания: аудит Cookie, Storage и сетевых запросов",
+          "metaDesc": "Проверьте нашу архитектуру без отслеживающих cookie: что хранится в localStorage, как работают запросы DoH/RDAP и как проверить это в DevTools.",
+          "keywords": "без отслеживания генератор доменов, без cookie, приватность в браузере, проверка DevTools",
+          "h1": "Без отслеживания: честный разбор Cookie, локального хранилища и сети",
+          "excerpt": "Ноль отслеживающих cookie и поведенческих профилей, а также прозрачное описание localStorage, запросов DoH/RDAP и инструкции по проверке в DevTools."
+        },
+        "ja": {
+          "published": true,
+          "title": "追跡なし設計の証明：Cookie・ローカル保存・通信の透明性",
+          "metaDesc": "追跡Cookieゼロの設計を技術的に公開。localStorageに保存される設定、DoH/RDAP通信の範囲、DevToolsでの検証手順を正直に解説します。",
+          "keywords": "追跡なし ドメインツール, トラッキングCookieゼロ, ブラウザプライバシー, DevTools検証",
+          "h1": "追跡なし：Cookie・ローカル保存・ネットワーク通信の透明な開示",
+          "excerpt": "追跡Cookieや行動プロファイリングは一切なし。localStorageの内容、DoH/RDAP通信の範囲、DevToolsでの検証方法を率直に解説します。"
+        }
+      }
+    },
+    {
+      "id": "offline-browser-domain-generator",
+      "section": "guides",
+      "defaultSlug": "offline-browser-domain-generator",
+      "slugByLang": {},
+      "articleType": "TechArticle",
+      "isPillar": true,
+      "changefreq": "monthly",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "author": {
+        "name": "Domain Name Engineering",
+        "role": "Client-Side Compute Architecture",
+        "url": "/about.html"
+      },
+      "relatedIds": [
+        "rfc-1035-domain-compliance",
+        "no-tracking-privacy-architecture"
+      ],
+      "locales": {
+        "en": {
+          "published": true,
+          "title": "How Our Domain Generator Runs Offline in Your Browser",
+          "metaDesc": "See which features run 100% offline in client-side JavaScript after page load, which lookups require internet, and how to test Offline mode.",
+          "keywords": "runs offline in browser, client-side domain generator, offline domain permutation, DevTools offline test",
+          "h1": "Runs Offline in Browser: What Executes Locally vs Online",
+          "excerpt": "Permutations, RFC 1035 checks, natural spelling scores, sorting, filtering, and exports run offline in JavaScript—with clear limits for live DNS checks."
+        },
+        "id": {
+          "published": true,
+          "title": "Cara Kerja Generator Domain Offline di Browser Anda",
+          "metaDesc": "Pelajari fitur apa saja yang berjalan 100% offline di JavaScript setelah halaman dimuat, bagian mana yang butuh internet, dan cara uji mode Offline.",
+          "keywords": "berjalan offline di browser, generator domain client-side, permutasi domain offline, uji offline DevTools",
+          "h1": "Berjalan Offline di Browser: Proses Lokal vs Koneksi Internet",
+          "excerpt": "Permutasi kata, validasi RFC 1035, skor pelafalan, sortir, filter, dan ekspor berjalan offline di browser—dengan batas jelas untuk cek DNS/RDAP live."
+        },
+        "es": {
+          "published": true,
+          "title": "Cómo Funciona el Generador Offline en tu Navegador",
+          "metaDesc": "Descubra qué funciones se ejecutan 100% offline en JavaScript tras cargar la página, qué requiere internet y cómo probarlo en modo Sin conexión.",
+          "keywords": "funciona offline navegador, generador dominios local, permutación offline, prueba DevTools offline",
+          "h1": "Funciona Offline en el Navegador: Qué Se Ejecuta Localmente y Qué Requiere Red",
+          "excerpt": "Permutaciones, validación RFC 1035, puntuación ortográfica, ordenación, filtros y exportación funcionan offline; solo la consulta DNS/RDAP requiere red."
+        },
+        "pt": {
+          "published": true,
+          "title": "Como o Gerador Funciona Offline no Seu Navegador",
+          "metaDesc": "Veja quais recursos rodam 100% offline em JavaScript após carregar a página, o que exige conexão e como testar no modo Offline do navegador.",
+          "keywords": "funciona offline navegador, gerador de domínios local, permutação offline, teste offline DevTools",
+          "h1": "Funciona Offline no Navegador: Processamento Local vs Conexão",
+          "excerpt": "Permutações, validação RFC 1035, pontuação fonética, ordenação, filtros e exportação rodam offline; apenas consultas DNS/RDAP ao vivo exigem rede."
+        },
+        "fr": {
+          "published": true,
+          "title": "Comment le Générateur Fonctionne Hors Ligne dans le Navigateur",
+          "metaDesc": "Découvrez quelles fonctions tournent 100% hors ligne en JavaScript après chargement, ce qui demande un accès réseau et comment tester en mode Hors ligne.",
+          "keywords": "fonctionne hors ligne navigateur, générateur domaines local, permutation hors ligne, test DevTools",
+          "h1": "Fonctionne Hors Ligne : Exécution Locale vs Requêtes Réseau",
+          "excerpt": "Permutations, contrôle RFC 1035, scores linguistiques, tri, filtres et exports tournent hors ligne en JavaScript ; seuls les checks DNS/RDAP nécessitent le web."
+        },
+        "de": {
+          "published": true,
+          "title": "So funktioniert der Domain-Generator offline im Browser",
+          "metaDesc": "Welche Funktionen nach dem Laden 100 % offline in JavaScript laufen, was Internet erfordert und wie Sie den Offline-Modus in DevTools testen.",
+          "keywords": "offline im Browser nutzbar, lokaler Domain Generator, Offline Permutation, DevTools Offline Test",
+          "h1": "Offline im Browser nutzbar: Lokale Berechnung vs. Online-Abfragen",
+          "excerpt": "Permutationen, RFC-1035-Prüfung, Sprach-Scoring, Sortierung, Filter und Exporte laufen offline in JavaScript – nur Live-DNS/RDAP erfordert Internet."
+        },
+        "ru": {
+          "published": true,
+          "title": "Как генератор доменов работает офлайн в браузере",
+          "metaDesc": "Какие функции на 100% работают офлайн в JavaScript после загрузки страницы, что требует интернета и как проверить офлайн-режим в DevTools.",
+          "keywords": "работает офлайн в браузере, локальный генератор доменов, офлайн перестановки, тест DevTools",
+          "h1": "Работает офлайн в браузере: локальные вычисления и онлайн-проверки",
+          "excerpt": "Перестановки, проверка RFC 1035, оценка звучания, сортировка, фильтры и экспорт работают офлайн в JS; интернет нужен только для живых запросов DNS/RDAP."
+        },
+        "ja": {
+          "published": true,
+          "title": "読み込み後にブラウザでオフライン動作する仕組み",
+          "metaDesc": "ページ読込後にクライアント側JavaScriptで100%オフライン動作する機能と、リアルタイムDNS/RDAP確認など通信が必要な機能の境界を解説します。",
+          "keywords": "オフライン動作 ドメイン生成, クライアントサイド処理, オフライン検証, DevToolsオフラインテスト",
+          "h1": "ブラウザでのオフライン動作：ローカル処理とオンライン通信の境界",
+          "excerpt": "候補生成・RFC 1035検証・発音スコア・並び替え・エクスポートは読み込み後オフラインで完結。リアルタイム空き確認のみネットワークを使用します。"
+        }
+      }
+    }
+  ]
 }

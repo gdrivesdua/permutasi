@@ -1,0 +1,73 @@
+{
+  "id": "no-tracking-privacy-architecture",
+  "lang": "en",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "No Tracking Architecture",
+  "keyTakeaways": [
+    "Domain Name sets zero tracking cookies, uses zero behavioral user accounts, and configures no Google Analytics measurement ID.",
+    "Keyword permutations, custom formulas, and naturalness scores run 100% inside your browser without sending your private search list on keypress.",
+    "Only functional local preferences (theme, language, and domainAvailabilityCacheV1) are stored in browser localStorage.",
+    "For full transparency, live availability lookups query public DoH/RDAP resolvers directly, and confirmed available domains <= 25 chars may log anonymous domain metrics."
+  ],
+  "sections": [
+    {
+      "anchor": "zero-cookie-generation",
+      "heading": "1. What 'No Tracking' Means Technically Here",
+      "paragraphs": [
+        "Most domain search tools log every keyword you type into proprietary marketing databases or attach behavioral tracking cookies to your session. Domain Name takes a different approach: there is no user login, no session tracking cookie, no cross-site retargeting pixel, and no behavioral analytics pipeline.",
+        "When you enter startup ideas, combine keywords, or adjust pronounceable presets, the entire generation and ranking pass happens locally inside your browser tab. Your unconfirmed or taken domain brainstorms are never sent to a remote backend."
+      ],
+      "table": {
+        "caption": "Exact Data & Storage Inventory on Domain Name",
+        "headers": ["Mechanism", "What Is Stored or Sent", "Tracking / Personal ID?"],
+        "rows": [
+          ["HTTP Cookies", "None set by the public generator", "No (0 tracking cookies)"],
+          ["localStorage Keys", "preferredTheme, preferredLang, domainAvailabilityCacheV1, domainAvailabilityCacheTtlMs", "No — stays strictly on your device"],
+          ["Live Availability Checks", "Browser calls Cloudflare DoH, Google DoH, and IANA/Registry RDAP", "Standard public DNS/RDAP network requests only"],
+          ["Available Domain Catalog", "Non-personal domain stats for confirmed 'available' <= 25 chars to /api/log-available-domain", "No cookies, no user ID, no IP stored in D1"]
+        ]
+      }
+    },
+    {
+      "anchor": "full-network-transparency",
+      "heading": "2. Honest Disclosure: Local Cache, Public DoH/RDAP & Short-Domain Logging",
+      "paragraphs": [
+        "Real trust requires telling users both what we do not collect and what network requests actually occur during live checks. First, browser localStorage saves your theme, active language, and a 6-hour availability cache (domainAvailabilityCacheV1) solely so repeated views do not hammer registry endpoints.",
+        "Second, whenever you run live availability checks (the top 24 auto-checks or manual Check / Bulk Check), your browser communicates directly with public DNS-over-HTTPS resolvers (cloudflare-dns.com and dns.google) and public RDAP endpoints listed by data.iana.org. Those public resolvers receive the domain query directly from your browser like any standard lookup.",
+        "Third, when a short domain (25 characters or fewer) is confirmed 'available', the app sends a minimal non-personal record (domain name, extension, heuristic quality scores, language code, and timestamp) to /api/log-available-domain to build aggregate naming research—without cookies, accounts, or IP logging. Keywords for 'taken' domains, long domains, or offline permutations are never transmitted."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Zero Third-Party Analytics Scripts",
+        "body": "Both Google Analytics (measurementId) and automatic AdSense scripts (enableAutoAdsScript) remain disabled in site.config.json, keeping generator sessions free of behavioral ad trackers."
+      }
+    },
+    {
+      "anchor": "devtools-audit-steps",
+      "heading": "3. How to Audit Privacy Yourself in Chrome or Firefox DevTools",
+      "paragraphs": [
+        "Every visitor can verify these claims independently in under one minute using built-in browser Developer Tools:"
+      ],
+      "bullets": [
+        { "label": "Step 1 — Inspect Cookies", "text": "Open DevTools -> Application (or Storage) -> Cookies. Confirm that zero tracking cookies exist for domainname.web.id." },
+        { "label": "Step 2 — Inspect Local Storage", "text": "Under Application -> Local Storage, verify that only readable UI settings (preferredTheme, preferredLang) and cached domain statuses (domainAvailabilityCacheV1) appear." },
+        { "label": "Step 3 — Watch the Network Tab", "text": "Open Network, temporarily switch throttling to Offline (or generate >30-char domains / disable checks), and type private keywords. Confirm zero backend requests are triggered during permutation generation." }
+      ]
+    }
+  ],
+  "methodologyNote": "This privacy breakdown reflects the live browser code in index.html, configuration in site.config.json, and server handler functions/api/log-available-domain.js.",
+  "faqs": [
+    {
+      "q": "Can someone else see the brand keywords I type in the generator?",
+      "a": "No private brainstorm list is transmitted when generating permutations or testing taken names. The only backend POST occurs if a live check confirms an available domain of 25 characters or fewer, and even then no user identity, cookie, or IP address is stored."
+    },
+    {
+      "q": "Why does Domain Name use localStorage if there is no tracking?",
+      "a": "localStorage keeps your light/dark theme, language choice, and local RDAP availability cache so your browser works fast and avoids redundant registry requests. Unlike tracking cookies, localStorage stays exclusively on your device and is never sent automatically in HTTP headers."
+    },
+    {
+      "q": "How can I clear everything saved in my browser?",
+      "a": "Open Browser Settings or DevTools -> Application -> Local Storage -> Clear. No server account exists to delete."
+    }
+  ]
+}
