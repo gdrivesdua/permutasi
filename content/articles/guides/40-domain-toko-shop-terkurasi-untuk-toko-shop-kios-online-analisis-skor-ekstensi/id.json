@@ -51,7 +51,39 @@
             "9.0",
             "100.0",
             "98.86",
-            "94.71.net"
+            "94.71"
+          ],
+          [
+            ".net",
+            "15",
+            "10.0",
+            "96.80",
+            "94.93",
+            "92.67"
+          ],
+          [
+            ".my.id",
+            "4",
+            "12.0",
+            "100.0",
+            "100.00",
+            "93.00"
+          ],
+          [
+            ".web.id",
+            "4",
+            "13.0",
+            "100.0",
+            "100.00",
+            "93.00"
+          ],
+          [
+            ".biz.id",
+            "4",
+            "13.0",
+            "100.0",
+            "100.00",
+            "93.00"
           ]
         ]
       }
@@ -80,7 +112,79 @@
             "100",
             "98",
             "95",
-            "Toko lifestyle, perlengkapan rumah, atau produk harianshopam.id"
+            "Toko lifestyle, perlengkapan rumah, atau produk harian"
+          ],
+          [
+            "shopam.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Kios kebutuhan cepat, camilan, atau promo harian"
+          ],
+          [
+            "shopar.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko kerajinan, art, atau produk kurasi kreatif"
+          ],
+          [
+            "shopel.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko elektronik ringan, aksesori gawai, atau perlengkapan digital"
+          ],
+          [
+            "shopem.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Online shop fesyen kasual atau kebutuhan sehari-hari"
+          ],
+          [
+            "shopen.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko perlengkapan kerja, alat tulis, atau kebutuhan kantor"
+          ],
+          [
+            "shopil.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko produk anak, hobi, atau perlengkapan keluarga"
+          ],
+          [
+            "shopir.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko perlengkapan otomotif ringan atau perawatan kendaraan"
+          ],
+          [
+            "shopor.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Kios serba ada atau toko ritel umum skala lokal"
+          ],
+          [
+            "shopur.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko produk natural, perawatan diri, atau kebutuhan rumah"
           ]
         ]
       }
@@ -106,7 +210,111 @@
             "100",
             "91",
             "94",
-            "Toko digital, apparel kasual, atau katalog produk modernshopab.net"
+            "Toko digital, apparel kasual, atau katalog produk modern"
+          ],
+          [
+            "shopab.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko khusus satu niche dengan target audiens berbahasa Inggris"
+          ],
+          [
+            "shopag.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko perlengkapan outdoor, hobi, atau gaya hidup"
+          ],
+          [
+            "shopeb.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Online shop produk pilihan dengan pelafalan lugas"
+          ],
+          [
+            "shoped.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko buku, sumber belajar, atau perlengkapan edukasi"
+          ],
+          [
+            "shopef.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko produk fungsional atau peralatan praktis"
+          ],
+          [
+            "shopeg.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko aksesori, gadget, atau perlengkapan teknis"
+          ],
+          [
+            "shopeh.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko kebutuhan rumah tangga, kesehatan, atau kebugaran"
+          ],
+          [
+            "shopep.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko kado, produk personal, atau pesanan kustom"
+          ],
+          [
+            "shopew.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko berbasis web atau etalase katalog daring"
+          ],
+          [
+            "shopib.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko ritel digital dengan identitas nama ringkas"
+          ],
+          [
+            "shopod.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko print-on-demand, edisi terbatas, atau mini-shop"
+          ],
+          [
+            "shopey.net",
+            "95",
+            "96",
+            "91",
+            "93",
+            "Toko daring bernuansa ramah dan mudah diingat"
+          ],
+          [
+            "shopoy.net",
+            "95",
+            "96",
+            "91",
+            "93",
+            "Toko kasual atau niche store dengan akhiran vokal y"
           ]
         ]
       }
@@ -134,7 +342,142 @@
             "100",
             "96",
             "94",
-            "Toko ritel lokal atau kios kebutuhan sehari-harishopeb.id"
+            "Toko ritel lokal atau kios kebutuhan sehari-hari"
+          ],
+          [
+            "shopeb.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko produk pilihan dengan penekanan nama yang tegas"
+          ],
+          [
+            "shoped.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko perlengkapan edukasi atau produk lokal"
+          ],
+          [
+            "shopes.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko daring UMKM dengan identitas lokal yang jelas"
+          ],
+          [
+            "shopal.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Etalase katalog web atau toko online berbasis situs"
+          ],
+          [
+            "shopel.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Toko web perlengkapan elektronik atau aksesori digital"
+          ],
+          [
+            "shoper.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Situs toko atau pusat katalog produk daring"
+          ],
+          [
+            "shopor.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Toko web multi-kategori untuk usaha rintisan"
+          ],
+          [
+            "shopal.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Toko mandiri, katalog jualan cepat, atau kios personal"
+          ],
+          [
+            "shopel.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Kios daring produk pilihan atau kanal jualan reseller"
+          ],
+          [
+            "shoper.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Halaman etalase dagang atau toko skala kecil"
+          ],
+          [
+            "shopor.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Kios atau micro-shop yang ringkas dan hemat"
+          ],
+          [
+            "shopal.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Usaha dagang atau toko yang menonjolkan identitas bisnis"
+          ],
+          [
+            "shopel.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Bisnis ritel elektronik atau kios usaha khusus"
+          ],
+          [
+            "shoper.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Usaha perdagangan atau toko yang fokus pada aktivitas niaga"
+          ],
+          [
+            "shopor.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Kios atau bisnis jual-beli berbagai produk"
           ]
         ]
       }
