@@ -770,9 +770,9 @@
                 <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full">
                     <div class="w-full sm:w-44 shrink-0">
                         <label id="uiAnalysisStatusFilterLabel" for="analysisStatusFilter" class="sr-only">Filter by availability status</label>
-                        <select id="analysisStatusFilter" onchange="renderDomainAnalysisList(true)" class="w-full min-h-[48px] sm:min-h-[40px] px-3 py-1.5 text-[12px] md:text-[13px] font-semibold bg-[#FFFFFF] text-[#292929] border border-[#C9D8D8] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] cursor-pointer">
+                        <select id="analysisStatusFilter" onchange="userChangedStatusFilter = true; renderDomainAnalysisList(true)" class="w-full min-h-[48px] sm:min-h-[40px] px-3 py-1.5 text-[12px] md:text-[13px] font-semibold bg-[#FFFFFF] text-[#292929] border border-[#C9D8D8] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] cursor-pointer">
                             <option id="uiStatusOptAll" value="all">Select Status: All</option>
-                            <option id="uiStatusOptAvailCheck" value="available_or_check">Available &amp; Check</option>
+                            <option id="uiStatusOptAvailCheck" value="available_or_check" selected>Available &amp; Check</option>
                             <option id="uiStatusOptAvailable" value="available">Available</option>
                             <option id="uiStatusOptTaken" value="taken">Taken</option>
                             <option id="uiStatusOptCheck" value="check">Check</option>
@@ -3439,6 +3439,8 @@
             return (typeof window !== 'undefined' && window.innerWidth < 640) ? 8 : 12;
         }
         let analysisRenderLimit = getInitialAnalysisRenderLimit();
+        let userChangedStatusFilter = false;
+        let analysisRefreshDebounceTimer = null;
         let analysisSkeletonTimer = null;
         let shareFeedbackTimer = null;
         let toastTimer = null;
@@ -4786,9 +4788,9 @@
                 clearTimeout(analysisSkeletonTimer);
                 analysisSkeletonTimer = null;
             }
-            if (options && options.resetStatusFilter) {
-                const statusFilterEl = document.getElementById('analysisStatusFilter');
-                if (statusFilterEl) statusFilterEl.value = 'available_or_check';
+            const statusFilterEl = document.getElementById('analysisStatusFilter');
+            if (statusFilterEl && !userChangedStatusFilter) {
+                statusFilterEl.value = 'available_or_check';
             }
             const rawKeyword = document.getElementById('keywordInput').value.trim().toLowerCase();
             const rawKeyword2 = document.getElementById('keyword2Input').value.trim().toLowerCase();
@@ -4938,45 +4940,43 @@
                 });
             });
 
-            // Prioritize shortest domains first; in EN/ID mode rank equal-SLD-length candidates by highest score first
+            // Execution order: Generate -> Calculate Score (70% Brand/Pronounceability + 30% Natural Spelling) -> Sort -> Truncate display cap -> Auto-Check Top 24
             const MAX_DOMAINS = 200;
-            if (activeUiLang === 'en' || activeUiLang === 'id') {
-                const activeTargetKeywords = getScoringTargetKeywords();
-                const sldLenMap = new Map();
-                for (let i = 0; i < results.length; i++) {
-                    const d = results[i];
-                    sldLenMap.set(d, splitDomainSldAndExt(d).sld.length);
+            const activeTargetKeywords = getScoringTargetKeywords();
+            const spellingNaturalnessMemo = new Map();
+            const scoredDomainMeta = new Map();
+
+            for (let i = 0; i < results.length; i++) {
+                const d = results[i];
+                const { sld, ext } = splitDomainSldAndExt(d);
+                let naturalScore = spellingNaturalnessMemo.get(sld);
+                if (naturalScore === undefined) {
+                    naturalScore = calculateSpellingNaturalness(sld, activeUiLang);
+                    spellingNaturalnessMemo.set(sld, naturalScore);
                 }
-                results.sort((a, b) => (sldLenMap.get(a) - sldLenMap.get(b)) || (a.length - b.length));
-                const cutoffSldLen = results.length > MAX_DOMAINS ? sldLenMap.get(results[MAX_DOMAINS - 1]) : Infinity;
-                const scoreCandidates = [];
-                const tailResults = [];
-                for (let i = 0; i < results.length; i++) {
-                    const d = results[i];
-                    if (sldLenMap.get(d) <= cutoffSldLen) {
-                        scoreCandidates.push(d);
-                    } else {
-                        tailResults.push(d);
-                    }
-                }
-                const scoreCacheMap = new Map();
-                for (let i = 0; i < scoreCandidates.length; i++) {
-                    const d = scoreCandidates[i];
-                    const ext = extractDomainExtension(d);
-                    scoreCacheMap.set(d, computeDomainScores(d, ext, activeUiLang, activeTargetKeywords).overall_heuristic_score);
-                }
-                scoreCandidates.sort((a, b) => {
-                    const sldDiff = sldLenMap.get(a) - sldLenMap.get(b);
-                    if (sldDiff !== 0) return sldDiff;
-                    const scoreDiff = scoreCacheMap.get(b) - scoreCacheMap.get(a);
-                    if (scoreDiff !== 0) return scoreDiff;
-                    if (a.length !== b.length) return a.length - b.length;
-                    return a.localeCompare(b);
+                const domainScores = computeDomainScores(d, ext, activeUiLang, activeTargetKeywords);
+                const brandPronScore = domainScores.overall_heuristic_score;
+                const combinedScore = Math.round((brandPronScore * 0.70 + naturalScore * 0.30) * 100) / 100;
+                scoredDomainMeta.set(d, {
+                    combinedScore,
+                    naturalScore,
+                    brandPronScore,
+                    sldLen: sld.length
                 });
-                results.splice(0, results.length, ...scoreCandidates, ...tailResults);
-            } else {
-                results.sort((a, b) => a.length - b.length);
             }
+
+            results.sort((a, b) => {
+                const metaA = scoredDomainMeta.get(a);
+                const metaB = scoredDomainMeta.get(b);
+                const combinedDiff = metaB.combinedScore - metaA.combinedScore;
+                if (Math.abs(combinedDiff) > 0.001) return combinedDiff;
+                const naturalDiff = metaB.naturalScore - metaA.naturalScore;
+                if (naturalDiff !== 0) return naturalDiff;
+                const sldDiff = metaA.sldLen - metaB.sldLen;
+                if (sldDiff !== 0) return sldDiff;
+                if (a.length !== b.length) return a.length - b.length;
+                return a.localeCompare(b);
+            });
 
             lastGeneratedTotalRaw = results.length;
             const isTruncated = results.length > MAX_DOMAINS;
@@ -5060,7 +5060,9 @@
             }
         }
 
-        const AUTO_CHECK_LIMIT = 5;
+        const AUTO_CHECK_LIMIT = 24;
+        const AUTO_CHECK_CONCURRENCY = 3;
+        const AUTO_CHECK_STAGGER_MS = 95;
         const MAX_CHECK_DOMAIN_LENGTH = 30;
         const AVAILABILITY_CACHE_STORAGE_KEY = 'domainAvailabilityCacheV1';
         const AVAILABILITY_CACHE_MIN_TTL_MS = 60 * 1000;
@@ -5491,23 +5493,39 @@
             if (!rdapBase) {
                 return { status: 'no-ns', method: 'NS' };
             }
-            try {
-                const res = await fetchWithTimeout(
-                    `${rdapBase}domain/${encodeURIComponent(domain)}`,
-                    { headers: { 'Accept': 'application/rdap+json, application/json' } },
-                    5500
-                );
-                if (res.status === 200) return { status: 'taken', method: 'RDAP' };
-                if (res.status === 404) return { status: 'available', method: 'RDAP' };
-                return { status: 'error', method: 'RDAP' };
-            } catch (e) {
-                return { status: 'no-ns', method: 'NS' };
+            const rdapUrl = `${rdapBase}domain/${encodeURIComponent(domain)}`;
+            for (let attempt = 0; attempt < 2; attempt++) {
+                try {
+                    const res = await fetchWithTimeout(
+                        rdapUrl,
+                        { headers: { 'Accept': 'application/rdap+json, application/json' } },
+                        5500
+                    );
+                    if (res.status === 200) return { status: 'taken', method: 'RDAP' };
+                    if (res.status === 404) return { status: 'available', method: 'RDAP' };
+                    if ((res.status === 429 || res.status === 503) && attempt === 0) {
+                        const retryHeader = Number(res.headers && res.headers.get && res.headers.get('Retry-After'));
+                        const backoffMs = Number.isFinite(retryHeader) && retryHeader > 0
+                            ? Math.min(1500, Math.max(300, retryHeader * 1000))
+                            : 500;
+                        await new Promise((resolve) => setTimeout(resolve, backoffMs));
+                        continue;
+                    }
+                    return { status: 'error', method: 'RDAP' };
+                } catch (e) {
+                    if (attempt === 0) {
+                        await new Promise((resolve) => setTimeout(resolve, 250));
+                        continue;
+                    }
+                    return { status: 'no-ns', method: 'NS' };
+                }
             }
+            return { status: 'error', method: 'RDAP' };
         }
 
         function getAnalysisFilterStatus() {
             const sel = document.getElementById('analysisStatusFilter');
-            return sel ? String(sel.value || 'all') : 'all';
+            return sel ? String(sel.value || 'available_or_check') : 'available_or_check';
         }
 
         function matchesAvailabilityFilter(domain, statusFilter) {
@@ -5529,11 +5547,19 @@
             return true;
         }
 
+        function scheduleCoalescedAnalysisRefresh() {
+            if (analysisRefreshDebounceTimer) return;
+            analysisRefreshDebounceTimer = setTimeout(() => {
+                analysisRefreshDebounceTimer = null;
+                renderDomainAnalysisList(false);
+            }, 60);
+        }
+
         function updateDomainAvailabilityCell(domain, isCheckingTransition) {
             const normTarget = normalizeDomainCacheKey(domain);
             const statusFilter = getAnalysisFilterStatus();
             if (!isCheckingTransition && (statusFilter === 'available' || statusFilter === 'taken' || (statusFilter === 'available_or_check' && !matchesAvailabilityFilter(domain, statusFilter)))) {
-                renderDomainAnalysisList(false);
+                scheduleCoalescedAnalysisRefresh();
                 return;
             }
             const listEl = document.getElementById('domainAnalysisList');
@@ -6538,6 +6564,253 @@
             };
         }
 
+        const SPELLING_BRANDABLE_SMOOTH_SUFFIXES = [
+            { suffix: 'tools', boost: 13 },
+            { suffix: 'ify', boost: 13 },
+            { suffix: 'hub', boost: 12 },
+            { suffix: 'lab', boost: 12 },
+            { suffix: 'box', boost: 12 },
+            { suffix: 'ly', boost: 12 },
+            { suffix: 'io', boost: 11 },
+            { suffix: 'al', boost: 9 },
+            { suffix: 'el', boost: 9 },
+            { suffix: 'er', boost: 9 },
+            { suffix: 'or', boost: 9 },
+            { suffix: 'o', boost: 7 },
+            { suffix: 'a', boost: 7 },
+            { suffix: 'y', boost: 8 }
+        ];
+        const EN_RECOGNIZED_DOUBLE_ENDINGS = new Set(['ll', 'ss', 'ff', 'tt', 'dd', 'rr', 'gg', 'bb', 'nn', 'mm', 'pp']);
+        const HEAVY_UNNATURAL_CLUSTERS_RE = /(?:xtr|qzt|pph|ngh|zzk|vwx|jq|qj|qz|zq|qx|xq|xz|zx|vx|xv)/;
+
+        function calculateSpellingNaturalness(label, lang) {
+            const cleanLabel = String(label || '').trim().toLowerCase();
+            if (!cleanLabel) return 20;
+
+            const normLang = String(lang || 'EN').trim().toUpperCase();
+            const segments = cleanLabel.split('-').filter(Boolean);
+            const lastSeg = (segments.length > 0 ? segments[segments.length - 1] : cleanLabel).replace(/[^a-z]/g, '');
+            const alphaOnly = cleanLabel.replace(/[^a-z]/g, '');
+            const digitsCount = (cleanLabel.match(/[0-9]/g) || []).length;
+            const hyphenCount = (cleanLabel.match(/-/g) || []).length;
+
+            if (!alphaOnly) return 20;
+            if (alphaOnly.length === 1) return 52;
+
+            let score = 68;
+            const isVowel = (ch) => ch === 'a' || ch === 'e' || ch === 'i' || ch === 'o' || ch === 'u';
+            let vowelCount = 0;
+            let yCount = 0;
+            let curCons = 0;
+            let maxCons = 0;
+            let curVowel = 0;
+            let maxVowel = 0;
+            let transitions = 0;
+            let prevEffV = null;
+
+            for (let i = 0; i < alphaOnly.length; i++) {
+                const ch = alphaOnly[i];
+                const v = isVowel(ch);
+                const effV = v || (ch === 'y' && i > 0);
+                if (v) {
+                    vowelCount++;
+                    curVowel++;
+                    curCons = 0;
+                    if (curVowel > maxVowel) maxVowel = curVowel;
+                } else {
+                    if (ch === 'y') yCount++;
+                    curCons++;
+                    curVowel = 0;
+                    if (curCons > maxCons) maxCons = curCons;
+                }
+                if (prevEffV !== null && effV !== prevEffV) {
+                    transitions++;
+                }
+                prevEffV = effV;
+            }
+
+            const vRatio = (vowelCount + yCount * 0.5) / alphaOnly.length;
+            const transitionRatio = transitions / Math.max(1, alphaOnly.length - 1);
+
+            if (vRatio >= 0.30 && vRatio <= 0.58) {
+                score += 10;
+            } else if ((vRatio >= 0.22 && vRatio < 0.30) || (vRatio > 0.58 && vRatio <= 0.68)) {
+                score += 4;
+            } else if (vowelCount === 0 && yCount === 0) {
+                score -= alphaOnly.length <= 3 ? 14 : 30;
+            } else {
+                score -= 10;
+            }
+
+            if (transitionRatio >= 0.60 && maxCons <= 2 && maxVowel <= 2) {
+                score += 8;
+            } else if (transitionRatio >= 0.42 && maxCons <= 2) {
+                score += 4;
+            } else if (transitionRatio < 0.28) {
+                score -= 8;
+            }
+
+            if (maxCons === 3) score -= 7;
+            else if (maxCons >= 4) score -= 20;
+            if (maxVowel >= 3) score -= 16;
+
+            // Typo risk from digits, hyphens, triple chars, or awkward vowel pairs
+            if (hyphenCount === 1 && segments.length === 2 && segments.every((p) => p.length >= 2)) {
+                score -= 7;
+            } else if (hyphenCount >= 1) {
+                score -= Math.min(20, hyphenCount * 10);
+            }
+            if (digitsCount > 0) {
+                score -= Math.min(22, 9 + digitsCount * 5);
+            }
+            if (/(.)\1{2,}/.test(cleanLabel)) {
+                score -= 18;
+            }
+            if (/(?:iy|uy|yy)/.test(alphaOnly)) {
+                score -= 22;
+            }
+
+            const targetKeywords = getScoringTargetKeywords();
+            const isTargetKeywordExact = targetKeywords.some((kw) => kw === lastSeg || kw === alphaOnly);
+
+            let hasMajorPenalty = false;
+            if (normLang === 'EN') {
+                const enPenalty = computeEnglishPronunciationPenalty(cleanLabel, targetKeywords);
+                const isKnownEnWord = enPenalty.isExempt || ENGLISH_COMMON_PENALTY_EXCEPTIONS.has(lastSeg) || EN_DOMAIN_NICHE_STEMS.includes(lastSeg);
+
+                if (!isKnownEnWord) {
+                    if (enPenalty.penalty > 0) {
+                        score -= enPenalty.penalty + 4;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                    const doubleEndMatch = lastSeg.match(/([a-z])\1$/);
+                    if (/(?:ckk|ssz|yy|aa)$/.test(lastSeg) || (doubleEndMatch && !EN_RECOGNIZED_DOUBLE_ENDINGS.has(doubleEndMatch[0]))) {
+                        score -= 20;
+                        hasMajorPenalty = true;
+                    }
+                } else {
+                    score += 8;
+                }
+            } else if (normLang === 'ID') {
+                const idPenalty = computeIndonesianPronunciationPenalty(cleanLabel, targetKeywords);
+                const isKnownIdWord = idPenalty.isExempt || INDONESIAN_COMMON_PENALTY_EXCEPTIONS.has(lastSeg) || ID_DOMAIN_NICHE_STEMS.includes(lastSeg);
+
+                if (!isKnownIdWord) {
+                    if (idPenalty.penalty > 0) {
+                        score -= idPenalty.penalty + 6;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                    const doubleEndMatch = lastSeg.match(/([a-z])\1$/);
+                    if (/(?:yy|aa|ckk|ssz)$/.test(lastSeg) || doubleEndMatch) {
+                        score -= 16;
+                        hasMajorPenalty = true;
+                    }
+                } else {
+                    score += 8;
+                }
+            } else if (normLang === 'ES' || normLang === 'PT') {
+                if (!isTargetKeywordExact) {
+                    if (/[jqvxw]$/.test(lastSeg) && !/(?:box|mix|fix|max|pro)$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly) || /(?:ckk|ssz|yy|aa)$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                    if (/[bcdfghjklmnpqrstvwxz]{3,}$/.test(lastSeg) && !/(?:str|ntr|ns)$/.test(lastSeg)) {
+                        score -= 14;
+                        hasMajorPenalty = true;
+                    }
+                }
+                if (!hasMajorPenalty && /(?:a|o|e|ar|er|or|al|el|ia|io|es|is)$/.test(lastSeg)) {
+                    score += 6;
+                }
+            } else if (normLang === 'FR') {
+                if (!isTargetKeywordExact) {
+                    if (/[jqvw]$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly) || /(?:ckk|ssz|yy|aa)$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                }
+                if (!hasMajorPenalty && /(?:e|a|o|i|er|ir|ar|or|al|el|et|at|ot|ie|io|st|nt|rt)$/.test(lastSeg)) {
+                    score += 6;
+                }
+            } else if (normLang === 'DE') {
+                if (!isTargetKeywordExact) {
+                    if (/[jqv]$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly) || /(?:ckk|ssz|yy|aa)$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                }
+                if (!hasMajorPenalty && /(?:er|el|en|em|es|ig|ik|st|nd|rt|ck|tz|ss|sch|cht)$/.test(lastSeg)) {
+                    score += 6;
+                }
+            } else if (normLang === 'RU') {
+                if (!isTargetKeywordExact) {
+                    if (/[jqv]$/.test(lastSeg)) {
+                        score -= 16;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly) || /(?:ckk|ssz|yy|aa)$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                }
+                if (!hasMajorPenalty && /(?:a|o|y|i|ov|ev|in|ik|ok|sk|st|nt)$/.test(lastSeg)) {
+                    score += 6;
+                }
+            } else if (normLang === 'JA') {
+                const isKnownTechTerm = /(?:hub|lab|box|tools|pro|app|dev|io|ai|ly|ify)$/.test(lastSeg);
+                if (!isTargetKeywordExact && !isKnownTechTerm) {
+                    if (/[bcdfghjklmpqrstvwxz]$/.test(lastSeg)) {
+                        score -= 14;
+                        hasMajorPenalty = true;
+                    }
+                    if (HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly) || /(?:ckk|ssz|yy|aa)$/.test(lastSeg)) {
+                        score -= 18;
+                        hasMajorPenalty = true;
+                    }
+                }
+                if (!hasMajorPenalty && (/[aiueon]$/.test(lastSeg) || isKnownTechTerm)) {
+                    score += 7;
+                }
+            }
+
+            // Boost smooth, easy-to-spell brandable endings when natural to the label
+            if (!hasMajorPenalty && alphaOnly.length >= 3) {
+                for (let i = 0; i < SPELLING_BRANDABLE_SMOOTH_SUFFIXES.length; i++) {
+                    const entry = SPELLING_BRANDABLE_SMOOTH_SUFFIXES[i];
+                    const suf = entry.suffix;
+                    if (!lastSeg.endsWith(suf)) continue;
+                    const prefixLen = lastSeg.length - suf.length;
+                    if (prefixLen === 0 && suf.length <= 2) continue;
+                    if (suf === 'y' && prefixLen >= 1 && isVowel(lastSeg[prefixLen - 1])) continue;
+                    if ((suf === 'o' || suf === 'a') && prefixLen >= 1 && isVowel(lastSeg[prefixLen - 1])) continue;
+                    score += entry.boost;
+                    break;
+                }
+            }
+
+            return clampDomainScore(score, 50);
+        }
+
         function getScoringTargetKeywords() {
             try {
                 const raw1 = document.getElementById('keywordInput')?.value.trim() || '';
@@ -6702,13 +6975,20 @@
                 if (activeQueue.length === 0) return;
 
                 let cursor = 0;
-                const workerCount = Math.min(3, activeQueue.length);
-                const workers = Array.from({ length: workerCount }, async () => {
+                const workerCount = Math.min(AUTO_CHECK_CONCURRENCY, activeQueue.length);
+                const workers = Array.from({ length: workerCount }, async (_, workerIdx) => {
+                    if (workerIdx > 0) {
+                        await new Promise((resolve) => setTimeout(resolve, workerIdx * 45));
+                    }
                     while (cursor < activeQueue.length) {
                         if (genId !== autoCheckGenerationId) return;
                         const nextDomain = activeQueue[cursor++];
                         if (!autoCheckPendingDomains.has(nextDomain)) continue;
                         await checkSingleDomainAvailability(nextDomain, false, 'auto');
+                        if (genId !== autoCheckGenerationId) return;
+                        if (cursor < activeQueue.length) {
+                            await new Promise((resolve) => setTimeout(resolve, AUTO_CHECK_STAGGER_MS));
+                        }
                     }
                 });
                 await Promise.all(workers);
@@ -7027,7 +7307,8 @@
         function toggleAvailableOnlyFilter() {
             const sel = document.getElementById('analysisStatusFilter');
             if (!sel) return;
-            sel.value = sel.value === 'available' ? 'all' : 'available';
+            userChangedStatusFilter = true;
+            sel.value = sel.value === 'available' ? 'available_or_check' : 'available';
             renderDomainAnalysisList(true);
         }
 
@@ -7385,7 +7666,8 @@
             const statusFilterEl = document.getElementById('analysisStatusFilter');
             const filterInputEl = document.getElementById('analysisFilterInput');
             const selectAllEl = document.getElementById('selectAllVisibleCheckbox');
-            if (statusFilterEl) statusFilterEl.value = 'all';
+            userChangedStatusFilter = false;
+            if (statusFilterEl) statusFilterEl.value = 'available_or_check';
             syncAvailableOnlyButton();
             if (filterInputEl) filterInputEl.value = '';
             if (selectAllEl) {

@@ -522,4 +522,48 @@ Jika Anda mengedit file `lib/lexicon/<lang>.json` langsung di editor teks tanpa 
      -d '{"action":"backfill-tags","mode":"retag-brandable","limit":200,"offset":0,"dryRun":false}'
    ```
 
+---
 
+### G. Kebijakan Generasi Domain, Pemeringkatan Ejaan Alami, Auto-Check 24 Teratas & Filter Default (`index.html`)
+
+Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, dan pengecekan ketersediaan sisi klien di `index.html` (yang dikompilasi ke seluruh 48 halaman statis di `dist/`):
+
+#### 1. Ekstensi Default per Bahasa (`defaultExts` & `extPlaceholder`)
+- **Bahasa Indonesia (`id`)**: `.my.id, .web.id, .biz.id, .id, .com`
+- **Bahasa Inggris (`en`)**: `.com, .net, .co`
+
+#### 2. Urutan Eksekusi Wajib & Pemeringkatan Berbasis Kealamian Ejaan
+- **Alur Eksekusi (`generateDomains`)**:
+  `Generate` → `Hitung Skor Gabungan (70% Brand/Pronounceability + 30% Natural Spelling)` → `Sortir Tertinggi ke Terendah` → `Batas Tampilan (MAX_DOMAINS = 200)` → `Auto-Check 24 Teratas`.
+- **Evaluasi SLD Murni (`calculateSpellingNaturalness(label, lang)`)**:
+  - Menilai **hanya bagian SLD/label sebelum TLD** (mis. `"boxal"` dari `"boxal.com"`, bukan ekstensinya), menghasilkan skor **`0–100`** untuk 8 bahasa aktif (`EN`, `ID`, `ES`, `PT`, `FR`, `DE`, `RU`, `JA`), serta di-*memoize* per `sld` agar ringan.
+  - **Rumus Peringkat Gabungan**:
+    ```text
+    combinedScore = round((overall_heuristic_score * 0.70 + naturalScore * 0.30) * 100) / 100
+    ```
+  - **Urutan *Tie-Breaker***: `combinedScore` lebih tinggi → `naturalScore` lebih tinggi → panjang SLD lebih pendek → panjang domain penuh lebih pendek → alfabetis (`localeCompare`).
+- **Aturan Skor & Penyesuaian Bahasa**:
+  - **Boost Akhiran Mulus (`SPELLING_BRANDABLE_SMOOTH_SUFFIXES`)**: Memberi bonus bila label tidak memiliki penalti fonetik mayor dan berakhiran pola yang mudah dieja (`-tools`, `-ify`, `-hub`, `-lab`, `-box`, `-ly`, `-io`, `-al`, `-el`, `-er`, `-or`, `-o`, `-a`, `-y`).
+  - **Bahasa Inggris (`EN`)**: Menurunkan skor akhiran canggung `-j`, `-q`, `-v`, `-x`, `-z` pada kata rekaan/gabungan (kecuali kata umum/singkatan standar seperti `fix`, `box`, `mix`, `quiz`, `jazz`, `buzz`), akhiran rawan salah ketik `-ah`/`-ih`/`-uh`, akhiran huruf ganda tak wajar (`-yy`, `-aa`, `-ckk`, `-ssz`, di luar `EN_RECOGNIZED_DOUBLE_ENDINGS` seperti `ll`, `ss`, `ff`, `tt`, `dd`, `rr`, `gg`, `bb`, `nn`, `mm`, `pp`), serta gugus konsonan berat (`HEAVY_UNNATURAL_CLUSTERS_RE`: `xtr`, `qzt`, `pph`, `ngh`, `zzk`, `vwx`, `jq`, `qj`, `qz`, `zq`, `qx`, `xq`, `xz`, `zx`, `vx`, `xv`), sementara akhiran alami Inggris (`-st`, `-nd`, `-ld`, `-ft`, `-mp`, `-nt`, `-ck`, `-sh`, `-ch`, `-th`, `-ng`) tetap diizinkan.
+  - **Bahasa Indonesia (`ID`)**: Menurunkan skor kombinasi/akhiran yang kaku atau membelit lidah (`-cj`, `-dj`, `-qh`, `-xh`, `-zj`, `-nstr`, `-bstr`, `-qzt`, `-vwx`, `HEAVY_UNNATURAL_CLUSTERS_RE`, dan akhiran huruf ganda tak wajar), dengan pengecualian untuk bunyi/kata alami Indonesia (`-ng`, `-ny`, `-kh`, `-sy`, `max`, `pro`, `fix`, `id`, `ku`, `mu`, `in`, dll.).
+  - **Bahasa Lain (`ES`, `PT`, `FR`, `DE`, `RU`, `JA`)**: Penyesuaian fonetik & keterbacaan ringan sesuai karakter tiap bahasa (mis. akhiran vokal/`-n` pada `JA`, `-er/-el/-en/-ig/-ik/-sch` pada `DE`, `-ov/-ev/-in/-sk` pada `RU`, `-a/-o/-e/-ar/-er/-or/-al` pada `ES`/`PT`, `-e/-er/-ir/-ie/-io/-st` pada `FR`).
+- **Kebijakan Non-Destruktif (Dilarang Menghapus Domain)**:
+  Domain berskor rendah **tidak pernah dihapus, difilter keluar, atau disembunyikan** dari daftar hasil—hanya diturunkan peringkatnya agar domain yang lebih alami muncul di posisi teratas terlebih dahulu.
+- **Paritas Skor D1 (`overall_heuristic_score`)**:
+  `computeDomainScores(...)` beserta 7 sub-skornya tetap identik 100% dengan `functions/api/log-available-domain.js` untuk menjaga keselarasan pencatatan skor ke Cloudflare D1.
+
+#### 3. Auto-Check Ketersediaan 24 Domain Teratas & Proteksi Throttling
+- **Batas Otomatis (`AUTO_CHECK_LIMIT = 24`)**: Setelah pengurutan gabungan selesai, hanya **24 domain teratas** (indeks `0` sampai `23`, dengan panjang `<= MAX_CHECK_DOMAIN_LENGTH = 30`) yang otomatis dijadwalkan untuk pengecekan ketersediaan di `scheduleAutoAvailabilityChecks`. Domain selebihnya tetap dapat dicek pengguna secara manual melalui tombol **Check** per baris atau **Bulk Check**.
+- **Throttling & Konkurensi Terkendali**:
+  - Pool worker berjalan dengan batas `AUTO_CHECK_CONCURRENCY = 3`, penundaan start bertahap per worker (`workerIdx * 45 ms`), serta jeda antar-domain `AUTO_CHECK_STAGGER_MS = 95 ms`.
+  - Refresh daftar analisis di-*coalesce* lewat `scheduleCoalescedAnalysisRefresh` (debounce `60 ms`) agar pembaruan status massal tidak membuat UI membeku.
+- **Graceful Rate-Limit & Error Retry (`checkRdapAvailability`)**:
+  - Jika server RDAP merespons HTTP `429` atau `503`, fungsi melakukan *backoff retry* 1x (mengikuti header `Retry-After` yang dibatasi `300–1500 ms`, atau default `500 ms`).
+  - Jika terjadi gangguan jaringan sementara, dilakukan 1x retry cepat (`250 ms`) sebelum beralih aman ke status `no-ns` atau `error` tanpa memblokir antrean domain berikutnya.
+
+#### 4. Filter Status Ketersediaan Default (`#analysisStatusFilter`)
+- **Default Awal & Setelah Generate**: Dropdown filter `#analysisStatusFilter` secara bawaan disetel ke **`"available_or_check"` (`Available & Check`)**, yang menyembunyikan domain berstatus `taken` namun tetap menampilkan domain `available` maupun yang masih berstatus `check` / belum dicek.
+- **Pelestarian Pilihan Pengguna (`userChangedStatusFilter`)**:
+  - Selama `userChangedStatusFilter === false`, setiap pemanggilan `generateDomains()` menjaga filter pada `"available_or_check"`.
+  - Begitu pengguna mengganti dropdown secara manual (`onchange`) atau mengklik tombol toggle `Available Only`, `userChangedStatusFilter` menjadi `true` sehingga pilihan pengguna tetap dipertahankan saat generate ulang.
+  - Tombol **Start Over / Mulai Ulang (`resetToHome`)** mereset `userChangedStatusFilter = false` dan mengembalikan filter ke `"available_or_check"`.
