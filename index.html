@@ -235,50 +235,80 @@
             }
         }
 
-        @media (max-width: 375px) {
+        @media (max-width: 479px) {
             #domainAnalysisPanel table th,
             #domainAnalysisPanel table td:not([colspan]) {
-                padding-left: 0.25rem;
-                padding-right: 0.25rem;
+                padding-left: 0.1875rem;
+                padding-right: 0.1875rem;
                 text-align: left !important;
+            }
+            #domainAnalysisPanel table th:first-child,
+            #domainAnalysisPanel table td:first-child:not([colspan]) {
+                padding-left: 0.375rem;
+            }
+            #domainAnalysisPanel table th:nth-child(2),
+            #domainAnalysisPanel table td:nth-child(2):not([colspan]) {
+                padding-left: 0.125rem;
+                padding-right: 0.125rem;
             }
             #domainAnalysisPanel table th,
             #domainAnalysisPanel table th button {
-                font-size: 10px;
-                letter-spacing: 0.02em;
+                font-size: 10.5px;
+                letter-spacing: 0.01em;
+                gap: 0.125rem;
             }
-            #domainAnalysisPanel table td:not([colspan]) {
-                font-size: 11px;
+            #domainAnalysisPanel table th [data-sort-icon] svg {
+                width: 0.625rem;
+                height: 0.625rem;
             }
             #domainAnalysisList td[data-avail-domain] span,
             #domainAnalysisList td[data-avail-domain] button {
-                font-size: 10px;
+                font-size: 11px;
             }
-            #domainAnalysisList td[data-avail-domain] > span,
-            #domainAnalysisList td[data-avail-domain] > button,
-            #domainAnalysisList td[data-avail-domain] > span > span {
+            #domainAnalysisList td[data-avail-domain] > span {
+                gap: 0.1875rem;
+            }
+            #domainAnalysisList td[data-avail-domain] > span > span,
+            #domainAnalysisList td[data-avail-domain] > button {
                 padding-left: 0.375rem;
                 padding-right: 0.375rem;
             }
             #domainAnalysisList td[data-avail-domain] button[data-recheck-domain] {
-                width: 1.25rem;
-                height: 1.25rem;
+                width: 1.125rem;
+                height: 1.125rem;
                 padding: 0;
             }
-            #domainAnalysisList td > div.inline-flex {
+            #domainAnalysisList td.ui-td-domain {
+                font-size: 14px;
+            }
+            #domainAnalysisList td.ui-td-domain > div.inline-flex {
                 justify-content: flex-start !important;
                 gap: 0.25rem;
             }
             #domainAnalysisList td button[data-copy-domain] {
-                width: 1.5rem;
-                height: 1.5rem;
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            #domainAnalysisList td button[data-copy-domain] svg {
+                width: 0.75rem;
+                height: 0.75rem;
+            }
+            #domainAnalysisList td[data-score-domain] > span {
+                font-size: 12px;
+                padding: 0.125rem 0.3125rem;
+            }
+            #domainAnalysisList td.ui-td-chars {
+                font-size: 12.5px;
+            }
+            #domainAnalysisList td.ui-td-num {
+                font-size: 12px;
             }
             #domainAnalysisList td a {
                 min-width: 1.625rem;
                 min-height: 1.75rem;
-                padding-left: 0.3rem;
-                padding-right: 0.3rem;
-                font-size: 10px;
+                padding-left: 0.3125rem;
+                padding-right: 0.3125rem;
+                font-size: 11px;
             }
         }
     </style>
@@ -752,7 +782,7 @@
         </div>
 
         <!-- Full-Width Interactive Domain Results & Availability Panel -->
-        <section id="domainAnalysisPanel" aria-labelledby="uiAnalysisTitle" class="scroll-mt-16 md:scroll-mt-20 w-full bg-[#FFFFFF] text-[#292929] rounded-xl shadow-sm border border-[#C9D8D8] p-4 sm:p-6 md:p-7 flex flex-col gap-4 md:gap-5 min-w-0">
+        <section id="domainAnalysisPanel" aria-labelledby="uiAnalysisTitle" class="scroll-mt-16 md:scroll-mt-20 w-full bg-[#FFFFFF] text-[#0F172A] rounded-xl shadow-sm border border-[#E2E8F0] px-2.5 py-4 sm:p-6 md:p-7 flex flex-col gap-4 md:gap-5 min-w-0">
             <div class="bg-[#ECF2F2] text-[#292929] border border-[#C9D8D8] rounded-xl p-4 sm:p-5 flex flex-col gap-1.5 shadow-sm">
                 <h2 id="uiAnalysisTitle" class="text-[17px] sm:text-[18px] md:text-[20px] font-bold tracking-tight text-[#292929] leading-[1.4]">Domain Results</h2>
                 <p id="uiAnalysisSub" class="text-[13px] md:text-[14px] text-[#292929]/90 leading-[1.5]">Check availability, brand score, backlink history, or archives instantly.</p>
@@ -810,56 +840,56 @@
                 </div>
             </div>
 
-            <!-- Responsive Horizontal-Scroll Table (Orange Theme) -->
-            <div class="overflow-x-auto border border-[#f05422]/40 rounded-xl max-h-[28rem] overflow-y-auto bg-[#FFFFFF] shadow-sm">
+            <!-- Responsive Horizontal-Scroll Table -->
+            <div class="overflow-x-auto border border-[#E2E8F0] rounded-xl max-h-[28rem] overflow-y-auto bg-[#FFFFFF] shadow-sm">
                 <table class="w-full text-left border-collapse">
-                    <thead class="sticky top-0 z-10 bg-[#f05422] border-b border-[#d64416] text-[11px] uppercase tracking-wider font-bold text-[#FFFFFF]">
+                    <thead class="sticky top-0 z-10 bg-[#EA580C] border-b border-[#C2410C] text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.04em] font-semibold text-[#FFFFFF]">
                         <tr>
-                            <th scope="col" id="uiThAvail" aria-sort="none" class="py-2.5 px-1.5 sm:px-2 w-px whitespace-nowrap text-left transition-colors">
-                                <button type="button" onclick="toggleAnalysisSort('availability')" class="group inline-flex items-center gap-1 uppercase tracking-wider font-bold text-inherit hover:text-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
+                            <th scope="col" id="uiThAvail" aria-sort="none" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left transition-colors">
+                                <button type="button" onclick="toggleAnalysisSort('availability')" class="group inline-flex items-center gap-1 uppercase tracking-[0.04em] font-semibold text-inherit hover:text-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
                                     <span id="uiThAvailLabel">Availability</span>
-                                    <span data-sort-icon="availability" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-65 group-hover:opacity-100 transition-opacity">
+                                    <span data-sort-icon="availability" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-75 group-hover:opacity-100 transition-opacity">
                                         <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>
                                     </span>
                                 </button>
                             </th>
-                            <th scope="col" class="py-2.5 px-1.5 sm:px-2 w-px whitespace-nowrap text-left">
-                                <input type="checkbox" id="selectAllVisibleCheckbox" onchange="toggleSelectAllVisible(this.checked)" aria-label="Select all visible domains" class="w-4 h-4 rounded border-white/90 bg-white text-[#f05422] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#f05422] cursor-pointer align-middle">
+                            <th scope="col" class="py-3 px-1.5 sm:px-2.5 w-px whitespace-nowrap text-left">
+                                <input type="checkbox" id="selectAllVisibleCheckbox" onchange="toggleSelectAllVisible(this.checked)" aria-label="Select all visible domains" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-white/90 bg-white text-[#EA580C] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#EA580C] cursor-pointer align-middle">
                             </th>
-                            <th scope="col" id="uiThDomain" aria-sort="none" class="py-2.5 px-1.5 sm:px-2 w-px whitespace-nowrap text-left transition-colors">
-                                <button type="button" onclick="toggleAnalysisSort('domain')" class="group inline-flex items-center gap-1 uppercase tracking-wider font-bold text-inherit hover:text-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
+                            <th scope="col" id="uiThDomain" aria-sort="none" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left transition-colors">
+                                <button type="button" onclick="toggleAnalysisSort('domain')" class="group inline-flex items-center gap-1 uppercase tracking-[0.04em] font-semibold text-inherit hover:text-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
                                     <span id="uiThDomainLabel">Domain Name</span>
-                                    <span data-sort-icon="domain" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-65 group-hover:opacity-100 transition-opacity">
+                                    <span data-sort-icon="domain" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-75 group-hover:opacity-100 transition-opacity">
                                         <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>
                                     </span>
                                 </button>
                             </th>
-                            <th scope="col" id="uiThScore" aria-sort="none" class="py-2.5 px-1.5 sm:px-2 w-px whitespace-nowrap text-left tabular-nums transition-colors">
-                                <button type="button" onclick="toggleAnalysisSort('score')" class="group inline-flex items-center gap-1 uppercase tracking-wider font-bold text-inherit hover:text-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
+                            <th scope="col" id="uiThScore" aria-sort="none" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left tabular-nums transition-colors">
+                                <button type="button" onclick="toggleAnalysisSort('score')" class="group inline-flex items-center gap-1 uppercase tracking-[0.04em] font-semibold text-inherit hover:text-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
                                     <span id="uiThScoreLabel">Score</span>
-                                    <span data-sort-icon="score" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-65 group-hover:opacity-100 transition-opacity">
+                                    <span data-sort-icon="score" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-75 group-hover:opacity-100 transition-opacity">
                                         <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>
                                     </span>
                                 </button>
                             </th>
-                            <th scope="col" id="uiThChars" aria-sort="none" class="py-2.5 px-1.5 sm:px-2 w-px whitespace-nowrap text-left tabular-nums ui-th-chars transition-colors">
-                                <button type="button" onclick="toggleAnalysisSort('chars')" class="group inline-flex items-center gap-1 uppercase tracking-wider font-bold text-inherit hover:text-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
+                            <th scope="col" id="uiThChars" aria-sort="none" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left tabular-nums ui-th-chars transition-colors">
+                                <button type="button" onclick="toggleAnalysisSort('chars')" class="group inline-flex items-center gap-1 uppercase tracking-[0.04em] font-semibold text-inherit hover:text-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
                                     <span id="uiThCharsLabel">Chars</span>
-                                    <span data-sort-icon="chars" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-65 group-hover:opacity-100 transition-opacity">
+                                    <span data-sort-icon="chars" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-75 group-hover:opacity-100 transition-opacity">
                                         <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>
                                     </span>
                                 </button>
                             </th>
-                            <th scope="col" id="uiThInspect" class="py-2.5 px-1.5 sm:px-2 whitespace-nowrap text-left">Inspect</th>
-                            <th scope="col" id="uiThNum" class="py-2.5 px-1.5 sm:px-2 w-px whitespace-nowrap text-left tabular-nums">#</th>
+                            <th scope="col" id="uiThInspect" class="py-3 px-2 sm:px-3 md:px-3.5 whitespace-nowrap text-left font-semibold">Inspect</th>
+                            <th scope="col" id="uiThNum" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left font-semibold tabular-nums">#</th>
                         </tr>
                     </thead>
-                    <tbody id="domainAnalysisList" class="divide-y divide-[#f05422]/20 bg-[#FFFFFF] text-[13px] md:text-[14px] text-[#292929] leading-[1.45] md:leading-[1.5]"></tbody>
+                    <tbody id="domainAnalysisList" class="divide-y divide-[#E2E8F0] bg-[#FFFFFF] text-[13px] md:text-[14px] text-[#0F172A] leading-[1.5]"></tbody>
                 </table>
             </div>
 
             <div id="domainAnalysisMoreWrap" class="text-center hidden pt-1">
-                <button type="button" id="uiAnalysisLoadMoreBtn" onclick="loadMoreAnalysisRows()" class="min-h-[48px] w-full sm:w-auto px-5 py-2 text-[13px] font-semibold bg-[#f9e1d9]/75 hover:bg-[#f9e1d9] text-[#292929] border border-[#f05422]/35 rounded-lg transition-colors">
+                <button type="button" id="uiAnalysisLoadMoreBtn" onclick="loadMoreAnalysisRows()" class="min-h-[48px] w-full sm:w-auto px-5 py-2 text-[13px] font-semibold bg-[#F8FAFC] hover:bg-[#FFF7ED] text-[#1E293B] hover:text-[#C2410C] border border-[#E2E8F0] hover:border-[#EA580C]/40 rounded-lg transition-colors">
                     Show More (+24)
                 </button>
             </div>
@@ -6909,7 +6939,7 @@
                 `${t.scoreNiche || 'Niche Clarity'}: ${s.niche_clarity_score}`,
                 `${t.scoreEmdPmd || 'EMD / PMD'}: ${s.emd_pmd_score}`
             ].join(' · ');
-            return `<span title="${escapeHtmlAttr(tooltip)}" class="inline-flex items-center px-2 py-0.5 rounded-md border text-[11px] font-bold tabular-nums ${tierCls}">${total}/100</span>`;
+            return `<span title="${escapeHtmlAttr(tooltip)}" class="inline-flex items-center px-2 py-0.5 rounded-md border text-[12px] sm:text-[13px] md:text-[14px] font-semibold font-mono tabular-nums ${tierCls}">${total}/100</span>`;
         }
 
         function getSelectedHeaderLanguageCode() {
@@ -7084,25 +7114,25 @@
                     return `<span class="inline-flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/70 whitespace-nowrap"><span aria-hidden="true" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>${checkingLabel}</span>`;
                 }
                 if (entry.status === 'available') {
-                    return `<span class="inline-flex items-center gap-1 whitespace-nowrap"><span title="${escapeHtmlAttr('NS empty · RDAP 404' + ageSuffix)}" class="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-semibold rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/70 whitespace-nowrap">${availableLabel}</span><button type="button" data-recheck-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-recheck-domain'), true, 'manual')" title="${recheckTitle}" aria-label="${recheckTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#f05422]/30 bg-[#FFFFFF] text-[#3F3042] hover:border-[#f05422] hover:text-[#f05422] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f05422]"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button></span>`;
+                    return `<span class="inline-flex items-center gap-1 whitespace-nowrap"><span title="${escapeHtmlAttr('NS empty · RDAP 404' + ageSuffix)}" class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] sm:text-[12px] font-semibold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">${availableLabel}</span><button type="button" data-recheck-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-recheck-domain'), true, 'manual')" title="${recheckTitle}" aria-label="${recheckTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#64748B] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button></span>`;
                 }
                 if (entry.status === 'taken') {
                     const methodNote = (entry.method === 'NS' ? 'NS Record found' : 'RDAP 200') + ageSuffix;
-                    return `<span class="inline-flex items-center gap-1 whitespace-nowrap"><span title="${escapeHtmlAttr(methodNote)}" class="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-semibold rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/70 whitespace-nowrap">${takenLabel}</span><button type="button" data-recheck-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-recheck-domain'), true, 'manual')" title="${recheckTitle}" aria-label="${recheckTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#f05422]/30 bg-[#FFFFFF] text-[#3F3042] hover:border-[#f05422] hover:text-[#f05422] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f05422]"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button></span>`;
+                    return `<span class="inline-flex items-center gap-1 whitespace-nowrap"><span title="${escapeHtmlAttr(methodNote)}" class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] sm:text-[12px] font-semibold rounded-md bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">${takenLabel}</span><button type="button" data-recheck-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-recheck-domain'), true, 'manual')" title="${recheckTitle}" aria-label="${recheckTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#64748B] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button></span>`;
                 }
                 if (entry.rawStatus === 'no-ns') {
-                    return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('No NS record (RDAP unavailable for this TLD)' + ageSuffix + ' — Click to re-check')}" class="inline-flex items-center justify-center min-h-[28px] px-2 py-0.5 text-[11px] font-medium rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-[#f05422] hover:text-[#f05422] transition-colors whitespace-nowrap">${noNsLabel}</button>`;
+                    return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('No NS record (RDAP unavailable for this TLD)' + ageSuffix + ' — Click to re-check')}" class="inline-flex items-center justify-center min-h-[28px] px-2 py-0.5 text-[11px] sm:text-[12px] font-medium rounded-md border border-[#CBD5E1] bg-[#F1F5F9] text-[#475569] hover:border-[#EA580C] hover:text-[#C2410C] transition-colors whitespace-nowrap">${noNsLabel}</button>`;
                 }
                 if (entry.rawStatus === 'error') {
-                    return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('Lookup failed' + ageSuffix + ' — Click to retry')}" class="inline-flex items-center justify-center min-h-[28px] px-2 py-0.5 text-[11px] font-medium rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-[#f05422] hover:text-[#f05422] transition-colors whitespace-nowrap">${retryLabel}</button>`;
+                    return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('Lookup failed' + ageSuffix + ' — Click to retry')}" class="inline-flex items-center justify-center min-h-[28px] px-2 py-0.5 text-[11px] sm:text-[12px] font-medium rounded-md border border-[#CBD5E1] bg-[#FFFFFF] text-[#475569] hover:border-[#EA580C] hover:text-[#C2410C] transition-colors whitespace-nowrap">${retryLabel}</button>`;
                 }
             }
 
             if (isAutoPending) {
-                return `<span class="inline-flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/70 whitespace-nowrap"><span aria-hidden="true" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>${checkingLabel}</span>`;
+                return `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] sm:text-[12px] font-medium rounded-md bg-amber-50 text-amber-800 border border-amber-200 whitespace-nowrap"><span aria-hidden="true" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>${checkingLabel}</span>`;
             }
 
-            return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" aria-label="${escapeHtmlAttr((t.availCheckBtn || 'Check') + ': ' + domain)}" class="inline-flex items-center justify-center min-h-[32px] px-2.5 py-1 text-[11px] md:text-[12px] font-semibold rounded-md border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 dark:hover:text-white transition-colors whitespace-nowrap">${checkLabel}</button>`;
+            return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" aria-label="${escapeHtmlAttr((t.availCheckBtn || 'Check') + ': ' + domain)}" class="inline-flex items-center justify-center min-h-[30px] px-2.5 py-0.5 text-[11px] sm:text-[12px] font-semibold rounded-md border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors whitespace-nowrap">${checkLabel}</button>`;
         }
 
         function getBatchTargetDomains() {
@@ -7496,14 +7526,14 @@
                 if (!thEl) return;
                 const isActive = analysisSortKey === key;
                 thEl.setAttribute('aria-sort', isActive ? (analysisSortDir === 'desc' ? 'descending' : 'ascending') : 'none');
-                thEl.classList.toggle('bg-[#d64416]', isActive);
+                thEl.classList.toggle('bg-[#C2410C]', isActive);
 
                 const iconEl = thEl.querySelector(`[data-sort-icon="${key}"]`);
                 if (iconEl) {
                     iconEl.innerHTML = isActive ? (analysisSortDir === 'desc' ? descSvg : ascSvg) : neutralSvg;
                     iconEl.classList.toggle('opacity-100', isActive);
-                    iconEl.classList.toggle('text-amber-100', isActive);
-                    iconEl.classList.toggle('opacity-65', !isActive);
+                    iconEl.classList.toggle('text-orange-100', isActive);
+                    iconEl.classList.toggle('opacity-75', !isActive);
                 }
             });
         }
@@ -7527,14 +7557,14 @@
             let html = '';
             for (let i = 0; i < rowCount; i++) {
                 html += `
-                    <tr class="${i % 2 === 1 ? 'bg-[#f9e1d9]/40' : 'bg-[#FFFFFF]'} animate-pulse">
-                        <td class="py-2.5 px-2"><div class="h-5 w-16 rounded bg-slate-200"></div></td>
-                        <td class="py-2.5 px-2"><div class="h-4 w-4 rounded bg-slate-200"></div></td>
-                        <td class="py-2.5 px-2"><div class="h-4 w-36 sm:w-48 rounded bg-slate-200"></div></td>
-                        <td class="py-2.5 px-2"><div class="h-4 w-10 rounded bg-slate-200"></div></td>
-                        <td class="py-2.5 px-2"><div class="h-4 w-8 rounded bg-slate-200"></div></td>
-                        <td class="py-2.5 px-2"><div class="h-6 w-24 rounded bg-slate-200"></div></td>
-                        <td class="py-2.5 px-2"><div class="h-4 w-5 rounded bg-slate-200"></div></td>
+                    <tr class="${i % 2 === 1 ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]'} animate-pulse">
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-5 w-16 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-1.5 sm:px-2.5"><div class="h-4 w-4 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-36 sm:w-48 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-10 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-8 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-6 w-24 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-5 rounded bg-slate-200"></div></td>
                     </tr>
                 `;
             }
@@ -7568,7 +7598,7 @@
 
             if (lastGeneratedDomains.length === 0) {
                 lastVisibleAnalysisDomains = [];
-                listEl.innerHTML = `<tr><td colspan="7" class="p-6 text-[13px] md:text-[14px] text-[#3F3042] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisEmpty || 'No domains generated yet.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#f05422]/40 bg-[#f9e1d9]/60 hover:bg-rose-50 hover:border-rose-400 text-[#292929] hover:text-rose-700 text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
+                listEl.innerHTML = `<tr><td colspan="7" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisEmpty || 'No domains generated yet.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
                 if (metaEl) metaEl.textContent = '';
                 if (moreWrapEl) moreWrapEl.classList.add('hidden');
                 syncBatchSelectionUi();
@@ -7577,7 +7607,7 @@
 
             if (filtered.length === 0) {
                 lastVisibleAnalysisDomains = [];
-                listEl.innerHTML = `<tr><td colspan="7" class="p-6 text-[13px] md:text-[14px] text-[#3F3042] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisNoMatch || 'No domains match your filter.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#f05422]/40 bg-[#f9e1d9]/60 hover:bg-rose-50 hover:border-rose-400 text-[#292929] hover:text-rose-700 text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
+                listEl.innerHTML = `<tr><td colspan="7" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisNoMatch || 'No domains match your filter.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
                 if (metaEl) {
                     metaEl.textContent = (t.analysisShowingTpl || 'Generated {generated} ideas · Showing {shown} of {total}')
                         .replace(/\{generated\}/g, String(lastGeneratedDomains.length))
@@ -7611,32 +7641,32 @@
                 const availCellHtml = renderAvailabilityCellHtml(domain, globalIdx, t);
                 const scoreCellHtml = renderDomainScoreCellHtml(domain, t);
                 const isSelected = selectedDomains.has(domain);
-                const rowBgClass = idx % 2 === 1 ? 'bg-[#f9e1d9]' : 'bg-[#FFFFFF]';
+                const rowBgClass = idx % 2 === 1 ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]';
 
                 return `
-                    <tr class="${rowBgClass} hover:bg-[#f4cec2] transition-colors domain-row-fade-in">
-                        <td data-avail-domain="${safeDomainAttr}" class="py-2 px-1.5 sm:px-2 w-px text-left whitespace-nowrap">${availCellHtml}</td>
-                        <td class="py-2 px-1.5 sm:px-2 w-px text-left whitespace-nowrap">
-                            <input type="checkbox" data-select-domain="${safeDomainAttr}" ${isSelected ? 'checked' : ''} onchange="toggleDomainSelection(this.getAttribute('data-select-domain'), this.checked)" aria-label="${escapeHtmlAttr(selectAriaPrefix + ': ' + domain)}" class="w-4 h-4 rounded border-[#f05422]/55 bg-[#FFFFFF] text-[#f05422] focus:ring-[#f05422] cursor-pointer align-middle">
+                    <tr class="${rowBgClass} hover:bg-[#FFF7ED] transition-colors domain-row-fade-in">
+                        <td data-avail-domain="${safeDomainAttr}" class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left whitespace-nowrap">${availCellHtml}</td>
+                        <td class="py-2.5 sm:py-3 px-1.5 sm:px-2.5 w-px text-left whitespace-nowrap">
+                            <input type="checkbox" data-select-domain="${safeDomainAttr}" ${isSelected ? 'checked' : ''} onchange="toggleDomainSelection(this.getAttribute('data-select-domain'), this.checked)" aria-label="${escapeHtmlAttr(selectAriaPrefix + ': ' + domain)}" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-[#CBD5E1] bg-[#FFFFFF] text-[#EA580C] focus:ring-[#EA580C] cursor-pointer align-middle">
                         </td>
-                        <td class="py-2 px-1.5 sm:px-2 w-px text-left font-mono text-[12px] sm:text-[13px] md:text-[14px] font-semibold text-[#292929] whitespace-nowrap leading-[1.45] md:leading-[1.5]">
-                            <div class="inline-flex items-center justify-start gap-1 sm:gap-1.5">
+                        <td class="ui-td-domain py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-sans not-italic text-[14px] sm:text-[15px] md:text-[16px] font-semibold text-[#0F172A] tracking-[-0.01em] whitespace-nowrap leading-[1.4]">
+                            <div class="inline-flex items-center justify-start gap-1.5">
                                 <span>${safeDomain}</span>
-                                <button type="button" data-copy-domain="${safeDomainAttr}" onclick="copySingleDomain(this.getAttribute('data-copy-domain'), this)" title="${copyTitle}" aria-label="${copyTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-[#f05422]/30 bg-[#FFFFFF] text-[#3F3042] hover:border-[#f05422] hover:text-[#f05422] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f05422]">
+                                <button type="button" data-copy-domain="${safeDomainAttr}" onclick="copySingleDomain(this.getAttribute('data-copy-domain'), this)" title="${copyTitle}" aria-label="${copyTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#64748B] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]">
                                     <svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
                             </div>
                         </td>
-                        <td data-score-domain="${safeDomainAttr}" class="py-2 px-1.5 sm:px-2 w-px text-left font-mono text-[11px] sm:text-[12px] tabular-nums whitespace-nowrap">${scoreCellHtml}</td>
-                        <td class="py-2 px-1.5 sm:px-2 w-px text-left font-mono text-[12px] md:text-[13px] tabular-nums text-[#3F3042] whitespace-nowrap leading-[1.45]">${domain.length}</td>
-                        <td class="py-2 px-1.5 sm:px-2 text-left whitespace-nowrap">
+                        <td data-score-domain="${safeDomainAttr}" class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12px] sm:text-[13px] md:text-[14px] tabular-nums whitespace-nowrap">${scoreCellHtml}</td>
+                        <td class="ui-td-chars py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12.5px] sm:text-[13px] md:text-[14px] font-medium tabular-nums text-[#334155] whitespace-nowrap leading-[1.45]">${domain.length}</td>
+                        <td class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 text-left whitespace-nowrap">
                             <div class="inline-flex items-center justify-start gap-1 sm:gap-1.5">
-                                <a href="${escapeHtmlAttr(ahrefsHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${blTitle}" aria-label="${blTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#f05422]/30 bg-[#FFFFFF] text-[#292929] hover:border-[#f05422] hover:text-[#f05422] transition-colors">BL</a>
-                                <a href="${escapeHtmlAttr(waybackHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${wmTitle}" aria-label="${wmTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#f05422]/30 bg-[#FFFFFF] text-[#292929] hover:border-[#578686] hover:text-[#578686] transition-colors">WM</a>
-                                <a href="${escapeHtmlAttr(googleHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${ggTitle}" aria-label="${ggTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#f05422]/30 bg-[#FFFFFF] text-[#292929] hover:border-[#0C723F] hover:text-[#0C723F] transition-colors">GG</a>
+                                <a href="${escapeHtmlAttr(ahrefsHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${blTitle}" aria-label="${blTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors">BL</a>
+                                <a href="${escapeHtmlAttr(waybackHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${wmTitle}" aria-label="${wmTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#578686] hover:text-[#578686] transition-colors">WM</a>
+                                <a href="${escapeHtmlAttr(googleHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${ggTitle}" aria-label="${ggTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#0C723F] hover:text-[#0C723F] transition-colors">GG</a>
                             </div>
                         </td>
-                        <td class="py-2 px-1.5 sm:px-2 w-px text-left text-[12px] md:text-[13px] font-mono tabular-nums text-[#3F3042] whitespace-nowrap leading-[1.45]">${idx + 1}</td>
+                        <td class="ui-td-num py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left text-[12px] md:text-[13px] font-mono tabular-nums text-[#64748B] whitespace-nowrap leading-[1.45]">${idx + 1}</td>
                     </tr>
                 `;
             }).join('');
