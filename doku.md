@@ -14,7 +14,7 @@ Berdasarkan audit langsung terhadap seluruh file sumber (`package.json`, `site.c
 | **Kebersihan Kode Sumber** | Siap | `site.config.json` bebas dari token/ID sensitif (`measurementId`, `verificationToken`, `publisherId` kosong). Tidak ada `localhost` atau *hardcoded secret* di HTML/JS. `ADMIN_PASSWORD` dibaca eksklusif dari environment/secret. |
 | **Build Statis (`npm run build`)** | Siap | Menjalankan `node scripts/build-static.mjs` tanpa bergantung pada `express` atau library native eksternal; menghasilkan **48 file HTML** (`en` di root, `id/es/pt/fr/de/ru/ja` di subdirektori), `robots.txt`, `sitemap.xml`, `_redirects`, `_headers`, `assets/`, dan `ads.txt` (jika `ADSENSE_CLIENT_ID` terisi). `admin-lexicon.html` **tidak** ikut di-build ke `dist/`. |
 | **Validasi Sintaks (`npm run lint`)** | Siap | Memverifikasi `server.js`, `scripts/site-builder.mjs`, `scripts/build-static.mjs`, `assets/trust-i18n.js`, `lib/domain-tagger.js`, `lib/lexicon-store.js`, `lib/admin-auth.js`, `lib/lexicon/bundle.js`, dan `functions/api/log-available-domain.js` menggunakan `node --check`. |
-| **Cache Ketersediaan (`localStorage`)** | Siap | Hasil cek DoH/RDAP disimpan di `localStorage` (`domainAvailabilityCacheV1`) dengan kunci lowercase ternormalisasi, TTL (default 6 jam untuk `available`/`taken`, 5 menit untuk `check`), pruning otomatis, fallback aman `try...catch`, serta tombol re-check per baris. |
+| **Cache Ketersediaan (`localStorage` / `sessionStorage`)** | Siap | Hasil cek RDAP/DNS disimpan di cache memori + `localStorage` dengan fallback `sessionStorage` (`domainAvailabilityCacheV1`), kunci lowercase ternormalisasi, TTL (default 6 jam untuk `available`/`taken`, 5 menit untuk `check`), pruning otomatis, fallback aman `try...catch`, serta tombol re-check per baris yang mem-bypass cache. |
 | **Cloudflare Secrets / Env Vars** | Siap | `scripts/site-builder.mjs` membaca override dari `process.env` saat proses build Cloudflare berjalan (`SITE_URL`, `CONTACT_EMAIL`, `GA_MEASUREMENT_ID`, `GSC_VERIFICATION`, `ADSENSE_CLIENT_ID`, `ADSENSE_DIRECT_SELLER_ID`, `ADSENSE_ENABLE_AUTO_ADS`, `BING_VERIFICATION`, `YANDEX_VERIFICATION`, `AHREFS_SITE_VERIFICATION`). `ADMIN_PASSWORD` digunakan di server lokal `/admin-lexicon` dan di Worker D1 untuk aksi `backfill-*`. |
 | **Mode AdSense Non-Auto Ads** | Siap | `enableAutoAdsScript` bernilai `false` di `site.config.json` dan dapat dikontrol via `ADSENSE_ENABLE_AUTO_ADS=false`. Seluruh halaman memiliki penanda kotak putih putus-putus maksimal 2 slot (1 slot di `contact.html`). |
 | **Security & Cache Headers (`_headers`)** | Siap | Build otomatis menghasilkan `dist/_headers` (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, dan `Cache-Control`). |
@@ -175,18 +175,18 @@ Jika akun atau repository GitHub Anda terkena *suspend* atau *limitation* oleh s
 
 Bagian ini merangkum arsitektur antarmuka, optimasi mobile, serta mekanisme cache lokal yang aktif pada aplikasi:
 
-### A. Cache Ketersediaan Domain di `localStorage`
-- **Kunci Penyimpanan**: `domainAvailabilityCacheV1` berisi objek JSON `{ version: 1, entries: { "<domain_lowercase>": { status, rawStatus, method, checkedAt, ttlMs } } }`.
-- **Normalisasi & Status**: Kunci domain selalu dinormalisasi ke huruf kecil (`normalizeDomainCacheKey`). Nilai `status` distandarkan menjadi `available | taken | check` (dengan `rawStatus` menyimpan detail `available | taken | no-ns | error` dan `method` menyimpan `NS | RDAP`).
+### A. Cache Ketersediaan Domain (`localStorage` + Fallback `sessionStorage`)
+- **Kunci Penyimpanan**: `domainAvailabilityCacheV1` berisi objek JSON `{ version: 1, entries: { "<domain_lowercase>": { status, rawStatus, method, checkedAt, ttlMs } } }`. Data dibaca/ditulis ke `localStorage` dengan fallback otomatis ke `sessionStorage` dan memori JS.
+- **Normalisasi & Status**: Kunci domain selalu dinormalisasi ke huruf kecil (`normalizeDomainCacheKey`). Nilai `status` distandarkan menjadi `available | taken | check` (dengan `rawStatus` menyimpan detail `available | taken | no-ns | error` dan `method` menyimpan `RDAP | NS | DNS`).
 - **TTL & Konfigurasi**:
   - Rentang TTL aman dikunci antara **1 menit** (`60.000 ms`) hingga **24 jam** (`86.400.000 ms`).
   - Default TTL adalah **6 jam** untuk status `available` dan `taken`, serta **5 menit** untuk status `check` (`no-ns` / `error`).
   - Dapat dikonfigurasi ulang via `window.__AVAILABILITY_CACHE_TTL_MS__` atau item `localStorage` `domainAvailabilityCacheTtlMs`.
 - **Cache-First Lookup, Hidrasi & Keamanan Kuota**:
-  - Saat `DOMContentLoaded`, `hydrateAvailabilityCacheFromStorage()` memuat entri yang masih valid ke `Map` memori sebelum generasi awal dan pengecekan otomatis berjalan, sehingga reload halaman, filter status (`All`, `Available`, `Taken`, `Check`), serta filter domain tidak memicu query ulang ke DoH/RDAP.
-  - Seluruh baca/tulis `localStorage` dibungkus `try...catch` dengan fallback aman ke memori jika browser memblokir storage atau melebihi kuota (`QuotaExceededError`), disertai *periodic pruning* tiap **5 menit** dan batas maksimal **1.000 entri**.
+  - Saat `DOMContentLoaded`, `hydrateAvailabilityCacheFromStorage()` memuat entri yang masih valid ke `Map` memori sebelum generasi awal dan pengecekan otomatis berjalan, sehingga reload halaman, ganti filter status (`Available & Check`, `All`, `Available`, `Taken`, `Check`), filter teks, maupun klik `Start Over` tidak memicu query ulang jaringan untuk domain yang masih valid di cache.
+  - Seluruh baca/tulis storage dibungkus `try...catch` dengan fallback bertingkat (`localStorage` → `sessionStorage` → memori) jika storage diblokir atau melebihi kuota (`QuotaExceededError`), disertai *periodic pruning* tiap **5 menit** dan batas maksimal **1.000 entri**.
 - **Force Re-Check (Bypass Cache)**:
-  - Baris berstatus `Available` / `Taken` menampilkan usia cache pada tooltip serta tombol **Re-check** (`data-recheck-domain`) untuk memaksa lookup ulang ke DNS-over-HTTPS / RDAP dan menimpa entri cache; klik eksplisit pada tombol `Check`, `No NS`, atau `Retry` juga memicu pengecekan segar.
+  - Tombol cek manual per baris (`Check`) dan tombol **Re-check** (`↻`, `data-recheck-domain`) memanggil `checkSingleDomainAvailability(..., forceRecheck = true)` sehingga melewati (*bypass*) cache lama untuk domain tersebut, mengambil status terbaru dari RDAP/DNS, lalu memperbarui entri cache.
 
 ### B. Sistem Warna, Layout Responsif & Token Desain
 1. **Form Generator (`#generatorSection`)**:
@@ -552,14 +552,20 @@ Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, d
 - **Paritas Skor D1 (`overall_heuristic_score`)**:
   `computeDomainScores(...)` beserta 7 sub-skornya tetap identik 100% dengan `functions/api/log-available-domain.js` untuk menjaga keselarasan pencatatan skor ke Cloudflare D1.
 
-#### 3. Auto-Check Ketersediaan 24 Domain Teratas & Proteksi Throttling
-- **Batas Otomatis (`AUTO_CHECK_LIMIT = 24`)**: Setelah pengurutan gabungan selesai, hanya **24 domain teratas** (indeks `0` sampai `23`, dengan panjang `<= MAX_CHECK_DOMAIN_LENGTH = 30`) yang otomatis dijadwalkan untuk pengecekan ketersediaan di `scheduleAutoAvailabilityChecks`. Domain selebihnya tetap dapat dicek pengguna secara manual melalui tombol **Check** per baris atau **Bulk Check**.
-- **Throttling & Konkurensi Terkendali**:
-  - Pool worker berjalan dengan batas `AUTO_CHECK_CONCURRENCY = 3`, penundaan start bertahap per worker (`workerIdx * 45 ms`), serta jeda antar-domain `AUTO_CHECK_STAGGER_MS = 95 ms`.
-  - Refresh daftar analisis di-*coalesce* lewat `scheduleCoalescedAnalysisRefresh` (debounce `60 ms`) agar pembaruan status massal tidak membuat UI membeku.
-- **Graceful Rate-Limit & Error Retry (`checkRdapAvailability`)**:
-  - Jika server RDAP merespons HTTP `429` atau `503`, fungsi melakukan *backoff retry* 1x (mengikuti header `Retry-After` yang dibatasi `300–1500 ms`, atau default `500 ms`).
-  - Jika terjadi gangguan jaringan sementara, dilakukan 1x retry cepat (`250 ms`) sebelum beralih aman ke status `no-ns` atau `error` tanpa memblokir antrean domain berikutnya.
+#### 3. Pipeline Pengecekan Ketersediaan Domain (Cache-First, Cap 24 Teratas, RDAP-First & Throttling)
+- **Pra-Cek (Urutkan → Baca Cache → Batas 24 Teratas)**:
+  - Kandidat hasil selalu diurutkan lebih dulu berdasarkan skor gabungan **Brand + Natural Spelling** agar domain terbaik menempati 24 posisi teratas.
+  - Sebelum melakukan permintaan jaringan, `scheduleAutoAvailabilityChecks` dan `checkSingleDomainAvailability` membaca cache sesi/lokal (`localStorage` + fallback `sessionStorage`) melalui `isCachedDomainReadyForAutoSkip`. Domain yang sudah valid di cache (misalnya setelah ganti filter atau menekan `Start Over`) langsung ditampilkan tanpa memanggil RDAP/DNS ulang.
+  - Auto-check hanya dijalankan pada **24 domain teratas** (`AUTO_CHECK_LIMIT = 24`, indeks `0` sampai `23`, panjang `<= MAX_CHECK_DOMAIN_LENGTH = 30`). Baris tambahan (termasuk hasil klik **Show More (+24)**) tetap berstatus **`Check`** sampai pengguna menekan tombol cek per baris atau **Bulk Check**.
+- **Verifikasi Utama (RDAP-First, Lalu NS Sekunder)**:
+  - Setiap lookup memanggil **RDAP terlebih dahulu** (`checkRdapAvailability`) sebagai sumber primer status registrasi.
+  - Jika RDAP menyatakan domain sudah terdaftar (`taken`), domain langsung ditandai **`Taken`** (`method: 'RDAP'`) dan **tetap `Taken` meskipun tidak memiliki nameserver (NS) aktif**.
+  - Jika RDAP melaporkan belum terdaftar (`not-registered` / `404`), pipeline melakukan verifikasi sekunder terhadap record **NS lewat DNS-over-HTTPS** (`checkNsViaDoh`): hanya ditandai **`Available`** (`method: 'RDAP'`) jika RDAP mengonfirmasi belum terdaftar dan tidak ditemukan NS aktif; jika justru ditemukan NS aktif, status menjadi **`Taken`** (`method: 'NS'`).
+  - Untuk TLD tanpa endpoint RDAP resmi (`no-rdap`), lookup memeriksa NS lewat DNS lalu menetapkan **`Taken`** bila ada NS aktif atau **`Check`** bila tidak ada.
+  - Jika RDAP atau DNS mengalami *timeout*, error jaringan, atau *rate limit* (`429` / `5xx`), status **tidak pernah** jatuh ke `Available`, melainkan tetap/ditetapkan ke **`Check`** (`rawStatus: 'error'`, cooldown retry `20 detik`) agar aman dicoba ulang.
+- **Throttling Batch & Manual Re-Check (Bypass Cache)**:
+  - Antrean auto-check dijalankan dalam batch kecil (`AUTO_CHECK_BATCH_SIZE = 4`) dengan konkurensi ringan (`AUTO_CHECK_CONCURRENCY = 2`, stagger worker `60 ms`, jeda antar-domain `AUTO_CHECK_STAGGER_MS = 120 ms`, jeda antar-batch `AUTO_CHECK_BATCH_PAUSE_MS = 180 ms`), *coalescing* refresh tabel (`60 ms`), serta *backoff* `429`/`503` dan *cooldown* per host RDAP (`rdapHostCooldownUntil`).
+  - Klik manual tombol **Check** atau **↻** (**Re-check**) pada baris menjalankan `forceRecheck = true` yang melewati cache untuk domain tersebut, mengambil hasil terbaru dari RDAP/DNS, dan memperbarui data cache.
 
 #### 4. Filter Status Ketersediaan Default (`#analysisStatusFilter`)
 - **Default Awal & Setelah Generate**: Dropdown filter `#analysisStatusFilter` secara bawaan disetel ke **`"available_or_check"` (`Available & Check`)**, yang menyembunyikan domain berstatus `taken` namun tetap menampilkan domain `available` maupun yang masih berstatus `check` / belum dicek.

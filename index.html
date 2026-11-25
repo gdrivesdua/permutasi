@@ -5146,8 +5146,11 @@
         }
 
         const AUTO_CHECK_LIMIT = 24;
-        const AUTO_CHECK_CONCURRENCY = 3;
-        const AUTO_CHECK_STAGGER_MS = 95;
+        const AUTO_CHECK_CONCURRENCY = 2;
+        const AUTO_CHECK_BATCH_SIZE = 4;
+        const AUTO_CHECK_STAGGER_MS = 120;
+        const AUTO_CHECK_BATCH_PAUSE_MS = 180;
+        const AVAILABILITY_ERROR_RETRY_COOLDOWN_MS = 20 * 1000;
         const MAX_CHECK_DOMAIN_LENGTH = 30;
         const AVAILABILITY_CACHE_STORAGE_KEY = 'domainAvailabilityCacheV1';
         const AVAILABILITY_CACHE_MIN_TTL_MS = 60 * 1000;
@@ -5159,6 +5162,7 @@
         const domainAvailabilityCache = new Map();
         const availabilityInFlight = new Map();
         const autoCheckPendingDomains = new Set();
+        const rdapHostCooldownUntil = new Map();
         let autoCheckDebounceTimer = null;
         let autoCheckGenerationId = 0;
         let hasDoneInitialAutoCheck = false;
@@ -5227,48 +5231,65 @@
         }
 
         function readAvailabilityStorageEntries() {
-            try {
-                if (typeof localStorage === 'undefined') return {};
-                const raw = localStorage.getItem(AVAILABILITY_CACHE_STORAGE_KEY);
-                if (!raw) return {};
-                const parsed = JSON.parse(raw);
-                if (parsed && typeof parsed === 'object') {
-                    if (parsed.entries && typeof parsed.entries === 'object' && !Array.isArray(parsed.entries)) {
-                        return parsed.entries;
+            const stores = [];
+            try { if (typeof localStorage !== 'undefined') stores.push(localStorage); } catch (e) {}
+            try { if (typeof sessionStorage !== 'undefined') stores.push(sessionStorage); } catch (e) {}
+            for (let i = 0; i < stores.length; i++) {
+                try {
+                    const raw = stores[i].getItem(AVAILABILITY_CACHE_STORAGE_KEY);
+                    if (!raw) continue;
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === 'object') {
+                        if (parsed.entries && typeof parsed.entries === 'object' && !Array.isArray(parsed.entries)) {
+                            return parsed.entries;
+                        }
+                        if (!Array.isArray(parsed) && parsed.version == null) {
+                            return parsed;
+                        }
                     }
-                    if (!Array.isArray(parsed) && parsed.version == null) {
-                        return parsed;
-                    }
-                }
-            } catch (e) {}
+                } catch (e) {}
+            }
             return {};
         }
 
         function writeAvailabilityStorageEntries(entriesMapObj) {
-            try {
-                if (typeof localStorage === 'undefined') return false;
-                const payload = JSON.stringify({
-                    version: 1,
-                    entries: entriesMapObj
-                });
-                localStorage.setItem(AVAILABILITY_CACHE_STORAGE_KEY, payload);
-                return true;
-            } catch (e) {
+            const payload = JSON.stringify({
+                version: 1,
+                entries: entriesMapObj
+            });
+            const tryWrite = (storage) => {
+                if (!storage) return false;
                 try {
-                    const keys = Object.keys(entriesMapObj || {})
-                        .sort((a, b) => (Number(entriesMapObj[b]?.checkedAt) || 0) - (Number(entriesMapObj[a]?.checkedAt) || 0))
-                        .slice(0, Math.max(50, Math.floor(AVAILABILITY_CACHE_MAX_ENTRIES / 2)));
-                    const trimmed = {};
-                    keys.forEach((k) => { trimmed[k] = entriesMapObj[k]; });
-                    localStorage.setItem(AVAILABILITY_CACHE_STORAGE_KEY, JSON.stringify({
-                        version: 1,
-                        entries: trimmed
-                    }));
+                    storage.setItem(AVAILABILITY_CACHE_STORAGE_KEY, payload);
                     return true;
-                } catch (e2) {
-                    return false;
+                } catch (e) {
+                    try {
+                        const keys = Object.keys(entriesMapObj || {})
+                            .sort((a, b) => (Number(entriesMapObj[b]?.checkedAt) || 0) - (Number(entriesMapObj[a]?.checkedAt) || 0))
+                            .slice(0, Math.max(50, Math.floor(AVAILABILITY_CACHE_MAX_ENTRIES / 2)));
+                        const trimmed = {};
+                        keys.forEach((k) => { trimmed[k] = entriesMapObj[k]; });
+                        storage.setItem(AVAILABILITY_CACHE_STORAGE_KEY, JSON.stringify({
+                            version: 1,
+                            entries: trimmed
+                        }));
+                        return true;
+                    } catch (e2) {
+                        return false;
+                    }
                 }
-            }
+            };
+            try {
+                if (typeof localStorage !== 'undefined' && tryWrite(localStorage)) {
+                    return true;
+                }
+            } catch (e) {}
+            try {
+                if (typeof sessionStorage !== 'undefined' && tryWrite(sessionStorage)) {
+                    return true;
+                }
+            } catch (e) {}
+            return false;
         }
 
         function pruneExpiredAvailabilityCache(forcePrune) {
@@ -5491,8 +5512,11 @@
                     try {
                         const cached = sessionStorage.getItem('ianaRdapTldMapV1');
                         if (cached) {
-                            Object.assign(map, JSON.parse(cached));
-                            return map;
+                            const parsed = JSON.parse(cached);
+                            if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+                                Object.assign(map, parsed);
+                                return map;
+                            }
                         }
                     } catch (e) {}
 
@@ -5520,7 +5544,9 @@
                                 });
                             });
                             try {
-                                sessionStorage.setItem('ianaRdapTldMapV1', JSON.stringify(extracted));
+                                if (Object.keys(extracted).length > 0) {
+                                    sessionStorage.setItem('ianaRdapTldMapV1', JSON.stringify(extracted));
+                                }
                             } catch (e) {}
                         }
                     } catch (e) {}
@@ -5536,6 +5562,34 @@
             if (KNOWN_RDAP_SERVERS[topTld]) return KNOWN_RDAP_SERVERS[topTld];
             const map = await loadIanaRdapMap();
             return map[topTld] || '';
+        }
+
+        function getRdapHostFromUrl(url) {
+            try {
+                return new URL(url).host.toLowerCase();
+            } catch (e) {
+                return '';
+            }
+        }
+
+        async function waitForRdapHostCooldown(rdapUrl) {
+            const host = getRdapHostFromUrl(rdapUrl);
+            if (!host) return;
+            const until = rdapHostCooldownUntil.get(host) || 0;
+            const waitMs = until - Date.now();
+            if (waitMs > 0) {
+                await new Promise((resolve) => setTimeout(resolve, Math.min(waitMs, 2500)));
+            }
+        }
+
+        function recordRdapHostCooldown(rdapUrl, cooldownMs) {
+            const host = getRdapHostFromUrl(rdapUrl);
+            if (!host) return;
+            const nextUntil = Date.now() + Math.min(4000, Math.max(400, cooldownMs));
+            const prevUntil = rdapHostCooldownUntil.get(host) || 0;
+            if (nextUntil > prevUntil) {
+                rdapHostCooldownUntil.set(host, nextUntil);
+            }
         }
 
         async function fetchWithTimeout(url, options, timeoutMs) {
@@ -5561,48 +5615,74 @@
                 }
             ];
 
+            let rateLimited = false;
             for (let i = 0; i < endpoints.length; i++) {
                 try {
                     const res = await fetchWithTimeout(endpoints[i].url, { headers: endpoints[i].headers }, 4000);
+                    if (res.status === 429 || res.status >= 500) {
+                        if (res.status === 429) rateLimited = true;
+                        continue;
+                    }
                     if (!res.ok) continue;
                     const data = await res.json();
-                    const hasNsAnswer = data && data.Status === 0 && Array.isArray(data.Answer) && data.Answer.some(r => r && r.type === 2);
+                    // DNS Status 0 (NOERROR) or 3 (NXDOMAIN) are definitive; SERVFAIL (2) / REFUSED (5) fall back to next resolver
+                    if (!data || (data.Status !== 0 && data.Status !== 3)) {
+                        continue;
+                    }
+                    const hasNsAnswer = data.Status === 0 && Array.isArray(data.Answer) && data.Answer.some(r => r && r.type === 2);
                     return { ok: true, hasNs: hasNsAnswer };
                 } catch (e) {}
             }
-            return { ok: false, hasNs: false };
+            return { ok: false, hasNs: false, rateLimited };
         }
 
         async function checkRdapAvailability(domain) {
             const rdapBase = await getRdapBaseUrlForDomain(domain);
             if (!rdapBase) {
-                return { status: 'no-ns', method: 'NS' };
+                return { status: 'no-rdap', method: 'RDAP' };
             }
             const rdapUrl = `${rdapBase}domain/${encodeURIComponent(domain)}`;
             for (let attempt = 0; attempt < 2; attempt++) {
+                await waitForRdapHostCooldown(rdapUrl);
                 try {
                     const res = await fetchWithTimeout(
                         rdapUrl,
                         { headers: { 'Accept': 'application/rdap+json, application/json' } },
                         5500
                     );
-                    if (res.status === 200) return { status: 'taken', method: 'RDAP' };
-                    if (res.status === 404) return { status: 'available', method: 'RDAP' };
-                    if ((res.status === 429 || res.status === 503) && attempt === 0) {
+                    if (res.status === 200) {
+                        return { status: 'taken', method: 'RDAP' };
+                    }
+                    if (res.status === 404) {
+                        return { status: 'not-registered', method: 'RDAP' };
+                    }
+                    if (res.status === 429 || res.status >= 500) {
                         const retryHeader = Number(res.headers && res.headers.get && res.headers.get('Retry-After'));
                         const backoffMs = Number.isFinite(retryHeader) && retryHeader > 0
-                            ? Math.min(1500, Math.max(300, retryHeader * 1000))
-                            : 500;
-                        await new Promise((resolve) => setTimeout(resolve, backoffMs));
-                        continue;
+                            ? Math.min(2000, Math.max(400, retryHeader * 1000))
+                            : (res.status === 429 ? 950 : 500);
+                        recordRdapHostCooldown(rdapUrl, backoffMs);
+                        if (attempt === 0) {
+                            await new Promise((resolve) => setTimeout(resolve, backoffMs));
+                            continue;
+                        }
                     }
-                    return { status: 'error', method: 'RDAP' };
+                    return {
+                        status: 'error',
+                        method: 'RDAP',
+                        rateLimited: res.status === 429,
+                        httpStatus: res.status
+                    };
                 } catch (e) {
                     if (attempt === 0) {
-                        await new Promise((resolve) => setTimeout(resolve, 250));
+                        await new Promise((resolve) => setTimeout(resolve, 300));
                         continue;
                     }
-                    return { status: 'no-ns', method: 'NS' };
+                    return {
+                        status: 'error',
+                        method: 'RDAP',
+                        timedOut: Boolean(e && e.name === 'AbortError')
+                    };
                 }
             }
             return { status: 'error', method: 'RDAP' };
@@ -6997,7 +7077,10 @@
             const normDomain = normalizeDomainCacheKey(domain);
             if (!normDomain || normDomain.length > MAX_CHECK_DOMAIN_LENGTH) return;
             const normalizedSource = checkSource === 'auto' ? 'auto' : 'manual';
-            if (!forceRecheck) {
+            if (forceRecheck) {
+                autoCheckPendingDomains.delete(domain);
+                autoCheckPendingDomains.delete(normDomain);
+            } else {
                 const existing = getAvailabilityCacheEntry(normDomain);
                 if (existing && (existing.status === 'available' || existing.status === 'taken' || existing.status === 'checking' || existing.rawStatus === 'no-ns')) {
                     updateDomainAvailabilityCell(domain, false);
@@ -7012,24 +7095,104 @@
                 setAvailabilityCacheEntry(normDomain, { status: 'checking', method: '' });
                 updateDomainAvailabilityCell(domain, true);
 
-                const nsResult = await checkNsViaDoh(normDomain);
-                if (nsResult.ok && nsResult.hasNs) {
-                    const saved = setAvailabilityCacheEntry(normDomain, { status: 'taken', rawStatus: 'taken', method: 'NS' });
+                try {
+                    // 1. Primary Check: Query RDAP first
+                    const rdapResult = await checkRdapAvailability(normDomain);
+
+                    if (rdapResult.status === 'taken') {
+                        // Exists in registry records -> Taken (keep Taken even without active NS)
+                        const saved = setAvailabilityCacheEntry(normDomain, {
+                            status: 'taken',
+                            rawStatus: 'taken',
+                            method: 'RDAP'
+                        });
+                        updateDomainAvailabilityCell(domain, false);
+                        return saved;
+                    }
+
+                    if (rdapResult.status === 'not-registered') {
+                        // 2. Secondary Check: Verify NS/DNS records after RDAP 404
+                        const nsResult = await checkNsViaDoh(normDomain);
+                        if (!nsResult.ok) {
+                            // DNS timed out, errored, or rate-limited -> keep/set status to Check (never Available)
+                            const saved = setAvailabilityCacheEntry(normDomain, {
+                                status: 'check',
+                                rawStatus: 'error',
+                                method: 'DNS'
+                            });
+                            updateDomainAvailabilityCell(domain, false);
+                            return saved;
+                        }
+                        if (nsResult.hasNs) {
+                            // Active NS exists despite RDAP 404 -> mark as Taken
+                            const saved = setAvailabilityCacheEntry(normDomain, {
+                                status: 'taken',
+                                rawStatus: 'taken',
+                                method: 'NS'
+                            });
+                            updateDomainAvailabilityCell(domain, false);
+                            return saved;
+                        }
+                        // Registry confirms unregistered AND no active NS -> Available
+                        const saved = setAvailabilityCacheEntry(normDomain, {
+                            status: 'available',
+                            rawStatus: 'available',
+                            method: 'RDAP'
+                        });
+                        updateDomainAvailabilityCell(domain, false);
+                        if (saved && saved.status === 'available' && normDomain.length <= AVAILABLE_DOMAIN_LOG_MAX_LENGTH) {
+                            logAvailableDomainToD1(normDomain, saved, normalizedSource);
+                        }
+                        return saved;
+                    }
+
+                    if (rdapResult.status === 'no-rdap') {
+                        // TLD has no official RDAP endpoint -> check NS/DNS records
+                        const nsResult = await checkNsViaDoh(normDomain);
+                        if (nsResult.ok && nsResult.hasNs) {
+                            const saved = setAvailabilityCacheEntry(normDomain, {
+                                status: 'taken',
+                                rawStatus: 'taken',
+                                method: 'NS'
+                            });
+                            updateDomainAvailabilityCell(domain, false);
+                            return saved;
+                        }
+                        if (!nsResult.ok) {
+                            const saved = setAvailabilityCacheEntry(normDomain, {
+                                status: 'check',
+                                rawStatus: 'error',
+                                method: 'DNS'
+                            });
+                            updateDomainAvailabilityCell(domain, false);
+                            return saved;
+                        }
+                        const saved = setAvailabilityCacheEntry(normDomain, {
+                            status: 'check',
+                            rawStatus: 'no-ns',
+                            method: 'NS'
+                        });
+                        updateDomainAvailabilityCell(domain, false);
+                        return saved;
+                    }
+
+                    // RDAP timed out, errored, or hit rate limits (429/5xx) -> keep/set status to Check
+                    const saved = setAvailabilityCacheEntry(normDomain, {
+                        status: 'check',
+                        rawStatus: 'error',
+                        method: 'RDAP'
+                    });
+                    updateDomainAvailabilityCell(domain, false);
+                    return saved;
+                } catch (err) {
+                    const saved = setAvailabilityCacheEntry(normDomain, {
+                        status: 'check',
+                        rawStatus: 'error',
+                        method: 'RDAP'
+                    });
                     updateDomainAvailabilityCell(domain, false);
                     return saved;
                 }
-
-                const rdapResult = await checkRdapAvailability(normDomain);
-                const saved = setAvailabilityCacheEntry(normDomain, {
-                    status: canonicalizeAvailabilityStatus(rdapResult.status),
-                    rawStatus: rdapResult.status,
-                    method: rdapResult.method || ''
-                });
-                updateDomainAvailabilityCell(domain, false);
-                if (saved && saved.status === 'available' && normDomain.length <= AVAILABLE_DOMAIN_LOG_MAX_LENGTH) {
-                    logAvailableDomainToD1(normDomain, saved, normalizedSource);
-                }
-                return saved;
             })().finally(() => {
                 autoCheckPendingDomains.delete(domain);
                 autoCheckPendingDomains.delete(normDomain);
@@ -7038,6 +7201,18 @@
 
             availabilityInFlight.set(normDomain, task);
             return task;
+        }
+
+        function isCachedDomainReadyForAutoSkip(entry, nowMs) {
+            if (!entry) return false;
+            if (entry.status === 'available' || entry.status === 'taken' || entry.status === 'checking' || entry.rawStatus === 'no-ns') {
+                return true;
+            }
+            if (entry.rawStatus === 'error') {
+                const ageMs = nowMs - Number(entry.checkedAt || 0);
+                return ageMs >= 0 && ageMs < AVAILABILITY_ERROR_RETRY_COOLDOWN_MS;
+            }
+            return false;
         }
 
         function scheduleAutoAvailabilityChecks(domains, immediate) {
@@ -7052,10 +7227,8 @@
                 .filter((d) => d && d.length <= MAX_CHECK_DOMAIN_LENGTH);
             if (targets.length === 0) return;
 
-            const queue = targets.filter((d) => {
-                const cached = getAvailabilityCacheEntry(d);
-                return !cached || cached.rawStatus === 'error';
-            });
+            const nowMs = Date.now();
+            const queue = targets.filter((d) => !isCachedDomainReadyForAutoSkip(getAvailabilityCacheEntry(d), nowMs));
             queue.forEach((d) => autoCheckPendingDomains.add(d));
             if (queue.length === 0) return;
 
@@ -7065,24 +7238,37 @@
                 const activeQueue = queue.filter((d) => autoCheckPendingDomains.has(d));
                 if (activeQueue.length === 0) return;
 
-                let cursor = 0;
-                const workerCount = Math.min(AUTO_CHECK_CONCURRENCY, activeQueue.length);
-                const workers = Array.from({ length: workerCount }, async (_, workerIdx) => {
-                    if (workerIdx > 0) {
-                        await new Promise((resolve) => setTimeout(resolve, workerIdx * 45));
-                    }
-                    while (cursor < activeQueue.length) {
-                        if (genId !== autoCheckGenerationId) return;
-                        const nextDomain = activeQueue[cursor++];
-                        if (!autoCheckPendingDomains.has(nextDomain)) continue;
-                        await checkSingleDomainAvailability(nextDomain, false, 'auto');
-                        if (genId !== autoCheckGenerationId) return;
-                        if (cursor < activeQueue.length) {
-                            await new Promise((resolve) => setTimeout(resolve, AUTO_CHECK_STAGGER_MS));
+                for (let batchStart = 0; batchStart < activeQueue.length; batchStart += AUTO_CHECK_BATCH_SIZE) {
+                    if (genId !== autoCheckGenerationId) return;
+                    const batch = activeQueue.slice(batchStart, batchStart + AUTO_CHECK_BATCH_SIZE);
+                    let cursor = 0;
+                    const workerCount = Math.min(AUTO_CHECK_CONCURRENCY, batch.length);
+                    const workers = Array.from({ length: workerCount }, async (_, workerIdx) => {
+                        if (workerIdx > 0) {
+                            await new Promise((resolve) => setTimeout(resolve, workerIdx * 60));
                         }
+                        while (cursor < batch.length) {
+                            if (genId !== autoCheckGenerationId) return;
+                            const nextDomain = batch[cursor++];
+                            if (!autoCheckPendingDomains.has(nextDomain)) continue;
+                            if (isCachedDomainReadyForAutoSkip(getAvailabilityCacheEntry(nextDomain), Date.now())) {
+                                autoCheckPendingDomains.delete(nextDomain);
+                                updateDomainAvailabilityCell(nextDomain, false);
+                                continue;
+                            }
+                            await checkSingleDomainAvailability(nextDomain, false, 'auto');
+                            if (genId !== autoCheckGenerationId) return;
+                            if (cursor < batch.length) {
+                                await new Promise((resolve) => setTimeout(resolve, AUTO_CHECK_STAGGER_MS));
+                            }
+                        }
+                    });
+                    await Promise.all(workers);
+                    if (genId !== autoCheckGenerationId) return;
+                    if (batchStart + AUTO_CHECK_BATCH_SIZE < activeQueue.length) {
+                        await new Promise((resolve) => setTimeout(resolve, AUTO_CHECK_BATCH_PAUSE_MS));
                     }
-                });
-                await Promise.all(workers);
+                }
             }, delay);
         }
 
@@ -7103,7 +7289,6 @@
             const availableLabel = escapeHtmlText(t.availAvailable || 'Available');
             const takenLabel = escapeHtmlText(t.availTaken || 'Taken');
             const noNsLabel = escapeHtmlText(t.availNoNs || 'No NS');
-            const retryLabel = escapeHtmlText(t.availRetry || 'Retry');
             const recheckTitle = escapeHtmlAttr(t.availRecheckTitle || 'Re-check availability (bypass cache)');
 
             if (entry) {
@@ -7114,7 +7299,7 @@
                     return `<span class="inline-flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/70 whitespace-nowrap"><span aria-hidden="true" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>${checkingLabel}</span>`;
                 }
                 if (entry.status === 'available') {
-                    return `<span class="inline-flex items-center gap-1 whitespace-nowrap"><span title="${escapeHtmlAttr('NS empty · RDAP 404' + ageSuffix)}" class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] sm:text-[12px] font-semibold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">${availableLabel}</span><button type="button" data-recheck-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-recheck-domain'), true, 'manual')" title="${recheckTitle}" aria-label="${recheckTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#64748B] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button></span>`;
+                    return `<span class="inline-flex items-center gap-1 whitespace-nowrap"><span title="${escapeHtmlAttr('RDAP 404 · NS empty' + ageSuffix)}" class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] sm:text-[12px] font-semibold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">${availableLabel}</span><button type="button" data-recheck-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-recheck-domain'), true, 'manual')" title="${recheckTitle}" aria-label="${recheckTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#64748B] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></button></span>`;
                 }
                 if (entry.status === 'taken') {
                     const methodNote = (entry.method === 'NS' ? 'NS Record found' : 'RDAP 200') + ageSuffix;
@@ -7124,7 +7309,7 @@
                     return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('No NS record (RDAP unavailable for this TLD)' + ageSuffix + ' — Click to re-check')}" class="inline-flex items-center justify-center min-h-[28px] px-2 py-0.5 text-[11px] sm:text-[12px] font-medium rounded-md border border-[#CBD5E1] bg-[#F1F5F9] text-[#475569] hover:border-[#EA580C] hover:text-[#C2410C] transition-colors whitespace-nowrap">${noNsLabel}</button>`;
                 }
                 if (entry.rawStatus === 'error') {
-                    return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('Lookup failed' + ageSuffix + ' — Click to retry')}" class="inline-flex items-center justify-center min-h-[28px] px-2 py-0.5 text-[11px] sm:text-[12px] font-medium rounded-md border border-[#CBD5E1] bg-[#FFFFFF] text-[#475569] hover:border-[#EA580C] hover:text-[#C2410C] transition-colors whitespace-nowrap">${retryLabel}</button>`;
+                    return `<button type="button" data-check-domain="${safeDomainAttr}" onclick="checkSingleDomainAvailability(this.getAttribute('data-check-domain'), true, 'manual')" title="${escapeHtmlAttr('Lookup timed out or rate-limited' + ageSuffix + ' — Click to check again')}" aria-label="${escapeHtmlAttr((t.availCheckBtn || 'Check') + ': ' + domain)}" class="inline-flex items-center justify-center min-h-[30px] px-2.5 py-0.5 text-[11px] sm:text-[12px] font-semibold rounded-md border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors whitespace-nowrap">${checkLabel}</button>`;
                 }
             }
 
@@ -7428,7 +7613,7 @@
                 if (entry.status === 'available') return 0;
                 if (entry.status === 'taken') return 6;
                 if (entry.rawStatus === 'no-ns') return 3;
-                if (entry.rawStatus === 'error') return 4;
+                if (entry.rawStatus === 'error') return 1;
             }
             if (autoCheckPendingDomains.has(domain)) return 2;
             return 1;

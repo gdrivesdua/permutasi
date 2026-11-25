@@ -356,6 +356,22 @@ app.post('/api/admin/lexicon/test', requireAdminAuth, express.json({ limit: '8kb
   return res.json({ ok: true, result });
 });
 
+app.get(['/public/doku.writing.md', '/public/doku.article.md'], (req, res) => {
+  const filename = path.basename(req.path);
+  const filePath = path.join(__dirname, 'public', filename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).type('text/plain; charset=utf-8').send('Not found');
+  }
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Content-Disposition', 'inline');
+  res.setHeader('Cache-Control', 'no-store');
+  return res.sendFile(filePath);
+});
+
+app.get(['/doku.writing.md', '/doku.article.md'], (req, res) => {
+  return res.redirect(301, `/public${req.path}`);
+});
+
 app.use(['/lib', '/functions', '/migrations', '/scripts', '/content', '/templates'], (_req, res) => res.status(404).end());
 app.use(express.static(path.join(__dirname), { index: false, dotfiles: 'deny' }));
 

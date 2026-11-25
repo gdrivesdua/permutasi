@@ -1244,6 +1244,11 @@ export function buildCloudflareHeaders() {
     '',
     '/ads.txt',
     '  Cache-Control: public, max-age=3600',
+    '',
+    '/public/*.md',
+    '  Content-Type: text/plain; charset=utf-8',
+    '  Content-Disposition: inline',
+    '  Cache-Control: public, max-age=300',
     ''
   ].join('\n');
 }

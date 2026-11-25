@@ -128,4 +128,17 @@ if (fs.existsSync(assetsSrcDir)) {
   console.log('Copied dist/assets');
 }
 
+const publicSrcDir = path.join(rootDir, 'public');
+if (fs.existsSync(publicSrcDir)) {
+  const publicMdFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md'));
+  if (publicMdFiles.length > 0) {
+    const publicDestDir = path.join(distDir, 'public');
+    fs.mkdirSync(publicDestDir, { recursive: true });
+    for (const fileName of publicMdFiles) {
+      fs.copyFileSync(path.join(publicSrcDir, fileName), path.join(publicDestDir, fileName));
+    }
+    console.log(`Copied dist/public markdown docs (${publicMdFiles.join(', ')})`);
+  }
+}
+
 console.log(`Static build complete for ${config.siteUrl}`);
