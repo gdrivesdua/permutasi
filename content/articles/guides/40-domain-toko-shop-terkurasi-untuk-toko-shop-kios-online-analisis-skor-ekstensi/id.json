@@ -30,7 +30,8 @@
         ".my.id, .web.id, dan .biz.id (masing-masing 4 domain, panjang 12–13 karakter): Seluruhnya meraih overall_heuristic_score 93 dengan brandability_score 100 dan pronunciation_comfort_score 100. Ekstensi ini sering dilirik UMKM atau kios rintisan karena biaya registrasinya umumnya terjangkau dan maknanya cukup jelas (web.id untuk kehadiran web, biz.id untuk usaha).",
         ".net (15 domain, panjang 10 karakter): Memiliki rata-rata overall_heuristic_score 92,67 (dan extension_lang_fit_score 91 pada en). Cocok untuk shop berbahasa Inggris atau toko digital lintas negara yang ingin alternatif selain .com.",
         "Pelajaran dari Kasus Pengecualian (shopaj.net)\nSatu-satunya entri dengan skor di bawah 80 pada file adalah shopaj.net (overall_heuristic_score 76, pronunciation_comfort_score 62, brandability_score 76, emd_pmd_score 54, tipe up). Akhiran -aj pada konteks bahasa Inggris terasa kurang lazim secara fonetik dibandingkan akhiran seperti -al, -el, atau -or, sehingga skor pelafalan dan brandability-nya ikut turun. Ini menjadi pengingat bahwa tidak semua permutasi huruf berawalan shop otomatis nyaman diucapkan.",
-        "3. Tabel Kurasi 40 Domain Toko (\"shop...\") TerkelompokBerikut 40 domain terkurasi dari shop-domain.csv (seluruhnya berstatus cek RDAP pada 25 November 2026) yang dikelompokkan berdasarkan karakteristik penggunaan agar lebih mudah dipindai sesuai model toko atau kios Anda."
+        "3. Tabel Kurasi 40 Domain Toko (\"shop...\") Terkelompok",
+        "Berikut 40 domain terkurasi dari shop-domain.csv (seluruhnya berstatus cek RDAP pada 25 November 2026) yang dikelompokkan berdasarkan karakteristik penggunaan agar lebih mudah dipindai sesuai model toko atau kios Anda."
       ],
       "bullets": [
         {
