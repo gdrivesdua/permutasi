@@ -1,7 +1,38 @@
 {
   "schemaVersion": 1,
-  "sections": ["guides", "research", "tools"],
+  "sections": [
+    "guides",
+    "research",
+    "tools"
+  ],
   "articles": [
+    {
+      "id": "40-domain-toko-shop-terkurasi-untuk-toko-shop-kios-online-analisis-skor-ekstensi",
+      "section": "guides",
+      "defaultSlug": "40-domain-toko-shop-terkurasi-untuk-toko-shop-kios-online-analisis-skor-ekstensi",
+      "slugByLang": {},
+      "articleType": "TechArticle",
+      "isPillar": true,
+      "changefreq": "monthly",
+      "datePublished": "2026-11-25",
+      "dateModified": "2026-11-25",
+      "author": {
+        "name": "Domain Name Editorial",
+        "role": "Domain Research & DNS Strategy",
+        "url": "/about.html"
+      },
+      "relatedIds": [],
+      "locales": {
+        "id": {
+          "published": false,
+          "title": "40 Domain Toko \"shop...\" Terkurasi: Analisis Skor & Ekstensi",
+          "metaDesc": "Kurasi 40 domain berawalan \"shop\" untuk toko, shop & kios online dari data RDAP, lengkap dengan skor pelafalan, brandability, perbandingan ekstensi, dan audit.",
+          "keywords": "",
+          "h1": "40 Domain Toko (\"shop...\") Terkurasi untuk Toko, Shop & Kios Online: Analisis Skor & Ekstensi",
+          "excerpt": "Kurasi 40 domain berawalan \"shop\" untuk toko, shop & kios online dari data RDAP, lengkap dengan skor pelafalan, brandability, perbandingan ekstensi, dan audit."
+        }
+      }
+    },
     {
       "id": "rfc-1035-domain-compliance",
       "section": "guides",
