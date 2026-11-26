@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "es",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Ejecución Offline en Navegador",
+  "keyTakeaways": [
+    "Tras cargar la página inicial, todas las permutaciones, patrones personalizados, validación RFC 1035, puntuación ortográfica, ordenación, filtros y exportación funcionan offline en JavaScript.",
+    "Los estados de disponibilidad consultados recientemente permanecen accesibles en localStorage (domainAvailabilityCacheV1) hasta 6 horas.",
+    "Solo la carga inicial del sitio (sin Service Worker registrado) y las consultas en vivo DoH/RDAP o enlaces externos BL/WM/GG requieren conexión a internet.",
+    "Puede comprobarlo en 30 segundos activando el modo Sin conexión (Offline) en DevTools -> Red."
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. Por Qué el Generador Funciona Offline Tras Cargar",
+      "paragraphs": [
+        "Muchas herramientas de dominios envían cada pulsación a un servidor remoto simplemente para unir dos palabras. Domain Name ejecuta su algoritmo combinatorio, sus estilos pronunciables, su evaluador ortográfico y su validador RFC 1035 directamente en el JavaScript de su navegador.",
+        "Una vez cargada la página, escribir palabras clave, probar patrones como [primary][dash][secondary], ordenar la tabla por Puntuación o Longitud y exportar en .txt o Markdown no realiza ninguna petición al servidor."
+      ],
+      "table": {
+        "caption": "División Exacta: Funciones Offline vs. Funciones Online",
+        "headers": ["Función / Operación", "¿Funciona Offline Tras Cargar?", "Mecanismo Técnico"],
+        "rows": [
+          ["Permutaciones y mezcla de palabras", "Sí (100% offline)", "JavaScript local permuteWords() y buildWordOrderVariants()"],
+          ["Patrones personalizados y estilos", "Sí (100% offline)", "Expansión local de fichas ([primary], [vocal], [número])"],
+          ["Validación de sintaxis RFC 1035", "Sí (100% offline)", "Funciones locales sanitizeKeywordToken() y validateRfc1035Domain()"],
+          ["Puntuación de marca y naturalidad", "Sí (100% offline)", "Cálculo local calculateSpellingNaturalness() y computeDomainScores()"],
+          ["Ordenación, filtros, Copiar y Exportar .txt", "Sí (100% offline)", "Renderizado DOM + API Clipboard / Blob en el navegador"],
+          ["Caché de disponibilidad previa", "Sí (TTL 6 horas)", "Lectura local desde localStorage domainAvailabilityCacheV1"],
+          ["Carga inicial de la página", "Requiere internet", "Solicitud HTTP estándar (sin Service Worker registrado aún)"],
+          ["Comprobación DNS/RDAP en vivo (Auto-24 / Check)", "Requiere internet", "Consultas a Cloudflare/Google DoH y RDAP de IANA"],
+          ["Accesos externos BL / WM / GG", "Requiere internet", "Abre enlaces externos hacia Ahrefs, Wayback Machine o Google"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. Límites Transparentes: Red Requerida Solo Para Consultas en Vivo",
+      "paragraphs": [
+        "Ser transparentes significa explicar que 'Funciona offline tras cargar' cubre la generación de ideas, validación RFC 1035, puntuación, ordenación y exportación una vez abierta la pestaña. Al no existir un Service Worker registrado para recargas en frío sin red, la apertura inicial sigue necesitando internet.",
+        "Del mismo modo, saber si un dominio fue registrado hace segundos requiere consultar servidores DNS y RDAP en vivo. Sin conexión, la tabla mantiene las filas no cacheadas en estado 'Check' o 'Reintentar' sin bloquear la interfaz."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Caché Local de 6 Horas en Navegador",
+        "body": "Los dominios verificados mientras estaba conectado permanecen en domainAvailabilityCacheV1 (6 horas para Disponible/Ocupado, 5 minutos para Check), permitiéndole filtrar y exportar listas completas offline."
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. Cómo Probar el Modo Offline en 30 Segundos",
+      "paragraphs": [
+        "Puede verificar la ejecución local en Chrome, Edge o Firefox sin desconectar el Wi-Fi:"
+      ],
+      "bullets": [
+        { "label": "Paso 1 — Abra la pestaña Red en DevTools", "text": "Pulse F12, entre en Red (Network) y espere a que termine la carga inicial." },
+        { "label": "Paso 2 — Seleccione Sin conexión (Offline)", "text": "Cambie el selector de limitación de red a 'Sin conexión' (Offline)." },
+        { "label": "Paso 3 — Genere, ordene y exporte", "text": "Escriba nuevas palabras clave, ordene por Puntuación o Longitud y exporte en Markdown o .txt: todo funciona al instante sin red." }
+      ]
+    }
+  ],
+  "methodologyNote": "Las capacidades offline reflejan el JavaScript ejecutado directamente en index.html; las dependencias de red corresponden únicamente a DoH/RDAP y /api/log-available-domain.",
+  "faqs": [
+    {
+      "q": "¿Por qué no funciona el botón Check sin internet?",
+      "a": "Confirmar si un dominio está libre en tiempo real exige consultar servidores DNS (DoH) y RDAP públicos en internet. Toda la generación, puntuación y exportación sigue funcionando offline."
+    },
+    {
+      "q": "¿Puedo exportar archivos .txt o Markdown estando desconectado?",
+      "a": "Sí. Copiar, Copiar MD y Exportar .txt crean los archivos localmente en la memoria de su navegador."
+    },
+    {
+      "q": "¿Se puede abrir la web desde cero sin conexión mediante Service Worker?",
+      "a": "Actualmente no hay un Service Worker instalado, por lo que cargar la página desde cero requiere conexión. Con la pestaña abierta, el generador sigue operando offline."
+    }
+  ]
+}

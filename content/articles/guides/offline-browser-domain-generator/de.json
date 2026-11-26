@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "de",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Offline im Browser nutzbar",
+  "keyTakeaways": [
+    "Nach dem Laden der Seite laufen sämtliche Permutationen, benutzerdefinierten Muster, RFC-1035-Prüfungen, Sprach-Scores, Sortierungen, Filter und Exporte 100 % offline in JavaScript.",
+    "Bereits geprüfte Verfügbarkeitswerte bleiben bis zu 6 Stunden lokal im localStorage (domainAvailabilityCacheV1) abrufbar.",
+    "Nur das erstmalige Laden der Seite (kein Service Worker registriert), Live-DNS/RDAP-Checks und externe BL-/WM-/GG-Links benötigen Internet.",
+    "Sie können dies in 30 Sekunden per Offline-Drosselung in DevTools -> Netzwerk testen."
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. Warum der Generator nach dem Laden offline funktioniert",
+      "paragraphs": [
+        "Viele Domain-Tools senden jeden Tastendruck an Backend-Server, nur um zwei Begriffe zu kombinieren. Domain Name führt die gesamte Kombinatorik, die Namensstil-Presets, den Sprach-Scorer und den RFC-1035-Validator direkt im JavaScript Ihres Browsers aus.",
+        "Sobald die Seite geladen ist, erfordert das Eingeben neuer Keywords, das Testen von Mustern wie [primary][dash][secondary], das Sortieren nach Score oder Zeichen sowie der .txt-/Markdown-Export keinerlei Server-Anfragen."
+      ],
+      "table": {
+        "caption": "Genaue Abgrenzung: Offline-fähig vs. Online-erforderlich",
+        "headers": ["Funktion / Vorgang", "Nach Laden offline nutzbar?", "Technischer Mechanismus"],
+        "rows": [
+          ["Keyword-Permutationen & Wort-Mix", "Ja (100 % offline)", "Lokale JS-Funktionen permuteWords() & buildWordOrderVariants()"],
+          ["Eigene Muster & Namensstile", "Ja (100 % offline)", "Lokale Token-Expansion ([primary], [vokal], [nummer])"],
+          ["RFC-1035-Syntaxprüfung", "Ja (100 % offline)", "Lokale Funktionen sanitizeKeywordToken() & validateRfc1035Domain()"],
+          ["Brandability- & Aussprache-Score", "Ja (100 % offline)", "Lokale Berechnung calculateSpellingNaturalness() & computeDomainScores()"],
+          ["Sortierung, Filter, Kopieren & .txt-Export", "Ja (100 % offline)", "DOM-Rendering + Clipboard- / Blob-API im Browser"],
+          ["Zwischengespeicherte Verfügbarkeit", "Ja (6 Std. Cache)", "Lokal aus localStorage (domainAvailabilityCacheV1)"],
+          ["Erstes Laden der Webseite", "Internet nötig", "Standard-HTTP-Aufruf (noch kein Service Worker registriert)"],
+          ["Live-Verfügbarkeit (Auto-24 / Bulk / Check)", "Internet nötig", "Live-Anfragen an Cloudflare/Google DoH & IANA/Registry RDAP"],
+          ["Externe BL- / WM- / GG-Links", "Internet nötig", "Öffnet externe Tabs für Ahrefs, Wayback Machine oder Google"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. Ehrliche Abgrenzung: Wo Internet nötig bleibt",
+      "paragraphs": [
+        "„Offline nutzbar“ bezieht sich auf die vollständige Generierung, RFC-1035-Validierung, Bewertung, Sortierung, Filterung und den Export nach dem Laden der Seite. Da derzeit kein Service Worker für Kaltstarts ohne Netz registriert ist, wird für das initiale Öffnen der Website weiterhin Internet benötigt.",
+        "Auch die Echtzeit-Verfügbarkeit ist globaler Live-Zustand: Offline können Auto-24 oder Bulk-Check keine DoH-/RDAP-Server erreichen; ungespeicherte Zeilen bleiben daher sauber im Status „Check“ oder „Erneut“, ohne die UI zu blockieren."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "6-Stunden-Cache im lokalen Browser",
+        "body": "Zuvor online geprüfte Domains bleiben in domainAvailabilityCacheV1 gespeichert (6 Stunden für Frei/Belegt, 5 Minuten für Check), sodass Sie Listen auch offline weiter filtern und exportieren können."
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. Offline-Modus in 30 Sekunden selbst testen",
+      "paragraphs": [
+        "Sie können die lokale Verarbeitung direkt in Chrome, Edge oder Firefox prüfen, ohne WLAN auszuschalten:"
+      ],
+      "bullets": [
+        { "label": "Schritt 1 — Netzwerk-Tab in DevTools öffnen", "text": "Drücken Sie F12, wechseln Sie zu Netzwerk (Network) und warten Sie den ersten Seitenabruf ab." },
+        { "label": "Schritt 2 — Auf Offline umstellen", "text": "Stellen Sie das Netzwerk-Throttling-Menü auf „Offline“." },
+        { "label": "Schritt 3 — Generieren, sortieren & exportieren", "text": "Geben Sie neue Keywords ein, sortieren Sie nach Score oder Zeichenzahl und exportieren Sie als .txt oder Markdown – alles reagiert sofort ohne Netzwerkanfragen." }
+      ]
+    }
+  ],
+  "methodologyNote": "Die Offline-Verarbeitung bezieht sich direkt auf das Client-JavaScript in index.html; Netzwerkaufrufe erfolgen nur für DoH/RDAP-Abfragen und /api/log-available-domain.",
+  "faqs": [
+    {
+      "q": "Warum stoppt die Live-Verfügbarkeitsprüfung im Offline-Modus?",
+      "a": "Ob eine Domain gerade registriert wurde, lässt sich nur über öffentliche DNS-(DoH)- und RDAP-Server im Internet ermitteln. Generierung, Syntaxprüfung, Scoring, Sortierung und Export arbeiten davon unabhängig offline weiter."
+    },
+    {
+      "q": "Kann ich Ergebnisse offline als .txt oder Markdown speichern?",
+      "a": "Ja. Kopieren, MD kopieren und .txt Export erzeugen die Dateien vollständig lokal im Browser."
+    },
+    {
+      "q": "Ist ein Service Worker für Offline-Neustarts der Seite installiert?",
+      "a": "Aktuell ist kein Service Worker registriert, sodass das erneute Laden einer geschlossenen Seite Internet erfordert. Solange der Tab geöffnet ist, arbeitet der Generator offline weiter."
+    }
+  ]
+}

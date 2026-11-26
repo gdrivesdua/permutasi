@@ -1,0 +1,77 @@
+{
+  "id": "offline-browser-domain-generator",
+  "lang": "pt",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "Execução Offline no Navegador",
+  "keyTakeaways": [
+    "Após carregar a página, todas as permutações, padrões personalizados, validação RFC 1035, pontuação fonética, ordenação, filtros e exportações rodam offline em JavaScript.",
+    "Resultados de disponibilidade consultados recentemente permanecem acessíveis no localStorage (domainAvailabilityCacheV1) por até 6 horas.",
+    "Apenas o carregamento inicial da página (sem Service Worker registrado) e consultas DNS/RDAP ao vivo ou links BL/WM/GG exigem internet.",
+    "Você pode comprovar em 30 segundos ativando o modo Offline em DevTools -> Rede (Network)."
+  ],
+  "sections": [
+    {
+      "anchor": "client-side-compute-engine",
+      "heading": "1. Por Que o Gerador Funciona Offline Após Carregar",
+      "paragraphs": [
+        "Muitos geradores de domínios enviam cada palavra digitada para um servidor remoto apenas para combinar termos. O Domain Name executa seu motor combinatório, estilos pronunciáveis, avaliador ortográfico e validador RFC 1035 inteiramente no JavaScript do navegador.",
+        "Depois que a página é carregada, testar palavras-chave, aplicar fórmulas como [primary][dash][secondary], ordenar por Pontuação ou Caracteres e exportar para .txt ou Markdown ocorre sem qualquer requisição ao servidor."
+      ],
+      "table": {
+        "caption": "Divisão Exata: Recursos Offline vs. Recursos Online",
+        "headers": ["Recurso / Operação", "Funciona Offline Após Carregar?", "Mecanismo Técnico"],
+        "rows": [
+          ["Permutações e mistura de palavras", "Sim (100% offline)", "JavaScript local permuteWords() e buildWordOrderVariants()"],
+          ["Padrões personalizados e estilos", "Sim (100% offline)", "Expansão local de tokens ([primary], [vogal], [número])"],
+          ["Validação de sintaxe RFC 1035", "Sim (100% offline)", "Funções locais sanitizeKeywordToken() e validateRfc1035Domain()"],
+          ["Pontuação de marca e naturalidade", "Sim (100% offline)", "Cálculo local calculateSpellingNaturalness() e computeDomainScores()"],
+          ["Ordenação, filtros, Copiar e Exportar .txt", "Sim (100% offline)", "DOM + API Clipboard / Blob direto no navegador"],
+          ["Cache de disponibilidade anterior", "Sim (TTL 6 horas)", "Leitura do localStorage domainAvailabilityCacheV1"],
+          ["Carregamento inicial do site", "Requer internet", "Requisição HTTP padrão (sem Service Worker instalado ainda)"],
+          ["Consultas DNS/RDAP ao vivo (Auto-24 / Check)", "Requer internet", "Consultas ao vivo para Cloudflare/Google DoH e RDAP da IANA"],
+          ["Atalhos externos BL / WM / GG", "Requer internet", "Abre abas externas no Ahrefs, Wayback Machine ou Google"]
+        ]
+      }
+    },
+    {
+      "anchor": "honest-boundaries",
+      "heading": "2. Limites Transparentes: Rede Necessária Apenas Para Consultas ao Vivo",
+      "paragraphs": [
+        "Transparência significa deixar claro que 'Funciona offline após carregar' abrange geração, validação RFC 1035, pontuação, filtros e exportação com a aba já aberta. Como ainda não há um Service Worker cacheando o HTML entre reinicializações, abrir o site do zero exige conexão.",
+        "Da mesma forma, verificar se um domínio foi registrado há instantes requer contato com servidores DNS e RDAP online. Sem internet, linhas sem cache permanecem seguramente em 'Check' ou 'Tentar' sem travar a tabela."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Cache Local de 6 Horas no Navegador",
+        "body": "Domínios verificados enquanto você estava online ficam salvos em domainAvailabilityCacheV1 (6 horas para Disponível/Registrado, 5 minutos para Check), permitindo filtrar e exportar listas mesmo sem sinal."
+      }
+    },
+    {
+      "anchor": "test-offline-devtools",
+      "heading": "3. Como Testar o Modo Offline em 30 Segundos",
+      "paragraphs": [
+        "Teste diretamente no Chrome, Edge ou Firefox sem precisar desligar o Wi-Fi:"
+      ],
+      "bullets": [
+        { "label": "Passo 1 — Abra a aba Rede (Network) no DevTools", "text": "Pressione F12, acesse Rede (Network) e aguarde o carregamento inicial." },
+        { "label": "Passo 2 — Selecione Offline", "text": "Mude o menu de simulação de rede para 'Offline'." },
+        { "label": "Passo 3 — Gere, ordene e exporte", "text": "Digite novas palavras-chave, ordene por Pontuação ou Tamanho e exporte em .txt ou Markdown instantaneamente sem tráfego de rede." }
+      ]
+    }
+  ],
+  "methodologyNote": "As capacidades offline refletem diretamente o código JavaScript de index.html; dependências de rede referem-se apenas a chamadas DoH/RDAP e /api/log-available-domain.",
+  "faqs": [
+    {
+      "q": "Por que o botão Check para quando fico offline?",
+      "a": "Saber se um domínio acabou de ser registrado exige consultar servidores DNS (DoH) e RDAP públicos na internet. Geração de ideias, validação, pontuação e exportação continuam funcionando normalmente offline."
+    },
+    {
+      "q": "Posso exportar minha lista em .txt ou Markdown sem internet?",
+      "a": "Sim. Copiar, Copiar MD e Exportar .txt geram tudo localmente na memória do navegador."
+    },
+    {
+      "q": "Consigo abrir a página do zero sem internet via Service Worker?",
+      "a": "Ainda não há Service Worker registrado, portanto abrir a aba pela primeira vez exige internet. Com a página já aberta, o gerador continua operando offline."
+    }
+  ]
+}

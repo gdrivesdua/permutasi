@@ -1,0 +1,532 @@
+{
+  "id": "40-domain-toko-shop-terkurasi-untuk-toko-shop-kios-online-analisis-skor-ekstensi",
+  "lang": "id",
+  "readingTimeMinutes": 5,
+  "breadcrumbLabel": "Pola Nama Domain",
+  "keyTakeaways": [
+    "97,6% sampel (40 dari 41 domain) pada shop-domain.csv lolos ambang kualitas (overall_heuristic_score >= 80, pronunciation_comfort_score >= 75, character_cleanliness_score = 100) dengan skor gabungan 93–95 dan pola np (natural PMD).",
+    "Ekstensi .id unggul di skor gabungan (94,71) pada data berlabel id berkat extension_lang_fit_score 98 dan panjang total 9 karakter, sedangkan .my.id (12 karakter), .web.id (13 karakter), dan .biz.id (13 karakter) konsisten di 93.",
+    "Ekstensi .net (10 karakter) mencatat rata-rata skor keseluruhan 92,67 (dan 93,86 tanpa shopaj.net), relevan untuk toko dengan audiens berbahasa Inggris atau lintas negara.",
+    "Satu anomali (shopaj.net, skor 76, pelafalan 62) membuktikan bahwa akhiran huruf yang kurang lazim secara fonetik tetap menurunkan kenyamanan ucap meski memakai awalan shop."
+  ],
+  "sections": [
+    {
+      "anchor": "mengapa-nama-toko-gagal-diingat",
+      "heading": "1. Mengapa Banyak Nama Toko Online Gagal Diingat Meski Pakai Kata \"Shop\"",
+      "paragraphs": [
+        "Menambahkan kata shop di depan nama usaha sering dianggap cara paling instan agar orang langsung tahu bahwa alamat web tersebut adalah toko atau kios jualan. Namun dalam praktiknya, banyak pemilik toko online, reseller, maupun pengelola kios digital yang menemui kendala saat nama domain tersebut diucapkan lewat telepon, obrolan suara, atau rekomendasi dari mulut ke mulut.",
+        "Ketika seseorang harus mengeja huruf demi huruf atau ragu apakah sebuah nama berakhiran vokal atau konsonan yang janggal, gesekan kecil (friction) langsung muncul. Bagi pembaca di niche e-commerce, digital marketing, maupun web developer yang membantu UMKM merintis toko, memahami pola struktur nama domain jauh lebih bernilai daripada sekadar menyalin daftar nama acak."
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Kenapa Artikel Ini Layak Dijadikan Rujukan?",
+        "body": "Pembahasan di bawah menggabungkan **data empiris 41 domain berlabel ecommerce** yang dicek via **RDAP** pada **25 November 2026** dengan kriteria seleksi ketat (character_cleanliness_score = 100, pronunciation_comfort_score >= 75, dan overall_heuristic_score >= 80)   ."
+      }
+    },
+    {
+      "anchor": "perbandingan-ekstensi-dan-skor-data",
+      "heading": "2. Perbandingan Ekstensi & Skor Kualitas dari Data shop-domain.csv",
+      "paragraphs": [
+        "Dari total 41 domain unik pada dataset shop-domain.csv (terdiri dari 26 entri berlabel bahasa id dan 15 entri berlabel en), seluruhnya diperiksa menggunakan metode RDAP (19 auto dan 22 manual) pada rentang waktu yang sama di 25 November 2026. Rata-rata keseluruhan metrik pada sampel ini menunjukkan tingkat keterbacaan yang tinggi: rata-rata pronunciation_comfort_score 98,83, rata-rata brandability_score 97,76, dan rata-rata overall_heuristic_score 93,46.   Perbedaan paling nyata terlihat pada panjang total karakter, kecocokan ekstensi dengan bahasa (extension_lang_fit_score), serta konteks penggunaan tiap ekstensi. Pemilik toko lokal di Indonesia umumnya lebih diuntungkan oleh nama singkat berakhiran .id, sementara toko yang menargetkan pasar internasional atau ingin tampil seperti platform/store global sering mempertimbangkan .net atau ekstensi turunan .id sesuai anggaran dan kebutuhan brand."
+      ],
+      "bullets": [
+        "Fokus .id (9 karakter, skor rata-rata 94,71): Mencatat extension_lang_fit_score tertinggi (98) pada sampel bahasa id dan panjang paling ringkas di antara ekstensi pada dataset ini.",
+        "Alternatif .my.id, .web.id & .biz.id (12–13 karakter, skor rata-rata 93,00): Mempertahankan pronunciation_comfort_score 100 dan brandability_score 100 pada seluruh 12 barisnya, cocok untuk toko rintisan, katalog web, atau kios usaha yang mengutamakan efisiensi biaya.",
+        "Opsi .net (10 karakter, skor rata-rata 92,67): Memiliki extension_lang_fit_score 91 pada konteks en; 14 dari 15 domain .net meraih skor 93–94, sementara 1 domain (shopaj.net) turun ke 76 (pronunciation_comfort_score 62, tipe up)."
+      ],
+      "table": {
+        "caption": "Ringkasan Metrik per Ekstensi pada Dataset shop-domain.csv (N = 41)",
+        "headers": [
+          "Ekstensi",
+          "Jumlah",
+          "Panjang Rata-rata",
+          "Pelafalan (Rata-rata)",
+          "Brandability (Rata-rata)",
+          "Skor Total (Rata-rata)"
+        ],
+        "rows": [
+          [
+            ".id",
+            "14",
+            "9.0",
+            "100.0",
+            "98.86",
+            "94.71"
+          ],
+          [
+            ".net",
+            "15",
+            "10.0",
+            "96.80",
+            "94.93",
+            "92.67"
+          ],
+          [
+            ".my.id",
+            "4",
+            "12.0",
+            "100.0",
+            "100.00",
+            "93.00"
+          ],
+          [
+            ".web.id",
+            "4",
+            "13.0",
+            "100.0",
+            "100.00",
+            "93.00"
+          ],
+          [
+            ".biz.id",
+            "4",
+            "13.0",
+            "100.0",
+            "100.00",
+            "93.00"
+          ]
+        ]
+      }
+    },
+    {
+      "anchor": "kurasi-domain-berdasarkan-pola-penggunaan",
+      "heading": "3. Kurasi 40 Domain Terpilih: Mana yang Cocok untuk Model Toko Anda?",
+      "paragraphs": [
+        "Alih-alih memilih nama berdasarkan urutan abjad semata, cara paling efektif untuk pencari nama toko atau kios adalah mencocokkan karakter nama dengan jenis barang dan cara berjualan. Domain dengan akhiran vokal + konsonan yang mengalir seperti shopal, shopar, shopel, shopem, shopen, dan shopor terasa lebih luwes saat dipadukan dengan nama lini produk atau kampanye promosi.",
+        "Di bawah ini adalah 40 domain dari shop-domain.csv yang lolos kriteria kualitas tinggi (overall_heuristic_score >= 80, pronunciation_comfort_score >= 75, character_cleanliness_score = 100), dibagi ke dalam tiga kelompok agar mudah dibandingkan."
+      ],
+      "table": {
+        "caption": "Kelompok A — Kandidat Skor Tertinggi .id (9 Karakter, Skor Total 95)",
+        "headers": [
+          "Domain",
+          "Pelafalan",
+          "Brandability",
+          "Kecocokan Ekstensi",
+          "Skor Total",
+          "Ilustrasi Kecocokan Toko"
+        ],
+        "rows": [
+          [
+            "shopal.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko lifestyle, perlengkapan rumah, atau produk harian"
+          ],
+          [
+            "shopam.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Kios kebutuhan cepat, camilan, atau promo harian"
+          ],
+          [
+            "shopar.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko kerajinan, art, atau produk kurasi kreatif"
+          ],
+          [
+            "shopel.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko elektronik ringan, aksesori gawai, atau perlengkapan digital"
+          ],
+          [
+            "shopem.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Online shop fesyen kasual atau kebutuhan sehari-hari"
+          ],
+          [
+            "shopen.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko perlengkapan kerja, alat tulis, atau kebutuhan kantor"
+          ],
+          [
+            "shopil.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko produk anak, hobi, atau perlengkapan keluarga"
+          ],
+          [
+            "shopir.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko perlengkapan otomotif ringan atau perawatan kendaraan"
+          ],
+          [
+            "shopor.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Kios serba ada atau toko ritel umum skala lokal"
+          ],
+          [
+            "shopur.id",
+            "100",
+            "100",
+            "98",
+            "95",
+            "Toko produk natural, perawatan diri, atau kebutuhan rumah"
+          ]
+        ]
+      }
+    },
+    {
+      "anchor": "kelompok-b-kandidat-net-skor-tinggi-10-karakter-skor-total-93-94",
+      "heading": "Kelompok B — Kandidat .net Skor Tinggi (10 Karakter, Skor Total 93–94)",
+      "paragraphs": [],
+      "table": {
+        "caption": "Kelompok B — Kandidat .net Skor Tinggi (10 Karakter, Skor Total 93–94)",
+        "headers": [
+          "Domain",
+          "Pelafalan",
+          "Brandability",
+          "Kecocokan Ekstensi",
+          "Skor Total",
+          "Ilustrasi Kecocokan Toko"
+        ],
+        "rows": [
+          [
+            "shopem.net",
+            "100",
+            "100",
+            "91",
+            "94",
+            "Toko digital, apparel kasual, atau katalog produk modern"
+          ],
+          [
+            "shopab.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko khusus satu niche dengan target audiens berbahasa Inggris"
+          ],
+          [
+            "shopag.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko perlengkapan outdoor, hobi, atau gaya hidup"
+          ],
+          [
+            "shopeb.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Online shop produk pilihan dengan pelafalan lugas"
+          ],
+          [
+            "shoped.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko buku, sumber belajar, atau perlengkapan edukasi"
+          ],
+          [
+            "shopef.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko produk fungsional atau peralatan praktis"
+          ],
+          [
+            "shopeg.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko aksesori, gadget, atau perlengkapan teknis"
+          ],
+          [
+            "shopeh.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko kebutuhan rumah tangga, kesehatan, atau kebugaran"
+          ],
+          [
+            "shopep.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko kado, produk personal, atau pesanan kustom"
+          ],
+          [
+            "shopew.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko berbasis web atau etalase katalog daring"
+          ],
+          [
+            "shopib.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko ritel digital dengan identitas nama ringkas"
+          ],
+          [
+            "shopod.net",
+            "100",
+            "96",
+            "91",
+            "94",
+            "Toko print-on-demand, edisi terbatas, atau mini-shop"
+          ],
+          [
+            "shopey.net",
+            "95",
+            "96",
+            "91",
+            "93",
+            "Toko daring bernuansa ramah dan mudah diingat"
+          ],
+          [
+            "shopoy.net",
+            "95",
+            "96",
+            "91",
+            "93",
+            "Toko kasual atau niche store dengan akhiran vokal y"
+          ]
+        ]
+      }
+    },
+    {
+      "anchor": "kelompok-c-id-skor-94-serta-web-id-my-id-biz-id-skor-total-93-94",
+      "heading": "Kelompok C — .id Skor 94 serta .web.id, .my.id & .biz.id (Skor Total 93–94)",
+      "paragraphs": [],
+      "table": {
+        "caption": "Kelompok C — .id Skor 94 serta .web.id, .my.id & .biz.id (Skor Total 93–94)",
+        "headers": [
+          "Domain",
+          "Ekstensi",
+          "Pjg",
+          "Pelafalan",
+          "Brandability",
+          "Skor Total",
+          "Ilustrasi Kecocokan Toko"
+        ],
+        "rows": [
+          [
+            "shopas.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko ritel lokal atau kios kebutuhan sehari-hari"
+          ],
+          [
+            "shopeb.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko produk pilihan dengan penekanan nama yang tegas"
+          ],
+          [
+            "shoped.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko perlengkapan edukasi atau produk lokal"
+          ],
+          [
+            "shopes.id",
+            ".id",
+            "9",
+            "100",
+            "96",
+            "94",
+            "Toko daring UMKM dengan identitas lokal yang jelas"
+          ],
+          [
+            "shopal.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Etalase katalog web atau toko online berbasis situs"
+          ],
+          [
+            "shopel.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Toko web perlengkapan elektronik atau aksesori digital"
+          ],
+          [
+            "shoper.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Situs toko atau pusat katalog produk daring"
+          ],
+          [
+            "shopor.web.id",
+            ".web.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Toko web multi-kategori untuk usaha rintisan"
+          ],
+          [
+            "shopal.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Toko mandiri, katalog jualan cepat, atau kios personal"
+          ],
+          [
+            "shopel.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Kios daring produk pilihan atau kanal jualan reseller"
+          ],
+          [
+            "shoper.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Halaman etalase dagang atau toko skala kecil"
+          ],
+          [
+            "shopor.my.id",
+            ".my.id",
+            "12",
+            "100",
+            "100",
+            "93",
+            "Kios atau micro-shop yang ringkas dan hemat"
+          ],
+          [
+            "shopal.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Usaha dagang atau toko yang menonjolkan identitas bisnis"
+          ],
+          [
+            "shopel.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Bisnis ritel elektronik atau kios usaha khusus"
+          ],
+          [
+            "shoper.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Usaha perdagangan atau toko yang fokus pada aktivitas niaga"
+          ],
+          [
+            "shopor.biz.id",
+            ".biz.id",
+            "13",
+            "100",
+            "100",
+            "93",
+            "Kios atau bisnis jual-beli berbagai produk"
+          ]
+        ]
+      }
+    },
+    {
+      "anchor": "checklist-sebelum-beli-domain-toko",
+      "heading": "4. Checklist 4 Langkah Sebelum Mendaftarkan Domain Toko Anda",
+      "paragraphs": [
+        "Menemukan nama domain yang enak dibaca dan mendapat skor tinggi hanyalah langkah awal. Untuk toko atau kios yang akan dipakai bertahun-tahun, pastikan nama tersebut tidak menyimpan masalah historis maupun sengketa nama yang bisa menghambat pertumbuhan brand.",
+        "Anda juga dapat menguji variasi kata kunci lain—seperti toko, kios, store, atau nama kategori produk Anda—langsung di Domain Name untuk membandingkan kombinasi kata dan ekstensi sebelum memutuskan."
+      ],
+      "bullets": [
+        {
+          "label": "Verifikasi status live terbaru",
+          "text": "Ketersediaan domain di registri dapat berubah kapan saja setelah waktu pengecekan data; selalu cek ulang secara langsung sebelum pembayaran."
+        },
+        {
+          "label": "Periksa jejak masa lalu domain",
+          "text": "Tinjau arsip lama dan riwayat tautan untuk memastikan domain tidak pernah dipakai situs spam atau konten yang merugikan reputasi toko."
+        },
+        {
+          "label": "Cek potensi merek dagang",
+          "text": "Pastikan nama yang dipilih tidak melanggar atau berbenturan dengan merek terdaftar di kelas barang/jasa yang relevan."
+        },
+        {
+          "label": "Lakukan tes ucap dan dengar",
+          "text": "Sebutkan nama domain lengkap dengan ekstensinya kepada orang lain tanpa memperlihatkan tulisan, lalu perhatikan apakah mereka bisa menuliskannya dengan tepat."
+        }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Catatan Keterbatasan Data & Tanggung Jawab Registrasi",
+        "body": "Angka pada artikel ini bersumber dari **41 entri** pada \\shop-domain.csv` yang dicatat via RDAP pada 25 November 2026. Skor heuristik bersifat panduan struktur dan pelafalan, bukan jaminan peringkat mesin pencari, ketersediaan permanen, maupun kepastian hukum merek dagang.`"
+      }
+    }
+  ],
+  "methodologyNote": "Data diolah dari file `shop-domain.csv` (`N = 41` domain berlabel `ecommerce`, metode `RDAP`, waktu pencatatan `25 November 2026`). Tabel kurasi menyaring `character_cleanliness_score = 100`, `pronunciation_comfort_score >= 75`, dan `overall_heuristic_score >= 80` (menghasilkan 40 domain; `shopaj.net` dengan skor `76` dibahas sebagai pembanding). Seluruh nilai tetap memerlukan pengecekan live dan audit merek dagang sebelum didaftarkan.",
+  "faqs": [
+    {
+      "q": "Mengapa artikel ini membedakan .id, .my.id, .web.id, .biz.id, dan .net untuk nama toko?",
+      "a": "Karena tiap ekstensi punya karakter panjang dan kecocokan konteks berbeda—**.id** unggul dengan panjang 9 karakter dan skor kecocokan bahasa tinggi untuk pasar Indonesia, **.my.id**, **.web.id**, dan **.biz.id** menawarkan alternatif yang sering dipilih untuk efisiensi atau identitas usaha/web, sedangkan **.net** lebih relevan untuk toko berbahasa Inggris atau lintas negara."
+    },
+    {
+      "q": "Apa alasan 1 domain (shopaj.net) tidak masuk dalam daftar 40 domain terkurasi?",
+      "a": "Pada dataset \\shop-domain.csv`, `shopaj.net` memiliki `overall_heuristic_score` 76 dan `pronunciation_comfort_score` 62 (di bawah ambang seleksi `>= 80` dan `>= 75`), sehingga lebih tepat dijadikan contoh pembanding risiko pelafalan[cite: 4, 5].`"
+    },
+    {
+      "q": "Bagaimana cara memakai artikel ini jika toko saya tidak memakai awalan \"shop\"?",
+      "a": "Gunakan pola evaluasi di artikel ini (kebersihan karakter, kenyamanan ucap, kecocokan ekstensi, serta 4 langkah *due diligence*) sebagai acuan, lalu masukkan kata kunci toko Anda sendiri ke [Domain Name](https://domainname.web.id/) untuk mengecek kandidat yang sesuai."
+    }
+  ]
+}

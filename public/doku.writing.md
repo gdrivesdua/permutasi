@@ -3,7 +3,7 @@
 Dokumen ini menjadi panduan operasional bagi penulis dan developer untuk menyusun, melokalisasi, dan mempublikasikan artikel pada arsitektur `content/articles/` + `templates/` + `scripts/site-builder.mjs`.
 
 Seluruh artikel dikelompokkan ke dalam 3 jalur URL (`section`):
-- `/guides/` (`section: "guides"`) — **Pillar Articles E-E-A-T** & panduan metodologi *evergreen*.
+- `/guides/` (`section: "guides"`) — **Pillar Articles E-E-A-T** & panduan metodologi *evergreen* (di navbar/header tampil dengan label **Articles** / **Artikel** agar tidak rancu dengan `/guide.html`).
 - `/research/` (`section: "research"`) — **Studi Data Empiris D1** & **Kurasi Editorial per Niche**.
 - `/tools/` (`section: "tools"`) — **Halaman Alat Interaktif** & *benchmark* berbasis data agregat.
 
@@ -16,7 +16,7 @@ Seluruh artikel dikelompokkan ke dalam 3 jalur URL (`section`):
      ```bash
      npx wrangler d1 execute domainname_available_domains --remote --command="SELECT ..."
      ```
-   - Simpan ringkasan snapshot JSON di `content/articles/data/<nama-snapshot>.json` agar angka konsisten antara tabel di artikel dan metadata E-E-A-T (`sampleSize`, `dateRange`).
+   - *(Opsional)* Simpan ringkasan snapshot JSON di `content/articles/data/<nama-snapshot>.json` sebagai arsip referensi, lalu pastikan angka `sampleSize` dan `dateRange` pada `dataSnapshot` di `content/articles/manifest.json` (yang langsung dibaca builder untuk metadata E-E-A-T) konsisten dengan isi tabel artikel.
 2. **Buat Direktori Artikel & File Bahasa**:
    - Buat folder `content/articles/<section>/<id>/` (gunakan slug ASCII huruf kecil + tanda hubung, mis. `domain-scoring-methodology`).
    - Tulis konten per bahasa yang sudah siap terbit, misalnya `en.json` dan `id.json`.
@@ -44,7 +44,7 @@ Seluruh artikel dikelompokkan ke dalam 3 jalur URL (`section`):
   3. **Metodologi & Cakupan Sampel**: Sebutkan jumlah sampel `N`, periode pengambilan (`checked_at`), dan definisi metrik (`sld`, `pronunciation_comfort_score`, `brandability_score`, dll.).
   4. **Minimal 2 Tabel Data (`table`) + Analisis Sebab-Akibat**: Jangan sekadar mengulang angka di tabel dalam bentuk kalimat. Jelaskan *mengapa* pola itu muncul (mis. mengapa domain 1–2 kata dengan rasio vokal 35%–50% mendominasi skor tinggi).
   5. **Rekomendasi Praktis (*Actionable Playbook*)**: Langkah nyata yang bisa diterapkan pembaca saat memilih nama domain.
-  6. **Catatan Metodologi & Keterbatasan Data (`methodologyNote`)**: Jelaskan bahwa status ketersediaan berbasis sinyal `NS`/`RDAP` pada tanggal cek dan tidak mencerminkan status merek dagang (*trademark*).
+  6. **Catatan Metodologi & Keterbatasan Data (`methodologyNote`)**: Jelaskan bahwa status ketersediaan berbasis pengecekan `RDAP` utama dan verifikasi `NS`/DNS sekunder pada tanggal cek (`checked_at`), serta tidak mencerminkan status merek dagang (*trademark*).
   7. **FAQ (`faqs`)**: 3–5 pertanyaan umum yang sering muncul di SERP.
 - **Hal yang Dilarang**:
   - Mengklaim korelasi sebagai jaminan peringkat Google.
@@ -90,11 +90,11 @@ Seluruh artikel dikelompokkan ke dalam 3 jalur URL (`section`):
 
 - **Target Panjang**: 1.500 – 2.500 kata (mendalam, terstruktur rapi, tanpa basa-basi filler).
 - **`articleType` di manifest**: `"TechArticle"` (untuk topik metodologi, linguistik, DNS/RDAP, SEO internasional) atau `"Article"` (untuk audit red flags, morfologi branding).
-- **Set `"isPillar": true`** di `manifest.json` agar mendapat prioritas `0.8` (`en`) / `0.7` (lokal) di `sitemap.xml`.
-- **Checklist Khusus untuk Ke-7 Topik Pillar (dari `doku.article.md` Bagian 6)**:
+- **Set `"isPillar": true`** di `manifest.json` agar mendapat prioritas `0.8` (`en`) / `0.7` (lokal) di `sitemap.xml` (catatan: seluruh entri dengan `section: "guides"` otomatis juga diperlakukan sebagai pillar oleh `scripts/site-builder.mjs`).
+- **Checklist Khusus untuk Ke-7 Topik Pillar (dari `/public/doku.article.md` Bagian 6)**:
   1. *Metodologi Penilaian Kualitas Domain*: Jelaskan 7 bobot sub-skor (`0.22` hingga `0.10`), penalti sinergis, serta bukti distribusi persentase nyata dari D1.
   2. *Anatomi Nama Brand Lolos Radio Test*: Bahas rasio vokal ideal (`30%–56%`), benturan konsonan berat, dan perbedaan fonetik antar bahasa (`.id` vs `.com`).
-  3. *Perbandingan Akurasi DNS (`NS`) vs `RDAP`*: Jelaskan delegasi DNS vs registry resmi, edge case domain tanpa `NS`, serta statistik proporsi `check_method` di D1.
+  3. *Perbandingan Akurasi `RDAP` vs DNS (`NS`)*: Jelaskan alur pengecekan `RDAP` lebih dulu sebagai sumber utama status registrasi, lalu verifikasi sekunder `NS`/DNS saat `RDAP` mengembalikan `404`, mengapa domain terdaftar tanpa `NS` tetap berstatus `Taken` (bukan `No NS`), serta statistik `check_method` di D1.
   4. *Domain Red Flags & Checklist Due Diligence*: Bahas pola `os`/`of`/`ol`/`nn`, cara audit Wayback Machine, profil backlink spam, dan merek dagang.
   5. *Pola Morfologi & Kata Majemuk Bisnis*: Bedah kombinasi kata kerja + objek, sufiks lokal (`-ku`, `-id`, dll.), dan batas panjang ringkas.
   6. *Strategi ccTLD vs gTLD (8 Pasar Bahasa)*: Bahas sinyal geotargeting Google Search, `extension_lang_fit_score`, dan studi kasus `.id`, `.de`, `.jp`, `.es`, `.com.br`, `.fr`, `.ru` vs `.com`.
@@ -143,7 +143,7 @@ Halaman `/guides/`, `/research/`, dan `/tools/` bertindak sebagai pintu masuk te
   "locales": {
     "en": {
       "published": true,
-      "title": "The Radio Test in Domain Naming: Empirical Phonetics Data (50–65 chars ideal)",
+      "title": "The Radio Test in Domain Naming: Empirical Phonetics Data",
       "metaDesc": "Meta description 110–155 karakter yang spesifik merangkum temuan dan manfaat artikel.",
       "keywords": "radio test domain, brandable phonetics, domain pronunciation score",
       "h1": "Anatomi Judul H1 Artikel yang Jelas dan Spesifik",

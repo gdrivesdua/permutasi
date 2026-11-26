@@ -1,0 +1,68 @@
+{
+  "id": "no-tracking-privacy-architecture",
+  "lang": "ja",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "追跡なしの設計",
+  "keyTakeaways": [
+    "Domain Nameは追跡Cookieを設定せず、ユーザーアカウントや行動分析スクリプトも使用しません。",
+    "キーワードの組み合わせや発音スコア計算はブラウザ内で完結し、入力中に下書きが送信されることはありません。",
+    "端末に保存されるのは表示テーマ・言語・空き状況キャッシュ（domainAvailabilityCacheV1）のみです。",
+    "透明性のため明記すると、リアルタイム空き確認のみ公開DoH/RDAPへ直接通信し、取得可能な25文字以下のドメインのみ匿名統計を記録します。"
+  ],
+  "sections": [
+    {
+      "anchor": "zero-tracking-architecture",
+      "heading": "1. 「追跡なし」の技術的な意味",
+      "paragraphs": [
+        "多くのドメイン検索サイトでは入力されたキーワードの記録や広告用Cookieの発行が行われますが、Domain Nameはアカウント登録不要・追跡Cookieゼロ・行動トラッキングなしで設計されています。",
+        "単語の組み合わせ生成や発音評価はすべてブラウザのタブ内で実行されます。"
+      ],
+      "table": {
+        "caption": "保存データと通信内容の透明な一覧",
+        "headers": ["仕組み", "保存・送信される内容", "個人追跡の有無"],
+        "rows": [
+          ["HTTP Cookie", "ジェネレーターによるCookie発行なし", "なし（追跡Cookie 0件）"],
+          ["localStorage", "preferredTheme、preferredLang、domainAvailabilityCacheV1", "なし — ご利用端末内のみに保持"],
+          ["リアルタイム確認", "Cloudflare/Google DoH および公開RDAPへ直接照会", "ブラウザからの標準DNS/RDAP照会"],
+          ["匿名カタログ記録", "取得可能かつ25文字以下の非個人統計のみ送信", "なし — Cookie・ユーザーID・IP非保存"]
+        ]
+      }
+    },
+    {
+      "anchor": "transparent-disclosure",
+      "heading": "2. localStorage・DoH/RDAP通信・匿名統計の率直な開示",
+      "paragraphs": [
+        "localStorageにはライト/ダーク設定・表示言語・6時間有効な空き状況キャッシュのみを保存し、レジストリへの重複リクエストを防いでいます。空き状況の照会時はブラウザがIANAのRDAP一覧と公開DoHへ直接アクセスします。",
+        "25文字以下のドメインで「取得可能（available）」が確認された場合のみ、CookieやIPを含まない統計スコアが /api/log-available-domain へ送信されます。登録済みドメインや生成のみのキーワードは送信されません。"
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "サードパーティ解析スクリプト無効",
+        "body": "site.config.json では Google Analytics と Auto Ads の双方が無効化されています。"
+      }
+    },
+    {
+      "anchor": "devtools-audit",
+      "heading": "3. DevTools を使った1分間のセルフ検証手順",
+      "paragraphs": [
+        "ChromeやFirefoxの開発者ツール（DevTools）から誰でも同じ動作を確認できます。"
+      ],
+      "bullets": [
+        { "label": "Cookieの確認", "text": "Application -> Cookies を開き、追跡Cookieが存在しないことを確認できます。" },
+        { "label": "Local Storageの確認", "text": "preferredTheme・preferredLang・domainAvailabilityCacheV1 のみが保存されていることを確認できます。" },
+        { "label": "Networkタブの確認", "text": "Offlineモードにしてキーワードを入力・生成すると、生成処理中に外部通信が一切発生しないことが確認できます。" }
+      ]
+    }
+  ],
+  "methodologyNote": "本内容は index.html のクライアント実装、site.config.json、および functions/api/log-available-domain.js の実コードに基づいています。",
+  "faqs": [
+    {
+      "q": "入力した事業アイデアやキーワードが他者に見られることはありますか？",
+      "a": "生成処理や取得済みドメインのキーワードが送信されることはありません。取得可能と確認された25文字以下のドメインのみ、CookieやIPなしで匿名統計が記録されます。"
+    },
+    {
+      "q": "追跡しないのに localStorage を使うのはなぜですか？",
+      "a": "表示言語やテーマ設定、RDAPキャッシュを端末内に保持して高速化するためです。Cookieとは異なりHTTPヘッダで自動送信されることはありません。"
+    }
+  ]
+}

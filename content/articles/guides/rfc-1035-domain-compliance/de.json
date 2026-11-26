@@ -1,0 +1,72 @@
+{
+  "id": "rfc-1035-domain-compliance",
+  "lang": "de",
+  "readingTimeMinutes": 6,
+  "breadcrumbLabel": "RFC 1035 Konformität",
+  "keyTakeaways": [
+    "Jeder Domain-Kandidat durchläuft sanitizeKeywordToken() und validateRfc1035Domain(), bevor er angezeigt wird.",
+    "Labels sind strikt auf ASCII-LDH-Zeichen (a-z, 0-9 und interne Bindestriche -) ohne Rand-Bindestriche begrenzt.",
+    "Jedes DNS-Label darf maximal 63 Zeichen lang sein; Hostnamen über 253 Zeichen werden verworfen.",
+    "Sie können die Regeln in 30 Sekunden direkt mit Leerzeichen, Sonderzeichen oder 70-Zeichen-Strings testen."
+  ],
+  "sections": [
+    {
+      "anchor": "was-rfc-1035-fordert",
+      "heading": "1. Was RFC 1035 für die DNS-Syntax vorschreibt",
+      "paragraphs": [
+        "Die 1987 veröffentlichte IETF-Spezifikation RFC 1035 legt die grundlegenden Syntaxregeln für DNS-Resolver und Domain-Registries fest. Abschnitt 2.3.1 definiert die LDH-Regel (Letters, Digits, Hyphen): Labels dürfen nur aus Kleinbuchstaben, Ziffern und inneren Bindestrichen bestehen und maximal 63 Oktette umfassen.",
+        "Ohne Bereinigung im Browser erzeugen Namens-Tools schnell ungültige Ergebnisse durch Leerzeichen, Umlaute oder Rand-Bindestriche. Domain Name filtert jeden ungültigen Kandidaten deterministisch heraus."
+      ],
+      "table": {
+        "caption": "RFC-1035-Vorgaben im Vergleich zur Generator-Prüfung",
+        "headers": ["DNS-Vorgabe", "RFC-1035-Regel", "Prüfung im Generator"],
+        "rows": [
+          ["Erlaubte Zeichen", "ASCII a-z, Ziffern 0-9, Bindestrich -", "Zeichen außerhalb [a-z0-9-] entfernt, Großbuchstaben kleingeschrieben"],
+          ["Label-Ränder", "Start & Ende mit Buchstabe oder Ziffer", "Rand-Bindestriche per /^-+|-+$/g entfernt"],
+          ["Label-Länge", "Maximal 63 Oktette (Abschnitt 2.3.4)", "Labels > 63 Zeichen liefern null und entfallen"],
+          ["Gesamtlänge", "255 Wire-Oktette (~253 ASCII-Zeichen)", "FQDNs > 253 Zeichen werden verworfen"],
+          ["Endungsprüfung", "Gültiges nicht-leeres TLD-Label", "Jedes TLD-Segment erfordert mindestens ein alphanumerisches Zeichen"]
+        ]
+      }
+    },
+    {
+      "anchor": "zweistufige-validierung",
+      "heading": "2. Zweistufige Validierung im Browser",
+      "paragraphs": [
+        "Im ersten Schritt bereinigt sanitizeKeywordToken() die Nutzereingabe sofort. Im zweiten Schritt prüft validateRfc1035Domain(pat, ext) jedes Label zwischen den Punkten auf maximal 63 Zeichen sowie die Gesamtlänge von höchstens 253 Zeichen."
+      ],
+      "codeBlock": {
+        "caption": "Kernprüfung innerhalb von validateRfc1035Domain(pat, ext)",
+        "code": "const cleanLabel = rawLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');\nif (!cleanLabel || cleanLabel.length > 63) return null;\n\nconst finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');\nif (finalDomain.length > 253) return null;"
+      }
+    },
+    {
+      "anchor": "selbst-testen",
+      "heading": "3. RFC-1035-Konformität in 30 Sekunden selbst testen",
+      "paragraphs": [
+        "Prüfen Sie diese Grenzfälle direkt im Eingabefeld für das Haupt-Keyword:"
+      ],
+      "bullets": [
+        { "label": "Leerzeichen & Sonderzeichen", "text": "Geben Sie '--Kaffee & Tee!! 2026--' ein und beobachten Sie die saubere LDH-Normalisierung." },
+        { "label": "63-Zeichen-Grenze", "text": "Fügen Sie ein 65-stelliges Wort ein: Kandidaten über 63 Zeichen je Label werden automatisch unterdrückt." },
+        { "label": "Eigene Muster", "text": "Testen Sie in den Erweiterten Optionen ein Muster mit '[dash]' am Ende – Rand-Bindestriche werden sauber abgeschnitten." }
+      ],
+      "callout": {
+        "tone": "info",
+        "title": "Technischer Hinweis",
+        "body": "RFC 1035 sichert gültige ASCII-LDH-Hostnamen. Nicht-ASCII-Zeichen werden bereinigt statt in Punycode (xn--) kodiert; spezifische Registry-Vorgaben gelten unabhängig davon."
+      }
+    }
+  ],
+  "methodologyNote": "Alle beschriebenen Regeln entsprechen exakt den aktiven JavaScript-Funktionen sanitizeKeywordToken() und validateRfc1035Domain() im Browser.",
+  "faqs": [
+    {
+      "q": "Warum beträgt das Gesamtlimit 253 statt 255 Zeichen?",
+      "a": "Im binären DNS-Format (RFC 1035 Abschnitt 2.3.4) benötigt jedes Label ein Längen-Byte plus abschließendes Root-Byte; 255 Wire-Oktette entsprechen daher 253 ASCII-Zeichen."
+    },
+    {
+      "q": "Ist eine RFC-1035-konforme Domain automatisch registrierbar?",
+      "a": "Sie ist syntaktisch gültig für DNS. Zusätzlich sind Live-RDAP/NS-Prüfungen, Registry-Richtlinien und eine Markenrecherche erforderlich."
+    }
+  ]
+}

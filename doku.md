@@ -14,7 +14,7 @@ Berdasarkan audit langsung terhadap seluruh file sumber (`package.json`, `site.c
 | **Kebersihan Kode Sumber** | Siap | `site.config.json` bebas dari token/ID sensitif (`measurementId`, `verificationToken`, `publisherId` kosong). Tidak ada `localhost` atau *hardcoded secret* di HTML/JS. `ADMIN_PASSWORD` dibaca eksklusif dari environment/secret. |
 | **Build Statis (`npm run build`)** | Siap | Menjalankan `node scripts/build-static.mjs` tanpa bergantung pada `express` atau library native eksternal; menghasilkan **48 file HTML** (`en` di root, `id/es/pt/fr/de/ru/ja` di subdirektori), `robots.txt`, `sitemap.xml`, `_redirects`, `_headers`, `assets/`, dan `ads.txt` (jika `ADSENSE_CLIENT_ID` terisi). `admin-lexicon.html` **tidak** ikut di-build ke `dist/`. |
 | **Validasi Sintaks (`npm run lint`)** | Siap | Memverifikasi `server.js`, `scripts/site-builder.mjs`, `scripts/build-static.mjs`, `assets/trust-i18n.js`, `lib/domain-tagger.js`, `lib/lexicon-store.js`, `lib/admin-auth.js`, `lib/lexicon/bundle.js`, dan `functions/api/log-available-domain.js` menggunakan `node --check`. |
-| **Cache Ketersediaan (`localStorage`)** | Siap | Hasil cek DoH/RDAP disimpan di `localStorage` (`domainAvailabilityCacheV1`) dengan kunci lowercase ternormalisasi, TTL (default 6 jam untuk `available`/`taken`, 5 menit untuk `check`), pruning otomatis, fallback aman `try...catch`, serta tombol re-check per baris. |
+| **Cache Ketersediaan (`localStorage` / `sessionStorage`)** | Siap | Hasil cek RDAP/DNS disimpan di cache memori + `localStorage` dengan fallback `sessionStorage` (`domainAvailabilityCacheV1`), kunci lowercase ternormalisasi, TTL (default 6 jam untuk `available`/`taken`, 5 menit untuk `check`), pruning otomatis, fallback aman `try...catch`, serta tombol re-check per baris yang mem-bypass cache. |
 | **Cloudflare Secrets / Env Vars** | Siap | `scripts/site-builder.mjs` membaca override dari `process.env` saat proses build Cloudflare berjalan (`SITE_URL`, `CONTACT_EMAIL`, `GA_MEASUREMENT_ID`, `GSC_VERIFICATION`, `ADSENSE_CLIENT_ID`, `ADSENSE_DIRECT_SELLER_ID`, `ADSENSE_ENABLE_AUTO_ADS`, `BING_VERIFICATION`, `YANDEX_VERIFICATION`, `AHREFS_SITE_VERIFICATION`). `ADMIN_PASSWORD` digunakan di server lokal `/admin-lexicon` dan di Worker D1 untuk aksi `backfill-*`. |
 | **Mode AdSense Non-Auto Ads** | Siap | `enableAutoAdsScript` bernilai `false` di `site.config.json` dan dapat dikontrol via `ADSENSE_ENABLE_AUTO_ADS=false`. Seluruh halaman memiliki penanda kotak putih putus-putus maksimal 2 slot (1 slot di `contact.html`). |
 | **Security & Cache Headers (`_headers`)** | Siap | Build otomatis menghasilkan `dist/_headers` (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, dan `Cache-Control`). |
@@ -175,18 +175,18 @@ Jika akun atau repository GitHub Anda terkena *suspend* atau *limitation* oleh s
 
 Bagian ini merangkum arsitektur antarmuka, optimasi mobile, serta mekanisme cache lokal yang aktif pada aplikasi:
 
-### A. Cache Ketersediaan Domain di `localStorage`
-- **Kunci Penyimpanan**: `domainAvailabilityCacheV1` berisi objek JSON `{ version: 1, entries: { "<domain_lowercase>": { status, rawStatus, method, checkedAt, ttlMs } } }`.
-- **Normalisasi & Status**: Kunci domain selalu dinormalisasi ke huruf kecil (`normalizeDomainCacheKey`). Nilai `status` distandarkan menjadi `available | taken | check` (dengan `rawStatus` menyimpan detail `available | taken | no-ns | error` dan `method` menyimpan `NS | RDAP`).
+### A. Cache Ketersediaan Domain (`localStorage` + Fallback `sessionStorage`)
+- **Kunci Penyimpanan**: `domainAvailabilityCacheV1` berisi objek JSON `{ version: 1, entries: { "<domain_lowercase>": { status, rawStatus, method, checkedAt, ttlMs } } }`. Data dibaca/ditulis ke `localStorage` dengan fallback otomatis ke `sessionStorage` dan memori JS.
+- **Normalisasi & Status**: Kunci domain selalu dinormalisasi ke huruf kecil (`normalizeDomainCacheKey`). Nilai `status` distandarkan menjadi `available | taken | check` (dengan `rawStatus` menyimpan detail `available | taken | no-ns | error` dan `method` menyimpan `RDAP | NS | DNS`).
 - **TTL & Konfigurasi**:
   - Rentang TTL aman dikunci antara **1 menit** (`60.000 ms`) hingga **24 jam** (`86.400.000 ms`).
   - Default TTL adalah **6 jam** untuk status `available` dan `taken`, serta **5 menit** untuk status `check` (`no-ns` / `error`).
   - Dapat dikonfigurasi ulang via `window.__AVAILABILITY_CACHE_TTL_MS__` atau item `localStorage` `domainAvailabilityCacheTtlMs`.
 - **Cache-First Lookup, Hidrasi & Keamanan Kuota**:
-  - Saat `DOMContentLoaded`, `hydrateAvailabilityCacheFromStorage()` memuat entri yang masih valid ke `Map` memori sebelum generasi awal dan pengecekan otomatis berjalan, sehingga reload halaman, filter status (`All`, `Available`, `Taken`, `Check`), serta filter domain tidak memicu query ulang ke DoH/RDAP.
-  - Seluruh baca/tulis `localStorage` dibungkus `try...catch` dengan fallback aman ke memori jika browser memblokir storage atau melebihi kuota (`QuotaExceededError`), disertai *periodic pruning* tiap **5 menit** dan batas maksimal **1.000 entri**.
+  - Saat `DOMContentLoaded`, `hydrateAvailabilityCacheFromStorage()` memuat entri yang masih valid ke `Map` memori sebelum generasi awal dan pengecekan otomatis berjalan, sehingga reload halaman, ganti filter status (`Available & Check`, `All`, `Available`, `Taken`, `Check`), filter teks, maupun klik `Start Over` tidak memicu query ulang jaringan untuk domain yang masih valid di cache.
+  - Seluruh baca/tulis storage dibungkus `try...catch` dengan fallback bertingkat (`localStorage` → `sessionStorage` → memori) jika storage diblokir atau melebihi kuota (`QuotaExceededError`), disertai *periodic pruning* tiap **5 menit** dan batas maksimal **1.000 entri**.
 - **Force Re-Check (Bypass Cache)**:
-  - Baris berstatus `Available` / `Taken` menampilkan usia cache pada tooltip serta tombol **Re-check** (`data-recheck-domain`) untuk memaksa lookup ulang ke DNS-over-HTTPS / RDAP dan menimpa entri cache; klik eksplisit pada tombol `Check`, `No NS`, atau `Retry` juga memicu pengecekan segar.
+  - Tombol cek manual per baris (`Check`) dan tombol **Re-check** (`↻`, `data-recheck-domain`) memanggil `checkSingleDomainAvailability(..., forceRecheck = true)` sehingga melewati (*bypass*) cache lama untuk domain tersebut, mengambil status terbaru dari RDAP/DNS, lalu memperbarui entri cache.
 
 ### B. Sistem Warna, Layout Responsif & Token Desain
 1. **Form Generator (`#generatorSection`)**:
@@ -522,4 +522,91 @@ Jika Anda mengedit file `lib/lexicon/<lang>.json` langsung di editor teks tanpa 
      -d '{"action":"backfill-tags","mode":"retag-brandable","limit":200,"offset":0,"dryRun":false}'
    ```
 
+---
+
+### G. Kebijakan Generasi Domain, Pemeringkatan Ejaan Alami, Auto-Check 24 Teratas & Filter Default (`index.html`)
+
+Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, dan pengecekan ketersediaan sisi klien di `index.html` (yang dikompilasi ke seluruh 48 halaman statis di `dist/`):
+
+#### 1. Ekstensi Default per Bahasa (`defaultExts` & `extPlaceholder`)
+- **Bahasa Indonesia (`id`)**: `.my.id, .web.id, .biz.id, .id, .com`
+- **Bahasa Inggris (`en`)**: `.com, .net, .co`
+
+#### 2. Urutan Eksekusi Wajib & Pemeringkatan Berbasis Kealamian Ejaan
+- **Alur Eksekusi (`generateDomains`)**:
+  `Generate` → `Hitung Skor Gabungan (70% Brand/Pronounceability + 30% Natural Spelling)` → `Sortir Tertinggi ke Terendah` → `Batas Tampilan (MAX_DOMAINS = 200)` → `Auto-Check 24 Teratas`.
+- **Evaluasi SLD Murni (`calculateSpellingNaturalness(label, lang)`)**:
+  - Menilai **hanya bagian SLD/label sebelum TLD** (mis. `"boxal"` dari `"boxal.com"`, bukan ekstensinya), menghasilkan skor **`0–100`** untuk 8 bahasa aktif (`EN`, `ID`, `ES`, `PT`, `FR`, `DE`, `RU`, `JA`), serta di-*memoize* per `sld` agar ringan.
+  - **Rumus Peringkat Gabungan**:
+    ```text
+    combinedScore = round((overall_heuristic_score * 0.70 + naturalScore * 0.30) * 100) / 100
+    ```
+  - **Urutan *Tie-Breaker***: `combinedScore` lebih tinggi → `naturalScore` lebih tinggi → panjang SLD lebih pendek → panjang domain penuh lebih pendek → alfabetis (`localeCompare`).
+- **Aturan Skor & Penyesuaian Bahasa**:
+  - **Boost Akhiran Mulus (`SPELLING_BRANDABLE_SMOOTH_SUFFIXES`)**: Memberi bonus bila label tidak memiliki penalti fonetik mayor dan berakhiran pola yang mudah dieja (`-tools`, `-ify`, `-hub`, `-lab`, `-box`, `-ly`, `-io`, `-al`, `-el`, `-er`, `-or`, `-o`, `-a`, `-y`).
+  - **Bahasa Inggris (`EN`)**: Menurunkan skor akhiran canggung `-j`, `-q`, `-v`, `-x`, `-z` pada kata rekaan/gabungan (kecuali kata umum/singkatan standar seperti `fix`, `box`, `mix`, `quiz`, `jazz`, `buzz`), akhiran rawan salah ketik `-ah`/`-ih`/`-uh`, akhiran huruf ganda tak wajar (`-yy`, `-aa`, `-ckk`, `-ssz`, di luar `EN_RECOGNIZED_DOUBLE_ENDINGS` seperti `ll`, `ss`, `ff`, `tt`, `dd`, `rr`, `gg`, `bb`, `nn`, `mm`, `pp`), serta gugus konsonan berat (`HEAVY_UNNATURAL_CLUSTERS_RE`: `xtr`, `qzt`, `pph`, `ngh`, `zzk`, `vwx`, `jq`, `qj`, `qz`, `zq`, `qx`, `xq`, `xz`, `zx`, `vx`, `xv`), sementara akhiran alami Inggris (`-st`, `-nd`, `-ld`, `-ft`, `-mp`, `-nt`, `-ck`, `-sh`, `-ch`, `-th`, `-ng`) tetap diizinkan.
+  - **Bahasa Indonesia (`ID`)**: Menurunkan skor kombinasi/akhiran yang kaku atau membelit lidah (`-cj`, `-dj`, `-qh`, `-xh`, `-zj`, `-nstr`, `-bstr`, `-qzt`, `-vwx`, `HEAVY_UNNATURAL_CLUSTERS_RE`, dan akhiran huruf ganda tak wajar), dengan pengecualian untuk bunyi/kata alami Indonesia (`-ng`, `-ny`, `-kh`, `-sy`, `max`, `pro`, `fix`, `id`, `ku`, `mu`, `in`, dll.).
+  - **Bahasa Lain (`ES`, `PT`, `FR`, `DE`, `RU`, `JA`)**: Penyesuaian fonetik & keterbacaan ringan sesuai karakter tiap bahasa (mis. akhiran vokal/`-n` pada `JA`, `-er/-el/-en/-ig/-ik/-sch` pada `DE`, `-ov/-ev/-in/-sk` pada `RU`, `-a/-o/-e/-ar/-er/-or/-al` pada `ES`/`PT`, `-e/-er/-ir/-ie/-io/-st` pada `FR`).
+- **Kebijakan Non-Destruktif (Dilarang Menghapus Domain)**:
+  Domain berskor rendah **tidak pernah dihapus, difilter keluar, atau disembunyikan** dari daftar hasil—hanya diturunkan peringkatnya agar domain yang lebih alami muncul di posisi teratas terlebih dahulu.
+- **Paritas Skor D1 (`overall_heuristic_score`)**:
+  `computeDomainScores(...)` beserta 7 sub-skornya tetap identik 100% dengan `functions/api/log-available-domain.js` untuk menjaga keselarasan pencatatan skor ke Cloudflare D1.
+
+#### 3. Pipeline Pengecekan Ketersediaan Domain (Cache-First, Cap 24 Teratas, RDAP-First & Throttling)
+- **Pra-Cek (Urutkan → Baca Cache → Batas 24 Teratas)**:
+  - Kandidat hasil selalu diurutkan lebih dulu berdasarkan skor gabungan **Brand + Natural Spelling** agar domain terbaik menempati 24 posisi teratas.
+  - Sebelum melakukan permintaan jaringan, `scheduleAutoAvailabilityChecks` dan `checkSingleDomainAvailability` membaca cache sesi/lokal (`localStorage` + fallback `sessionStorage`) melalui `isCachedDomainReadyForAutoSkip`. Domain yang sudah valid di cache (misalnya setelah ganti filter atau menekan `Start Over`) langsung ditampilkan tanpa memanggil RDAP/DNS ulang.
+  - Auto-check hanya dijalankan pada **24 domain teratas** (`AUTO_CHECK_LIMIT = 24`, indeks `0` sampai `23`, panjang `<= MAX_CHECK_DOMAIN_LENGTH = 30`). Baris tambahan (termasuk hasil klik **Show More (+24)**) tetap berstatus **`Check`** sampai pengguna menekan tombol cek per baris atau **Bulk Check**.
+- **Verifikasi Utama (RDAP-First, Lalu NS Sekunder)**:
+  - Setiap lookup memanggil **RDAP terlebih dahulu** (`checkRdapAvailability`) sebagai sumber primer status registrasi.
+  - Jika RDAP menyatakan domain sudah terdaftar (`taken`), domain langsung ditandai **`Taken`** (`method: 'RDAP'`) dan **tetap `Taken` meskipun tidak memiliki nameserver (NS) aktif**.
+  - Jika RDAP melaporkan belum terdaftar (`not-registered` / `404`), pipeline melakukan verifikasi sekunder terhadap record **NS lewat DNS-over-HTTPS** (`checkNsViaDoh`): hanya ditandai **`Available`** (`method: 'RDAP'`) jika RDAP mengonfirmasi belum terdaftar dan tidak ditemukan NS aktif; jika justru ditemukan NS aktif, status menjadi **`Taken`** (`method: 'NS'`).
+  - Untuk TLD tanpa endpoint RDAP resmi (`no-rdap`), lookup memeriksa NS lewat DNS lalu menetapkan **`Taken`** bila ada NS aktif atau **`Check`** bila tidak ada.
+  - Jika RDAP atau DNS mengalami *timeout*, error jaringan, atau *rate limit* (`429` / `5xx`), status **tidak pernah** jatuh ke `Available`, melainkan tetap/ditetapkan ke **`Check`** (`rawStatus: 'error'`, cooldown retry `20 detik`) agar aman dicoba ulang.
+- **Throttling Batch & Manual Re-Check (Bypass Cache)**:
+  - Antrean auto-check dijalankan dalam batch kecil (`AUTO_CHECK_BATCH_SIZE = 4`) dengan konkurensi ringan (`AUTO_CHECK_CONCURRENCY = 2`, stagger worker `60 ms`, jeda antar-domain `AUTO_CHECK_STAGGER_MS = 120 ms`, jeda antar-batch `AUTO_CHECK_BATCH_PAUSE_MS = 180 ms`), *coalescing* refresh tabel (`60 ms`), serta *backoff* `429`/`503` dan *cooldown* per host RDAP (`rdapHostCooldownUntil`).
+  - Klik manual tombol **Check** atau **↻** (**Re-check**) pada baris menjalankan `forceRecheck = true` yang melewati cache untuk domain tersebut, mengambil hasil terbaru dari RDAP/DNS, dan memperbarui data cache.
+
+#### 4. Filter Status Ketersediaan Default (`#analysisStatusFilter`)
+- **Default Awal & Setelah Generate**: Dropdown filter `#analysisStatusFilter` secara bawaan disetel ke **`"available_or_check"` (`Available & Check`)**, yang menyembunyikan domain berstatus `taken` namun tetap menampilkan domain `available` maupun yang masih berstatus `check` / belum dicek.
+- **Pelestarian Pilihan Pengguna (`userChangedStatusFilter`)**:
+  - Selama `userChangedStatusFilter === false`, setiap pemanggilan `generateDomains()` menjaga filter pada `"available_or_check"`.
+  - Begitu pengguna mengganti dropdown secara manual (`onchange`) atau mengklik tombol toggle `Available Only`, `userChangedStatusFilter` menjadi `true` sehingga pilihan pengguna tetap dipertahankan saat generate ulang.
+  - Tombol **Start Over / Mulai Ulang (`resetToHome`)** mereset `userChangedStatusFilter = false` dan mengembalikan filter ke `"available_or_check"`.
+
+---
+
+### H. Online Article Editor (`/admin-articles/`) & Auto-Commit GitHub
+
+Bagian ini mendokumentasikan arsitektur sistem editor artikel berbasis web bergaya WordPress yang dapat diakses online (Cloudflare Pages + Pages Functions) maupun lokal/preview (`server.js`), beserta mekanisme commit atomik ke GitHub untuk memicu auto-build statis.
+
+#### 1. Struktur File & Kompatibilitas Dual-Runtime
+| Komponen | Lokasi | Peran Teknis |
+| --- | --- | --- |
+| **UI Editor Web** | `admin-articles.html` -> `dist/admin-articles/index.html` | Antarmuka WordPress-like (login 1 kolom Password, daftar artikel lintas 8 bahasa, editor blok `sections[]`, tabel, callout, FAQ, lencana indikator sintaks Markdown `MD`, live SEO meter, pratinjau aman berbasis DOM API). Memakai `<meta name="robots" content="noindex, nofollow">` dan tidak masuk `sitemap.xml`. |
+| **Mesin Markdown Bersama** | `assets/article-markdown.js` | Parser & renderer Markdown UMD nol-dependensi (`globalThis.__ARTICLE_MARKDOWN__`) untuk **bold**, *italic*, `` `code` ``, `[link](url)`, daftar (`-`/`1.`), `> blockquote`, dan tabel pipe. Men-escape seluruh HTML mentah, membatasi protokol tautan ke `https:`/`http:`/`/`/`#`, serta menyediakan `stripMarkdownToPlainText` untuk penghitungan kata & JSON-LD `FAQPage`. |
+| **Panduan Penulis** | `public/doku.writer.html` -> `dist/public/doku.writer.html` | Buku pegangan penulis non-teknis (`noindex, nofollow`) yang dapat dibaca langsung di `/public/doku.writer.html`. |
+| **Validasi & Normalisasi** | `lib/article-schema.js` | Modul ESM murni (`validateAndNormalizeArticleSave`, `applyArticleSaveToManifest`, `countArticleWords` berbasis `stripMarkdownToPlainText`) yang menyamakan aturan validasi `scripts/site-builder.mjs` (`slug` `^[a-z0-9]+(?:-[a-z0-9]+)*$`, `section`, `articleType`, `dateModified >= datePublished`, `published: true` wajib punya `title`/`metaDesc`/`h1` dan min. 1 section, bebas tabrakan rute). |
+| **Klien GitHub Atomik** | `lib/github-articles.js` | Memakai Web `fetch()` standar (`getRepoFileText`, `commitRepoFilesAtomic`) dengan **Git Data API** (`git/ref` -> `git/commits` -> `git/blobs` -> `git/trees` -> `git/commits` -> `PATCH git/refs`) sehingga perubahan `content/articles/manifest.json` dan `content/articles/<section>/<id>/<lang>.json` masuk dalam **1 commit atomik** (mencegah 2 build bertumpuk atau error *race condition* di Cloudflare Pages). |
+| **Auth & Sesi Edge** | `lib/worker-article-auth.js` | Autentikasi password-only (SHA-256 constant-time), verifikasi `Origin`/`X-Requested-With` anti-CSRF, rate limiter IP, cookie **`HttpOnly; SameSite=None; Secure; Partitioned`** (`dn_article_session`), serta tabel D1 `article_editor_sessions` (auto-bootstrap saat login) untuk pelacakan & pencabutan sesi sisi server. |
+| **Cloudflare Pages Functions** | `functions/api/articles/auth.js`, `index.js`, `save.js` | Endpoint produksi `/api/articles/auth` (`GET`/`POST`/`DELETE`), `/api/articles` (`GET`), dan `/api/articles/save` (`POST`). |
+| **Preview Express Lokal** | `server.js` | Melayani `/admin-articles/` dan `/api/articles/*`: otomatis memakai mode GitHub bila `GITHUB_TOKEN`/`GITHUB_OWNER`/`GITHUB_REPO` terisi, atau membaca/menulis ke disk `content/articles/` dengan pengecekan batas direktori (`resolveConfinedArticleFile`) bila berjalan lokal tanpa token GitHub. |
+
+#### 2. Perlindungan SEO, Keamanan & Sesi
+- **Tidak Terindeks Search Engine**: `scripts/site-builder.mjs` menambahkan `Disallow: /admin-articles/` dan `Disallow: /api/articles/` pada `robots.txt`, serta header `X-Robots-Tag: noindex, nofollow` + `Cache-Control: no-store` pada `_headers` dan `server.js`.
+- **Sanitasi Markdown & Zero Raw HTML**: Baik pratinjau DOM (`admin-articles.html`) maupun output HTML statis (`scripts/site-builder.mjs`) mem-parsing Markdown melalui `assets/article-markdown.js`. Tag HTML mentah (`<script>`, `<iframe>`, `<object>`, atribut `onclick`/`onerror`) selalu di-escape menjadi teks biasa, dan tautan `[label](url)` hanya menerima `https://`, `http://`, path relatif `/...`, atau `#anchor`.
+- **Zero Secret di Browser**: Password editor, `ARTICLE_SESSION_SECRET`, dan `GITHUB_TOKEN` hanya dibaca di server/Pages Function. Token sesi tidak pernah ditulis ke `localStorage`/`sessionStorage`, melainkan disimpan sebagai cookie `HttpOnly` bertanda tangan HMAC-SHA256 dengan validasi `jti` di D1 (`article_editor_sessions`) / memori server Express.
+- **Proteksi CSRF**: Semua endpoint mutasi (`POST`/`DELETE` `/api/articles/auth`, `POST` `/api/articles/save`) memvalidasi kesesuaian header `Origin` dengan `Host`/`X-Forwarded-Host` serta header `X-Requested-With`.
+
+#### 3. Environment Variables / Secrets Cloudflare yang Diperlukan
+Tambahkan variabel berikut di **Cloudflare Pages -> Settings -> Environment variables** sebelum menguji login dan publish dari `/admin-articles/`:
+
+| Variabel | Tipe | Keterangan |
+| --- | --- | --- |
+| `ARTICLE_ADMIN_PASSWORD` | **Secret** | Password login tunggal untuk `/admin-articles/`. Bila dikosongkan, backend memakai fallback `ADMIN_PASSWORD`. |
+| `ARTICLE_SESSION_SECRET` | **Secret** *(Disarankan)* | String acak min. 32 karakter untuk menandatangani cookie sesi HMAC-SHA256 di Cloudflare Workers. |
+| `GITHUB_TOKEN` | **Secret** | Fine-grained Personal Access Token GitHub dengan izin **Contents: Read & Write** khusus ke repositori proyek ini. |
+| `GITHUB_OWNER` | Text (Plaintext) | Username atau nama organisasi GitHub pemilik repositori. |
+| `GITHUB_REPO` | Text (Plaintext) | Nama repositori GitHub tempat kode dan `content/articles/` berada. |
+| `GITHUB_BRANCH` | Text (Opsional) | Nama branch target auto-deploy Cloudflare Pages (default: `main`). |
 
