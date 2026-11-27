@@ -152,6 +152,14 @@ if (fs.existsSync(adminLexiconSrc)) {
   console.log('Generated dist/admin-lexicon/index.html');
 }
 
+const adminDataSrc = path.join(rootDir, 'admin-data.html');
+if (fs.existsSync(adminDataSrc)) {
+  const adminDataOut = path.join(distDir, 'admin-data', 'index.html');
+  fs.mkdirSync(path.dirname(adminDataOut), { recursive: true });
+  fs.copyFileSync(adminDataSrc, adminDataOut);
+  console.log('Generated dist/admin-data/index.html');
+}
+
 const publicSrcDir = path.join(rootDir, 'public');
 if (fs.existsSync(publicSrcDir)) {
   const publicDocFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md') || name === 'doku.writer.html' || name === 'doku.adsense.html');
