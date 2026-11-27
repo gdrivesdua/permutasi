@@ -239,3 +239,25 @@ Pastikan seluruh poin berikut terpenuhi sebelum artikel dirilis:
 - [ ] **Bebas Klaim Menyesatkan**: Tidak menjanjikan ranking #1 Google dan mencantumkan pengingat cek merek dagang + status ketersediaan berbasis `checked_at`.
 - [ ] **Kualitas HTML & Schema**: Terdapat minimal 2 sub-bagian (`<h2>`), minimal 2 `faqs`, dan minimal 1–2 tautan `relatedIds` ke artikel lain yang sudah `published: true` di bahasa yang sama.
 - [ ] **Validasi Build Bersih**: Perintah `npm run lint && npm run build` selesai dengan exit code `0`, tidak ada error manifest, dan URL artikel muncul di `dist/sitemap.xml` dengan `<lastmod>` sesuai `dateModified`.
+
+---
+
+## 6. Riwayat Perubahan Teknis & Estetika Penulisan Artikel
+
+Bagian ini merangkum pembaruan teknis rendering dan estetika tampilan baca halaman artikel publik (`templates/article.html`, `assets/article-markdown.js`, `assets/article-reader.js`, `scripts/site-builder.mjs`, dan skema artikel):
+
+1. **Estetika Baca Single-Column & Tipografi Nyaman (`templates/article.html`)**:
+   - Mempertahankan tata letak artikel satu kolom (*single-column* `max-w-3xl`), latar putih bersih, teks kontras abu-abu tua/hitam, aksen biru tenang, dan jarak antar-elemen (*whitespace*) lega (`gap-8`) untuk kenyamanan baca desktop maupun mobile.
+   - Menggunakan `tabular-nums` pada angka tabel agar perbandingan metrik statistik domain sejajar rapi.
+2. **Kontrol Ukuran Font Interaktif `A− / A+` per Bagian (`templates/article.html` + `assets/article-reader.js`)**:
+   - Menambahkan toolbar penyesuaian ukuran font untuk pengunjung dengan pemilih cakupan granular: **Semua Bagian Artikel**, **Paragraf Isi**, **Daftar Poin / Bullets**, **Kotak Sorotan (Callout)**, **Tabel Penutup H2**, **Catatan Metodologi**, dan **FAQ Artikel**.
+   - Implementasi menggunakan CSS Custom Properties (`--art-scale-prose`, `--art-scale-bullets`, `--art-scale-callout`, `--art-scale-table`, `--art-scale-methodology`, `--art-scale-faq`) dengan rentang aman `82%–136%`, tombol `Reset`, serta persistensi otomatis di `localStorage` (`dn_article_font_prefs_v1`).
+3. **Dukungan Teknis Gambar & Tabel di Dalam Paragraf (`assets/article-markdown.js`)**:
+   - Menambahkan parser gambar Markdown `![alt](url "judul")` yang merender `<figure>` dan `<img>` responsif (`loading="lazy"`) dengan sanitasi protokol ketat (`https://`, `http://`, atau path `/...` saja; menolak `javascript:`/`data:`).
+   - Mendukung tabel Markdown pipe langsung di dalam blok paragraf isi, berdampingan dengan `Tabel Penutup H2` terstruktur yang dirender di bagian akhir sub-bab H2 lengkap dengan tag `<caption>` resmi; seluruh HTML mentah tetap di-escape otomatis.
+4. **Integrasi Estetika 5 Slot Iklan di Halaman Artikel (`scripts/site-builder.mjs` + `assets/adsense-slots.js` + `assets/article-reader.js`)**:
+   - Menempatkan 5 titik slot yang menjaga alur baca: `Slot 1` di bawah Ringkasan Utama (sebelum Daftar Isi), `Slot 2` setelah Tabel Ringkasan Metrik / Bagian 2, `Slot 3` rata tengah di antara tabel kurasi Kelompok A dan B, `Slot 4` setelah Bagian 4 / sebelum FAQ, dan `Slot 5` sticky Anchor Ad di bawah layar dengan tombol tutup (`×`) yang diingat selama sesi tab.
+   - Setiap slot inline menerapkan jarak *margin* atas-bawah minimal `20–24px` agar tidak menempel langsung pada paragraf atau tabel artikel.
+5. **Validasi Penghapusan Artikel Atomik (`lib/article-schema.js`, `lib/github-articles.js`, `functions/api/articles/delete.js`)**:
+   - Menambahkan `applyArticleDeleteToManifest` dan `listRepoDirectoryFiles` serta dukungan penghapusan blob pada `commitRepoFilesAtomic` agar penghapusan artikel membersihkan entri `manifest.json` dan berkas `<lang>.json` secara konsisten dalam satu commit atomik.
+

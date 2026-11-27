@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Studio Layout Artikel &amp; 5 Slot AdSense — Domain Name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        #previewArticleSheet {
+            --art-scale-prose: 1;
+            --art-scale-bullets: 1;
+            --art-scale-callout: 1;
+            --art-scale-table: 1;
+            --art-scale-methodology: 1;
+            --art-scale-faq: 1;
+        }
+        #previewArticleSheet .article-prose p {
+            font-size: calc(1rem * var(--art-scale-prose));
+            line-height: 1.75;
+        }
+        #previewArticleSheet .article-bullets,
+        #previewArticleSheet .article-takeaways {
+            font-size: calc(0.95rem * var(--art-scale-bullets));
+            line-height: 1.7;
+        }
+        #previewArticleSheet .article-callout,
+        #previewArticleSheet .article-callout p {
+            font-size: calc(0.9375rem * var(--art-scale-callout));
+            line-height: 1.65;
+        }
+        #previewArticleSheet .article-table th {
+            font-size: calc(0.75rem * var(--art-scale-table));
+        }
+        #previewArticleSheet .article-table td {
+            font-size: calc(0.875rem * var(--art-scale-table));
+            font-variant-numeric: tabular-nums;
+        }
+        #previewArticleSheet .article-table caption {
+            font-size: calc(0.8125rem * var(--art-scale-table));
+        }
+        #previewArticleSheet .article-methodology,
+        #previewArticleSheet .article-methodology p {
+            font-size: calc(0.875rem * var(--art-scale-methodology));
+            line-height: 1.65;
+        }
+        #previewArticleSheet .article-faq summary {
+            font-size: calc(0.975rem * var(--art-scale-faq));
+        }
+        #previewArticleSheet .article-faq .article-faq-answer,
+        #previewArticleSheet .article-faq .article-faq-answer p {
+            font-size: calc(0.9375rem * var(--art-scale-faq));
+            line-height: 1.65;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased flex flex-col">
+
+    <!-- Interlinked Studio Header -->
+    <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <a href="/" class="text-xs sm:text-sm font-semibold text-blue-600 hover:underline whitespace-nowrap shrink-0">
+                    &larr; Situs Utama
+                </a>
+                <span class="text-slate-300" aria-hidden="true">/</span>
+                <span class="text-sm sm:text-base font-bold tracking-tight text-slate-900 truncate">
+                    Layout &amp; AdSense Studio
+                </span>
+            </div>
+
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto">
+                <a href="/admin-articles/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
+                    Article Studio
+                </a>
+                <a href="/adsense-studio/" aria-current="page" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-700 whitespace-nowrap shrink-0">
+                    Layout &amp; AdSense
+                </a>
+                <a href="/admin-lexicon" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
+                    Admin Lexicon
+                </a>
+                <a id="openLiveSampleLink" href="/id/guides/pola-nama-domain-toko-shop-paling-mudah-diingat-studi-data-nama-domain-yang-masih-tersedia/" target="_blank" rel="noopener" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
+                    Artikel Live
+                </a>
+                <button id="saveConfigBtn" type="button" class="hidden px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                    Simpan Konfigurasi
+                </button>
+                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors whitespace-nowrap shrink-0">
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Auth Gate (Unified Password with Article Studio & Admin Lexicon) -->
+    <section id="authSection" class="flex-1 w-full max-w-md mx-auto px-4 py-12">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-sm space-y-5">
+            <div id="authLoading" class="text-sm text-slate-500 text-center py-4">
+                Memeriksa sesi editorial...
+            </div>
+
+            <div id="authUnconfiguredBox" class="hidden space-y-3 text-sm">
+                <h1 class="text-lg font-bold text-slate-900">Studio Belum Dikonfigurasi</h1>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Secret password editorial (<code class="font-mono">ARTICLE_ADMIN_PASSWORD</code> atau <code class="font-mono">ADMIN_PASSWORD</code>) belum diatur pada environment server.
+                </p>
+            </div>
+
+            <form id="setupForm" class="hidden space-y-4">
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900">Inisialisasi Password Editorial</h1>
+                    <p class="mt-1 text-xs text-slate-600 leading-relaxed">
+                        Password ini digunakan bersama oleh <strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, dan <strong>Admin Lexicon</strong> (minimal 8 karakter).
+                    </p>
+                </div>
+                <div>
+                    <label for="setupPassword" class="block text-xs font-semibold text-slate-700 mb-1.5">Password Baru</label>
+                    <input id="setupPassword" type="password" minlength="8" maxlength="128" required autocomplete="new-password"
+                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="setupPasswordConfirm" class="block text-xs font-semibold text-slate-700 mb-1.5">Konfirmasi Password</label>
+                    <input id="setupPasswordConfirm" type="password" minlength="8" maxlength="128" required autocomplete="new-password"
+                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <p id="setupError" class="hidden text-xs font-medium text-rose-600"></p>
+                <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
+                    Simpan Password &amp; Masuk
+                </button>
+            </form>
+
+            <form id="loginForm" class="hidden space-y-4">
+                <div class="space-y-1">
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900">Masuk ke Layout &amp; AdSense Studio</h1>
+                    <p class="text-xs sm:text-sm text-slate-600">
+                        Gunakan password yang sama dengan <strong>Article Studio</strong> untuk mengatur ukuran huruf artikel dan 5 slot AdSense.
+                    </p>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-xs font-semibold mb-1.5 text-slate-700">Password</label>
+                    <input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Masukkan password editorial..."
+                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <p id="loginError" class="hidden text-xs font-medium text-rose-600"></p>
+                <button id="loginSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
+                    Masuk ke Studio
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Studio Workspace (Locked behind unified /api/articles/auth session) -->
+    <main id="studioWorkspaceSection" class="hidden flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Column: Font Size Controls & 5 AdSense Slot Forms -->
+        <aside class="lg:col-span-5 space-y-5">
+            <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+                <div class="space-y-1">
+                    <h1 class="text-lg font-bold text-slate-900">Studio Layout Artikel &amp; AdSense</h1>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Atur ukuran huruf artikel per bagian serta konfigurasi kode atau simulasi 5 slot AdSense untuk Desktop &amp; Mobile.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                    <div>
+                        <label for="sampleArticleSelect" class="block text-xs font-semibold text-slate-700 mb-1">Artikel Pratinjau</label>
+                        <select id="sampleArticleSelect" class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        </select>
+                    </div>
+                    <div>
+                        <label for="globalPublisherIdInput" class="block text-xs font-semibold text-slate-700 mb-1">Publisher ID Global (Opsional)</label>
+                        <input id="globalPublisherIdInput" type="text" placeholder="ca-pub-1234567890123456"
+                            class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+                </div>
+
+                <label class="flex items-start gap-2.5 pt-1 text-xs text-slate-700 cursor-pointer">
+                    <input id="applyPreviewToSiteCheckbox" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600">
+                    <span>Terapkan konfigurasi &amp; simulasi slot tersimpan saat membuka halaman artikel live di browser ini.</span>
+                </label>
+
+                <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                    <button id="exportCodeBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors whitespace-nowrap">
+                        Salin Kode / JSON Konfigurasi
+                    </button>
+                    <button id="resetDefaultBtn" type="button" class="px-3.5 py-2 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
+                        Reset Default
+                    </button>
+                </div>
+
+                <p id="studioFeedbackMsg" role="status" class="hidden text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2"></p>
+            </section>
+
+            <!-- Typography (+/-) Per Article Section Panel -->
+            <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-3.5">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-900">Kontrol Ukuran Huruf (+/-) per Bagian</h2>
+                        <p class="text-xs text-slate-500">Uji keterbacaan tiap bagian artikel di Desktop &amp; Mobile.</p>
+                    </div>
+                    <button id="studioResetFontsBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 whitespace-nowrap shrink-0">
+                        Reset 100%
+                    </button>
+                </div>
+
+                <div id="fontPartControlsList" class="divide-y divide-slate-100"></div>
+            </section>
+
+            <!-- 5 Structured AdSense Slot Inputs -->
+            <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+                <div>
+                    <h2 class="text-sm font-bold text-slate-900">Konfigurasi 5 Slot AdSense Terbaik</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                        Atur kode AdSense atau mode simulasi, ukuran Desktop/Mobile, status aktif, dan jarak margin minimal 20–24px.
+                    </p>
+                </div>
+
+                <div id="slotFormsContainer" class="space-y-3"></div>
+            </section>
+        </aside>
+
+        <!-- Right Column: Single-Column Clean White Article Preview Viewport -->
+        <section class="lg:col-span-7 space-y-4 lg:sticky lg:top-20">
+            <!-- Device Switcher & Preview Toolbar -->
+            <div class="bg-white rounded-xl border border-slate-200 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-lg" role="group" aria-label="Pilih perangkat pratinjau">
+                    <button id="previewDesktopBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm">
+                        Desktop (Kolom Artikel)
+                    </button>
+                    <button id="previewMobileBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900">
+                        Mobile (390px)
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 text-xs text-slate-500 tabular-nums">
+                    <span id="activeDeviceReadout">Lebar kolom baca ~728px</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <span id="activeSlotCountReadout">5/5 slot aktif</span>
+                </div>
+            </div>
+
+            <!-- Viewport Frame -->
+            <div id="previewOuterStage" class="rounded-xl border border-slate-200 bg-slate-100/80 p-3 sm:p-5 flex justify-center">
+                <div id="previewDeviceFrame" class="w-full max-w-[780px] bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden transition-[max-width] duration-200">
+                    <!-- Simulated Minimal Browser Chrome in Preview -->
+                    <div class="border-b border-slate-200 bg-white px-5 py-3 flex items-center justify-between text-xs text-slate-500">
+                        <span class="font-semibold text-slate-900">Domain Name</span>
+                        <span id="previewDeviceUrlHint" class="font-mono text-[11px] truncate max-w-[260px] sm:max-w-md text-slate-400"></span>
+                    </div>
+
+                    <!-- Scrollable Article Preview Canvas (Clean White Background, Dark Slate Text, Calm Blue Accents) -->
+                    <div id="previewScrollContainer" class="max-h-[78vh] overflow-y-auto bg-white">
+                        <article id="previewArticleSheet" class="px-5 py-7 sm:px-10 sm:py-10 flex flex-col gap-7 text-slate-800 bg-white">
+                            <!-- Populated cleanly via DOM helpers -->
+                        </article>
+
+                        <!-- Anchor spacer when Slot 5 active -->
+                        <div id="previewAnchorSpacer" class="h-24"></div>
+                    </div>
+
+                    <!-- Slot 5 Overlay Anchor Ad inside Device Viewport -->
+                    <div id="previewSlot5Overlay" class="hidden absolute inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/95 backdrop-blur px-3 py-2 shadow-lg">
+                    </div>
+
+                    <!-- Restore Anchor Button if user clicked Close (×) -->
+                    <button id="restoreSlot5Btn" type="button" class="hidden absolute bottom-3 right-3 z-20 px-3 py-1.5 text-[11px] font-semibold rounded-lg border border-blue-200 bg-white text-blue-700 hover:bg-blue-50 shadow-sm">
+                        Tampilkan Anchor Ad (Slot 5)
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Export JSON / HTML Snippets Modal -->
+    <div id="exportModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-4 flex items-center justify-center">
+        <div class="w-full max-w-3xl max-h-[88vh] bg-white rounded-xl border border-slate-200 shadow-xl flex flex-col overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-slate-900">Salin Kode HTML &amp; JSON Konfigurasi</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Siap ditempel ke <code class="font-mono">site.config.json</code> atau template HTML proyek utama.</p>
+                </div>
+                <button id="closeExportModalBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50">
+                    Tutup
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto space-y-5">
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">1. JSON Konfigurasi (site.config.json &rarr; googleAdSense)</h3>
+                        <button id="copyJsonBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                            Salin JSON
+                        </button>
+                    </div>
+                    <textarea id="exportJsonTextarea" rows="10" readonly class="w-full p-3 text-xs font-mono rounded-lg border border-slate-200 bg-slate-50 text-slate-800 focus:outline-none"></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">2. Cuplikan Kode HTML 5 Slot (&lt;ins class="adsbygoogle"&gt;)</h3>
+                        <button id="copyHtmlSnippetsBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                            Salin Kode HTML
+                        </button>
+                    </div>
+                    <textarea id="exportHtmlTextarea" rows="10" readonly class="w-full p-3 text-xs font-mono rounded-lg border border-slate-200 bg-slate-50 text-slate-800 focus:outline-none"></textarea>
+                </div>
+
+                <p id="exportCopyStatus" class="hidden text-xs font-medium text-blue-700"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/article-markdown.js"></script>
+    <script src="/assets/adsense-slots.js"></script>
+    <script src="/assets/adsense-studio-sample.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var slotsApi = window.__ADSENSE_SLOTS__;
+            var mdApi = window.__ARTICLE_MARKDOWN__;
+            var samples = window.__ADSENSE_STUDIO_SAMPLES__ || [];
+
+            var PART_DEFINITIONS = [
+                { key: 'prose', label: 'Paragraf Isi', defaultDesc: 'Teks utama tiap bagian artikel' },
+                { key: 'bullets', label: 'Daftar Poin / Bullets', defaultDesc: 'Ringkasan utama & poin daftar' },
+                { key: 'callout', label: 'Kotak Sorotan (Callout)', defaultDesc: 'Kotak info & catatan data' },
+                { key: 'table', label: 'Tabel Penutup H2', defaultDesc: 'Tabel metrik & kurasi domain' },
+                { key: 'methodology', label: 'Catatan Metodologi', defaultDesc: 'Transparansi dataset & RDAP' },
+                { key: 'faq', label: 'FAQ Artikel', defaultDesc: 'Pertanyaan & jawaban pembaca' }
+            ];
+
+            var state = {
+                device: 'desktop',
+                selectedSampleId: samples[0] ? samples[0].id : '',
+                globalPublisherId: '',
+                applyPreviewToSite: true,
+                slot5DismissedInPreview: false,
+                activeVisitorScope: 'all',
+                fontScales: {
+                    prose: 1,
+                    bullets: 1,
+                    callout: 1,
+                    table: 1,
+                    methodology: 1,
+                    faq: 1
+                },
+                slots: slotsApi.cloneDefaultSlots(),
+                expandedSlotId: 'slot1'
+            };
+
+            var els = {
+                authSection: document.getElementById('authSection'),
+                authLoading: document.getElementById('authLoading'),
+                authUnconfiguredBox: document.getElementById('authUnconfiguredBox'),
+                setupForm: document.getElementById('setupForm'),
+                setupPassword: document.getElementById('setupPassword'),
+                setupPasswordConfirm: document.getElementById('setupPasswordConfirm'),
+                setupError: document.getElementById('setupError'),
+                loginForm: document.getElementById('loginForm'),
+                loginPassword: document.getElementById('loginPassword'),
+                loginError: document.getElementById('loginError'),
+                loginSubmitBtn: document.getElementById('loginSubmitBtn'),
+                logoutBtn: document.getElementById('logoutBtn'),
+                studioWorkspaceSection: document.getElementById('studioWorkspaceSection'),
+                sampleArticleSelect: document.getElementById('sampleArticleSelect'),
+                globalPublisherIdInput: document.getElementById('globalPublisherIdInput'),
+                applyPreviewToSiteCheckbox: document.getElementById('applyPreviewToSiteCheckbox'),
+                openLiveSampleLink: document.getElementById('openLiveSampleLink'),
+                saveConfigBtn: document.getElementById('saveConfigBtn'),
+                exportCodeBtn: document.getElementById('exportCodeBtn'),
+                resetDefaultBtn: document.getElementById('resetDefaultBtn'),
+                studioResetFontsBtn: document.getElementById('studioResetFontsBtn'),
+                studioFeedbackMsg: document.getElementById('studioFeedbackMsg'),
+                fontPartControlsList: document.getElementById('fontPartControlsList'),
+                slotFormsContainer: document.getElementById('slotFormsContainer'),
+                previewDesktopBtn: document.getElementById('previewDesktopBtn'),
+                previewMobileBtn: document.getElementById('previewMobileBtn'),
+                activeDeviceReadout: document.getElementById('activeDeviceReadout'),
+                activeSlotCountReadout: document.getElementById('activeSlotCountReadout'),
+                previewDeviceFrame: document.getElementById('previewDeviceFrame'),
+                previewDeviceUrlHint: document.getElementById('previewDeviceUrlHint'),
+                previewArticleSheet: document.getElementById('previewArticleSheet'),
+                previewAnchorSpacer: document.getElementById('previewAnchorSpacer'),
+                previewSlot5Overlay: document.getElementById('previewSlot5Overlay'),
+                restoreSlot5Btn: document.getElementById('restoreSlot5Btn'),
+                exportModal: document.getElementById('exportModal'),
+                closeExportModalBtn: document.getElementById('closeExportModalBtn'),
+                exportJsonTextarea: document.getElementById('exportJsonTextarea'),
+                exportHtmlTextarea: document.getElementById('exportHtmlTextarea'),
+                copyJsonBtn: document.getElementById('copyJsonBtn'),
+                copyHtmlSnippetsBtn: document.getElementById('copyHtmlSnippetsBtn'),
+                exportCopyStatus: document.getElementById('exportCopyStatus')
+            };
+
+            function clampScale(val) {
+                var num = Number(val);
+                if (!Number.isFinite(num)) return 1;
+                return Math.round(Math.max(0.82, Math.min(1.36, num)) * 100) / 100;
+            }
+
+            function showFeedback(text) {
+                els.studioFeedbackMsg.textContent = text;
+                els.studioFeedbackMsg.classList.remove('hidden');
+                clearTimeout(showFeedback._timer);
+                showFeedback._timer = setTimeout(function () {
+                    els.studioFeedbackMsg.classList.add('hidden');
+                }, 4000);
+            }
+
+            function loadSavedConfig() {
+                try {
+                    var raw = localStorage.getItem(slotsApi.STORAGE_KEY);
+                    if (!raw) return;
+                    var parsed = JSON.parse(raw);
+                    if (!parsed || typeof parsed !== 'object') return;
+                    if (typeof parsed.globalPublisherId === 'string') {
+                        state.globalPublisherId = parsed.globalPublisherId;
+                    }
+                    if (typeof parsed.applyPreviewToSite === 'boolean') {
+                        state.applyPreviewToSite = parsed.applyPreviewToSite;
+                    }
+                    if (parsed.fontScales && typeof parsed.fontScales === 'object') {
+                        PART_DEFINITIONS.forEach(function (part) {
+                            if (parsed.fontScales[part.key] !== undefined) {
+                                state.fontScales[part.key] = clampScale(parsed.fontScales[part.key]);
+                            }
+                        });
+                    }
+                    if (Array.isArray(parsed.slots)) {
+                        state.slots = slotsApi.normalizeSlotsConfig(parsed.slots);
+                    }
+                } catch (_e) {}
+            }
+
+            function saveConfigToLocalStorage() {
+                var payload = {
+                    version: 1,
+                    savedAt: new Date().toISOString(),
+                    globalPublisherId: slotsApi.normalizeClientId(state.globalPublisherId) || state.globalPublisherId.trim(),
+                    applyPreviewToSite: Boolean(state.applyPreviewToSite),
+                    fontScales: Object.assign({}, state.fontScales),
+                    slots: state.slots.map(function (s) {
+                        var parsed = slotsApi.parseAdSenseSnippet(s.adCode);
+                        return {
+                            id: s.id,
+                            name: s.name,
+                            unitType: s.unitType,
+                            enabled: s.enabled,
+                            mode: s.mode,
+                            desktopSize: s.desktopSize,
+                            mobileSize: s.mobileSize,
+                            marginTop: slotsApi.clampMargin(s.marginTop, 24),
+                            marginBottom: slotsApi.clampMargin(s.marginBottom, 24),
+                            adCode: s.adCode,
+                            clientId: parsed.clientId || '',
+                            adSlot: parsed.adSlot || '',
+                            adFormat: parsed.adFormat || '',
+                            adLayout: parsed.adLayout || '',
+                            adLayoutKey: parsed.adLayoutKey || ''
+                        };
+                    })
+                };
+                try {
+                    localStorage.setItem(slotsApi.STORAGE_KEY, JSON.stringify(payload));
+                    showFeedback('Konfigurasi 5 slot AdSense & ukuran huruf tersimpan ke localStorage.');
+                } catch (_e) {
+                    showFeedback('Gagal menyimpan ke localStorage browser.');
+                }
+            }
+
+            function applyFontVarsToSheet() {
+                var sheet = els.previewArticleSheet;
+                PART_DEFINITIONS.forEach(function (p) {
+                    sheet.style.setProperty('--art-scale-' + p.key, String(state.fontScales[p.key] || 1));
+                });
+            }
+
+            function renderFontPartControls() {
+                els.fontPartControlsList.textContent = '';
+                PART_DEFINITIONS.forEach(function (part) {
+                    var row = document.createElement('div');
+                    row.className = 'py-2.5 flex items-center justify-between gap-3';
+
+                    var meta = document.createElement('div');
+                    meta.className = 'min-w-0';
+                    var lbl = document.createElement('p');
+                    lbl.className = 'text-xs font-semibold text-slate-800 truncate';
+                    lbl.textContent = part.label;
+                    var desc = document.createElement('p');
+                    desc.className = 'text-[11px] text-slate-500 truncate';
+                    desc.textContent = part.defaultDesc;
+                    meta.appendChild(lbl);
+                    meta.appendChild(desc);
+
+                    var ctrl = document.createElement('div');
+                    ctrl.className = 'flex items-center gap-1.5 shrink-0';
+
+                    var decBtn = document.createElement('button');
+                    decBtn.type = 'button';
+                    decBtn.textContent = '−';
+                    decBtn.setAttribute('aria-label', 'Perkecil font ' + part.label);
+                    decBtn.className = 'min-h-[34px] min-w-[34px] rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50';
+                    decBtn.addEventListener('click', function () {
+                        state.fontScales[part.key] = clampScale((state.fontScales[part.key] || 1) - 0.06);
+                        applyFontVarsToSheet();
+                        renderFontPartControls();
+                        syncVisitorToolbarReadout();
+                    });
+
+                    var pct = document.createElement('span');
+                    pct.className = 'min-w-[2.75rem] text-center text-xs font-mono font-semibold text-slate-700 tabular-nums';
+                    pct.textContent = Math.round((state.fontScales[part.key] || 1) * 100) + '%';
+
+                    var incBtn = document.createElement('button');
+                    incBtn.type = 'button';
+                    incBtn.textContent = '+';
+                    incBtn.setAttribute('aria-label', 'Perbesar font ' + part.label);
+                    incBtn.className = 'min-h-[34px] min-w-[34px] rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50';
+                    incBtn.addEventListener('click', function () {
+                        state.fontScales[part.key] = clampScale((state.fontScales[part.key] || 1) + 0.06);
+                        applyFontVarsToSheet();
+                        renderFontPartControls();
+                        syncVisitorToolbarReadout();
+                    });
+
+                    ctrl.appendChild(decBtn);
+                    ctrl.appendChild(pct);
+                    ctrl.appendChild(incBtn);
+                    row.appendChild(meta);
+                    row.appendChild(ctrl);
+                    els.fontPartControlsList.appendChild(row);
+                });
+            }
+
+            function renderSlotForms() {
+                els.slotFormsContainer.textContent = '';
+
+                state.slots.forEach(function (slot, index) {
+                    var isOpen = state.expandedSlotId === slot.id;
+                    var card = document.createElement('div');
+                    card.className = 'rounded-xl border ' + (slot.enabled ? 'border-slate-200 bg-white' : 'border-slate-200 bg-slate-50/70 opacity-85');
+
+                    // Header row
+                    var header = document.createElement('div');
+                    header.className = 'px-4 py-3 flex items-center justify-between gap-2';
+
+                    var toggleExpandBtn = document.createElement('button');
+                    toggleExpandBtn.type = 'button';
+                    toggleExpandBtn.className = 'flex-1 text-left min-w-0';
+                    var titleEl = document.createElement('p');
+                    titleEl.className = 'text-xs font-bold text-slate-900 truncate';
+                    titleEl.textContent = slot.name;
+                    var subEl = document.createElement('p');
+                    subEl.className = 'text-[11px] text-slate-500 mt-0.5 tabular-nums truncate';
+                    subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
+                    toggleExpandBtn.appendChild(titleEl);
+                    toggleExpandBtn.appendChild(subEl);
+                    toggleExpandBtn.addEventListener('click', function () {
+                        state.expandedSlotId = isOpen ? '' : slot.id;
+                        renderSlotForms();
+                    });
+
+                    var rightCtrl = document.createElement('div');
+                    rightCtrl.className = 'flex items-center gap-2 shrink-0';
+
+                    var activeLbl = document.createElement('label');
+                    activeLbl.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 cursor-pointer';
+                    var activeCb = document.createElement('input');
+                    activeCb.type = 'checkbox';
+                    activeCb.checked = slot.enabled;
+                    activeCb.className = 'h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600';
+                    activeCb.addEventListener('change', function () {
+                        slot.enabled = activeCb.checked;
+                        renderSlotForms();
+                        renderArticlePreview();
+                    });
+                    var activeSpan = document.createElement('span');
+                    activeSpan.textContent = 'Aktif';
+                    activeLbl.appendChild(activeCb);
+                    activeLbl.appendChild(activeSpan);
+
+                    var expandBadge = document.createElement('button');
+                    expandBadge.type = 'button';
+                    expandBadge.textContent = isOpen ? 'Tutup' : 'Atur';
+                    expandBadge.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50';
+                    expandBadge.addEventListener('click', function () {
+                        state.expandedSlotId = isOpen ? '' : slot.id;
+                        renderSlotForms();
+                    });
+
+                    rightCtrl.appendChild(activeLbl);
+                    rightCtrl.appendChild(expandBadge);
+                    header.appendChild(toggleExpandBtn);
+                    header.appendChild(rightCtrl);
+                    card.appendChild(header);
+
+                    if (isOpen) {
+                        var body = document.createElement('div');
+                        body.className = 'px-4 pb-4 pt-3 border-t border-slate-100 space-y-3';
+
+                        var hint = document.createElement('p');
+                        hint.className = 'text-[11px] text-slate-500';
+                        hint.textContent = 'Posisi ke-' + (index + 1) + ': ' + slot.placementHint;
+                        body.appendChild(hint);
+
+                        // Slot Name
+                        var nameGroup = document.createElement('div');
+                        var nameLbl = document.createElement('label');
+                        nameLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        nameLbl.textContent = 'Nama Slot';
+                        var nameInput = document.createElement('input');
+                        nameInput.type = 'text';
+                        nameInput.value = slot.name;
+                        nameInput.className = 'w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600';
+                        nameInput.addEventListener('input', function () {
+                            slot.name = nameInput.value;
+                            titleEl.textContent = slot.name || ('Slot ' + (index + 1));
+                            renderArticlePreview();
+                        });
+                        nameGroup.appendChild(nameLbl);
+                        nameGroup.appendChild(nameInput);
+                        body.appendChild(nameGroup);
+
+                        // Unit Type & Mode
+                        var row1 = document.createElement('div');
+                        row1.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2.5';
+
+                        var unitWrap = document.createElement('div');
+                        var unitLbl = document.createElement('label');
+                        unitLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        unitLbl.textContent = 'Jenis Unit AdSense';
+                        var unitSel = document.createElement('select');
+                        unitSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
+                        slotsApi.UNIT_TYPE_OPTIONS.forEach(function (optText) {
+                            var opt = document.createElement('option');
+                            opt.value = optText;
+                            opt.textContent = optText;
+                            if (slot.unitType === optText) opt.selected = true;
+                            unitSel.appendChild(opt);
+                        });
+                        unitSel.addEventListener('change', function () {
+                            slot.unitType = unitSel.value;
+                            renderArticlePreview();
+                        });
+                        unitWrap.appendChild(unitLbl);
+                        unitWrap.appendChild(unitSel);
+
+                        var modeWrap = document.createElement('div');
+                        var modeLbl = document.createElement('label');
+                        modeLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        modeLbl.textContent = 'Mode Pratinjau';
+                        var modeSel = document.createElement('select');
+                        modeSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
+                        [
+                            { v: 'simulation', t: 'Simulasi / Wireframe Proporsi' },
+                            { v: 'live', t: 'Kode AdSense Asli (<ins>)' }
+                        ].forEach(function (m) {
+                            var opt = document.createElement('option');
+                            opt.value = m.v;
+                            opt.textContent = m.t;
+                            if (slot.mode === m.v) opt.selected = true;
+                            modeSel.appendChild(opt);
+                        });
+                        modeSel.addEventListener('change', function () {
+                            slot.mode = modeSel.value;
+                            subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
+                            renderArticlePreview();
+                        });
+                        modeWrap.appendChild(modeLbl);
+                        modeWrap.appendChild(modeSel);
+
+                        row1.appendChild(unitWrap);
+                        row1.appendChild(modeWrap);
+                        body.appendChild(row1);
+
+                        // Desktop Size & Mobile Size
+                        var row2 = document.createElement('div');
+                        row2.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2.5';
+
+                        var deskWrap = document.createElement('div');
+                        var deskLbl = document.createElement('label');
+                        deskLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        deskLbl.textContent = 'Ukuran Desktop';
+                        var deskSel = document.createElement('select');
+                        deskSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
+                        (slotsApi.DESKTOP_SIZE_PRESETS[slot.id] || []).forEach(function (p) {
+                            var opt = document.createElement('option');
+                            opt.value = p.id;
+                            opt.textContent = p.label;
+                            if (slot.desktopSize === p.id) opt.selected = true;
+                            deskSel.appendChild(opt);
+                        });
+                        deskSel.addEventListener('change', function () {
+                            slot.desktopSize = deskSel.value;
+                            subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
+                            renderArticlePreview();
+                        });
+                        deskWrap.appendChild(deskLbl);
+                        deskWrap.appendChild(deskSel);
+
+                        var mobWrap = document.createElement('div');
+                        var mobLbl = document.createElement('label');
+                        mobLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        mobLbl.textContent = 'Ukuran Mobile';
+                        var mobSel = document.createElement('select');
+                        mobSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
+                        (slotsApi.MOBILE_SIZE_PRESETS[slot.id] || []).forEach(function (p) {
+                            var opt = document.createElement('option');
+                            opt.value = p.id;
+                            opt.textContent = p.label;
+                            if (slot.mobileSize === p.id) opt.selected = true;
+                            mobSel.appendChild(opt);
+                        });
+                        mobSel.addEventListener('change', function () {
+                            slot.mobileSize = mobSel.value;
+                            subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
+                            renderArticlePreview();
+                        });
+                        mobWrap.appendChild(mobLbl);
+                        mobWrap.appendChild(mobSel);
+
+                        row2.appendChild(deskWrap);
+                        row2.appendChild(mobWrap);
+                        body.appendChild(row2);
+
+                        // Top & Bottom Margin Controls (min 20px)
+                        var row3 = document.createElement('div');
+                        row3.className = 'grid grid-cols-2 gap-2.5';
+
+                        var mtWrap = document.createElement('div');
+                        var mtLbl = document.createElement('label');
+                        mtLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        mtLbl.textContent = 'Margin Atas (min. 20px)';
+                        var mtInput = document.createElement('input');
+                        mtInput.type = 'number';
+                        mtInput.min = '20';
+                        mtInput.max = '64';
+                        mtInput.value = String(slotsApi.clampMargin(slot.marginTop, 24));
+                        mtInput.className = 'w-full px-2.5 py-1.5 text-xs font-mono tabular-nums rounded-lg border border-slate-200 bg-white text-slate-800';
+                        mtInput.addEventListener('change', function () {
+                            slot.marginTop = slotsApi.clampMargin(mtInput.value, 24);
+                            mtInput.value = String(slot.marginTop);
+                            renderArticlePreview();
+                        });
+                        mtWrap.appendChild(mtLbl);
+                        mtWrap.appendChild(mtInput);
+
+                        var mbWrap = document.createElement('div');
+                        var mbLbl = document.createElement('label');
+                        mbLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        mbLbl.textContent = 'Margin Bawah (min. 20px)';
+                        var mbInput = document.createElement('input');
+                        mbInput.type = 'number';
+                        mbInput.min = '20';
+                        mbInput.max = '64';
+                        mbInput.value = String(slotsApi.clampMargin(slot.marginBottom, 24));
+                        mbInput.className = 'w-full px-2.5 py-1.5 text-xs font-mono tabular-nums rounded-lg border border-slate-200 bg-white text-slate-800';
+                        mbInput.addEventListener('change', function () {
+                            slot.marginBottom = slotsApi.clampMargin(mbInput.value, 24);
+                            mbInput.value = String(slot.marginBottom);
+                            renderArticlePreview();
+                        });
+                        mbWrap.appendChild(mbLbl);
+                        mbWrap.appendChild(mbInput);
+
+                        row3.appendChild(mtWrap);
+                        row3.appendChild(mbWrap);
+                        body.appendChild(row3);
+
+                        // AdSense <script> / <ins> snippet paste input
+                        var codeWrap = document.createElement('div');
+                        var codeLbl = document.createElement('label');
+                        codeLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
+                        codeLbl.textContent = 'Cuplikan Kode AdSense (<script> / <ins>)';
+                        var codeTa = document.createElement('textarea');
+                        codeTa.rows = 4;
+                        codeTa.placeholder = '<ins class="adsbygoogle"\n     style="display:block"\n     data-ad-client="ca-pub-..."\n     data-ad-slot="1234567890"\n     data-ad-format="auto"></ins>';
+                        codeTa.value = slot.adCode || '';
+                        codeTa.className = 'w-full p-2.5 text-[11px] font-mono rounded-lg border border-slate-200 bg-slate-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600';
+
+                        var parseStatus = document.createElement('p');
+                        parseStatus.className = 'mt-1 text-[11px]';
+
+                        function refreshParseStatus() {
+                            var p = slotsApi.parseAdSenseSnippet(slot.adCode);
+                            if (!p.hasCode) {
+                                parseStatus.className = 'mt-1 text-[11px] text-slate-500';
+                                parseStatus.textContent = 'Belum ada cuplikan ditempel — pratinjau memakai mode simulasi.';
+                            } else if (p.valid) {
+                                parseStatus.className = 'mt-1 text-[11px] font-medium text-blue-700';
+                                parseStatus.textContent = 'Terdeteksi aman: ' + p.clientId + ' · slot ' + p.adSlot + (p.adFormat ? ' · format ' + p.adFormat : '');
+                            } else {
+                                parseStatus.className = 'mt-1 text-[11px] font-medium text-amber-700';
+                                parseStatus.textContent = p.warning;
+                            }
+                        }
+
+                        codeTa.addEventListener('input', function () {
+                            slot.adCode = codeTa.value;
+                            var parsed = slotsApi.parseAdSenseSnippet(slot.adCode);
+                            if (parsed.valid && slot.mode === 'simulation') {
+                                slot.mode = 'live';
+                                modeSel.value = 'live';
+                            }
+                            refreshParseStatus();
+                            renderArticlePreview();
+                        });
+
+                        refreshParseStatus();
+                        codeWrap.appendChild(codeLbl);
+                        codeWrap.appendChild(codeTa);
+                        codeWrap.appendChild(parseStatus);
+                        body.appendChild(codeWrap);
+
+                        card.appendChild(body);
+                    }
+
+                    els.slotFormsContainer.appendChild(card);
+                });
+            }
+
+            function appendInlineMarkdownSafe(container, rawText) {
+                var nodes = mdApi.renderInlineMarkdownNodes(String(rawText || ''), document);
+                for (var i = 0; i < nodes.length; i++) {
+                    container.appendChild(nodes[i]);
+                }
+            }
+
+            function appendBlocksSafe(container, rawText) {
+                var blocks = mdApi.parseMarkdownBlocks(String(rawText || ''));
+                for (var i = 0; i < blocks.length; i++) {
+                    var block = blocks[i];
+                    if (block.type === 'paragraph') {
+                        var p = document.createElement('p');
+                        p.className = 'text-slate-700 leading-relaxed';
+                        appendInlineMarkdownSafe(p, block.text);
+                        container.appendChild(p);
+                    }
+                }
+            }
+
+            function buildPreviewAdNode(slot) {
+                if (!slot || !slot.enabled) return null;
+                var viewport = state.device;
+                var spec = slotsApi.resolveSizeSpec(slot.id, viewport === 'mobile' ? slot.mobileSize : slot.desktopSize, viewport);
+                var parsed = slotsApi.parseAdSenseSnippet(slot.adCode);
+                var effectiveClient = parsed.clientId || slotsApi.normalizeClientId(state.globalPublisherId);
+                var hasLiveCreds = slot.mode === 'live' && Boolean(effectiveClient && parsed.adSlot);
+
+                var wrapper = document.createElement('div');
+                wrapper.setAttribute('role', 'region');
+                wrapper.setAttribute('aria-label', slot.name);
+                wrapper.style.marginTop = slotsApi.clampMargin(slot.marginTop, 24) + 'px';
+                wrapper.style.marginBottom = slotsApi.clampMargin(slot.marginBottom, 24) + 'px';
+                wrapper.style.maxWidth = spec.width + 'px';
+                wrapper.className = 'w-full mx-auto flex flex-col items-center';
+
+                var box = document.createElement('div');
+                box.className = 'w-full rounded-xl border p-3.5 flex flex-col items-center justify-center text-center transition-colors '
+                    + (hasLiveCreds
+                        ? 'border-blue-300 bg-blue-50/40'
+                        : 'border-dashed border-blue-300 bg-slate-50/80');
+                box.style.minHeight = spec.height + 'px';
+
+                var badgeLine = document.createElement('p');
+                badgeLine.className = 'text-[11px] font-semibold ' + (hasLiveCreds ? 'text-blue-700' : 'text-slate-800');
+                badgeLine.textContent = slot.name;
+
+                var dimLine = document.createElement('p');
+                dimLine.className = 'text-[11px] font-mono text-slate-500 mt-1 tabular-nums';
+                dimLine.textContent = (hasLiveCreds
+                    ? ('Unit Live <ins>: ' + effectiveClient + ' / slot ' + parsed.adSlot)
+                    : ('Simulasi ' + slot.unitType))
+                    + ' · ' + (viewport === 'mobile' ? 'Mobile ' : 'Desktop ') + spec.id
+                    + ' · Margin ' + slotsApi.clampMargin(slot.marginTop, 24) + 'px/' + slotsApi.clampMargin(slot.marginBottom, 24) + 'px';
+
+                box.appendChild(badgeLine);
+                box.appendChild(dimLine);
+
+                // Multiplex Ad visual grid simulation for Slot 4
+                if (spec.multiplexCols && spec.multiplexRows) {
+                    var grid = document.createElement('div');
+                    grid.className = 'mt-3 w-full grid gap-2';
+                    grid.style.gridTemplateColumns = 'repeat(' + spec.multiplexCols + ', minmax(0, 1fr))';
+                    var totalCards = spec.multiplexCols * spec.multiplexRows;
+                    for (var i = 0; i < totalCards; i++) {
+                        var tile = document.createElement('div');
+                        tile.className = 'rounded-lg border border-slate-200 bg-white p-2.5 text-left space-y-1';
+                        var tileThumb = document.createElement('div');
+                        tileThumb.className = 'h-10 rounded bg-slate-100 border border-slate-200/70';
+                        var tileTitle = document.createElement('p');
+                        tileTitle.className = 'text-[10px] font-semibold text-slate-700 truncate';
+                        tileTitle.textContent = 'Rekomendasi Iklan #' + (i + 1);
+                        tile.appendChild(tileThumb);
+                        tile.appendChild(tileTitle);
+                        grid.appendChild(tile);
+                    }
+                    box.appendChild(grid);
+                }
+
+                wrapper.appendChild(box);
+                return wrapper;
+            }
+
+            function renderSlot5Overlay() {
+                var slot5 = state.slots.find(function (s) { return s.id === 'slot5'; });
+                if (!slot5 || !slot5.enabled) {
+                    els.previewSlot5Overlay.classList.add('hidden');
+                    els.restoreSlot5Btn.classList.add('hidden');
+                    els.previewAnchorSpacer.classList.add('hidden');
+                    return;
+                }
+
+                if (state.slot5DismissedInPreview) {
+                    els.previewSlot5Overlay.classList.add('hidden');
+                    els.restoreSlot5Btn.classList.remove('hidden');
+                    els.previewAnchorSpacer.classList.add('hidden');
+                    return;
+                }
+
+                els.restoreSlot5Btn.classList.add('hidden');
+                els.previewAnchorSpacer.classList.remove('hidden');
+                els.previewSlot5Overlay.classList.remove('hidden');
+                els.previewSlot5Overlay.textContent = '';
+
+                var spec = slotsApi.resolveSizeSpec('slot5', state.device === 'mobile' ? slot5.mobileSize : slot5.desktopSize, state.device);
+                var parsed = slotsApi.parseAdSenseSnippet(slot5.adCode);
+                var effectiveClient = parsed.clientId || slotsApi.normalizeClientId(state.globalPublisherId);
+                var hasLive = slot5.mode === 'live' && Boolean(effectiveClient && parsed.adSlot);
+
+                var row = document.createElement('div');
+                row.className = 'max-w-full mx-auto flex items-center justify-between gap-2.5';
+
+                var box = document.createElement('div');
+                box.className = 'flex-1 min-w-0 rounded-lg border border-dashed border-blue-300 bg-slate-50 px-3 flex items-center justify-center text-center';
+                box.style.height = spec.height + 'px';
+                box.style.maxWidth = spec.width + 'px';
+                box.style.margin = '0 auto';
+
+                var lbl = document.createElement('span');
+                lbl.className = 'text-[11px] font-mono text-slate-600 truncate tabular-nums';
+                lbl.textContent = (hasLive ? 'Live Anchor ' + parsed.adSlot : 'Slot 5 Anchor Ad') + ' · ' + (state.device === 'mobile' ? 'Mobile ' : 'Desktop ') + spec.id;
+                box.appendChild(lbl);
+
+                var closeBtn = document.createElement('button');
+                closeBtn.type = 'button';
+                closeBtn.setAttribute('aria-label', 'Tutup Anchor Ad pratinjau');
+                closeBtn.textContent = '×';
+                closeBtn.className = 'min-h-[36px] min-w-[36px] rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-sm font-bold shrink-0';
+                closeBtn.addEventListener('click', function () {
+                    state.slot5DismissedInPreview = true;
+                    renderSlot5Overlay();
+                });
+
+                row.appendChild(box);
+                row.appendChild(closeBtn);
+                els.previewSlot5Overlay.appendChild(row);
+            }
+
+            function syncVisitorToolbarReadout() {
+                var lbl = document.getElementById('visitorToolbarScaleReadout');
+                var scopeSel = document.getElementById('visitorToolbarScopeSelect');
+                if (!lbl || !scopeSel) return;
+                var scope = scopeSel.value;
+                var val = scope === 'all' ? state.fontScales.prose : (state.fontScales[scope] || 1);
+                lbl.textContent = Math.round(val * 100) + '%';
+            }
+
+            function adjustVisitorScale(scope, delta) {
+                if (scope === 'all') {
+                    var next = clampScale((state.fontScales.prose || 1) + delta);
+                    PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = next; });
+                } else {
+                    state.fontScales[scope] = clampScale((state.fontScales[scope] || 1) + delta);
+                }
+                applyFontVarsToSheet();
+                renderFontPartControls();
+                syncVisitorToolbarReadout();
+            }
+
+            function renderArticlePreview() {
+                var article = samples.find(function (a) { return a.id === state.selectedSampleId; }) || samples[0];
+                if (!article) return;
+
+                els.previewDeviceUrlHint.textContent = article.liveUrl || '';
+                els.openLiveSampleLink.href = article.liveUrl || '/';
+
+                var activeCount = state.slots.filter(function (s) { return s.enabled; }).length;
+                els.activeSlotCountReadout.textContent = activeCount + '/5 slot aktif';
+
+                if (state.device === 'mobile') {
+                    els.previewDeviceFrame.className = 'w-full max-w-[390px] bg-white rounded-xl border border-slate-300 shadow-md relative overflow-hidden transition-[max-width] duration-200';
+                    els.activeDeviceReadout.textContent = 'Pratinjau Mobile 390px';
+                    els.previewMobileBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm';
+                    els.previewDesktopBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900';
+                } else {
+                    els.previewDeviceFrame.className = 'w-full max-w-[780px] bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden transition-[max-width] duration-200';
+                    els.activeDeviceReadout.textContent = 'Lebar kolom baca ~728px';
+                    els.previewDesktopBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm';
+                    els.previewMobileBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900';
+                }
+
+                var sheet = els.previewArticleSheet;
+                sheet.textContent = '';
+                applyFontVarsToSheet();
+
+                // Header
+                var header = document.createElement('header');
+                header.className = 'border-b border-slate-200 pb-6 space-y-3';
+
+                var kicker = document.createElement('p');
+                kicker.className = 'text-[11px] uppercase tracking-wider font-semibold text-blue-600';
+                kicker.textContent = article.sectionLabel;
+
+                var h1 = document.createElement('h1');
+                h1.className = 'text-xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-tight [text-wrap:balance]';
+                h1.textContent = article.h1;
+
+                var excerpt = document.createElement('p');
+                excerpt.className = 'text-sm sm:text-base text-slate-600 leading-relaxed';
+                excerpt.textContent = article.excerpt;
+
+                var metaLine = document.createElement('div');
+                metaLine.className = 'flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 pt-1';
+                metaLine.textContent = article.author + ' · Diperbarui ' + article.dateModified + ' · ' + article.readingTimeMinutes + ' menit baca'
+                    + (article.datasetMeta ? ' · ' + article.datasetMeta : '');
+
+                // Visitor interactive +/- bar inside article preview
+                var toolbar = document.createElement('div');
+                toolbar.className = 'pt-3 mt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2';
+
+                var scopeWrap = document.createElement('div');
+                scopeWrap.className = 'flex items-center gap-2';
+                var scopeLbl = document.createElement('label');
+                scopeLbl.setAttribute('for', 'visitorToolbarScopeSelect');
+                scopeLbl.className = 'text-xs font-medium text-slate-500';
+                scopeLbl.textContent = 'Ukuran Teks:';
+
+                var scopeSel = document.createElement('select');
+                scopeSel.id = 'visitorToolbarScopeSelect';
+                scopeSel.className = 'min-h-[36px] bg-slate-50 text-xs font-medium text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200';
+                [{ k: 'all', l: 'Semua Bagian Artikel' }].concat(PART_DEFINITIONS.map(function (d) { return { k: d.key, l: d.label }; })).forEach(function (optItem) {
+                    var o = document.createElement('option');
+                    o.value = optItem.k;
+                    o.textContent = optItem.l;
+                    if (state.activeVisitorScope === optItem.k) o.selected = true;
+                    scopeSel.appendChild(o);
+                });
+                scopeSel.addEventListener('change', function () {
+                    state.activeVisitorScope = scopeSel.value;
+                    syncVisitorToolbarReadout();
+                });
+                scopeWrap.appendChild(scopeLbl);
+                scopeWrap.appendChild(scopeSel);
+
+                var btnWrap = document.createElement('div');
+                btnWrap.className = 'flex items-center gap-1.5';
+
+                var vDec = document.createElement('button');
+                vDec.type = 'button';
+                vDec.textContent = 'A−';
+                vDec.className = 'min-h-[36px] min-w-[38px] px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50';
+                vDec.addEventListener('click', function () { adjustVisitorScale(state.activeVisitorScope, -0.06); });
+
+                var vVal = document.createElement('span');
+                vVal.id = 'visitorToolbarScaleReadout';
+                vVal.className = 'min-w-[3rem] text-center text-xs font-mono font-semibold text-slate-700 tabular-nums';
+
+                var vInc = document.createElement('button');
+                vInc.type = 'button';
+                vInc.textContent = 'A+';
+                vInc.className = 'min-h-[36px] min-w-[38px] px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50';
+                vInc.addEventListener('click', function () { adjustVisitorScale(state.activeVisitorScope, 0.06); });
+
+                btnWrap.appendChild(vDec);
+                btnWrap.appendChild(vVal);
+                btnWrap.appendChild(vInc);
+
+                toolbar.appendChild(scopeWrap);
+                toolbar.appendChild(btnWrap);
+
+                header.appendChild(kicker);
+                header.appendChild(h1);
+                header.appendChild(excerpt);
+                header.appendChild(metaLine);
+                header.appendChild(toolbar);
+                sheet.appendChild(header);
+                syncVisitorToolbarReadout();
+
+                // Key Takeaways
+                if (Array.isArray(article.keyTakeaways) && article.keyTakeaways.length > 0) {
+                    var ktBox = document.createElement('section');
+                    ktBox.className = 'p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5';
+                    var ktTitle = document.createElement('h2');
+                    ktTitle.className = 'text-sm sm:text-base font-bold text-slate-900';
+                    ktTitle.textContent = 'Ringkasan Utama';
+                    var ktList = document.createElement('ul');
+                    ktList.className = 'article-takeaways list-disc pl-5 space-y-1.5 text-slate-700';
+                    article.keyTakeaways.forEach(function (item) {
+                        var li = document.createElement('li');
+                        appendInlineMarkdownSafe(li, item);
+                        ktList.appendChild(li);
+                    });
+                    ktBox.appendChild(ktTitle);
+                    ktBox.appendChild(ktList);
+                    sheet.appendChild(ktBox);
+                }
+
+                // >>> SLOT 1: Below Key Takeaways, before TOC
+                var slot1Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot1'; }));
+                if (slot1Node) sheet.appendChild(slot1Node);
+
+                // Table of Contents
+                if (Array.isArray(article.sections) && article.sections.length >= 2) {
+                    var tocBox = document.createElement('nav');
+                    tocBox.className = 'p-4 rounded-xl border border-slate-200 bg-white';
+                    var tocLbl = document.createElement('p');
+                    tocLbl.className = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2';
+                    tocLbl.textContent = 'Daftar Isi';
+                    var tocOl = document.createElement('ol');
+                    tocOl.className = 'list-decimal pl-5 space-y-1 text-sm text-blue-600';
+                    article.sections.forEach(function (sec) {
+                        var li = document.createElement('li');
+                        var a = document.createElement('a');
+                        a.href = '#' + sec.anchor;
+                        a.className = 'hover:underline';
+                        a.textContent = sec.heading;
+                        li.appendChild(a);
+                        tocOl.appendChild(li);
+                    });
+                    tocBox.appendChild(tocLbl);
+                    tocBox.appendChild(tocOl);
+                    sheet.appendChild(tocBox);
+                }
+
+                // Sections Wrapper
+                var proseWrap = document.createElement('div');
+                proseWrap.className = 'article-prose flex flex-col gap-7 text-slate-800';
+
+                var sections = article.sections || [];
+                var slot2Idx = sections.length >= 2 ? 1 : 0;
+                var slot3Idx = sections.length >= 4 ? 2 : (sections.length === 3 ? 1 : -1);
+
+                sections.forEach(function (sec, idx) {
+                    var secEl = document.createElement('section');
+                    secEl.id = sec.anchor;
+                    secEl.className = 'space-y-4';
+
+                    if (sec.heading) {
+                        var h2 = document.createElement('h2');
+                        h2.className = 'text-lg sm:text-xl font-bold text-slate-900 pt-1';
+                        h2.textContent = sec.heading;
+                        secEl.appendChild(h2);
+                    }
+
+                    if (Array.isArray(sec.paragraphs)) {
+                        sec.paragraphs.forEach(function (pText) {
+                            appendBlocksSafe(secEl, pText);
+                        });
+                    }
+
+                    if (Array.isArray(sec.bullets) && sec.bullets.length > 0) {
+                        var ul = document.createElement('ul');
+                        ul.className = 'article-bullets list-disc pl-5 space-y-2 text-slate-700';
+                        sec.bullets.forEach(function (b) {
+                            var li = document.createElement('li');
+                            if (b && typeof b === 'object' && b.label) {
+                                var strong = document.createElement('strong');
+                                strong.className = 'text-slate-900';
+                                strong.textContent = b.label + ': ';
+                                li.appendChild(strong);
+                                appendInlineMarkdownSafe(li, b.text || '');
+                            } else {
+                                appendInlineMarkdownSafe(li, b);
+                            }
+                            ul.appendChild(li);
+                        });
+                        secEl.appendChild(ul);
+                    }
+
+                    if (sec.table && Array.isArray(sec.table.headers) && Array.isArray(sec.table.rows)) {
+                        var tableWrap = document.createElement('div');
+                        tableWrap.className = 'overflow-x-auto rounded-xl border border-slate-200';
+                        var table = document.createElement('table');
+                        table.className = 'article-table min-w-full border-collapse';
+                        if (sec.table.caption) {
+                            var cap = document.createElement('caption');
+                            cap.className = 'text-left font-semibold text-slate-600 px-3.5 pt-3 pb-2';
+                            cap.textContent = sec.table.caption;
+                            table.appendChild(cap);
+                        }
+                        var thead = document.createElement('thead');
+                        var headTr = document.createElement('tr');
+                        sec.table.headers.forEach(function (hText) {
+                            var th = document.createElement('th');
+                            th.className = 'px-3.5 py-2.5 text-left font-semibold uppercase tracking-wider text-slate-700 bg-slate-100 border-b border-slate-200 whitespace-nowrap';
+                            th.textContent = hText;
+                            headTr.appendChild(th);
+                        });
+                        thead.appendChild(headTr);
+                        table.appendChild(thead);
+
+                        var tbody = document.createElement('tbody');
+                        sec.table.rows.forEach(function (r) {
+                            var tr = document.createElement('tr');
+                            tr.className = 'hover:bg-slate-50';
+                            r.forEach(function (cell) {
+                                var td = document.createElement('td');
+                                td.className = 'px-3.5 py-2.5 text-slate-700 border-b border-slate-200 tabular-nums';
+                                td.textContent = cell;
+                                tr.appendChild(td);
+                            });
+                            tbody.appendChild(tr);
+                        });
+                        table.appendChild(tbody);
+                        tableWrap.appendChild(table);
+                        secEl.appendChild(tableWrap);
+                    }
+
+                    if (sec.callout && sec.callout.body) {
+                        var calloutEl = document.createElement('aside');
+                        calloutEl.className = 'article-callout p-4 rounded-xl border border-blue-200 bg-blue-50/70 text-slate-800 space-y-1.5';
+                        if (sec.callout.title) {
+                            var cTitle = document.createElement('p');
+                            cTitle.className = 'font-semibold text-slate-900';
+                            cTitle.textContent = sec.callout.title;
+                            calloutEl.appendChild(cTitle);
+                        }
+                        appendBlocksSafe(calloutEl, sec.callout.body);
+                        secEl.appendChild(calloutEl);
+                    }
+
+                    proseWrap.appendChild(secEl);
+
+                    // >>> SLOT 2: After Section 2 (Bagian 2 + Tabel Ringkasan Metrik)
+                    if (idx === slot2Idx) {
+                        var slot2Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot2'; }));
+                        if (slot2Node) proseWrap.appendChild(slot2Node);
+                    }
+                    // >>> SLOT 3: Between Kelompok A & Kelompok B
+                    if (idx === slot3Idx) {
+                        var slot3Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot3'; }));
+                        if (slot3Node) proseWrap.appendChild(slot3Node);
+                    }
+                });
+
+                sheet.appendChild(proseWrap);
+
+                // >>> SLOT 4: After Section 4 (Checklist 4 Langkah), before Methodology / FAQ
+                var slot4Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot4'; }));
+                if (slot4Node) sheet.appendChild(slot4Node);
+
+                // Methodology Note
+                if (article.methodologyNote) {
+                    var methSec = document.createElement('section');
+                    methSec.className = 'article-methodology p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2';
+                    var mTitle = document.createElement('h2');
+                    mTitle.className = 'text-sm sm:text-base font-bold text-slate-900';
+                    mTitle.textContent = 'Catatan Metodologi & Transparansi';
+                    methSec.appendChild(mTitle);
+                    appendBlocksSafe(methSec, article.methodologyNote);
+                    sheet.appendChild(methSec);
+                }
+
+                // FAQs
+                if (Array.isArray(article.faqs) && article.faqs.length > 0) {
+                    var faqSec = document.createElement('section');
+                    faqSec.className = 'article-faq space-y-3 pt-4 border-t border-slate-200';
+                    var fTitle = document.createElement('h2');
+                    fTitle.className = 'text-lg sm:text-xl font-bold text-slate-900';
+                    fTitle.textContent = 'FAQ Artikel';
+                    faqSec.appendChild(fTitle);
+
+                    article.faqs.forEach(function (faq, fIdx) {
+                        var det = document.createElement('details');
+                        if (fIdx === 0) det.open = true;
+                        det.className = 'p-4 rounded-xl border border-slate-200 bg-slate-50/50';
+                        var sum = document.createElement('summary');
+                        sum.className = 'font-semibold text-slate-900 cursor-pointer';
+                        sum.textContent = faq.q;
+                        var ans = document.createElement('div');
+                        ans.className = 'article-faq-answer mt-2 text-slate-700';
+                        appendBlocksSafe(ans, faq.a);
+                        det.appendChild(sum);
+                        det.appendChild(ans);
+                        faqSec.appendChild(det);
+                    });
+                    sheet.appendChild(faqSec);
+                }
+
+                // >>> SLOT 5: Sticky Bottom Overlay Anchor Ad
+                renderSlot5Overlay();
+            }
+
+            function openExportModal() {
+                var cleanClient = slotsApi.normalizeClientId(state.globalPublisherId) || '';
+                var exportJsonObj = {
+                    googleAdSense: {
+                        publisherId: cleanClient,
+                        directSellerId: 'f08c47fec0942fa0',
+                        enableAutoAdsScript: Boolean(cleanClient),
+                        generateAdsTxt: true,
+                        slots: state.slots.map(function (s) {
+                            var ins = slotsApi.buildSafeInsAttributes(s, cleanClient);
+                            return {
+                                id: s.id,
+                                name: s.name,
+                                unitType: s.unitType,
+                                enabled: s.enabled,
+                                mode: s.mode,
+                                desktopSize: s.desktopSize,
+                                mobileSize: s.mobileSize,
+                                marginTop: slotsApi.clampMargin(s.marginTop, 24),
+                                marginBottom: slotsApi.clampMargin(s.marginBottom, 24),
+                                clientId: ins.clientId,
+                                adSlot: ins.adSlot,
+                                adFormat: ins.adFormat
+                            };
+                        })
+                    }
+                };
+                els.exportJsonTextarea.value = JSON.stringify(exportJsonObj, null, 2);
+
+                var snippets = state.slots.map(function (s) {
+                    return slotsApi.buildExportSnippetForSlot(s, cleanClient);
+                }).join('\n\n');
+                els.exportHtmlTextarea.value = snippets;
+                els.exportCopyStatus.classList.add('hidden');
+                els.exportModal.classList.remove('hidden');
+            }
+
+            function copyTextarea(textareaEl, label) {
+                textareaEl.select();
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(textareaEl.value).then(function () {
+                        els.exportCopyStatus.textContent = label + ' berhasil disalin ke clipboard.';
+                        els.exportCopyStatus.classList.remove('hidden');
+                    }).catch(function () {
+                        els.exportCopyStatus.textContent = 'Teks telah diseleksi. Tekan Ctrl+C / Cmd+C untuk menyalin.';
+                        els.exportCopyStatus.classList.remove('hidden');
+                    });
+                } else {
+                    try { document.execCommand('copy'); } catch (_e) {}
+                    els.exportCopyStatus.textContent = label + ' berhasil disalin.';
+                    els.exportCopyStatus.classList.remove('hidden');
+                }
+            }
+
+            var studioInitialized = false;
+
+            function initializeStudioWorkspace() {
+                if (!studioInitialized) {
+                    studioInitialized = true;
+                    samples.forEach(function (s) {
+                        var opt = document.createElement('option');
+                        opt.value = s.id;
+                        opt.textContent = s.h1.slice(0, 56) + (s.h1.length > 56 ? '...' : '');
+                        els.sampleArticleSelect.appendChild(opt);
+                    });
+
+                    loadSavedConfig();
+                    els.globalPublisherIdInput.value = state.globalPublisherId;
+                    els.applyPreviewToSiteCheckbox.checked = state.applyPreviewToSite;
+                    els.sampleArticleSelect.value = state.selectedSampleId;
+
+                    els.sampleArticleSelect.addEventListener('change', function () {
+                        state.selectedSampleId = els.sampleArticleSelect.value;
+                        renderArticlePreview();
+                    });
+                    els.globalPublisherIdInput.addEventListener('input', function () {
+                        state.globalPublisherId = els.globalPublisherIdInput.value;
+                        renderArticlePreview();
+                    });
+                    els.applyPreviewToSiteCheckbox.addEventListener('change', function () {
+                        state.applyPreviewToSite = els.applyPreviewToSiteCheckbox.checked;
+                    });
+                    els.previewDesktopBtn.addEventListener('click', function () {
+                        state.device = 'desktop';
+                        renderArticlePreview();
+                    });
+                    els.previewMobileBtn.addEventListener('click', function () {
+                        state.device = 'mobile';
+                        renderArticlePreview();
+                    });
+                    els.restoreSlot5Btn.addEventListener('click', function () {
+                        state.slot5DismissedInPreview = false;
+                        renderSlot5Overlay();
+                    });
+                    els.saveConfigBtn.addEventListener('click', saveConfigToLocalStorage);
+                    els.exportCodeBtn.addEventListener('click', openExportModal);
+                    els.closeExportModalBtn.addEventListener('click', function () {
+                        els.exportModal.classList.add('hidden');
+                    });
+                    els.exportModal.addEventListener('click', function (e) {
+                        if (e.target === els.exportModal) els.exportModal.classList.add('hidden');
+                    });
+                    els.copyJsonBtn.addEventListener('click', function () {
+                        copyTextarea(els.exportJsonTextarea, 'JSON Konfigurasi');
+                    });
+                    els.copyHtmlSnippetsBtn.addEventListener('click', function () {
+                        copyTextarea(els.exportHtmlTextarea, 'Kode HTML 5 Slot AdSense');
+                    });
+                    els.studioResetFontsBtn.addEventListener('click', function () {
+                        PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
+                        applyFontVarsToSheet();
+                        renderFontPartControls();
+                        syncVisitorToolbarReadout();
+                        showFeedback('Ukuran font seluruh bagian artikel dikembalikan ke 100%.');
+                    });
+                    els.resetDefaultBtn.addEventListener('click', function () {
+                        state.slots = slotsApi.cloneDefaultSlots();
+                        state.globalPublisherId = '';
+                        state.slot5DismissedInPreview = false;
+                        PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
+                        els.globalPublisherIdInput.value = '';
+                        try { localStorage.removeItem(slotsApi.STORAGE_KEY); } catch (_e) {}
+                        renderFontPartControls();
+                        renderSlotForms();
+                        renderArticlePreview();
+                        showFeedback('Konfigurasi 5 slot dan ukuran font direset ke rekomendasi awal.');
+                    });
+                }
+
+                renderFontPartControls();
+                renderSlotForms();
+                renderArticlePreview();
+            }
+
+            async function authApiFetch(url, options) {
+                var opts = options || {};
+                var headers = Object.assign({
+                    'X-Requested-With': 'XMLHttpRequest'
+                }, opts.headers || {});
+                if (opts.body && !headers['Content-Type']) {
+                    headers['Content-Type'] = 'application/json';
+                }
+                var res = await fetch(url, Object.assign({
+                    credentials: 'same-origin'
+                }, opts, { headers: headers }));
+                var data = await res.json().catch(function () { return { ok: false, error: 'Respons server tidak valid.' }; });
+                if (!res.ok) {
+                    var err = new Error((data && data.error) || ('HTTP ' + res.status));
+                    err.status = res.status;
+                    throw err;
+                }
+                return data;
+            }
+
+            function enterStudioWorkspace() {
+                els.authSection.classList.add('hidden');
+                els.studioWorkspaceSection.classList.remove('hidden');
+                els.saveConfigBtn.classList.remove('hidden');
+                els.logoutBtn.classList.remove('hidden');
+                initializeStudioWorkspace();
+            }
+
+            async function checkStudioAuth() {
+                els.authLoading.classList.remove('hidden');
+                els.authUnconfiguredBox.classList.add('hidden');
+                els.setupForm.classList.add('hidden');
+                els.loginForm.classList.add('hidden');
+                els.studioWorkspaceSection.classList.add('hidden');
+                els.saveConfigBtn.classList.add('hidden');
+                els.logoutBtn.classList.add('hidden');
+                els.authSection.classList.remove('hidden');
+
+                try {
+                    var info = await authApiFetch('/api/articles/auth');
+                    els.authLoading.classList.add('hidden');
+                    if (info.authenticated) {
+                        enterStudioWorkspace();
+                    } else if (info.needsSetup) {
+                        els.setupForm.classList.remove('hidden');
+                    } else if (!info.configured) {
+                        els.authUnconfiguredBox.classList.remove('hidden');
+                    } else {
+                        els.loginForm.classList.remove('hidden');
+                        els.loginPassword.focus();
+                    }
+                } catch (err) {
+                    els.authLoading.textContent = (err && err.message) || 'Gagal menghubungi server autentikasi.';
+                }
+            }
+
+            els.setupForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                els.setupError.classList.add('hidden');
+                if (els.setupPassword.value !== els.setupPasswordConfirm.value) {
+                    els.setupError.textContent = 'Konfirmasi password tidak cocok.';
+                    els.setupError.classList.remove('hidden');
+                    return;
+                }
+                try {
+                    await authApiFetch('/api/articles/auth', {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'setup', password: els.setupPassword.value })
+                    });
+                    els.setupPassword.value = '';
+                    els.setupPasswordConfirm.value = '';
+                    enterStudioWorkspace();
+                } catch (err) {
+                    els.setupError.textContent = (err && err.message) || 'Inisialisasi password gagal.';
+                    els.setupError.classList.remove('hidden');
+                }
+            });
+
+            els.loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                els.loginError.classList.add('hidden');
+                els.loginSubmitBtn.disabled = true;
+                try {
+                    await authApiFetch('/api/articles/auth', {
+                        method: 'POST',
+                        body: JSON.stringify({ password: els.loginPassword.value })
+                    });
+                    els.loginPassword.value = '';
+                    enterStudioWorkspace();
+                } catch (err) {
+                    els.loginError.textContent = (err && err.message) || 'Password tidak sesuai.';
+                    els.loginError.classList.remove('hidden');
+                } finally {
+                    els.loginSubmitBtn.disabled = false;
+                }
+            });
+
+            els.logoutBtn.addEventListener('click', async function () {
+                try {
+                    await authApiFetch('/api/articles/auth', { method: 'DELETE' });
+                } catch (_e) {}
+                els.exportModal.classList.add('hidden');
+                await checkStudioAuth();
+            });
+
+            checkStudioAuth();
+        })();
+    </script>
+</body>
+</html>

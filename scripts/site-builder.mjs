@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import '../assets/trust-i18n.js';
 import '../assets/article-markdown.js';
+import '../assets/adsense-slots.js';
 
 const __builderFilename = fileURLToPath(import.meta.url);
 const __builderDirname = path.dirname(__builderFilename);
@@ -10,6 +11,7 @@ const DEFAULT_ROOT_DIR = path.resolve(__builderDirname, '..');
 
 const trustI18n = globalThis.__TRUST_I18N__;
 const articleMarkdown = globalThis.__ARTICLE_MARKDOWN__;
+const adsenseSlotsHelper = globalThis.__ADSENSE_SLOTS__;
 const EDU_FAQ_BY_LANG = JSON.parse(
   fs.readFileSync(new URL('./edu-faq-i18n.json', import.meta.url), 'utf8')
 );
@@ -416,7 +418,9 @@ export function loadSiteConfig(rootDir) {
       enableAutoAdsScript: process.env.ADSENSE_ENABLE_AUTO_ADS !== undefined
         ? String(process.env.ADSENSE_ENABLE_AUTO_ADS).trim().toLowerCase() === 'true'
         : fileConfig.googleAdSense?.enableAutoAdsScript !== false,
-      generateAdsTxt: fileConfig.googleAdSense?.generateAdsTxt !== false
+      generateAdsTxt: fileConfig.googleAdSense?.generateAdsTxt !== false,
+      hasCustomSlots: Array.isArray(fileConfig.googleAdSense?.slots) && fileConfig.googleAdSense.slots.length > 0,
+      slots: adsenseSlotsHelper ? adsenseSlotsHelper.normalizeSlotsConfig(fileConfig.googleAdSense?.slots) : []
     },
     otherVerifications: {
       bingMsvalidate: normalizeVerificationToken(
@@ -1264,6 +1268,22 @@ export function buildCloudflareHeaders() {
     '  X-Robots-Tag: noindex, nofollow',
     '  Cache-Control: no-store',
     '',
+    '/adsense-studio',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
+    '',
+    '/adsense-studio/*',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
+    '',
+    '/admin-lexicon',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
+    '',
+    '/admin-lexicon/*',
+    '  X-Robots-Tag: noindex, nofollow',
+    '  Cache-Control: no-store',
+    '',
     '/api/articles/*',
     '  X-Robots-Tag: noindex, nofollow',
     '  Cache-Control: no-store',
@@ -1783,8 +1803,11 @@ function buildLanguageTargetsMarkup(currentLang, config, resolveHrefForLang) {
   return { selectOptions, footerLinks };
 }
 
-function renderArticleSectionsHtml(sections) {
+function renderArticleSectionsHtml(sections, inlineAds = {}) {
   if (!Array.isArray(sections)) return '';
+  const slot2Idx = sections.length >= 2 ? 1 : 0;
+  const slot3Idx = sections.length >= 4 ? 2 : (sections.length === 3 ? 1 : -1);
+
   return sections.map((sec, idx) => {
     const anchor = escapeHtmlAttr(sec?.anchor || `section-${idx + 1}`);
     const parts = [`<section id="${anchor}" class="space-y-4 scroll-mt-20">`];
@@ -1804,7 +1827,7 @@ function renderArticleSectionsHtml(sections) {
         }
         return `<li>${articleMarkdown.renderInlineMarkdownHtml(b)}</li>`;
       }).join('');
-      parts.push(`<ul class="list-disc pl-5 space-y-2">${items}</ul>`);
+      parts.push(`<ul class="article-bullets list-disc pl-5 space-y-2">${items}</ul>`);
     }
     if (sec?.callout && sec.callout.body) {
       const tone = sec.callout.tone === 'warning'
@@ -1814,7 +1837,7 @@ function renderArticleSectionsHtml(sections) {
         ? `<p class="font-semibold text-sm mb-1">${articleMarkdown.renderInlineMarkdownHtml(sec.callout.title)}</p>`
         : '';
       const bodyHtml = articleMarkdown.renderMarkdownBlocksHtml(sec.callout.body);
-      parts.push(`<aside class="p-4 rounded-xl border ${tone} text-sm leading-relaxed space-y-2">${titleHtml}${bodyHtml}</aside>`);
+      parts.push(`<aside class="article-callout p-4 rounded-xl border ${tone} text-sm leading-relaxed space-y-2">${titleHtml}${bodyHtml}</aside>`);
     }
     if (sec?.codeBlock && sec.codeBlock.code) {
       const codeCaption = sec.codeBlock.caption
@@ -1831,11 +1854,11 @@ function renderArticleSectionsHtml(sections) {
         .join('');
       const trHtml = sec.table.rows.map((row) => {
         const tds = (Array.isArray(row) ? row : [])
-          .map((cell) => `<td class="px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800">${articleMarkdown.renderInlineMarkdownHtml(cell)}</td>`)
+          .map((cell) => `<td class="px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 tabular-nums">${articleMarkdown.renderInlineMarkdownHtml(cell)}</td>`)
           .join('');
         return `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">${tds}</tr>`;
       }).join('');
-      parts.push(`<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800"><table class="min-w-full border-collapse">${captionHtml}<thead><tr>${thHtml}</tr></thead><tbody>${trHtml}</tbody></table></div>`);
+      parts.push(`<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800"><table class="article-table min-w-full border-collapse">${captionHtml}<thead><tr>${thHtml}</tr></thead><tbody>${trHtml}</tbody></table></div>`);
     }
     if (Array.isArray(sec?.subsections)) {
       for (const sub of sec.subsections) {
@@ -1851,12 +1874,18 @@ function renderArticleSectionsHtml(sections) {
         }
         if (Array.isArray(sub?.bullets) && sub.bullets.length > 0) {
           const sItems = sub.bullets.map((b) => `<li>${articleMarkdown.renderInlineMarkdownHtml(b)}</li>`).join('');
-          parts.push(`<ul class="list-disc pl-5 space-y-1.5">${sItems}</ul>`);
+          parts.push(`<ul class="article-bullets list-disc pl-5 space-y-1.5">${sItems}</ul>`);
         }
         parts.push('</div>');
       }
     }
     parts.push('</section>');
+    if (idx === slot2Idx && inlineAds.slot2) {
+      parts.push(inlineAds.slot2);
+    }
+    if (idx === slot3Idx && inlineAds.slot3) {
+      parts.push(inlineAds.slot3);
+    }
     return parts.join('\n');
   }).join('\n');
 }
@@ -1928,7 +1957,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   const keyTakeawaysHtml = Array.isArray(content.keyTakeaways) && content.keyTakeaways.length > 0
     ? `<section aria-label="${escapeHtmlAttr(labels.keyTakeawaysTitle)}" class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2.5">
         <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.keyTakeawaysTitle)}</h2>
-        <ul class="list-disc pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">${content.keyTakeaways.map((k) => `<li>${articleMarkdown.renderInlineMarkdownHtml(k)}</li>`).join('')}</ul>
+        <ul class="article-takeaways list-disc pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">${content.keyTakeaways.map((k) => `<li>${articleMarkdown.renderInlineMarkdownHtml(k)}</li>`).join('')}</ul>
       </section>`
     : '';
 
@@ -1946,7 +1975,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     : '';
 
   const methodologyNoteHtml = content.methodologyNote
-    ? `<section class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
+    ? `<section class="article-methodology p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
         <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.methodologyTitle)}</h2>
         <div class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(content.methodologyNote)}</div>
       </section>`
@@ -1954,9 +1983,9 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
 
   const faqsList = Array.isArray(content.faqs) ? content.faqs.filter((f) => f?.q && f?.a) : [];
   const faqsHtml = faqsList.length > 0
-    ? `<section class="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
+    ? `<section class="article-faq space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
         <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.faqTitle)}</h2>
-        <div class="space-y-3">${faqsList.map((f) => `<details class="group p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40"><summary class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white cursor-pointer">${escapeHtmlText(f.q)}</summary><div class="mt-2.5 space-y-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(f.a)}</div></details>`).join('')}</div>
+        <div class="space-y-3">${faqsList.map((f) => `<details class="group p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40"><summary class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white cursor-pointer">${escapeHtmlText(f.q)}</summary><div class="article-faq-answer mt-2.5 space-y-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(f.a)}</div></details>`).join('')}</div>
       </section>`
     : '';
 
@@ -1985,12 +2014,25 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     </section>`;
 
   const adsense = normalizeAdSenseIds(config.googleAdSense.publisherId);
-  const adSlot1 = adsense.clientId
-    ? `<div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="article-mid-content" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[728px] mx-auto min-h-[100px] sm:min-h-[90px] bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl"></div>`
-    : '<!-- ADSENSE MANUAL SLOT 1: rendered when googleAdSense.publisherId is configured -->';
-  const adSlot2 = adsense.clientId
-    ? `<div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="article-post-content" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="w-full max-w-[336px] sm:max-w-[728px] mx-auto min-h-[280px] sm:min-h-[250px] bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl"></div>`
-    : '<!-- ADSENSE MANUAL SLOT 2: rendered when googleAdSense.publisherId is configured -->';
+  const configuredSlots = adsenseSlotsHelper
+    ? adsenseSlotsHelper.normalizeSlotsConfig(config.googleAdSense.slots)
+    : [];
+  const slotById = {};
+  for (const s of configuredSlots) {
+    slotById[s.id] = s;
+  }
+  const shouldRenderSimulationSsr = Boolean(config.googleAdSense.hasCustomSlots);
+  const renderConfiguredSlot = (slotId) => {
+    if (!adsenseSlotsHelper || !slotById[slotId]) return '';
+    return adsenseSlotsHelper.buildSlotSsrHtml(slotById[slotId], adsense.clientId, {
+      renderSimulationPlaceholder: shouldRenderSimulationSsr
+    });
+  };
+  const adSlot1 = renderConfiguredSlot('slot1');
+  const adSlot2 = renderConfiguredSlot('slot2');
+  const adSlot3 = renderConfiguredSlot('slot3');
+  const adSlot4 = renderConfiguredSlot('slot4');
+  const adSlot5 = renderConfiguredSlot('slot5');
 
   const schemaType = ARTICLE_TYPES.includes(article.articleType) ? article.articleType : 'Article';
   const schemaGraph = [
@@ -2078,10 +2120,11 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     KEY_TAKEAWAYS_HTML: keyTakeawaysHtml,
     ADSENSE_SLOT_1: adSlot1,
     TOC_HTML: tocHtml,
-    ARTICLE_SECTIONS_HTML: renderArticleSectionsHtml(content.sections),
+    ARTICLE_SECTIONS_HTML: renderArticleSectionsHtml(content.sections, { slot2: adSlot2, slot3: adSlot3 }),
+    ADSENSE_SLOT_4: adSlot4,
     METHODOLOGY_NOTE_HTML: methodologyNoteHtml,
     FAQS_HTML: faqsHtml,
-    ADSENSE_SLOT_2: adSlot2,
+    ADSENSE_SLOT_5: adSlot5,
     RELATED_ARTICLES_HTML: relatedArticlesHtml,
     FOOTER_SLOGAN: escapeHtmlText(chrome.footerSlogan),
     SITE_HOST: escapeHtmlText(siteHost),

@@ -25,34 +25,52 @@
       .replace(/>/g, '&gt;');
   }
 
-  function sanitizeMarkdownHref(rawUrl) {
-    var raw = String(rawUrl == null ? '' : rawUrl).trim();
-    if (!raw) return null;
+  function parseDestinationAndTitle(rawInput) {
+    var raw = String(rawInput == null ? '' : rawInput).trim();
+    if (!raw) return { url: '', title: '' };
 
-    // Strip optional enclosing <...>
-    if (raw.charAt(0) === '<' && raw.charAt(raw.length - 1) === '>') {
-      raw = raw.slice(1, -1).trim();
+    var url = raw;
+    var title = '';
+
+    if (raw.charAt(0) === '<') {
+      var gtIdx = raw.indexOf('>');
+      if (gtIdx > 1) {
+        url = raw.slice(1, gtIdx).trim();
+        var restAfterGt = raw.slice(gtIdx + 1).trim();
+        var gtTitleMatch = restAfterGt.match(/^(?:"([^"]*)"|'([^']*)'|\(([^)]*)\))\s*$/);
+        if (gtTitleMatch) {
+          title = (gtTitleMatch[1] || gtTitleMatch[2] || gtTitleMatch[3] || '').trim();
+        }
+      }
     } else {
-      // Strip optional Markdown link title: https://example.com "Title"
-      var titleMatch = raw.match(/^(\S+)\s+(?:"[^"]*"|'[^']*'|\([^)]*\))\s*$/);
+      // Extract optional Markdown title: https://example.com "Title"
+      var titleMatch = raw.match(/^(\S+)\s+(?:"([^"]*)"|'([^']*)'|\(([^)]*)\))\s*$/);
       if (titleMatch) {
-        raw = titleMatch[1];
+        url = titleMatch[1];
+        title = (titleMatch[2] || titleMatch[3] || titleMatch[4] || '').trim();
       }
     }
 
+    return { url: url, title: title };
+  }
+
+  function sanitizeSafeUrl(rawUrl, allowAnchors) {
+    var parsedParts = parseDestinationAndTitle(rawUrl);
+    var raw = parsedParts.url;
     if (!raw) return null;
+
     // Reject control characters or internal whitespace
     if (/[\u0000-\u0020\u007F]/.test(raw)) return null;
 
-    // Allow clean in-page anchor links
-    if (/^#[A-Za-z0-9][A-Za-z0-9_-]*$/.test(raw)) {
-      return { href: raw, external: false };
+    // Allow clean in-page anchor links when enabled
+    if (allowAnchors && /^#[A-Za-z0-9][A-Za-z0-9_-]*$/.test(raw)) {
+      return { href: raw, external: false, title: parsedParts.title };
     }
 
     // Allow single-slash site-relative paths (reject protocol-relative //evil.com or /\)
     if (raw.charAt(0) === '/' && raw.charAt(1) !== '/' && raw.charAt(1) !== '\\') {
       if (/^\/[^\s<>"]*$/.test(raw)) {
-        return { href: raw, external: false };
+        return { href: raw, external: false, title: parsedParts.title };
       }
       return null;
     }
@@ -61,12 +79,24 @@
     try {
       var parsed = new URL(raw);
       if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
-        return { href: parsed.href, external: true };
+        return { href: parsed.href, external: true, title: parsedParts.title };
       }
     } catch (_e) {
       return null;
     }
     return null;
+  }
+
+  function sanitizeMarkdownHref(rawUrl) {
+    var res = sanitizeSafeUrl(rawUrl, true);
+    if (!res) return null;
+    return { href: res.href, external: res.external };
+  }
+
+  function sanitizeMarkdownImageUrl(rawUrl) {
+    var res = sanitizeSafeUrl(rawUrl, false);
+    if (!res) return null;
+    return { src: res.href, external: res.external, title: res.title };
   }
 
   function pushText(tokens, text) {
@@ -195,6 +225,7 @@
   function parseInlineTokens(input, options) {
     var opts = options || {};
     var allowLinks = opts.allowLinks !== false;
+    var allowImages = opts.allowImages !== false;
     var depth = opts._depth || 0;
     var str = String(input == null ? '' : input);
     var tokens = [];
@@ -240,7 +271,32 @@
         continue;
       }
 
-      // 3. Markdown link [label](url)
+      // 3. Markdown image ![alt](url "caption")
+      if (allowImages && ch === '!' && str.charAt(i + 1) === '[') {
+        var imgCloseBracket = findClosingBracket(str, i + 1);
+        if (imgCloseBracket !== -1 && str.charAt(imgCloseBracket + 1) === '(') {
+          var imgCloseParen = findClosingParen(str, imgCloseBracket + 1);
+          if (imgCloseParen !== -1) {
+            var rawAlt = str.slice(i + 2, imgCloseBracket);
+            var rawImgDest = str.slice(imgCloseBracket + 2, imgCloseParen);
+            var safeImg = sanitizeMarkdownImageUrl(rawImgDest);
+            if (safeImg) {
+              tokens.push({
+                type: 'image',
+                src: safeImg.src,
+                alt: rawAlt.trim(),
+                title: safeImg.title || ''
+              });
+            } else if (rawAlt.trim()) {
+              pushText(tokens, rawAlt.trim());
+            }
+            i = imgCloseParen + 1;
+            continue;
+          }
+        }
+      }
+
+      // 4. Markdown link [label](url)
       if (allowLinks && ch === '[') {
         var closeBracket = findClosingBracket(str, i);
         if (closeBracket !== -1 && str.charAt(closeBracket + 1) === '(') {
@@ -387,6 +443,16 @@
     return parseTableSeparatorRow(lines[idx + 1], headers.length) !== null;
   }
 
+  function parseStandaloneImageLine(line) {
+    var trimmed = String(line || '').trim();
+    if (!trimmed || trimmed.slice(0, 2) !== '![') return null;
+    var tokens = parseInlineTokens(trimmed, { allowLinks: false, allowImages: true });
+    if (tokens.length === 1 && tokens[0].type === 'image') {
+      return tokens[0];
+    }
+    return null;
+  }
+
   function parseMarkdownBlocks(input, depth) {
     var currentDepth = depth || 0;
     var raw = String(input == null ? '' : input).replace(/\r\n?/g, '\n');
@@ -430,7 +496,20 @@
         continue;
       }
 
-      // 2. Blockquote (> ...)
+      // 2. Standalone Image (![alt](url "caption"))
+      var standaloneImg = parseStandaloneImageLine(line);
+      if (standaloneImg) {
+        blocks.push({
+          type: 'image',
+          src: standaloneImg.src,
+          alt: standaloneImg.alt,
+          title: standaloneImg.title || ''
+        });
+        i += 1;
+        continue;
+      }
+
+      // 3. Blockquote (> ...)
       if (matchQuoteLine(line)) {
         var quoteLines = [];
         while (i < lines.length) {
@@ -449,7 +528,7 @@
         continue;
       }
 
-      // 3. Unordered List (- , * , + )
+      // 4. Unordered List (- , * , + )
       var ulMatch = matchUlLine(line);
       if (ulMatch) {
         var ulItems = [];
@@ -461,7 +540,7 @@
             continue;
           }
           // Soft continuation line indented under previous item
-          if (/^\s{2,}\S/.test(lines[i]) && !matchOlLine(lines[i]) && !matchQuoteLine(lines[i]) && !isTableStartAt(lines, i) && ulItems.length > 0) {
+          if (/^\s{2,}\S/.test(lines[i]) && !matchOlLine(lines[i]) && !matchQuoteLine(lines[i]) && !isTableStartAt(lines, i) && !parseStandaloneImageLine(lines[i]) && ulItems.length > 0) {
             ulItems[ulItems.length - 1] += ' ' + lines[i].trim();
             i += 1;
             continue;
@@ -475,7 +554,7 @@
         continue;
       }
 
-      // 4. Ordered List (1. , 2. )
+      // 5. Ordered List (1. , 2. )
       var olMatch = matchOlLine(line);
       if (olMatch) {
         var startNum = parseInt(olMatch[1], 10);
@@ -488,7 +567,7 @@
             i += 1;
             continue;
           }
-          if (/^\s{2,}\S/.test(lines[i]) && !matchUlLine(lines[i]) && !matchQuoteLine(lines[i]) && !isTableStartAt(lines, i) && olItems.length > 0) {
+          if (/^\s{2,}\S/.test(lines[i]) && !matchUlLine(lines[i]) && !matchQuoteLine(lines[i]) && !isTableStartAt(lines, i) && !parseStandaloneImageLine(lines[i]) && olItems.length > 0) {
             olItems[olItems.length - 1] += ' ' + lines[i].trim();
             i += 1;
             continue;
@@ -503,7 +582,7 @@
         continue;
       }
 
-      // 5. Paragraph
+      // 6. Paragraph
       var paraLines = [];
       while (
         i < lines.length &&
@@ -511,7 +590,8 @@
         !matchQuoteLine(lines[i]) &&
         !matchUlLine(lines[i]) &&
         !matchOlLine(lines[i]) &&
-        !isTableStartAt(lines, i)
+        !isTableStartAt(lines, i) &&
+        !parseStandaloneImageLine(lines[i])
       ) {
         paraLines.push(lines[i].trim());
         i += 1;
@@ -544,6 +624,9 @@
       } else if (tok.type === 'link') {
         var relAttr = tok.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         out += '<a href="' + escapeHtmlAttr(tok.href) + '"' + relAttr + ' class="text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-700 dark:hover:text-blue-300 break-words">' + renderTokensToHtml(tok.children) + '</a>';
+      } else if (tok.type === 'image') {
+        var imgTitleAttr = tok.title ? ' title="' + escapeHtmlAttr(tok.title) + '"' : '';
+        out += '<img src="' + escapeHtmlAttr(tok.src) + '" alt="' + escapeHtmlAttr(tok.alt || '') + '"' + imgTitleAttr + ' loading="lazy" decoding="async" referrerpolicy="no-referrer" class="inline-block max-w-full h-auto rounded-lg border border-slate-200 dark:border-slate-800 my-1.5">';
       }
     }
     return out;
@@ -563,6 +646,11 @@
       if (blk.type === 'paragraph') {
         var clsAttr = pClass ? ' class="' + escapeHtmlAttr(pClass) + '"' : '';
         parts.push('<p' + clsAttr + '>' + renderInlineMarkdownHtml(blk.text) + '</p>');
+      } else if (blk.type === 'image') {
+        var figCaptionHtml = blk.title
+          ? '<figcaption class="text-xs text-center text-slate-500 dark:text-slate-400">' + escapeHtmlText(blk.title) + '</figcaption>'
+          : '';
+        parts.push('<figure class="my-4 space-y-2"><img src="' + escapeHtmlAttr(blk.src) + '" alt="' + escapeHtmlAttr(blk.alt || '') + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" class="w-full max-h-[540px] object-contain rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">' + figCaptionHtml + '</figure>');
       } else if (blk.type === 'ul') {
         var ulLis = blk.items.map(function (it) {
           return '<li>' + renderInlineMarkdownHtml(it) + '</li>';
@@ -609,6 +697,8 @@
       var tok = tokens[i];
       if (tok.type === 'text' || tok.type === 'code') {
         out += tok.value;
+      } else if (tok.type === 'image') {
+        if (tok.alt) out += tok.alt;
       } else if (tok.children) {
         out += tokensToPlainText(tok.children);
       }
@@ -622,6 +712,9 @@
       var blk = blocks[i];
       if (blk.type === 'paragraph') {
         parts.push(tokensToPlainText(parseInlineTokens(blk.text)));
+      } else if (blk.type === 'image') {
+        if (blk.alt) parts.push(blk.alt);
+        if (blk.title && blk.title !== blk.alt) parts.push(blk.title);
       } else if (blk.type === 'ul' || blk.type === 'ol') {
         for (var j = 0; j < blk.items.length; j++) {
           parts.push(tokensToPlainText(parseInlineTokens(blk.items[j])));
@@ -659,6 +752,7 @@
     escapeHtmlText: escapeHtmlText,
     escapeHtmlAttr: escapeHtmlAttr,
     sanitizeMarkdownHref: sanitizeMarkdownHref,
+    sanitizeMarkdownImageUrl: sanitizeMarkdownImageUrl,
     parseInlineTokens: parseInlineTokens,
     parseMarkdownBlocks: parseMarkdownBlocks,
     renderInlineMarkdownHtml: renderInlineMarkdownHtml,

@@ -55,8 +55,55 @@
             }
         }
     </script>
+    <style>
+        #articleRoot {
+            --art-scale-prose: 1;
+            --art-scale-bullets: 1;
+            --art-scale-callout: 1;
+            --art-scale-table: 1;
+            --art-scale-methodology: 1;
+            --art-scale-faq: 1;
+        }
+        #articleRoot .article-prose p {
+            font-size: calc(1rem * var(--art-scale-prose));
+            line-height: 1.75;
+        }
+        #articleRoot .article-bullets,
+        #articleRoot .article-takeaways {
+            font-size: calc(0.95rem * var(--art-scale-bullets));
+            line-height: 1.7;
+        }
+        #articleRoot .article-callout,
+        #articleRoot .article-callout p {
+            font-size: calc(0.9375rem * var(--art-scale-callout));
+            line-height: 1.65;
+        }
+        #articleRoot .article-table th {
+            font-size: calc(0.75rem * var(--art-scale-table));
+        }
+        #articleRoot .article-table td {
+            font-size: calc(0.875rem * var(--art-scale-table));
+            font-variant-numeric: tabular-nums;
+        }
+        #articleRoot .article-table caption {
+            font-size: calc(0.8125rem * var(--art-scale-table));
+        }
+        #articleRoot .article-methodology,
+        #articleRoot .article-methodology p {
+            font-size: calc(0.875rem * var(--art-scale-methodology));
+            line-height: 1.65;
+        }
+        #articleRoot .article-faq summary {
+            font-size: calc(0.975rem * var(--art-scale-faq));
+        }
+        #articleRoot .article-faq .article-faq-answer,
+        #articleRoot .article-faq .article-faq-answer p {
+            font-size: calc(0.9375rem * var(--art-scale-faq));
+            line-height: 1.65;
+        }
+    </style>
 </head>
-<body data-page-type="article" data-article-id="{{ARTICLE_ID}}" data-article-section="{{SECTION_KEY}}" data-page-lang="{{PAGE_LANG}}" class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased min-h-screen overflow-x-clip transition-colors duration-200 flex flex-col">
+<body data-page-type="article" data-article-id="{{ARTICLE_ID}}" data-article-section="{{SECTION_KEY}}" data-page-lang="{{PAGE_LANG}}" class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased min-h-screen overflow-x-clip transition-colors duration-200 flex flex-col">
 
     <!-- Sticky Header -->
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur border-b border-slate-200 dark:border-slate-800">
@@ -89,8 +136,8 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-12 flex flex-col gap-8">
+    <!-- Main Single-Column Reading Canvas -->
+    <main class="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col gap-8">
         <nav aria-label="Breadcrumb" class="text-xs font-medium text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-2">
             <a href="{{HOME_HREF}}" class="hover:text-blue-600 dark:hover:text-blue-400">{{HOME_LABEL}}</a>
             <span>/</span>
@@ -99,12 +146,40 @@
             <span class="text-slate-900 dark:text-slate-200">{{BREADCRUMB_CURRENT}}</span>
         </nav>
 
-        <article class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm py-6 px-4 sm:p-8 md:p-10 flex flex-col gap-7">
-            <header class="border-b border-slate-200 dark:border-slate-800 pb-6 space-y-3">
+        <article id="articleRoot" class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm py-7 px-5 sm:p-10 flex flex-col gap-8">
+            <header class="border-b border-slate-200 dark:border-slate-800 pb-6 space-y-3.5">
                 <p class="text-[11px] uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400">{{SECTION_LABEL}}</p>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">{{ARTICLE_H1}}</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight [text-wrap:balance]">{{ARTICLE_H1}}</h1>
                 <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">{{ARTICLE_EXCERPT}}</p>
                 {{EEAT_META_BAR}}
+
+                <!-- Visitor Font Size Adjustment Bar (+/- per section part) -->
+                <div id="articleFontToolbar" class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <label for="articleFontScopeSelect" class="text-xs font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">Ukuran Teks:</label>
+                        <select id="articleFontScopeSelect" class="min-h-[38px] bg-slate-50 dark:bg-slate-950 text-xs font-medium text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer">
+                            <option value="all">Semua Bagian Artikel</option>
+                            <option value="prose">Paragraf Isi</option>
+                            <option value="bullets">Daftar Poin / Bullets</option>
+                            <option value="callout">Kotak Sorotan (Callout)</option>
+                            <option value="table">Tabel Penutup H2</option>
+                            <option value="methodology">Catatan Metodologi</option>
+                            <option value="faq">FAQ Artikel</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button id="articleFontDecreaseBtn" type="button" aria-label="Perkecil ukuran teks" title="Perkecil ukuran teks" class="min-h-[38px] min-w-[40px] px-2.5 inline-flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                            A&minus;
+                        </button>
+                        <span id="articleFontValueLabel" class="min-w-[3.25rem] text-center text-xs font-mono font-semibold text-slate-700 dark:text-slate-200 tabular-nums">100%</span>
+                        <button id="articleFontIncreaseBtn" type="button" aria-label="Perbesar ukuran teks" title="Perbesar ukuran teks" class="min-h-[38px] min-w-[40px] px-2.5 inline-flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                            A+
+                        </button>
+                        <button id="articleFontResetBtn" type="button" class="hidden min-h-[38px] px-2.5 inline-flex items-center justify-center rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-xs font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                            Reset
+                        </button>
+                    </div>
+                </div>
             </header>
 
             {{INTERACTIVE_WIDGET_HTML}}
@@ -115,22 +190,24 @@
 
             {{TOC_HTML}}
 
-            <div class="flex flex-col gap-7 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+            <div class="article-prose flex flex-col gap-8 text-slate-800 dark:text-slate-200 leading-relaxed">
                 {{ARTICLE_SECTIONS_HTML}}
             </div>
+
+            {{ADSENSE_SLOT_4}}
 
             {{METHODOLOGY_NOTE_HTML}}
 
             {{FAQS_HTML}}
 
-            {{ADSENSE_SLOT_2}}
-
             {{RELATED_ARTICLES_HTML}}
         </article>
     </main>
 
+    {{ADSENSE_SLOT_5}}
+
     <!-- Interlinked Footer -->
-    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 pb-16 sm:pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
                 <div class="md:col-span-4 space-y-2">
@@ -171,5 +248,7 @@
             }
         }
     </script>
+    <script src="/assets/adsense-slots.js" defer></script>
+    <script src="/assets/article-reader.js" defer></script>
 </body>
 </html>

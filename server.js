@@ -43,13 +43,15 @@ import {
   verifyAdminPassword
 } from './lib/admin-auth.js';
 import {
+  applyArticleDeleteToManifest,
   applyArticleSaveToManifest,
   validateAndNormalizeArticleSave
 } from './lib/article-schema.js';
 import {
   commitRepoFilesAtomic,
   getGitHubConfig,
-  getRepoFileText
+  getRepoFileText,
+  listRepoDirectoryFiles
 } from './lib/github-articles.js';
 import {
   buildSessionCookieHeader,
@@ -246,17 +248,25 @@ app.get(['/admin-lexicon', '/admin-lexicon.html'], (_req, res) => {
   res.type('html').send(fs.readFileSync(adminPath, 'utf8'));
 });
 
-app.get('/api/admin/auth/status', (_req, res) => {
+app.get('/api/admin/auth/status', (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  const state = getAdminAuthState();
-  res.json({ ok: true, ...state });
+  const state = getExpressArticleAuthState();
+  const session = verifyExpressArticleSession(req);
+  res.json({ ok: true, ...state, authenticated: Boolean(session), expiresAt: session?.exp || null });
 });
 
 app.post('/api/admin/auth/setup', express.json({ limit: '4kb' }), (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
   const rate = checkLoginRateLimit(req.ip);
   if (!rate.allowed) {
     return res.status(429).json({ ok: false, error: `Too many attempts. Try again in ${rate.retryAfterSec}s.` });
+  }
+  const authState = getExpressArticleAuthState();
+  if (!authState.needsSetup) {
+    return res.status(409).json({ ok: false, error: 'Admin password is already configured.' });
   }
   const result = claimInitialAdminPassword(req.body?.password);
   if (!result.ok) {
@@ -264,36 +274,45 @@ app.post('/api/admin/auth/setup', express.json({ limit: '4kb' }), (req, res) => 
     return res.status(result.status).json({ ok: false, error: result.error });
   }
   clearFailedLogins(req.ip);
-  const session = issueSessionToken();
-  return res.json({ ok: true, ...session, mode: getAdminAuthState().mode });
+  const session = issueExpressArticleSession();
+  res.setHeader('Set-Cookie', buildSessionCookieHeader(session.token, isExpressHttps(req), session.maxAgeSec));
+  return res.json({ ok: true, token: session.token, expiresAt: session.expiresAt, mode: getExpressArticleAuthState().mode });
 });
 
 app.post('/api/admin/auth/login', express.json({ limit: '4kb' }), (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
   const rate = checkLoginRateLimit(req.ip);
   if (!rate.allowed) {
     return res.status(429).json({ ok: false, error: `Too many failed login attempts. Try again in ${rate.retryAfterSec}s.` });
   }
-  const state = getAdminAuthState();
+  const state = getExpressArticleAuthState();
   if (state.needsSetup) {
     return res.status(409).json({ ok: false, needsSetup: true, error: 'Admin password must be initialized first.' });
   }
-  if (!verifyAdminPassword(req.body?.password)) {
+  if (!verifyExpressArticlePassword(req.body?.password)) {
     recordFailedLogin(req.ip);
     return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
   }
   clearFailedLogins(req.ip);
-  const session = issueSessionToken();
-  return res.json({ ok: true, ...session, mode: state.mode });
+  const session = issueExpressArticleSession();
+  res.setHeader('Set-Cookie', buildSessionCookieHeader(session.token, isExpressHttps(req), session.maxAgeSec));
+  return res.json({ ok: true, token: session.token, expiresAt: session.expiresAt, mode: state.mode });
 });
 
-app.post('/api/admin/auth/logout', requireAdminAuth, (req, res) => {
+app.post('/api/admin/auth/logout', requireUnifiedAdminAuth, (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  revokeSessionToken(req.adminToken);
+  revokeExpressArticleSession(req);
+  if (req.adminToken) {
+    revokeSessionToken(req.adminToken);
+  }
+  res.setHeader('Set-Cookie', buildSessionCookieHeader('', isExpressHttps(req), 0));
   return res.json({ ok: true });
 });
 
-app.get('/api/admin/lexicon', requireAdminAuth, (_req, res) => {
+app.get('/api/admin/lexicon', requireUnifiedAdminAuth, (_req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const data = readAllLexicons();
   return res.json({
@@ -305,7 +324,7 @@ app.get('/api/admin/lexicon', requireAdminAuth, (_req, res) => {
   });
 });
 
-app.put('/api/admin/lexicon/:lang', requireAdminAuth, express.json({ limit: '16kb' }), (req, res) => {
+app.put('/api/admin/lexicon/:lang', requireUnifiedAdminAuth, express.json({ limit: '16kb' }), (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const key = String(req.params.lang || '').trim().toLowerCase();
   if (!ALL_LEXICON_KEYS.includes(key)) {
@@ -330,7 +349,7 @@ app.put('/api/admin/lexicon/:lang', requireAdminAuth, express.json({ limit: '16k
   }
 });
 
-app.delete('/api/admin/lexicon/:lang/:word', requireAdminAuth, (req, res) => {
+app.delete('/api/admin/lexicon/:lang/:word', requireUnifiedAdminAuth, (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const key = String(req.params.lang || '').trim().toLowerCase();
   const word = String(req.params.word || '').trim().toLowerCase();
@@ -351,7 +370,7 @@ app.delete('/api/admin/lexicon/:lang/:word', requireAdminAuth, (req, res) => {
   });
 });
 
-app.post('/api/admin/lexicon/test', requireAdminAuth, express.json({ limit: '8kb' }), (req, res) => {
+app.post('/api/admin/lexicon/test', requireUnifiedAdminAuth, express.json({ limit: '8kb' }), (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const domain = String(req.body?.domain || '').trim().toLowerCase();
   const uiLang = LEXICON_LANGS.includes(String(req.body?.uiLang || '').trim().toLowerCase())
@@ -383,7 +402,9 @@ const activeArticleSessions = new Map();
 
 function isExpressHttps(req) {
   const xfProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
-  return req.secure || xfProto === 'https';
+  if (req.secure || xfProto === 'https') return true;
+  const originOrReferer = String(req.headers.origin || req.headers.referer || '').trim().toLowerCase();
+  return originOrReferer.startsWith('https://');
 }
 
 function verifyExpressSameOrigin(req) {
@@ -438,8 +459,8 @@ function issueExpressArticleSession() {
   return { token: `${encoded}.${sig}`, jti, expiresAt: exp, maxAgeSec: Math.floor(ARTICLE_SESSION_TTL_MS / 1000) };
 }
 
-function verifyExpressArticleSession(req) {
-  const token = parseCookieValue(req.headers.cookie, ARTICLE_COOKIE_NAME);
+function verifyExpressArticleToken(rawToken) {
+  const token = String(rawToken || '').trim();
   if (!token) return null;
   const dotIdx = token.indexOf('.');
   if (dotIdx <= 0) return null;
@@ -471,11 +492,47 @@ function verifyExpressArticleSession(req) {
   }
 }
 
-function revokeExpressArticleSession(req) {
-  const session = verifyExpressArticleSession(req);
-  if (session?.jti) {
-    activeArticleSessions.delete(session.jti);
+function getExpressArticleRequestTokens(req) {
+  const tokens = [];
+  const cookieToken = parseCookieValue(req.headers.cookie, ARTICLE_COOKIE_NAME);
+  if (cookieToken) tokens.push(cookieToken);
+  const authHeader = String(req.headers.authorization || '').trim();
+  if (authHeader.startsWith('Bearer ')) {
+    const bearerToken = authHeader.slice(7).trim();
+    if (bearerToken && bearerToken !== cookieToken) {
+      tokens.push(bearerToken);
+    }
   }
+  return tokens;
+}
+
+function verifyExpressArticleSession(req) {
+  for (const token of getExpressArticleRequestTokens(req)) {
+    const payload = verifyExpressArticleToken(token);
+    if (payload) return payload;
+  }
+  return null;
+}
+
+function revokeExpressArticleSession(req) {
+  for (const token of getExpressArticleRequestTokens(req)) {
+    const session = verifyExpressArticleToken(token);
+    if (session?.jti) {
+      activeArticleSessions.delete(session.jti);
+    }
+  }
+}
+
+function requireUnifiedAdminAuth(req, res, next) {
+  if (req.method !== 'GET' && req.method !== 'HEAD' && !verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+  const articleSession = verifyExpressArticleSession(req);
+  if (articleSession) {
+    req.adminSession = articleSession;
+    return next();
+  }
+  return requireAdminAuth(req, res, next);
 }
 
 function resolveConfinedArticleFile(...segments) {
@@ -497,6 +554,19 @@ app.get(['/admin-articles', '/admin-articles/', '/admin-articles/index.html'], (
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   return res.type('html').send(fs.readFileSync(editorPath, 'utf8'));
+});
+
+app.get(['/adsense-studio', '/adsense-studio/', '/adsense-studio/index.html', '/admin-adsense', '/admin-adsense/', '/admin-adsense.html'], (req, res) => {
+  if (req.path !== '/adsense-studio/') {
+    return res.redirect(301, '/adsense-studio/');
+  }
+  const studioPath = path.join(__dirname, 'admin-adsense.html');
+  if (!fs.existsSync(studioPath)) {
+    return res.status(404).end();
+  }
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  return res.type('html').send(fs.readFileSync(studioPath, 'utf8'));
 });
 
 app.get('/api/articles/auth', (req, res) => {
@@ -552,6 +622,7 @@ app.post('/api/articles/auth', express.json({ limit: '4kb' }), (req, res) => {
     return res.json({
       ok: true,
       authenticated: true,
+      sessionToken: session.token,
       expiresAt: session.expiresAt,
       storageMode: githubCfg.configured ? 'github' : 'local',
       githubConfigured: githubCfg.configured,
@@ -575,6 +646,7 @@ app.post('/api/articles/auth', express.json({ limit: '4kb' }), (req, res) => {
   return res.json({
     ok: true,
     authenticated: true,
+    sessionToken: session.token,
     expiresAt: session.expiresAt,
     storageMode: githubCfg.configured ? 'github' : 'local',
     githubConfigured: githubCfg.configured,
@@ -740,6 +812,73 @@ app.post('/api/articles/save', express.json({ limit: '256kb' }), async (req, res
     });
   } catch (err) {
     return res.status(500).json({ ok: false, error: err?.message || 'Failed to save article.' });
+  }
+});
+
+app.post('/api/articles/delete', express.json({ limit: '4kb' }), async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized. Please sign in again.' });
+  }
+
+  const githubCfg = getGitHubConfig(process.env);
+  try {
+    if (githubCfg.configured) {
+      const manifestFile = await getRepoFileText(githubCfg, 'content/articles/manifest.json');
+      const existingManifest = manifestFile
+        ? JSON.parse(manifestFile.text)
+        : { schemaVersion: 1, sections: [...ARTICLE_SECTIONS], articles: [] };
+      const deleted = applyArticleDeleteToManifest(existingManifest, req.body?.id);
+      if (!deleted.ok) {
+        return res.status(deleted.status || 400).json({ ok: false, error: deleted.errors[0], errors: deleted.errors });
+      }
+      const articleDir = `content/articles/${deleted.deletedArticle.section}/${deleted.deletedArticle.id}`;
+      const filesToDelete = await listRepoDirectoryFiles(githubCfg, articleDir);
+      const changes = [
+        { path: 'content/articles/manifest.json', content: JSON.stringify(deleted.manifest, null, 2) + '\n' },
+        ...filesToDelete.map((filePath) => ({ path: filePath, delete: true }))
+      ];
+      const commitMsg = `docs(articles): delete ${deleted.deletedArticle.section}/${deleted.deletedArticle.id}`;
+      const commitResult = await commitRepoFilesAtomic(githubCfg, changes, commitMsg);
+      return res.json({
+        ok: true,
+        storageMode: 'github',
+        deletedId: deleted.deletedArticle.id,
+        section: deleted.deletedArticle.section,
+        commit: commitResult
+      });
+    }
+
+    const existingManifest = loadArticleManifest(__dirname);
+    const deleted = applyArticleDeleteToManifest(existingManifest, req.body?.id);
+    if (!deleted.ok) {
+      return res.status(deleted.status || 400).json({ ok: false, error: deleted.errors[0], errors: deleted.errors });
+    }
+    const { section, id } = deleted.deletedArticle;
+    if (!ARTICLE_SECTIONS.includes(section) || !ARTICLE_SLUG_REGEX.test(id)) {
+      return res.status(400).json({ ok: false, error: 'Invalid article section or ID.' });
+    }
+    const manifestPath = resolveConfinedArticleFile('manifest.json');
+    const articleDir = resolveConfinedArticleFile(section, id);
+    if (fs.existsSync(articleDir)) {
+      fs.rmSync(articleDir, { recursive: true, force: true });
+    }
+    fs.writeFileSync(manifestPath, JSON.stringify(deleted.manifest, null, 2) + '\n', 'utf8');
+
+    return res.json({
+      ok: true,
+      storageMode: 'local',
+      deletedId: id,
+      section,
+      commit: null
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Failed to delete article.' });
   }
 });
 
