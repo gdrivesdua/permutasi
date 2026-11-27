@@ -679,7 +679,7 @@
           }).join('');
           return '<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">' + tds + '</tr>';
         }).join('');
-        parts.push('<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800"><table class="min-w-full border-collapse"><thead><tr>' + thHtml + '</tr></thead><tbody>' + trHtml + '</tbody></table></div>');
+        parts.push('<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800"><table class="article-table min-w-full border-collapse"><thead><tr>' + thHtml + '</tr></thead><tbody>' + trHtml + '</tbody></table></div>');
       }
     }
 
@@ -756,6 +756,7 @@
     parseInlineTokens: parseInlineTokens,
     parseMarkdownBlocks: parseMarkdownBlocks,
     renderInlineMarkdownHtml: renderInlineMarkdownHtml,
+    renderBlocksToHtml: renderBlocksToHtml,
     renderMarkdownBlocksHtml: renderMarkdownBlocksHtml,
     stripMarkdownToPlainText: stripMarkdownToPlainText,
     countReadableWords: countReadableWords

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Studio Layout Artikel &amp; 5 Slot AdSense — Domain Name</title>
+    <title>Studio Layout &amp; AdSense (Artikel, Front Page, Guide, FAQ) — Domain Name</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,49 +23,94 @@
     </script>
     <style>
         #previewArticleSheet {
+            --art-scale-takeaways: 1;
+            --art-scale-toc: 1;
             --art-scale-prose: 1;
             --art-scale-bullets: 1;
             --art-scale-callout: 1;
             --art-scale-table: 1;
             --art-scale-methodology: 1;
             --art-scale-faq: 1;
+            --art-scale-related: 1;
         }
-        #previewArticleSheet .article-prose p {
-            font-size: calc(1rem * var(--art-scale-prose));
-            line-height: 1.75;
+        #previewArticleSheet [data-font-part="takeaways"] {
+            --part-scale: var(--art-scale-takeaways, 1);
         }
-        #previewArticleSheet .article-bullets,
-        #previewArticleSheet .article-takeaways {
-            font-size: calc(0.95rem * var(--art-scale-bullets));
+        #previewArticleSheet [data-font-part="takeaways"] .article-takeaways,
+        #previewArticleSheet [data-font-part="takeaways"] .article-takeaways li {
+            font-size: calc(0.9375rem * var(--part-scale));
             line-height: 1.7;
         }
-        #previewArticleSheet .article-callout,
-        #previewArticleSheet .article-callout p {
-            font-size: calc(0.9375rem * var(--art-scale-callout));
+        #previewArticleSheet [data-font-part="toc"] {
+            --part-scale: var(--art-scale-toc, 1);
+        }
+        #previewArticleSheet [data-font-part="toc"] .article-toc-list,
+        #previewArticleSheet [data-font-part="toc"] .article-toc-list li {
+            font-size: calc(0.875rem * var(--part-scale));
             line-height: 1.65;
         }
-        #previewArticleSheet .article-table th {
-            font-size: calc(0.75rem * var(--art-scale-table));
+        #previewArticleSheet [data-font-part="prose"] {
+            --part-scale: var(--art-scale-prose, 1);
         }
-        #previewArticleSheet .article-table td {
-            font-size: calc(0.875rem * var(--art-scale-table));
+        #previewArticleSheet [data-font-part="prose"] p,
+        #previewArticleSheet [data-font-part="prose"] blockquote {
+            font-size: calc(1rem * var(--part-scale));
+            line-height: 1.75;
+        }
+        #previewArticleSheet [data-font-part="prose"] .article-bullets,
+        #previewArticleSheet [data-font-part="prose"] ul,
+        #previewArticleSheet [data-font-part="prose"] ol {
+            font-size: calc(0.95rem * var(--part-scale));
+            line-height: 1.7;
+        }
+        #previewArticleSheet [data-font-part="callout"] {
+            --part-scale: var(--art-scale-callout, 1);
+        }
+        #previewArticleSheet [data-font-part="callout"] .article-callout,
+        #previewArticleSheet [data-font-part="callout"] .article-callout p {
+            font-size: calc(0.9375rem * var(--part-scale));
+            line-height: 1.65;
+        }
+        #previewArticleSheet [data-font-part="table"] {
+            --part-scale: var(--art-scale-table, 1);
+        }
+        #previewArticleSheet [data-font-part="table"] .article-table th {
+            font-size: calc(0.75rem * var(--part-scale));
+        }
+        #previewArticleSheet [data-font-part="table"] .article-table td {
+            font-size: calc(0.875rem * var(--part-scale));
             font-variant-numeric: tabular-nums;
         }
-        #previewArticleSheet .article-table caption {
-            font-size: calc(0.8125rem * var(--art-scale-table));
+        #previewArticleSheet [data-font-part="table"] .article-table caption {
+            font-size: calc(0.8125rem * var(--part-scale));
         }
-        #previewArticleSheet .article-methodology,
-        #previewArticleSheet .article-methodology p {
-            font-size: calc(0.875rem * var(--art-scale-methodology));
+        #previewArticleSheet [data-font-part="methodology"] {
+            --part-scale: var(--art-scale-methodology, 1);
+        }
+        #previewArticleSheet [data-font-part="methodology"] .article-methodology,
+        #previewArticleSheet [data-font-part="methodology"] .article-methodology p {
+            font-size: calc(0.875rem * var(--part-scale));
             line-height: 1.65;
         }
-        #previewArticleSheet .article-faq summary {
-            font-size: calc(0.975rem * var(--art-scale-faq));
+        #previewArticleSheet [data-font-part="faq"] {
+            --part-scale: var(--art-scale-faq, 1);
         }
-        #previewArticleSheet .article-faq .article-faq-answer,
-        #previewArticleSheet .article-faq .article-faq-answer p {
-            font-size: calc(0.9375rem * var(--art-scale-faq));
+        #previewArticleSheet [data-font-part="faq"] .article-faq summary {
+            font-size: calc(0.975rem * var(--part-scale));
+        }
+        #previewArticleSheet [data-font-part="faq"] .article-faq .article-faq-answer,
+        #previewArticleSheet [data-font-part="faq"] .article-faq .article-faq-answer p {
+            font-size: calc(0.9375rem * var(--part-scale));
             line-height: 1.65;
+        }
+        #previewArticleSheet [data-font-part="related"] {
+            --part-scale: var(--art-scale-related, 1);
+        }
+        #previewArticleSheet [data-font-part="related"] .article-related-card-title {
+            font-size: calc(0.875rem * var(--part-scale));
+        }
+        #previewArticleSheet [data-font-part="related"] .article-related-card-desc {
+            font-size: calc(0.75rem * var(--part-scale));
         }
     </style>
 </head>
@@ -171,16 +216,48 @@
         <aside class="lg:col-span-5 space-y-5">
             <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
                 <div class="space-y-1">
-                    <h1 class="text-lg font-bold text-slate-900">Studio Layout Artikel &amp; AdSense</h1>
+                    <h1 class="text-lg font-bold text-slate-900">Studio Layout &amp; AdSense Multi-Halaman</h1>
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        Atur ukuran huruf artikel per bagian serta konfigurasi kode atau simulasi 5 slot AdSense untuk Desktop &amp; Mobile.
+                        Atur penempatan AdSense untuk <strong>Artikel</strong>, <strong>Front Page (8 bahasa)</strong>, <strong>/guide.html</strong>, dan <strong>/faq.html</strong>. Slot tanpa kode aktif otomatis tersembunyi di situs publik.
                     </p>
                 </div>
 
+                <!-- Page Target Selector Tabs -->
+                <div class="pt-2 border-t border-slate-100 space-y-2">
+                    <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500">Target Halaman Pengaturan</span>
+                    <div id="pageGroupTabs" class="grid grid-cols-2 sm:grid-cols-4 gap-1.5" role="tablist" aria-label="Pilih target halaman AdSense">
+                        <button type="button" data-page-group="article" role="tab" aria-selected="true" class="px-2.5 py-2 text-xs font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-700 transition-colors whitespace-nowrap">
+                            Artikel (5)
+                        </button>
+                        <button type="button" data-page-group="home" role="tab" aria-selected="false" class="px-2.5 py-2 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
+                            Front Page (2)
+                        </button>
+                        <button type="button" data-page-group="guide" role="tab" aria-selected="false" class="px-2.5 py-2 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
+                            Guide (2)
+                        </button>
+                        <button type="button" data-page-group="faq" role="tab" aria-selected="false" class="px-2.5 py-2 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap">
+                            FAQ (1)
+                        </button>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
-                    <div>
+                    <div id="articleSelectWrap">
                         <label for="sampleArticleSelect" class="block text-xs font-semibold text-slate-700 mb-1">Artikel Pratinjau</label>
                         <select id="sampleArticleSelect" class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        </select>
+                    </div>
+                    <div id="multilingualLangWrap" class="hidden">
+                        <label for="previewLangSelect" class="block text-xs font-semibold text-slate-700 mb-1">Bahasa Pratinjau (8 Edisi)</label>
+                        <select id="previewLangSelect" class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="id">Indonesia (ID)</option>
+                            <option value="en">English (EN)</option>
+                            <option value="es">Español (ES)</option>
+                            <option value="pt">Português (PT)</option>
+                            <option value="fr">Français (FR)</option>
+                            <option value="de">Deutsch (DE)</option>
+                            <option value="ru">Русский (RU)</option>
+                            <option value="ja">日本語 (JA)</option>
                         </select>
                     </div>
                     <div>
@@ -192,7 +269,7 @@
 
                 <label class="flex items-start gap-2.5 pt-1 text-xs text-slate-700 cursor-pointer">
                     <input id="applyPreviewToSiteCheckbox" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600">
-                    <span>Terapkan konfigurasi &amp; simulasi slot tersimpan saat membuka halaman artikel live di browser ini.</span>
+                    <span>Terapkan unit AdSense aktif tersimpan saat membuka halaman situs live di browser ini (slot yang masih kosong tidak ditampilkan).</span>
                 </label>
 
                 <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
@@ -208,7 +285,7 @@
             </section>
 
             <!-- Typography (+/-) Per Article Section Panel -->
-            <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-3.5">
+            <section id="fontSectionPanel" class="bg-white rounded-xl border border-slate-200 p-5 space-y-3.5">
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <h2 class="text-sm font-bold text-slate-900">Kontrol Ukuran Huruf (+/-) per Bagian</h2>
@@ -222,11 +299,11 @@
                 <div id="fontPartControlsList" class="divide-y divide-slate-100"></div>
             </section>
 
-            <!-- 5 Structured AdSense Slot Inputs -->
+            <!-- Structured AdSense Slot Inputs -->
             <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
                 <div>
-                    <h2 class="text-sm font-bold text-slate-900">Konfigurasi 5 Slot AdSense Terbaik</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">
+                    <h2 id="slotSectionHeading" class="text-sm font-bold text-slate-900">Konfigurasi Slot AdSense Halaman</h2>
+                    <p id="slotSectionSub" class="text-xs text-slate-500 mt-0.5">
                         Atur kode AdSense atau mode simulasi, ukuran Desktop/Mobile, status aktif, dan jarak margin minimal 20–24px.
                     </p>
                 </div>
@@ -235,13 +312,13 @@
             </section>
         </aside>
 
-        <!-- Right Column: Single-Column Clean White Article Preview Viewport -->
+        <!-- Right Column: Single-Column Clean White Preview Viewport -->
         <section class="lg:col-span-7 space-y-4 lg:sticky lg:top-20">
             <!-- Device Switcher & Preview Toolbar -->
             <div class="bg-white rounded-xl border border-slate-200 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-lg" role="group" aria-label="Pilih perangkat pratinjau">
                     <button id="previewDesktopBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm">
-                        Desktop (Kolom Artikel)
+                        Desktop (Kolom Konten)
                     </button>
                     <button id="previewMobileBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900">
                         Mobile (390px)
@@ -346,13 +423,60 @@
                 { key: 'faq', label: 'FAQ Artikel', defaultDesc: 'Pertanyaan & jawaban pembaca' }
             ];
 
+            var LANG_LABELS = {
+                en: 'English (EN)',
+                id: 'Indonesia (ID)',
+                es: 'Español (ES)',
+                pt: 'Português (PT)',
+                fr: 'Français (FR)',
+                de: 'Deutsch (DE)',
+                ru: 'Русский (RU)',
+                ja: '日本語 (JA)'
+            };
+
+            var HOME_PREVIEW_COPY = {
+                en: { kicker: 'Front Page · /', title: 'Domain Name Generator "business"', sub: 'Combine keywords to discover short, RFC 1035 compliant domain ideas in seconds.', boxTitle: 'Enter Business Name & Extensions', kwSample: 'coffee + roastery (.com, .io)', resTitle: 'Generated Domain Results', howTitle: 'How to use this tool in 3 steps', cta1: 'Domain Naming Best Practices →', cta2: 'View FAQ →', liveUrl: '/' },
+                id: { kicker: 'Front Page · /id/', title: 'Generator Ide Nama Domain "business"', sub: 'Gabungkan kata kunci untuk menemukan ide nama domain yang singkat dan siap pakai dalam hitungan detik.', boxTitle: 'Nama Bisnis & Ekstensi Domain', kwSample: 'toko + kopi (.com, .id)', resTitle: 'Hasil Domain', howTitle: 'Cara pakai alat ini dalam 3 langkah', cta1: 'Panduan & Tips Penamaan Domain →', cta2: 'Lihat FAQ →', liveUrl: '/id/' },
+                es: { kicker: 'Front Page · /es/', title: 'Generador de Dominios "business"', sub: 'Combina tus palabras clave y encuentra ideas de dominios cortos al instante.', boxTitle: 'Nombre de Tu Negocio', kwSample: 'tienda + online (.com, .es)', resTitle: 'Resultados de Dominios', howTitle: 'Cómo usar esta herramienta en 3 pasos', cta1: 'Mejores Prácticas de Dominios →', cta2: 'Ver FAQ →', liveUrl: '/es/' },
+                pt: { kicker: 'Front Page · /pt/', title: 'Gerador de Domínios "business"', sub: 'Combine suas palavras-chave e encontre ideias de domínios curtos em segundos.', boxTitle: 'Nome do Seu Negócio', kwSample: 'loja + online (.com, .pt)', resTitle: 'Resultados de Domínios', howTitle: 'Como usar esta ferramenta em 3 passos', cta1: 'Boas Práticas de Domínios →', cta2: 'Ver FAQ →', liveUrl: '/pt/' },
+                fr: { kicker: 'Front Page · /fr/', title: 'Générateur de Domaines « business »', sub: 'Combinez vos mots-clés pour trouver des idées de domaines courts en quelques secondes.', boxTitle: 'Nom de Votre Entreprise', kwSample: 'ia + outil (.com, .fr)', resTitle: 'Résultats de Domaines', howTitle: 'Comment utiliser cet outil en 3 étapes', cta1: 'Bonnes Pratiques de Domaines →', cta2: 'Voir la FAQ →', liveUrl: '/fr/' },
+                de: { kicker: 'Front Page · /de/', title: '„business“ Domainnamen-Generator', sub: 'Kombinieren Sie Keywords und finden Sie in Sekunden kurze Domain-Ideen.', boxTitle: 'Ihr Firmenname', kwSample: 'ki + tools (.com, .de)', resTitle: 'Domain-Ergebnisse', howTitle: 'So nutzen Sie das Tool in 3 Schritten', cta1: 'Domain-Naming Best Practices →', cta2: 'FAQ ansehen →', liveUrl: '/de/' },
+                ru: { kicker: 'Front Page · /ru/', title: 'Генератор доменов «business»', sub: 'Объединяйте ключевые слова и за секунды находите короткие доменные имена.', boxTitle: 'Название Вашего Бизнеса', kwSample: 'ai + bot (.com, .ru)', resTitle: 'Результаты доменов', howTitle: 'Как пользоваться генератором за 3 шага', cta1: 'Руководство по выбору домена →', cta2: 'Открыть FAQ →', liveUrl: '/ru/' },
+                ja: { kicker: 'Front Page · /ja/', title: '「business」ドメイン名ジェネレーター', sub: 'キーワードを組み合わせるだけで、短くて使いやすいドメイン候補を数秒で見つけられます。', boxTitle: 'ビジネス名とドメイン拡張子', kwSample: 'ai + tool (.com, .jp)', resTitle: 'ドメイン候補', howTitle: '3ステップで使うドメイン作成', cta1: 'ドメイン命名のベストプラクティス →', cta2: 'FAQを見る →', liveUrl: '/ja/' }
+            };
+
+            var GUIDE_PREVIEW_COPY = {
+                en: { kicker: 'Guide · /guide.html', h1: 'Domain Naming Best Practices & Extension Strategy', intro: 'How to pick concise, pronounceable, RFC 1035 compliant domain names across gTLDs, ccTLDs, and niche TLDs.', s1: '5-Step Tool Usage & Keyword Strategy', s2: 'Extension Strategy (gTLDs / ccTLDs / nTLDs) & Bad vs Good Examples', liveUrl: '/guide.html' },
+                id: { kicker: 'Panduan · /id/guide.html', h1: 'Panduan & Strategi Penamaan Domain Terbaik', intro: 'Cara memilih nama domain singkat, mudah diucapkan, dan sesuai standar RFC 1035 untuk merek Anda.', s1: 'Panduan 5 Langkah & Strategi Kata Kunci', s2: 'Strategi Ekstensi (.com, .id, .ai) & Contoh Buruk vs Baik', liveUrl: '/id/guide.html' },
+                es: { kicker: 'Guía · /es/guide.html', h1: 'Mejores Prácticas y Estrategia de Nombres de Dominio', intro: 'Cómo elegir dominios cortos, fáciles de pronunciar y compatibles con RFC 1035.', s1: 'Guía de 5 Pasos y Estrategia de Palabras Clave', s2: 'Estrategia de Extensiones y Ejemplos Reales', liveUrl: '/es/guide.html' },
+                pt: { kicker: 'Guia · /pt/guide.html', h1: 'Boas Prácticas e Estratégia de Nomes de Domínio', intro: 'Como escolher domínios curtos, fáceis de pronunciar e compatíveis com RFC 1035.', s1: 'Guia em 5 Passos e Estratégia de Palavras-Chave', s2: 'Estratégia de Extensões e Exemplos', liveUrl: '/pt/guide.html' },
+                fr: { kicker: 'Guide · /fr/guide.html', h1: 'Bonnes Pratiques et Stratégie de Noms de Domaine', intro: 'Comment choisir des domaines courts, mémorables et conformes à la norme RFC 1035.', s1: 'Guide en 5 Étapes & Stratégie Mots-Clés', s2: 'Stratégie d’Extensions & Exemples', liveUrl: '/fr/guide.html' },
+                de: { kicker: 'Leitfaden · /de/guide.html', h1: 'Domain-Naming Best Practices & Endungsstrategie', intro: 'So wählen Sie kurze, aussprechbare und RFC 1035-konforme Domainnamen aus.', s1: '5-Schritte-Anleitung & Keyword-Strategie', s2: 'Endungsstrategie & Gute vs. Schlechte Beispiele', liveUrl: '/de/guide.html' },
+                ru: { kicker: 'Руководство · /ru/guide.html', h1: 'Лучшие практики и стратегия выбора домена', intro: 'Как выбирать короткие, запоминающиеся домены по стандарту RFC 1035.', s1: '5 шагов работы и стратегия ключевых слов', s2: 'Выбор доменной зоны и разбор примеров', liveUrl: '/ru/guide.html' },
+                ja: { kicker: 'ガイド · /ja/guide.html', h1: 'ドメイン命名のベストプラクティスと戦略', intro: '短く覚えやすく、RFC 1035準拠のドメイン名を選ぶための実践ガイド。', s1: '5ステップの使い方とキーワード戦略', s2: 'TLD戦略（gTLD / ccTLD）と良い例・悪い例', liveUrl: '/ja/guide.html' }
+            };
+
+            var FAQ_PREVIEW_COPY = {
+                en: { kicker: 'FAQ · /faq.html', h1: 'Frequently Asked Questions About Domain Naming', sub: 'Answers on RFC 1035 limits, hyphens, pronounceable styles, and availability checks.', q1: 'What makes a domain name RFC 1035 compliant?', q2: 'Should I use hyphens (-) or avoid them in a brand domain?', liveUrl: '/faq.html' },
+                id: { kicker: 'FAQ · /id/faq.html', h1: 'Pertanyaan Umum Seputar Penamaan Domain', sub: 'Jawaban tentang aturan RFC 1035, tanda hubung (-), skor pengucapan, dan cek ketersediaan.', q1: 'Apa syarat nama domain yang sesuai standar RFC 1035?', q2: 'Kapan sebaiknya memakai tanda hubung (-) atau tanpa dash?', liveUrl: '/id/faq.html' },
+                es: { kicker: 'FAQ · /es/faq.html', h1: 'Preguntas Frecuentes sobre Nombres de Dominio', sub: 'Respuestas sobre límites RFC 1035, guiones y verificación de disponibilidad.', q1: '¿Qué hace que un dominio cumpla con RFC 1035?', q2: '¿Conviene usar guiones (-) en un dominio de marca?', liveUrl: '/es/faq.html' },
+                pt: { kicker: 'FAQ · /pt/faq.html', h1: 'Perguntas Frequentes sobre Domínios', sub: 'Respostas sobre regras RFC 1035, hífens e verificação de disponibilidade.', q1: 'O que torna um domínio compatível com RFC 1035?', q2: 'Devo usar hífen (-) em um domínio de marca?', liveUrl: '/pt/faq.html' },
+                fr: { kicker: 'FAQ · /fr/faq.html', h1: 'Questions Fréquentes sur les Noms de Domaine', sub: 'Réponses sur les normes RFC 1035, tirets et vérification.', q1: 'Qu’est-ce qu’un domaine conforme à la RFC 1035 ?', q2: 'Faut-il utiliser un tiret (-) dans un nom de marque ?', liveUrl: '/fr/faq.html' },
+                de: { kicker: 'FAQ · /de/faq.html', h1: 'Häufige Fragen zur Domainnamen-Wahl', sub: 'Antworten zu RFC 1035, Bindestrichen und Verfügbarkeitsprüfung.', q1: 'Wann ist ein Domainname RFC 1035-konform?', q2: 'Sollte man Bindestriche (-) vermeiden?', liveUrl: '/de/faq.html' },
+                ru: { kicker: 'FAQ · /ru/faq.html', h1: 'Частые вопросы о выборе доменного имени', sub: 'Ответы о правилах RFC 1035, дефисах и проверке занятости.', q1: 'Какие требования предъявляет стандарт RFC 1035?', q2: 'Стоит ли использовать дефис (-) в доменном имени?', liveUrl: '/ru/faq.html' },
+                ja: { kicker: 'FAQ · /ja/faq.html', h1: 'ドメイン命名に関するよくある質問', sub: 'RFC 1035規格、ハイフンの有無、空き状況確認についての回答。', q1: 'RFC 1035に準拠したドメイン名の条件とは？', q2: 'ハイフン（-）は使ったほうがよいですか？', liveUrl: '/ja/faq.html' }
+            };
+
             var state = {
+                activePageGroup: 'article',
+                previewLang: 'id',
                 device: 'desktop',
                 selectedSampleId: samples[0] ? samples[0].id : '',
                 globalPublisherId: '',
                 applyPreviewToSite: true,
                 slot5DismissedInPreview: false,
                 activeVisitorScope: 'all',
+                slotLangEditScope: {},
                 fontScales: {
                     prose: 1,
                     bullets: 1,
@@ -379,6 +503,13 @@
                 loginSubmitBtn: document.getElementById('loginSubmitBtn'),
                 logoutBtn: document.getElementById('logoutBtn'),
                 studioWorkspaceSection: document.getElementById('studioWorkspaceSection'),
+                pageGroupTabs: document.getElementById('pageGroupTabs'),
+                articleSelectWrap: document.getElementById('articleSelectWrap'),
+                multilingualLangWrap: document.getElementById('multilingualLangWrap'),
+                previewLangSelect: document.getElementById('previewLangSelect'),
+                fontSectionPanel: document.getElementById('fontSectionPanel'),
+                slotSectionHeading: document.getElementById('slotSectionHeading'),
+                slotSectionSub: document.getElementById('slotSectionSub'),
                 sampleArticleSelect: document.getElementById('sampleArticleSelect'),
                 globalPublisherIdInput: document.getElementById('globalPublisherIdInput'),
                 applyPreviewToSiteCheckbox: document.getElementById('applyPreviewToSiteCheckbox'),
@@ -424,6 +555,49 @@
                 }, 4000);
             }
 
+            function getVisibleSlots() {
+                return state.slots.filter(function (s) {
+                    return (s.pageGroup || 'article') === state.activePageGroup;
+                });
+            }
+
+            function syncPageGroupUi() {
+                var group = state.activePageGroup;
+                var tabBtns = els.pageGroupTabs.querySelectorAll('[data-page-group]');
+                tabBtns.forEach(function (btn) {
+                    var active = btn.getAttribute('data-page-group') === group;
+                    btn.setAttribute('aria-selected', active ? 'true' : 'false');
+                    btn.className = active
+                        ? 'px-2.5 py-2 text-xs font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-700 transition-colors whitespace-nowrap'
+                        : 'px-2.5 py-2 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap';
+                });
+
+                var isArticle = group === 'article';
+                els.articleSelectWrap.classList.toggle('hidden', !isArticle);
+                els.multilingualLangWrap.classList.toggle('hidden', isArticle);
+                els.fontSectionPanel.classList.toggle('hidden', !isArticle);
+
+                if (group === 'home') {
+                    els.slotSectionHeading.textContent = 'Slot AdSense Front Page (8 Bahasa)';
+                    els.slotSectionSub.textContent = 'Mengatur penempatan iklan di halaman utama / hingga /ja/ beserta opsi override per bahasa.';
+                } else if (group === 'guide') {
+                    els.slotSectionHeading.textContent = 'Slot AdSense Halaman /guide.html (8 Bahasa)';
+                    els.slotSectionSub.textContent = 'Mengatur slot pertengahan & pasca-konten untuk /guide.html dan seluruh edisi bahasanya.';
+                } else if (group === 'faq') {
+                    els.slotSectionHeading.textContent = 'Slot AdSense Halaman /faq.html (8 Bahasa)';
+                    els.slotSectionSub.textContent = 'Mengatur penempatan iklan setelah daftar akordeon FAQ di /faq.html dan 7 bahasa lainnya.';
+                } else {
+                    els.slotSectionHeading.textContent = 'Konfigurasi 5 Slot AdSense Artikel';
+                    els.slotSectionSub.textContent = 'Atur kode AdSense atau mode simulasi, ukuran Desktop/Mobile, status aktif, dan margin minimal 20–24px.';
+                }
+
+                var visible = getVisibleSlots();
+                var hasExpandedInGroup = visible.some(function (s) { return s.id === state.expandedSlotId; });
+                if (!hasExpandedInGroup && visible[0]) {
+                    state.expandedSlotId = visible[0].id;
+                }
+            }
+
             function loadSavedConfig() {
                 try {
                     var raw = localStorage.getItem(slotsApi.STORAGE_KEY);
@@ -449,9 +623,30 @@
                 } catch (_e) {}
             }
 
+            function serializeLangOverridesForStorage(slot) {
+                var out = {};
+                if (!slot || !slot.langOverrides) return out;
+                Object.keys(slot.langOverrides).forEach(function (langCode) {
+                    var ov = slot.langOverrides[langCode];
+                    if (!ov) return;
+                    var parsed = slotsApi.parseAdSenseSnippet(ov.adCode);
+                    out[langCode] = {
+                        enabled: ov.enabled !== false,
+                        mode: ov.mode === 'live' ? 'live' : 'simulation',
+                        adCode: ov.adCode || '',
+                        clientId: parsed.clientId || '',
+                        adSlot: parsed.adSlot || '',
+                        adFormat: parsed.adFormat || '',
+                        adLayout: parsed.adLayout || '',
+                        adLayoutKey: parsed.adLayoutKey || ''
+                    };
+                });
+                return out;
+            }
+
             function saveConfigToLocalStorage() {
                 var payload = {
-                    version: 1,
+                    version: 2,
                     savedAt: new Date().toISOString(),
                     globalPublisherId: slotsApi.normalizeClientId(state.globalPublisherId) || state.globalPublisherId.trim(),
                     applyPreviewToSite: Boolean(state.applyPreviewToSite),
@@ -460,6 +655,8 @@
                         var parsed = slotsApi.parseAdSenseSnippet(s.adCode);
                         return {
                             id: s.id,
+                            pageGroup: s.pageGroup,
+                            positionKey: s.positionKey,
                             name: s.name,
                             unitType: s.unitType,
                             enabled: s.enabled,
@@ -473,13 +670,14 @@
                             adSlot: parsed.adSlot || '',
                             adFormat: parsed.adFormat || '',
                             adLayout: parsed.adLayout || '',
-                            adLayoutKey: parsed.adLayoutKey || ''
+                            adLayoutKey: parsed.adLayoutKey || '',
+                            langOverrides: serializeLangOverridesForStorage(s)
                         };
                     })
                 };
                 try {
                     localStorage.setItem(slotsApi.STORAGE_KEY, JSON.stringify(payload));
-                    showFeedback('Konfigurasi 5 slot AdSense & ukuran huruf tersimpan ke localStorage.');
+                    showFeedback('Konfigurasi AdSense multi-halaman (Artikel, Front Page, Guide, FAQ) tersimpan ke localStorage.');
                 } catch (_e) {
                     showFeedback('Gagal menyimpan ke localStorage browser.');
                 }
@@ -549,11 +747,25 @@
                 });
             }
 
+            function buildSlotHeaderSummary(slot, editTarget) {
+                var overrideKeys = Object.keys(slot.langOverrides || {});
+                var overrideNote = overrideKeys.length > 0 ? (' · Override: ' + overrideKeys.map(function (c) { return c.toUpperCase(); }).join(',')) : '';
+                var insCheck = slotsApi.parseAdSenseSnippet(editTarget.adCode);
+                var statusMode = (editTarget.mode === 'live' && insCheck.valid) ? 'Kode Asli' : (editTarget.mode === 'live' ? 'Kode Belum Valid' : 'Simulasi');
+                return (editTarget.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + statusMode + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize + overrideNote;
+            }
+
             function renderSlotForms() {
                 els.slotFormsContainer.textContent = '';
+                var visibleSlots = getVisibleSlots();
 
-                state.slots.forEach(function (slot, index) {
+                visibleSlots.forEach(function (slot, index) {
                     var isOpen = state.expandedSlotId === slot.id;
+                    var isMultilingualGroup = slot.pageGroup !== 'article';
+                    var langScope = isMultilingualGroup ? (state.slotLangEditScope[slot.id] || 'default') : 'default';
+                    var overrideObj = (langScope !== 'default' && slot.langOverrides) ? slot.langOverrides[langScope] : null;
+                    var activeEditTarget = overrideObj || slot;
+
                     var card = document.createElement('div');
                     card.className = 'rounded-xl border ' + (slot.enabled ? 'border-slate-200 bg-white' : 'border-slate-200 bg-slate-50/70 opacity-85');
 
@@ -569,7 +781,7 @@
                     titleEl.textContent = slot.name;
                     var subEl = document.createElement('p');
                     subEl.className = 'text-[11px] text-slate-500 mt-0.5 tabular-nums truncate';
-                    subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
+                    subEl.textContent = buildSlotHeaderSummary(slot, activeEditTarget);
                     toggleExpandBtn.appendChild(titleEl);
                     toggleExpandBtn.appendChild(subEl);
                     toggleExpandBtn.addEventListener('click', function () {
@@ -584,12 +796,21 @@
                     activeLbl.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 cursor-pointer';
                     var activeCb = document.createElement('input');
                     activeCb.type = 'checkbox';
-                    activeCb.checked = slot.enabled;
+                    activeCb.checked = activeEditTarget.enabled !== false;
                     activeCb.className = 'h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600';
                     activeCb.addEventListener('change', function () {
-                        slot.enabled = activeCb.checked;
+                        if (langScope !== 'default') {
+                            slot.langOverrides = slot.langOverrides || {};
+                            if (!slot.langOverrides[langScope]) {
+                                slot.langOverrides[langScope] = { enabled: activeCb.checked, mode: slot.mode, adCode: '' };
+                            } else {
+                                slot.langOverrides[langScope].enabled = activeCb.checked;
+                            }
+                        } else {
+                            slot.enabled = activeCb.checked;
+                        }
                         renderSlotForms();
-                        renderArticlePreview();
+                        renderActivePagePreview();
                     });
                     var activeSpan = document.createElement('span');
                     activeSpan.textContent = 'Aktif';
@@ -620,6 +841,77 @@
                         hint.textContent = 'Posisi ke-' + (index + 1) + ': ' + slot.placementHint;
                         body.appendChild(hint);
 
+                        // Optional Language Scope Selector for Multilingual Pages (Front Page, Guide, FAQ)
+                        if (isMultilingualGroup) {
+                            var scopePanel = document.createElement('div');
+                            scopePanel.className = 'p-2.5 rounded-lg border border-slate-200 bg-slate-50 space-y-2';
+
+                            var scopeHead = document.createElement('div');
+                            scopeHead.className = 'flex flex-wrap items-center justify-between gap-2';
+
+                            var scopeLbl = document.createElement('label');
+                            scopeLbl.className = 'text-[11px] font-semibold text-slate-700';
+                            scopeLbl.textContent = 'Cakupan Bahasa Kode Iklan';
+
+                            var scopeSel = document.createElement('select');
+                            scopeSel.className = 'px-2.5 py-1 text-xs rounded-md border border-slate-200 bg-white text-slate-800';
+                            var defOpt = document.createElement('option');
+                            defOpt.value = 'default';
+                            defOpt.textContent = 'Semua Bahasa (Default Global)';
+                            if (langScope === 'default') defOpt.selected = true;
+                            scopeSel.appendChild(defOpt);
+
+                            slotsApi.SUPPORTED_LANGS.forEach(function (lc) {
+                                var o = document.createElement('option');
+                                o.value = lc;
+                                var hasOv = Boolean(slot.langOverrides && slot.langOverrides[lc]);
+                                o.textContent = 'Khusus ' + (LANG_LABELS[lc] || lc.toUpperCase()) + (hasOv ? ' [Diatur]' : '');
+                                if (langScope === lc) o.selected = true;
+                                scopeSel.appendChild(o);
+                            });
+
+                            scopeSel.addEventListener('change', function () {
+                                state.slotLangEditScope[slot.id] = scopeSel.value;
+                                if (scopeSel.value !== 'default') {
+                                    state.previewLang = scopeSel.value;
+                                    els.previewLangSelect.value = scopeSel.value;
+                                }
+                                renderSlotForms();
+                                renderActivePagePreview();
+                            });
+
+                            scopeHead.appendChild(scopeLbl);
+                            scopeHead.appendChild(scopeSel);
+                            scopePanel.appendChild(scopeHead);
+
+                            if (langScope !== 'default') {
+                                var ovInfoRow = document.createElement('div');
+                                ovInfoRow.className = 'flex items-center justify-between gap-2 text-[11px]';
+                                var ovText = document.createElement('span');
+                                ovText.className = overrideObj ? 'text-blue-700 font-medium' : 'text-slate-500';
+                                ovText.textContent = overrideObj
+                                    ? ('Menggunakan pengaturan khusus bahasa ' + langScope.toUpperCase() + '.')
+                                    : ('Belum ada override untuk ' + langScope.toUpperCase() + ' — menempel kode di bawah otomatis membuat override khusus.');
+                                ovInfoRow.appendChild(ovText);
+
+                                if (overrideObj) {
+                                    var clearOvBtn = document.createElement('button');
+                                    clearOvBtn.type = 'button';
+                                    clearOvBtn.textContent = 'Ikuti Default';
+                                    clearOvBtn.className = 'px-2 py-0.5 text-[11px] font-medium rounded border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 shrink-0';
+                                    clearOvBtn.addEventListener('click', function () {
+                                        if (slot.langOverrides) delete slot.langOverrides[langScope];
+                                        renderSlotForms();
+                                        renderActivePagePreview();
+                                    });
+                                    ovInfoRow.appendChild(clearOvBtn);
+                                }
+                                scopePanel.appendChild(ovInfoRow);
+                            }
+
+                            body.appendChild(scopePanel);
+                        }
+
                         // Slot Name
                         var nameGroup = document.createElement('div');
                         var nameLbl = document.createElement('label');
@@ -632,7 +924,7 @@
                         nameInput.addEventListener('input', function () {
                             slot.name = nameInput.value;
                             titleEl.textContent = slot.name || ('Slot ' + (index + 1));
-                            renderArticlePreview();
+                            renderActivePagePreview();
                         });
                         nameGroup.appendChild(nameLbl);
                         nameGroup.appendChild(nameInput);
@@ -657,7 +949,7 @@
                         });
                         unitSel.addEventListener('change', function () {
                             slot.unitType = unitSel.value;
-                            renderArticlePreview();
+                            renderActivePagePreview();
                         });
                         unitWrap.appendChild(unitLbl);
                         unitWrap.appendChild(unitSel);
@@ -665,23 +957,33 @@
                         var modeWrap = document.createElement('div');
                         var modeLbl = document.createElement('label');
                         modeLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
-                        modeLbl.textContent = 'Mode Pratinjau';
+                        modeLbl.textContent = 'Mode Pratinjau Studio';
                         var modeSel = document.createElement('select');
                         modeSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
                         [
-                            { v: 'simulation', t: 'Simulasi / Wireframe Proporsi' },
+                            { v: 'simulation', t: 'Simulasi Studio (Tersembunyi di Publik)' },
                             { v: 'live', t: 'Kode AdSense Asli (<ins>)' }
                         ].forEach(function (m) {
                             var opt = document.createElement('option');
                             opt.value = m.v;
                             opt.textContent = m.t;
-                            if (slot.mode === m.v) opt.selected = true;
+                            if (activeEditTarget.mode === m.v) opt.selected = true;
                             modeSel.appendChild(opt);
                         });
                         modeSel.addEventListener('change', function () {
-                            slot.mode = modeSel.value;
-                            subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
-                            renderArticlePreview();
+                            if (langScope !== 'default') {
+                                slot.langOverrides = slot.langOverrides || {};
+                                slot.langOverrides[langScope] = slot.langOverrides[langScope] || {
+                                    enabled: slot.enabled,
+                                    mode: modeSel.value,
+                                    adCode: slot.adCode || ''
+                                };
+                                slot.langOverrides[langScope].mode = modeSel.value;
+                            } else {
+                                slot.mode = modeSel.value;
+                            }
+                            subEl.textContent = buildSlotHeaderSummary(slot, langScope !== 'default' ? slot.langOverrides[langScope] : slot);
+                            renderActivePagePreview();
                         });
                         modeWrap.appendChild(modeLbl);
                         modeWrap.appendChild(modeSel);
@@ -709,8 +1011,8 @@
                         });
                         deskSel.addEventListener('change', function () {
                             slot.desktopSize = deskSel.value;
-                            subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
-                            renderArticlePreview();
+                            subEl.textContent = buildSlotHeaderSummary(slot, activeEditTarget);
+                            renderActivePagePreview();
                         });
                         deskWrap.appendChild(deskLbl);
                         deskWrap.appendChild(deskSel);
@@ -730,8 +1032,8 @@
                         });
                         mobSel.addEventListener('change', function () {
                             slot.mobileSize = mobSel.value;
-                            subEl.textContent = (slot.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + (slot.mode === 'live' ? 'Kode Asli' : 'Simulasi') + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize;
-                            renderArticlePreview();
+                            subEl.textContent = buildSlotHeaderSummary(slot, activeEditTarget);
+                            renderActivePagePreview();
                         });
                         mobWrap.appendChild(mobLbl);
                         mobWrap.appendChild(mobSel);
@@ -757,7 +1059,7 @@
                         mtInput.addEventListener('change', function () {
                             slot.marginTop = slotsApi.clampMargin(mtInput.value, 24);
                             mtInput.value = String(slot.marginTop);
-                            renderArticlePreview();
+                            renderActivePagePreview();
                         });
                         mtWrap.appendChild(mtLbl);
                         mtWrap.appendChild(mtInput);
@@ -775,7 +1077,7 @@
                         mbInput.addEventListener('change', function () {
                             slot.marginBottom = slotsApi.clampMargin(mbInput.value, 24);
                             mbInput.value = String(slot.marginBottom);
-                            renderArticlePreview();
+                            renderActivePagePreview();
                         });
                         mbWrap.appendChild(mbLbl);
                         mbWrap.appendChild(mbInput);
@@ -788,21 +1090,21 @@
                         var codeWrap = document.createElement('div');
                         var codeLbl = document.createElement('label');
                         codeLbl.className = 'block text-[11px] font-semibold text-slate-700 mb-1';
-                        codeLbl.textContent = 'Cuplikan Kode AdSense (<script> / <ins>)';
+                        codeLbl.textContent = 'Cuplikan Kode AdSense (<script> / <ins>)' + (langScope !== 'default' ? ' — ' + langScope.toUpperCase() : '');
                         var codeTa = document.createElement('textarea');
                         codeTa.rows = 4;
                         codeTa.placeholder = '<ins class="adsbygoogle"\n     style="display:block"\n     data-ad-client="ca-pub-..."\n     data-ad-slot="1234567890"\n     data-ad-format="auto"></ins>';
-                        codeTa.value = slot.adCode || '';
+                        codeTa.value = activeEditTarget.adCode || '';
                         codeTa.className = 'w-full p-2.5 text-[11px] font-mono rounded-lg border border-slate-200 bg-slate-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600';
 
                         var parseStatus = document.createElement('p');
                         parseStatus.className = 'mt-1 text-[11px]';
 
-                        function refreshParseStatus() {
-                            var p = slotsApi.parseAdSenseSnippet(slot.adCode);
+                        function refreshParseStatus(codeVal) {
+                            var p = slotsApi.parseAdSenseSnippet(codeVal);
                             if (!p.hasCode) {
                                 parseStatus.className = 'mt-1 text-[11px] text-slate-500';
-                                parseStatus.textContent = 'Belum ada cuplikan ditempel — pratinjau memakai mode simulasi.';
+                                parseStatus.textContent = 'Belum ada cuplikan ditempel — hanya tampil di simulasi Studio (tersembunyi di situs publik).';
                             } else if (p.valid) {
                                 parseStatus.className = 'mt-1 text-[11px] font-medium text-blue-700';
                                 parseStatus.textContent = 'Terdeteksi aman: ' + p.clientId + ' · slot ' + p.adSlot + (p.adFormat ? ' · format ' + p.adFormat : '');
@@ -813,17 +1115,39 @@
                         }
 
                         codeTa.addEventListener('input', function () {
-                            slot.adCode = codeTa.value;
-                            var parsed = slotsApi.parseAdSenseSnippet(slot.adCode);
-                            if (parsed.valid && slot.mode === 'simulation') {
-                                slot.mode = 'live';
-                                modeSel.value = 'live';
+                            var nextCode = codeTa.value;
+                            var parsed = slotsApi.parseAdSenseSnippet(nextCode);
+                            var targetRef;
+                            if (langScope !== 'default') {
+                                slot.langOverrides = slot.langOverrides || {};
+                                if (!slot.langOverrides[langScope]) {
+                                    slot.langOverrides[langScope] = {
+                                        enabled: slot.enabled,
+                                        mode: parsed.valid ? 'live' : 'simulation',
+                                        adCode: nextCode
+                                    };
+                                } else {
+                                    slot.langOverrides[langScope].adCode = nextCode;
+                                    if (parsed.valid && slot.langOverrides[langScope].mode === 'simulation') {
+                                        slot.langOverrides[langScope].mode = 'live';
+                                        modeSel.value = 'live';
+                                    }
+                                }
+                                targetRef = slot.langOverrides[langScope];
+                            } else {
+                                slot.adCode = nextCode;
+                                if (parsed.valid && slot.mode === 'simulation') {
+                                    slot.mode = 'live';
+                                    modeSel.value = 'live';
+                                }
+                                targetRef = slot;
                             }
-                            refreshParseStatus();
-                            renderArticlePreview();
+                            refreshParseStatus(nextCode);
+                            subEl.textContent = buildSlotHeaderSummary(slot, targetRef);
+                            renderActivePagePreview();
                         });
 
-                        refreshParseStatus();
+                        refreshParseStatus(activeEditTarget.adCode || '');
                         codeWrap.appendChild(codeLbl);
                         codeWrap.appendChild(codeTa);
                         codeWrap.appendChild(parseStatus);
@@ -856,7 +1180,8 @@
                 }
             }
 
-            function buildPreviewAdNode(slot) {
+            function buildPreviewAdNode(baseSlot, langCode) {
+                var slot = (langCode && slotsApi.resolveSlotForLang) ? slotsApi.resolveSlotForLang(baseSlot, langCode) : baseSlot;
                 if (!slot || !slot.enabled) return null;
                 var viewport = state.device;
                 var spec = slotsApi.resolveSizeSpec(slot.id, viewport === 'mobile' ? slot.mobileSize : slot.desktopSize, viewport);
@@ -876,25 +1201,24 @@
                 box.className = 'w-full rounded-xl border p-3.5 flex flex-col items-center justify-center text-center transition-colors '
                     + (hasLiveCreds
                         ? 'border-blue-300 bg-blue-50/40'
-                        : 'border-dashed border-blue-300 bg-slate-50/80');
+                        : 'border-dashed border-slate-300 bg-slate-50/80');
                 box.style.minHeight = spec.height + 'px';
 
                 var badgeLine = document.createElement('p');
                 badgeLine.className = 'text-[11px] font-semibold ' + (hasLiveCreds ? 'text-blue-700' : 'text-slate-800');
-                badgeLine.textContent = slot.name;
+                badgeLine.textContent = slot.name + (slot.activeLangOverride ? ' [' + slot.activeLangOverride.toUpperCase() + ']' : '');
 
                 var dimLine = document.createElement('p');
                 dimLine.className = 'text-[11px] font-mono text-slate-500 mt-1 tabular-nums';
                 dimLine.textContent = (hasLiveCreds
                     ? ('Unit Live <ins>: ' + effectiveClient + ' / slot ' + parsed.adSlot)
-                    : ('Simulasi ' + slot.unitType))
+                    : ('Simulasi Studio (tersembunyi di publik sebelum kode diisi)'))
                     + ' · ' + (viewport === 'mobile' ? 'Mobile ' : 'Desktop ') + spec.id
                     + ' · Margin ' + slotsApi.clampMargin(slot.marginTop, 24) + 'px/' + slotsApi.clampMargin(slot.marginBottom, 24) + 'px';
 
                 box.appendChild(badgeLine);
                 box.appendChild(dimLine);
 
-                // Multiplex Ad visual grid simulation for Slot 4
                 if (spec.multiplexCols && spec.multiplexRows) {
                     var grid = document.createElement('div');
                     grid.className = 'mt-3 w-full grid gap-2';
@@ -921,7 +1245,7 @@
 
             function renderSlot5Overlay() {
                 var slot5 = state.slots.find(function (s) { return s.id === 'slot5'; });
-                if (!slot5 || !slot5.enabled) {
+                if (state.activePageGroup !== 'article' || !slot5 || !slot5.enabled) {
                     els.previewSlot5Overlay.classList.add('hidden');
                     els.restoreSlot5Btn.classList.add('hidden');
                     els.previewAnchorSpacer.classList.add('hidden');
@@ -975,24 +1299,274 @@
             }
 
             function syncVisitorToolbarReadout() {
-                var lbl = document.getElementById('visitorToolbarScaleReadout');
-                var scopeSel = document.getElementById('visitorToolbarScopeSelect');
-                if (!lbl || !scopeSel) return;
-                var scope = scopeSel.value;
-                var val = scope === 'all' ? state.fontScales.prose : (state.fontScales[scope] || 1);
-                lbl.textContent = Math.round(val * 100) + '%';
+                // Legacy no-op: per-part A− / A+ buttons now live on each article part
             }
 
-            function adjustVisitorScale(scope, delta) {
-                if (scope === 'all') {
-                    var next = clampScale((state.fontScales.prose || 1) + delta);
-                    PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = next; });
-                } else {
-                    state.fontScales[scope] = clampScale((state.fontScales[scope] || 1) + delta);
+            var PREVIEW_PART_PREFS_KEY = 'dn_article_part_font_prefs_v1';
+            var PREVIEW_SCOPE_KEY = '__studio_preview__';
+
+            function loadPreviewPartScale(partKey) {
+                if (!partKey) return 1;
+                try {
+                    var raw = localStorage.getItem(PREVIEW_PART_PREFS_KEY);
+                    if (!raw) return 1;
+                    var all = JSON.parse(raw);
+                    var entry = all && all[PREVIEW_SCOPE_KEY];
+                    if (entry && entry[partKey] !== undefined) {
+                        return clampScale(entry[partKey]);
+                    }
+                } catch (_e) {}
+                return 1;
+            }
+
+            function savePreviewPartScale(partKey, val) {
+                if (!partKey) return;
+                try {
+                    var raw = localStorage.getItem(PREVIEW_PART_PREFS_KEY);
+                    var all = raw ? JSON.parse(raw) : {};
+                    if (!all || typeof all !== 'object') all = {};
+                    if (!all[PREVIEW_SCOPE_KEY] || typeof all[PREVIEW_SCOPE_KEY] !== 'object') {
+                        all[PREVIEW_SCOPE_KEY] = {};
+                    }
+                    if (val === null || Math.abs(val - 1) <= 0.005) {
+                        delete all[PREVIEW_SCOPE_KEY][partKey];
+                        if (Object.keys(all[PREVIEW_SCOPE_KEY]).length === 0) {
+                            delete all[PREVIEW_SCOPE_KEY];
+                        }
+                    } else {
+                        all[PREVIEW_SCOPE_KEY][partKey] = clampScale(val);
+                    }
+                    localStorage.setItem(PREVIEW_PART_PREFS_KEY, JSON.stringify(all));
+                } catch (_e) {}
+            }
+
+            function createPreviewFontControlGroup(partKey, onStep) {
+                var group = document.createElement('div');
+                group.className = 'inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/90 divide-x divide-slate-200 shadow-sm shrink-0 select-none';
+                var scale = loadPreviewPartScale(partKey);
+
+                var decBtn = document.createElement('button');
+                decBtn.type = 'button';
+                decBtn.textContent = 'A−';
+                decBtn.title = 'Perkecil teks';
+                decBtn.className = 'min-h-[28px] min-w-[30px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 hover:bg-white hover:text-blue-600 rounded-l-lg transition-colors';
+
+                var pctBtn = document.createElement('button');
+                pctBtn.type = 'button';
+                pctBtn.title = 'Reset ke 100%';
+                pctBtn.className = 'hidden min-h-[28px] px-1.5 inline-flex items-center justify-center text-[10px] font-mono font-semibold text-blue-600 hover:bg-white tabular-nums transition-colors';
+
+                var incBtn = document.createElement('button');
+                incBtn.type = 'button';
+                incBtn.textContent = 'A+';
+                incBtn.title = 'Perbesar teks';
+                incBtn.className = 'min-h-[28px] min-w-[30px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 hover:bg-white hover:text-blue-600 rounded-r-lg transition-colors';
+
+                function syncGroup(persist) {
+                    var isDef = Math.abs(scale - 1) <= 0.005;
+                    pctBtn.textContent = Math.round(scale * 100) + '%';
+                    pctBtn.classList.toggle('hidden', isDef);
+                    decBtn.disabled = scale <= 0.83;
+                    incBtn.disabled = scale >= 1.35;
+                    onStep(isDef ? null : scale);
+                    if (persist) {
+                        savePreviewPartScale(partKey, isDef ? null : scale);
+                    }
                 }
-                applyFontVarsToSheet();
-                renderFontPartControls();
-                syncVisitorToolbarReadout();
+
+                decBtn.addEventListener('click', function () {
+                    scale = clampScale(scale - 0.06);
+                    syncGroup(true);
+                });
+                incBtn.addEventListener('click', function () {
+                    scale = clampScale(scale + 0.06);
+                    syncGroup(true);
+                });
+                pctBtn.addEventListener('click', function () {
+                    scale = 1;
+                    syncGroup(true);
+                });
+
+                group.appendChild(decBtn);
+                group.appendChild(pctBtn);
+                group.appendChild(incBtn);
+                syncGroup(false);
+                return group;
+            }
+
+            function wrapPreviewFontPart(partType, innerNode, partKey) {
+                var wrap = document.createElement('div');
+                wrap.className = 'dn-font-part';
+                wrap.setAttribute('data-font-part', partType);
+                if (partKey) wrap.setAttribute('data-part-key', partKey);
+                var bar = document.createElement('div');
+                bar.className = 'flex items-center justify-end mb-1.5';
+                bar.appendChild(createPreviewFontControlGroup(partKey, function (val) {
+                    if (val === null) wrap.style.removeProperty('--part-scale');
+                    else wrap.style.setProperty('--part-scale', String(val));
+                }));
+                wrap.appendChild(bar);
+                wrap.appendChild(innerNode);
+                return wrap;
+            }
+
+            function applyDeviceFrameGeometry() {
+                var visible = getVisibleSlots();
+                var activeCount = visible.filter(function (s) {
+                    var resolved = state.activePageGroup === 'article' ? s : slotsApi.resolveSlotForLang(s, state.previewLang);
+                    return resolved && resolved.enabled !== false;
+                }).length;
+                els.activeSlotCountReadout.textContent = activeCount + '/' + visible.length + ' slot aktif';
+
+                if (state.device === 'mobile') {
+                    els.previewDeviceFrame.className = 'w-full max-w-[390px] bg-white rounded-xl border border-slate-300 shadow-md relative overflow-hidden transition-[max-width] duration-200';
+                    els.activeDeviceReadout.textContent = 'Pratinjau Mobile 390px';
+                    els.previewMobileBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm';
+                    els.previewDesktopBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900';
+                } else {
+                    var maxW = state.activePageGroup === 'home' ? 'max-w-[900px]' : 'max-w-[780px]';
+                    els.previewDeviceFrame.className = 'w-full ' + maxW + ' bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden transition-[max-width] duration-200';
+                    els.activeDeviceReadout.textContent = state.activePageGroup === 'home' ? 'Kolom Front Page ~880px' : 'Lebar kolom baca ~728px';
+                    els.previewDesktopBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm';
+                    els.previewMobileBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900';
+                }
+            }
+
+            function buildMockCardBlock(kickerText, titleText, bodyText) {
+                var card = document.createElement('section');
+                card.className = 'p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2';
+                if (kickerText) {
+                    var k = document.createElement('p');
+                    k.className = 'text-[11px] font-semibold uppercase tracking-wider text-blue-600';
+                    k.textContent = kickerText;
+                    card.appendChild(k);
+                }
+                var h = document.createElement('h2');
+                h.className = 'text-base sm:text-lg font-bold text-slate-900';
+                h.textContent = titleText;
+                card.appendChild(h);
+                if (bodyText) {
+                    var p = document.createElement('p');
+                    p.className = 'text-xs sm:text-sm text-slate-600 leading-relaxed';
+                    p.textContent = bodyText;
+                    card.appendChild(p);
+                }
+                return card;
+            }
+
+            function renderHomePreview() {
+                var lang = state.previewLang || 'id';
+                var copy = HOME_PREVIEW_COPY[lang] || HOME_PREVIEW_COPY.en;
+                els.previewDeviceUrlHint.textContent = copy.liveUrl;
+                els.openLiveSampleLink.href = copy.liveUrl;
+
+                var sheet = els.previewArticleSheet;
+                sheet.textContent = '';
+
+                var hero = document.createElement('header');
+                hero.className = 'border-b border-slate-200 pb-5 space-y-2';
+                var kicker = document.createElement('p');
+                kicker.className = 'text-[11px] uppercase tracking-wider font-semibold text-blue-600';
+                kicker.textContent = copy.kicker + ' · ' + (LANG_LABELS[lang] || lang.toUpperCase());
+                var h1 = document.createElement('h1');
+                h1.className = 'text-xl sm:text-2xl font-bold tracking-tight text-slate-900';
+                h1.textContent = copy.title;
+                var sub = document.createElement('p');
+                sub.className = 'text-xs sm:text-sm text-slate-600 leading-relaxed';
+                sub.textContent = copy.sub;
+                hero.appendChild(kicker);
+                hero.appendChild(h1);
+                hero.appendChild(sub);
+                sheet.appendChild(hero);
+
+                sheet.appendChild(buildMockCardBlock('Generator Workspace', copy.boxTitle, 'Input kata kunci utama, sekunder, tersier, pola [c][v], serta gaya pengucapan: ' + copy.kwSample));
+                sheet.appendChild(buildMockCardBlock('Tabel Hasil Domain', copy.resTitle, 'Daftar nama domain terurut terpendek beserta cek ketersediaan RDAP, Wayback, dan skor merek.'));
+
+                var hSlot1 = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'home-slot1'; }), lang);
+                if (hSlot1) sheet.appendChild(hSlot1);
+
+                sheet.appendChild(buildMockCardBlock('Share & 3 Langkah Cepat', copy.howTitle, copy.cta1 + '  ·  ' + copy.cta2));
+
+                var hSlot2 = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'home-slot2'; }), lang);
+                if (hSlot2) sheet.appendChild(hSlot2);
+
+                renderSlot5Overlay();
+            }
+
+            function renderGuidePreview() {
+                var lang = state.previewLang || 'id';
+                var copy = GUIDE_PREVIEW_COPY[lang] || GUIDE_PREVIEW_COPY.en;
+                els.previewDeviceUrlHint.textContent = copy.liveUrl;
+                els.openLiveSampleLink.href = copy.liveUrl;
+
+                var sheet = els.previewArticleSheet;
+                sheet.textContent = '';
+
+                var hero = document.createElement('header');
+                hero.className = 'border-b border-slate-200 pb-5 space-y-2';
+                var kicker = document.createElement('p');
+                kicker.className = 'text-[11px] uppercase tracking-wider font-semibold text-blue-600';
+                kicker.textContent = copy.kicker + ' · ' + (LANG_LABELS[lang] || lang.toUpperCase());
+                var h1 = document.createElement('h1');
+                h1.className = 'text-xl sm:text-2xl font-bold tracking-tight text-slate-900';
+                h1.textContent = copy.h1;
+                var intro = document.createElement('p');
+                intro.className = 'text-xs sm:text-sm text-slate-600 leading-relaxed';
+                intro.textContent = copy.intro;
+                hero.appendChild(kicker);
+                hero.appendChild(h1);
+                hero.appendChild(intro);
+                sheet.appendChild(hero);
+
+                sheet.appendChild(buildMockCardBlock('Bagian 1–2', copy.s1, 'Langkah pemakaian generator, strategi kata kunci utama vs pendukung, serta keterbacaan fonetik.'));
+
+                var gSlot1 = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'guide-slot1'; }), lang);
+                if (gSlot1) sheet.appendChild(gSlot1);
+
+                sheet.appendChild(buildMockCardBlock('Bagian 3–5', copy.s2, 'Perbandingan ekstensi gTLD, ccTLD, risiko penalti EMD, serta tabel contoh domain baik vs buruk.'));
+
+                var gSlot2 = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'guide-slot2'; }), lang);
+                if (gSlot2) sheet.appendChild(gSlot2);
+
+                sheet.appendChild(buildMockCardBlock('CTA Penutup', 'Siap Mencari Domain?', 'Tombol menuju FAQ atau kembali ke Generator Domain Utama.'));
+
+                renderSlot5Overlay();
+            }
+
+            function renderFaqPreview() {
+                var lang = state.previewLang || 'id';
+                var copy = FAQ_PREVIEW_COPY[lang] || FAQ_PREVIEW_COPY.en;
+                els.previewDeviceUrlHint.textContent = copy.liveUrl;
+                els.openLiveSampleLink.href = copy.liveUrl;
+
+                var sheet = els.previewArticleSheet;
+                sheet.textContent = '';
+
+                var hero = document.createElement('header');
+                hero.className = 'border-b border-slate-200 pb-5 space-y-2';
+                var kicker = document.createElement('p');
+                kicker.className = 'text-[11px] uppercase tracking-wider font-semibold text-blue-600';
+                kicker.textContent = copy.kicker + ' · ' + (LANG_LABELS[lang] || lang.toUpperCase());
+                var h1 = document.createElement('h1');
+                h1.className = 'text-xl sm:text-2xl font-bold tracking-tight text-slate-900';
+                h1.textContent = copy.h1;
+                var sub = document.createElement('p');
+                sub.className = 'text-xs sm:text-sm text-slate-600 leading-relaxed';
+                sub.textContent = copy.sub;
+                hero.appendChild(kicker);
+                hero.appendChild(h1);
+                hero.appendChild(sub);
+                sheet.appendChild(hero);
+
+                sheet.appendChild(buildMockCardBlock('Akordeon FAQ #1', copy.q1, 'Penjelasan standar label DNS maksimal 63 karakter, huruf kecil ASCII, dan tanda hubung internal.'));
+                sheet.appendChild(buildMockCardBlock('Akordeon FAQ #2', copy.q2, 'Kapan kata terpisah dengan dash membantu kejelasan vs domain merek tanpa dash.'));
+
+                var fSlot1 = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'faq-slot1'; }), lang);
+                if (fSlot1) sheet.appendChild(fSlot1);
+
+                sheet.appendChild(buildMockCardBlock('CTA Penutup', 'Kembali ke Generator', 'Tautan cepat menuju Panduan & Generator Utama.'));
+
+                renderSlot5Overlay();
             }
 
             function renderArticlePreview() {
@@ -1001,21 +1575,6 @@
 
                 els.previewDeviceUrlHint.textContent = article.liveUrl || '';
                 els.openLiveSampleLink.href = article.liveUrl || '/';
-
-                var activeCount = state.slots.filter(function (s) { return s.enabled; }).length;
-                els.activeSlotCountReadout.textContent = activeCount + '/5 slot aktif';
-
-                if (state.device === 'mobile') {
-                    els.previewDeviceFrame.className = 'w-full max-w-[390px] bg-white rounded-xl border border-slate-300 shadow-md relative overflow-hidden transition-[max-width] duration-200';
-                    els.activeDeviceReadout.textContent = 'Pratinjau Mobile 390px';
-                    els.previewMobileBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm';
-                    els.previewDesktopBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900';
-                } else {
-                    els.previewDeviceFrame.className = 'w-full max-w-[780px] bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden transition-[max-width] duration-200';
-                    els.activeDeviceReadout.textContent = 'Lebar kolom baca ~728px';
-                    els.previewDesktopBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap bg-white text-slate-900 shadow-sm';
-                    els.previewMobileBtn.className = 'px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap text-slate-600 hover:text-slate-900';
-                }
 
                 var sheet = els.previewArticleSheet;
                 sheet.textContent = '';
@@ -1042,69 +1601,12 @@
                 metaLine.textContent = article.author + ' · Diperbarui ' + article.dateModified + ' · ' + article.readingTimeMinutes + ' menit baca'
                     + (article.datasetMeta ? ' · ' + article.datasetMeta : '');
 
-                // Visitor interactive +/- bar inside article preview
-                var toolbar = document.createElement('div');
-                toolbar.className = 'pt-3 mt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2';
-
-                var scopeWrap = document.createElement('div');
-                scopeWrap.className = 'flex items-center gap-2';
-                var scopeLbl = document.createElement('label');
-                scopeLbl.setAttribute('for', 'visitorToolbarScopeSelect');
-                scopeLbl.className = 'text-xs font-medium text-slate-500';
-                scopeLbl.textContent = 'Ukuran Teks:';
-
-                var scopeSel = document.createElement('select');
-                scopeSel.id = 'visitorToolbarScopeSelect';
-                scopeSel.className = 'min-h-[36px] bg-slate-50 text-xs font-medium text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200';
-                [{ k: 'all', l: 'Semua Bagian Artikel' }].concat(PART_DEFINITIONS.map(function (d) { return { k: d.key, l: d.label }; })).forEach(function (optItem) {
-                    var o = document.createElement('option');
-                    o.value = optItem.k;
-                    o.textContent = optItem.l;
-                    if (state.activeVisitorScope === optItem.k) o.selected = true;
-                    scopeSel.appendChild(o);
-                });
-                scopeSel.addEventListener('change', function () {
-                    state.activeVisitorScope = scopeSel.value;
-                    syncVisitorToolbarReadout();
-                });
-                scopeWrap.appendChild(scopeLbl);
-                scopeWrap.appendChild(scopeSel);
-
-                var btnWrap = document.createElement('div');
-                btnWrap.className = 'flex items-center gap-1.5';
-
-                var vDec = document.createElement('button');
-                vDec.type = 'button';
-                vDec.textContent = 'A−';
-                vDec.className = 'min-h-[36px] min-w-[38px] px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50';
-                vDec.addEventListener('click', function () { adjustVisitorScale(state.activeVisitorScope, -0.06); });
-
-                var vVal = document.createElement('span');
-                vVal.id = 'visitorToolbarScaleReadout';
-                vVal.className = 'min-w-[3rem] text-center text-xs font-mono font-semibold text-slate-700 tabular-nums';
-
-                var vInc = document.createElement('button');
-                vInc.type = 'button';
-                vInc.textContent = 'A+';
-                vInc.className = 'min-h-[36px] min-w-[38px] px-2 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50';
-                vInc.addEventListener('click', function () { adjustVisitorScale(state.activeVisitorScope, 0.06); });
-
-                btnWrap.appendChild(vDec);
-                btnWrap.appendChild(vVal);
-                btnWrap.appendChild(vInc);
-
-                toolbar.appendChild(scopeWrap);
-                toolbar.appendChild(btnWrap);
-
                 header.appendChild(kicker);
                 header.appendChild(h1);
                 header.appendChild(excerpt);
                 header.appendChild(metaLine);
-                header.appendChild(toolbar);
                 sheet.appendChild(header);
-                syncVisitorToolbarReadout();
 
-                // Key Takeaways
                 if (Array.isArray(article.keyTakeaways) && article.keyTakeaways.length > 0) {
                     var ktBox = document.createElement('section');
                     ktBox.className = 'p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5';
@@ -1120,14 +1622,12 @@
                     });
                     ktBox.appendChild(ktTitle);
                     ktBox.appendChild(ktList);
-                    sheet.appendChild(ktBox);
+                    sheet.appendChild(wrapPreviewFontPart('takeaways', ktBox, 'takeaways'));
                 }
 
-                // >>> SLOT 1: Below Key Takeaways, before TOC
                 var slot1Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot1'; }));
                 if (slot1Node) sheet.appendChild(slot1Node);
 
-                // Table of Contents
                 if (Array.isArray(article.sections) && article.sections.length >= 2) {
                     var tocBox = document.createElement('nav');
                     tocBox.className = 'p-4 rounded-xl border border-slate-200 bg-white';
@@ -1135,7 +1635,7 @@
                     tocLbl.className = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2';
                     tocLbl.textContent = 'Daftar Isi';
                     var tocOl = document.createElement('ol');
-                    tocOl.className = 'list-decimal pl-5 space-y-1 text-sm text-blue-600';
+                    tocOl.className = 'article-toc-list list-decimal pl-5 space-y-1 text-sm text-blue-600';
                     article.sections.forEach(function (sec) {
                         var li = document.createElement('li');
                         var a = document.createElement('a');
@@ -1147,10 +1647,9 @@
                     });
                     tocBox.appendChild(tocLbl);
                     tocBox.appendChild(tocOl);
-                    sheet.appendChild(tocBox);
+                    sheet.appendChild(wrapPreviewFontPart('toc', tocBox, 'toc'));
                 }
 
-                // Sections Wrapper
                 var proseWrap = document.createElement('div');
                 proseWrap.className = 'article-prose flex flex-col gap-7 text-slate-800';
 
@@ -1159,6 +1658,7 @@
                 var slot3Idx = sections.length >= 4 ? 2 : (sections.length === 3 ? 1 : -1);
 
                 sections.forEach(function (sec, idx) {
+                    var secKeyPrefix = 'sec:' + (sec.anchor || ('section-' + (idx + 1)));
                     var secEl = document.createElement('section');
                     secEl.id = sec.anchor;
                     secEl.className = 'space-y-4';
@@ -1170,29 +1670,35 @@
                         secEl.appendChild(h2);
                     }
 
-                    if (Array.isArray(sec.paragraphs)) {
-                        sec.paragraphs.forEach(function (pText) {
-                            appendBlocksSafe(secEl, pText);
-                        });
-                    }
-
-                    if (Array.isArray(sec.bullets) && sec.bullets.length > 0) {
-                        var ul = document.createElement('ul');
-                        ul.className = 'article-bullets list-disc pl-5 space-y-2 text-slate-700';
-                        sec.bullets.forEach(function (b) {
-                            var li = document.createElement('li');
-                            if (b && typeof b === 'object' && b.label) {
-                                var strong = document.createElement('strong');
-                                strong.className = 'text-slate-900';
-                                strong.textContent = b.label + ': ';
-                                li.appendChild(strong);
-                                appendInlineMarkdownSafe(li, b.text || '');
-                            } else {
-                                appendInlineMarkdownSafe(li, b);
-                            }
-                            ul.appendChild(li);
-                        });
-                        secEl.appendChild(ul);
+                    var hasParas = Array.isArray(sec.paragraphs) && sec.paragraphs.length > 0;
+                    var hasBullets = Array.isArray(sec.bullets) && sec.bullets.length > 0;
+                    if (hasParas || hasBullets) {
+                        var proseBody = document.createElement('div');
+                        proseBody.className = 'space-y-4';
+                        if (hasParas) {
+                            sec.paragraphs.forEach(function (pText) {
+                                appendBlocksSafe(proseBody, pText);
+                            });
+                        }
+                        if (hasBullets) {
+                            var ul = document.createElement('ul');
+                            ul.className = 'article-bullets list-disc pl-5 space-y-2 text-slate-700';
+                            sec.bullets.forEach(function (b) {
+                                var li = document.createElement('li');
+                                if (b && typeof b === 'object' && b.label) {
+                                    var strong = document.createElement('strong');
+                                    strong.className = 'text-slate-900';
+                                    strong.textContent = b.label + ': ';
+                                    li.appendChild(strong);
+                                    appendInlineMarkdownSafe(li, b.text || '');
+                                } else {
+                                    appendInlineMarkdownSafe(li, b);
+                                }
+                                ul.appendChild(li);
+                            });
+                            proseBody.appendChild(ul);
+                        }
+                        secEl.appendChild(wrapPreviewFontPart('prose', proseBody, secKeyPrefix + ':prose:1'));
                     }
 
                     if (sec.table && Array.isArray(sec.table.headers) && Array.isArray(sec.table.rows)) {
@@ -1231,7 +1737,7 @@
                         });
                         table.appendChild(tbody);
                         tableWrap.appendChild(table);
-                        secEl.appendChild(tableWrap);
+                        secEl.appendChild(wrapPreviewFontPart('table', tableWrap, secKeyPrefix + ':table'));
                     }
 
                     if (sec.callout && sec.callout.body) {
@@ -1244,17 +1750,15 @@
                             calloutEl.appendChild(cTitle);
                         }
                         appendBlocksSafe(calloutEl, sec.callout.body);
-                        secEl.appendChild(calloutEl);
+                        secEl.appendChild(wrapPreviewFontPart('callout', calloutEl, secKeyPrefix + ':callout'));
                     }
 
                     proseWrap.appendChild(secEl);
 
-                    // >>> SLOT 2: After Section 2 (Bagian 2 + Tabel Ringkasan Metrik)
                     if (idx === slot2Idx) {
                         var slot2Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot2'; }));
                         if (slot2Node) proseWrap.appendChild(slot2Node);
                     }
-                    // >>> SLOT 3: Between Kelompok A & Kelompok B
                     if (idx === slot3Idx) {
                         var slot3Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot3'; }));
                         if (slot3Node) proseWrap.appendChild(slot3Node);
@@ -1263,11 +1767,9 @@
 
                 sheet.appendChild(proseWrap);
 
-                // >>> SLOT 4: After Section 4 (Checklist 4 Langkah), before Methodology / FAQ
                 var slot4Node = buildPreviewAdNode(state.slots.find(function (s) { return s.id === 'slot4'; }));
                 if (slot4Node) sheet.appendChild(slot4Node);
 
-                // Methodology Note
                 if (article.methodologyNote) {
                     var methSec = document.createElement('section');
                     methSec.className = 'article-methodology p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2';
@@ -1276,17 +1778,25 @@
                     mTitle.textContent = 'Catatan Metodologi & Transparansi';
                     methSec.appendChild(mTitle);
                     appendBlocksSafe(methSec, article.methodologyNote);
-                    sheet.appendChild(methSec);
+                    sheet.appendChild(wrapPreviewFontPart('methodology', methSec, 'methodology'));
                 }
 
-                // FAQs
                 if (Array.isArray(article.faqs) && article.faqs.length > 0) {
                     var faqSec = document.createElement('section');
-                    faqSec.className = 'article-faq space-y-3 pt-4 border-t border-slate-200';
+                    faqSec.className = 'dn-font-part article-faq space-y-3 pt-4 border-t border-slate-200';
+                    faqSec.setAttribute('data-font-part', 'faq');
+                    faqSec.setAttribute('data-part-key', 'faq');
+                    var faqHeadRow = document.createElement('div');
+                    faqHeadRow.className = 'flex items-center justify-between gap-3';
                     var fTitle = document.createElement('h2');
                     fTitle.className = 'text-lg sm:text-xl font-bold text-slate-900';
                     fTitle.textContent = 'FAQ Artikel';
-                    faqSec.appendChild(fTitle);
+                    faqHeadRow.appendChild(fTitle);
+                    faqHeadRow.appendChild(createPreviewFontControlGroup('faq', function (val) {
+                        if (val === null) faqSec.style.removeProperty('--part-scale');
+                        else faqSec.style.setProperty('--part-scale', String(val));
+                    }));
+                    faqSec.appendChild(faqHeadRow);
 
                     article.faqs.forEach(function (faq, fIdx) {
                         var det = document.createElement('details');
@@ -1305,8 +1815,48 @@
                     sheet.appendChild(faqSec);
                 }
 
-                // >>> SLOT 5: Sticky Bottom Overlay Anchor Ad
+                var relSec = document.createElement('section');
+                relSec.className = 'dn-font-part pt-4 border-t border-slate-200 space-y-3';
+                relSec.setAttribute('data-font-part', 'related');
+                relSec.setAttribute('data-part-key', 'related');
+                var relHeadRow = document.createElement('div');
+                relHeadRow.className = 'flex items-center justify-between gap-3';
+                var relTitle = document.createElement('h2');
+                relTitle.className = 'text-base sm:text-lg font-bold text-slate-900';
+                relTitle.textContent = 'Artikel & Riset Terkait';
+                relHeadRow.appendChild(relTitle);
+                relHeadRow.appendChild(createPreviewFontControlGroup('related', function (val) {
+                    if (val === null) relSec.style.removeProperty('--part-scale');
+                    else relSec.style.setProperty('--part-scale', String(val));
+                }));
+                relSec.appendChild(relHeadRow);
+                var relCard = document.createElement('div');
+                relCard.className = 'p-4 rounded-xl border border-slate-200 bg-slate-50/70';
+                var relCardTitle = document.createElement('p');
+                relCardTitle.className = 'article-related-card-title font-semibold text-sm text-slate-900';
+                relCardTitle.textContent = 'Validasi Standar DNS RFC 1035 untuk Domain Toko';
+                var relCardDesc = document.createElement('p');
+                relCardDesc.className = 'article-related-card-desc text-xs text-slate-600 mt-1';
+                relCardDesc.textContent = 'Pelajari cara kerja validasi karakter a-z0-9-, batas 63 karakter, dan struktur domain bersih.';
+                relCard.appendChild(relCardTitle);
+                relCard.appendChild(relCardDesc);
+                relSec.appendChild(relCard);
+                sheet.appendChild(relSec);
+
                 renderSlot5Overlay();
+            }
+
+            function renderActivePagePreview() {
+                applyDeviceFrameGeometry();
+                if (state.activePageGroup === 'home') {
+                    renderHomePreview();
+                } else if (state.activePageGroup === 'guide') {
+                    renderGuidePreview();
+                } else if (state.activePageGroup === 'faq') {
+                    renderFaqPreview();
+                } else {
+                    renderArticlePreview();
+                }
             }
 
             function openExportModal() {
@@ -1319,8 +1869,10 @@
                         generateAdsTxt: true,
                         slots: state.slots.map(function (s) {
                             var ins = slotsApi.buildSafeInsAttributes(s, cleanClient);
-                            return {
+                            var entry = {
                                 id: s.id,
+                                pageGroup: s.pageGroup,
+                                positionKey: s.positionKey,
                                 name: s.name,
                                 unitType: s.unitType,
                                 enabled: s.enabled,
@@ -1333,15 +1885,25 @@
                                 adSlot: ins.adSlot,
                                 adFormat: ins.adFormat
                             };
+                            var ov = serializeLangOverridesForStorage(s);
+                            if (Object.keys(ov).length > 0) {
+                                entry.langOverrides = ov;
+                            }
+                            return entry;
                         })
                     }
                 };
                 els.exportJsonTextarea.value = JSON.stringify(exportJsonObj, null, 2);
 
-                var snippets = state.slots.map(function (s) {
-                    return slotsApi.buildExportSnippetForSlot(s, cleanClient);
-                }).join('\n\n');
-                els.exportHtmlTextarea.value = snippets;
+                var snippets = [];
+                state.slots.forEach(function (s) {
+                    snippets.push(slotsApi.buildExportSnippetForSlot(s, cleanClient));
+                    var ovKeys = Object.keys(s.langOverrides || {});
+                    ovKeys.forEach(function (lc) {
+                        snippets.push(slotsApi.buildExportSnippetForSlot(s, cleanClient, lc));
+                    });
+                });
+                els.exportHtmlTextarea.value = snippets.join('\n\n');
                 els.exportCopyStatus.classList.add('hidden');
                 els.exportModal.classList.remove('hidden');
             }
@@ -1379,25 +1941,40 @@
                     els.globalPublisherIdInput.value = state.globalPublisherId;
                     els.applyPreviewToSiteCheckbox.checked = state.applyPreviewToSite;
                     els.sampleArticleSelect.value = state.selectedSampleId;
+                    els.previewLangSelect.value = state.previewLang;
+
+                    els.pageGroupTabs.addEventListener('click', function (e) {
+                        var btn = e.target.closest('[data-page-group]');
+                        if (!btn) return;
+                        state.activePageGroup = btn.getAttribute('data-page-group') || 'article';
+                        syncPageGroupUi();
+                        renderSlotForms();
+                        renderActivePagePreview();
+                    });
+
+                    els.previewLangSelect.addEventListener('change', function () {
+                        state.previewLang = els.previewLangSelect.value || 'id';
+                        renderActivePagePreview();
+                    });
 
                     els.sampleArticleSelect.addEventListener('change', function () {
                         state.selectedSampleId = els.sampleArticleSelect.value;
-                        renderArticlePreview();
+                        renderActivePagePreview();
                     });
                     els.globalPublisherIdInput.addEventListener('input', function () {
                         state.globalPublisherId = els.globalPublisherIdInput.value;
-                        renderArticlePreview();
+                        renderActivePagePreview();
                     });
                     els.applyPreviewToSiteCheckbox.addEventListener('change', function () {
                         state.applyPreviewToSite = els.applyPreviewToSiteCheckbox.checked;
                     });
                     els.previewDesktopBtn.addEventListener('click', function () {
                         state.device = 'desktop';
-                        renderArticlePreview();
+                        renderActivePagePreview();
                     });
                     els.previewMobileBtn.addEventListener('click', function () {
                         state.device = 'mobile';
-                        renderArticlePreview();
+                        renderActivePagePreview();
                     });
                     els.restoreSlot5Btn.addEventListener('click', function () {
                         state.slot5DismissedInPreview = false;
@@ -1415,7 +1992,7 @@
                         copyTextarea(els.exportJsonTextarea, 'JSON Konfigurasi');
                     });
                     els.copyHtmlSnippetsBtn.addEventListener('click', function () {
-                        copyTextarea(els.exportHtmlTextarea, 'Kode HTML 5 Slot AdSense');
+                        copyTextarea(els.exportHtmlTextarea, 'Kode HTML Slot AdSense');
                     });
                     els.studioResetFontsBtn.addEventListener('click', function () {
                         PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
@@ -1427,20 +2004,23 @@
                     els.resetDefaultBtn.addEventListener('click', function () {
                         state.slots = slotsApi.cloneDefaultSlots();
                         state.globalPublisherId = '';
+                        state.slotLangEditScope = {};
                         state.slot5DismissedInPreview = false;
                         PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
                         els.globalPublisherIdInput.value = '';
                         try { localStorage.removeItem(slotsApi.STORAGE_KEY); } catch (_e) {}
+                        syncPageGroupUi();
                         renderFontPartControls();
                         renderSlotForms();
-                        renderArticlePreview();
-                        showFeedback('Konfigurasi 5 slot dan ukuran font direset ke rekomendasi awal.');
+                        renderActivePagePreview();
+                        showFeedback('Seluruh slot multi-halaman dan ukuran font direset ke pengaturan awal.');
                     });
                 }
 
+                syncPageGroupUi();
                 renderFontPartControls();
                 renderSlotForms();
-                renderArticlePreview();
+                renderActivePagePreview();
             }
 
             async function authApiFetch(url, options) {
