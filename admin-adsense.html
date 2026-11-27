@@ -23,6 +23,7 @@
     </script>
     <style>
         #previewArticleSheet {
+            --article-font-scale: 1;
             --art-scale-takeaways: 1;
             --art-scale-toc: 1;
             --art-scale-prose: 1;
@@ -33,8 +34,24 @@
             --art-scale-faq: 1;
             --art-scale-related: 1;
         }
+        #previewArticleSheet .dn-font-controls-bar,
+        #previewArticleSheet .dn-font-controls,
+        #previewArticleSheet .dn-font-btn {
+            position: relative;
+            z-index: 20;
+        }
+        #previewArticleSheet .dn-font-btn {
+            min-width: 36px;
+            min-height: 36px;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+        #previewArticleSheet .dn-font-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
         #previewArticleSheet [data-font-part="takeaways"] {
-            --part-scale: var(--art-scale-takeaways, 1);
+            --part-scale: calc(var(--art-scale-takeaways, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="takeaways"] .article-takeaways,
         #previewArticleSheet [data-font-part="takeaways"] .article-takeaways li {
@@ -42,7 +59,7 @@
             line-height: 1.7;
         }
         #previewArticleSheet [data-font-part="toc"] {
-            --part-scale: var(--art-scale-toc, 1);
+            --part-scale: calc(var(--art-scale-toc, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="toc"] .article-toc-list,
         #previewArticleSheet [data-font-part="toc"] .article-toc-list li {
@@ -50,7 +67,7 @@
             line-height: 1.65;
         }
         #previewArticleSheet [data-font-part="prose"] {
-            --part-scale: var(--art-scale-prose, 1);
+            --part-scale: calc(var(--art-scale-prose, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="prose"] p,
         #previewArticleSheet [data-font-part="prose"] blockquote {
@@ -59,20 +76,22 @@
         }
         #previewArticleSheet [data-font-part="prose"] .article-bullets,
         #previewArticleSheet [data-font-part="prose"] ul,
-        #previewArticleSheet [data-font-part="prose"] ol {
+        #previewArticleSheet [data-font-part="prose"] ol,
+        #previewArticleSheet [data-font-part="prose"] li {
             font-size: calc(0.95rem * var(--part-scale));
             line-height: 1.7;
         }
         #previewArticleSheet [data-font-part="callout"] {
-            --part-scale: var(--art-scale-callout, 1);
+            --part-scale: calc(var(--art-scale-callout, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="callout"] .article-callout,
-        #previewArticleSheet [data-font-part="callout"] .article-callout p {
+        #previewArticleSheet [data-font-part="callout"] .article-callout p,
+        #previewArticleSheet [data-font-part="callout"] .article-callout li {
             font-size: calc(0.9375rem * var(--part-scale));
             line-height: 1.65;
         }
         #previewArticleSheet [data-font-part="table"] {
-            --part-scale: var(--art-scale-table, 1);
+            --part-scale: calc(var(--art-scale-table, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="table"] .article-table th {
             font-size: calc(0.75rem * var(--part-scale));
@@ -85,26 +104,28 @@
             font-size: calc(0.8125rem * var(--part-scale));
         }
         #previewArticleSheet [data-font-part="methodology"] {
-            --part-scale: var(--art-scale-methodology, 1);
+            --part-scale: calc(var(--art-scale-methodology, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="methodology"] .article-methodology,
-        #previewArticleSheet [data-font-part="methodology"] .article-methodology p {
+        #previewArticleSheet [data-font-part="methodology"] .article-methodology p,
+        #previewArticleSheet [data-font-part="methodology"] .article-methodology li {
             font-size: calc(0.875rem * var(--part-scale));
             line-height: 1.65;
         }
         #previewArticleSheet [data-font-part="faq"] {
-            --part-scale: var(--art-scale-faq, 1);
+            --part-scale: calc(var(--art-scale-faq, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="faq"] .article-faq summary {
             font-size: calc(0.975rem * var(--part-scale));
         }
         #previewArticleSheet [data-font-part="faq"] .article-faq .article-faq-answer,
-        #previewArticleSheet [data-font-part="faq"] .article-faq .article-faq-answer p {
+        #previewArticleSheet [data-font-part="faq"] .article-faq .article-faq-answer p,
+        #previewArticleSheet [data-font-part="faq"] .article-faq .article-faq-answer li {
             font-size: calc(0.9375rem * var(--part-scale));
             line-height: 1.65;
         }
         #previewArticleSheet [data-font-part="related"] {
-            --part-scale: var(--art-scale-related, 1);
+            --part-scale: calc(var(--art-scale-related, 1) * var(--article-font-scale, 1));
         }
         #previewArticleSheet [data-font-part="related"] .article-related-card-title {
             font-size: calc(0.875rem * var(--part-scale));
@@ -543,7 +564,8 @@
             function clampScale(val) {
                 var num = Number(val);
                 if (!Number.isFinite(num)) return 1;
-                return Math.round(Math.max(0.82, Math.min(1.36, num)) * 100) / 100;
+                var clamped = Math.max(0.85, Math.min(1.3, num));
+                return Number((Math.round(clamped * 20) / 20).toFixed(2));
             }
 
             function showFeedback(text) {
@@ -714,9 +736,10 @@
                     decBtn.type = 'button';
                     decBtn.textContent = '−';
                     decBtn.setAttribute('aria-label', 'Perkecil font ' + part.label);
-                    decBtn.className = 'min-h-[34px] min-w-[34px] rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50';
+                    decBtn.className = 'min-h-[36px] min-w-[36px] rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed';
+                    decBtn.disabled = (state.fontScales[part.key] || 1) <= PREVIEW_MIN_SCALE + 0.001;
                     decBtn.addEventListener('click', function () {
-                        state.fontScales[part.key] = clampScale((state.fontScales[part.key] || 1) - 0.06);
+                        state.fontScales[part.key] = clampScale((state.fontScales[part.key] || 1) - PREVIEW_STEP_SCALE);
                         applyFontVarsToSheet();
                         renderFontPartControls();
                         syncVisitorToolbarReadout();
@@ -730,9 +753,10 @@
                     incBtn.type = 'button';
                     incBtn.textContent = '+';
                     incBtn.setAttribute('aria-label', 'Perbesar font ' + part.label);
-                    incBtn.className = 'min-h-[34px] min-w-[34px] rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50';
+                    incBtn.className = 'min-h-[36px] min-w-[36px] rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed';
+                    incBtn.disabled = (state.fontScales[part.key] || 1) >= PREVIEW_MAX_SCALE - 0.001;
                     incBtn.addEventListener('click', function () {
-                        state.fontScales[part.key] = clampScale((state.fontScales[part.key] || 1) + 0.06);
+                        state.fontScales[part.key] = clampScale((state.fontScales[part.key] || 1) + PREVIEW_STEP_SCALE);
                         applyFontVarsToSheet();
                         renderFontPartControls();
                         syncVisitorToolbarReadout();
@@ -1302,95 +1326,104 @@
                 // Legacy no-op: per-part A− / A+ buttons now live on each article part
             }
 
-            var PREVIEW_PART_PREFS_KEY = 'dn_article_part_font_prefs_v1';
-            var PREVIEW_SCOPE_KEY = '__studio_preview__';
+            var PREVIEW_FONT_SCALE_KEY = 'dn_article_font_scale_v1';
+            var PREVIEW_MIN_SCALE = 0.85;
+            var PREVIEW_MAX_SCALE = 1.3;
+            var PREVIEW_STEP_SCALE = 0.05;
 
-            function loadPreviewPartScale(partKey) {
-                if (!partKey) return 1;
+            function readPreviewFontScale() {
                 try {
-                    var raw = localStorage.getItem(PREVIEW_PART_PREFS_KEY);
-                    if (!raw) return 1;
-                    var all = JSON.parse(raw);
-                    var entry = all && all[PREVIEW_SCOPE_KEY];
-                    if (entry && entry[partKey] !== undefined) {
-                        return clampScale(entry[partKey]);
-                    }
-                } catch (_e) {}
-                return 1;
+                    var raw = localStorage.getItem(PREVIEW_FONT_SCALE_KEY);
+                    if (raw === null || raw === '') return 1;
+                    return clampScale(raw);
+                } catch (_e) {
+                    return 1;
+                }
             }
 
-            function savePreviewPartScale(partKey, val) {
-                if (!partKey) return;
+            var previewFontScale = readPreviewFontScale();
+
+            function savePreviewFontScale(scale) {
                 try {
-                    var raw = localStorage.getItem(PREVIEW_PART_PREFS_KEY);
-                    var all = raw ? JSON.parse(raw) : {};
-                    if (!all || typeof all !== 'object') all = {};
-                    if (!all[PREVIEW_SCOPE_KEY] || typeof all[PREVIEW_SCOPE_KEY] !== 'object') {
-                        all[PREVIEW_SCOPE_KEY] = {};
-                    }
-                    if (val === null || Math.abs(val - 1) <= 0.005) {
-                        delete all[PREVIEW_SCOPE_KEY][partKey];
-                        if (Object.keys(all[PREVIEW_SCOPE_KEY]).length === 0) {
-                            delete all[PREVIEW_SCOPE_KEY];
-                        }
-                    } else {
-                        all[PREVIEW_SCOPE_KEY][partKey] = clampScale(val);
-                    }
-                    localStorage.setItem(PREVIEW_PART_PREFS_KEY, JSON.stringify(all));
+                    if (scale === 1) localStorage.removeItem(PREVIEW_FONT_SCALE_KEY);
+                    else localStorage.setItem(PREVIEW_FONT_SCALE_KEY, String(scale));
                 } catch (_e) {}
             }
 
-            function createPreviewFontControlGroup(partKey, onStep) {
+            function syncAllPreviewFontButtons() {
+                var sheet = els.previewArticleSheet;
+                if (!sheet) return;
+                var isMin = previewFontScale <= PREVIEW_MIN_SCALE + 0.001;
+                var isMax = previewFontScale >= PREVIEW_MAX_SCALE - 0.001;
+                var isDefault = Math.abs(previewFontScale - 1) <= 0.001;
+                var pctText = Math.round(previewFontScale * 100) + '%';
+
+                var decBtns = sheet.querySelectorAll('[data-font-act="dec"]');
+                for (var i = 0; i < decBtns.length; i++) {
+                    decBtns[i].disabled = isMin;
+                    decBtns[i].setAttribute('aria-disabled', isMin ? 'true' : 'false');
+                }
+                var incBtns = sheet.querySelectorAll('[data-font-act="inc"]');
+                for (var j = 0; j < incBtns.length; j++) {
+                    incBtns[j].disabled = isMax;
+                    incBtns[j].setAttribute('aria-disabled', isMax ? 'true' : 'false');
+                }
+                var pctBtns = sheet.querySelectorAll('[data-font-pct]');
+                for (var k = 0; k < pctBtns.length; k++) {
+                    pctBtns[k].textContent = pctText;
+                    pctBtns[k].classList.toggle('hidden', isDefault);
+                }
+            }
+
+            function updatePreviewFontScale(nextScale, persist) {
+                previewFontScale = clampScale(nextScale);
+                if (els.previewArticleSheet) {
+                    els.previewArticleSheet.style.setProperty('--article-font-scale', String(previewFontScale));
+                }
+                syncAllPreviewFontButtons();
+                if (persist !== false) {
+                    savePreviewFontScale(previewFontScale);
+                }
+                return previewFontScale;
+            }
+
+            function createPreviewFontControlGroup() {
                 var group = document.createElement('div');
-                group.className = 'inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/90 divide-x divide-slate-200 shadow-sm shrink-0 select-none';
-                var scale = loadPreviewPartScale(partKey);
+                group.className = 'dn-font-controls relative z-20 inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/90 divide-x divide-slate-200 shadow-sm shrink-0 select-none';
 
                 var decBtn = document.createElement('button');
                 decBtn.type = 'button';
+                decBtn.setAttribute('data-font-act', 'dec');
                 decBtn.textContent = 'A−';
                 decBtn.title = 'Perkecil teks';
-                decBtn.className = 'min-h-[28px] min-w-[30px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 hover:bg-white hover:text-blue-600 rounded-l-lg transition-colors';
+                decBtn.className = 'dn-font-btn relative z-20 min-h-[36px] min-w-[36px] px-2.5 inline-flex items-center justify-center text-xs font-semibold text-slate-600 hover:bg-white hover:text-blue-600 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation rounded-l-lg transition-colors';
 
                 var pctBtn = document.createElement('button');
                 pctBtn.type = 'button';
+                pctBtn.setAttribute('data-font-pct', '');
                 pctBtn.title = 'Reset ke 100%';
-                pctBtn.className = 'hidden min-h-[28px] px-1.5 inline-flex items-center justify-center text-[10px] font-mono font-semibold text-blue-600 hover:bg-white tabular-nums transition-colors';
+                pctBtn.className = 'dn-font-btn hidden relative z-20 min-h-[36px] min-w-[36px] px-2 inline-flex items-center justify-center text-[11px] font-mono font-semibold text-blue-600 hover:bg-white touch-manipulation tabular-nums transition-colors';
 
                 var incBtn = document.createElement('button');
                 incBtn.type = 'button';
+                incBtn.setAttribute('data-font-act', 'inc');
                 incBtn.textContent = 'A+';
                 incBtn.title = 'Perbesar teks';
-                incBtn.className = 'min-h-[28px] min-w-[30px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 hover:bg-white hover:text-blue-600 rounded-r-lg transition-colors';
-
-                function syncGroup(persist) {
-                    var isDef = Math.abs(scale - 1) <= 0.005;
-                    pctBtn.textContent = Math.round(scale * 100) + '%';
-                    pctBtn.classList.toggle('hidden', isDef);
-                    decBtn.disabled = scale <= 0.83;
-                    incBtn.disabled = scale >= 1.35;
-                    onStep(isDef ? null : scale);
-                    if (persist) {
-                        savePreviewPartScale(partKey, isDef ? null : scale);
-                    }
-                }
+                incBtn.className = 'dn-font-btn relative z-20 min-h-[36px] min-w-[36px] px-2.5 inline-flex items-center justify-center text-xs font-semibold text-slate-600 hover:bg-white hover:text-blue-600 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation rounded-r-lg transition-colors';
 
                 decBtn.addEventListener('click', function () {
-                    scale = clampScale(scale - 0.06);
-                    syncGroup(true);
+                    updatePreviewFontScale(previewFontScale - PREVIEW_STEP_SCALE, true);
                 });
                 incBtn.addEventListener('click', function () {
-                    scale = clampScale(scale + 0.06);
-                    syncGroup(true);
+                    updatePreviewFontScale(previewFontScale + PREVIEW_STEP_SCALE, true);
                 });
                 pctBtn.addEventListener('click', function () {
-                    scale = 1;
-                    syncGroup(true);
+                    updatePreviewFontScale(1, true);
                 });
 
                 group.appendChild(decBtn);
                 group.appendChild(pctBtn);
                 group.appendChild(incBtn);
-                syncGroup(false);
                 return group;
             }
 
@@ -1400,11 +1433,8 @@
                 wrap.setAttribute('data-font-part', partType);
                 if (partKey) wrap.setAttribute('data-part-key', partKey);
                 var bar = document.createElement('div');
-                bar.className = 'flex items-center justify-end mb-1.5';
-                bar.appendChild(createPreviewFontControlGroup(partKey, function (val) {
-                    if (val === null) wrap.style.removeProperty('--part-scale');
-                    else wrap.style.setProperty('--part-scale', String(val));
-                }));
+                bar.className = 'dn-font-controls-bar relative z-20 flex items-center justify-end mb-1.5';
+                bar.appendChild(createPreviewFontControlGroup());
                 wrap.appendChild(bar);
                 wrap.appendChild(innerNode);
                 return wrap;
@@ -1792,10 +1822,7 @@
                     fTitle.className = 'text-lg sm:text-xl font-bold text-slate-900';
                     fTitle.textContent = 'FAQ Artikel';
                     faqHeadRow.appendChild(fTitle);
-                    faqHeadRow.appendChild(createPreviewFontControlGroup('faq', function (val) {
-                        if (val === null) faqSec.style.removeProperty('--part-scale');
-                        else faqSec.style.setProperty('--part-scale', String(val));
-                    }));
+                    faqHeadRow.appendChild(createPreviewFontControlGroup());
                     faqSec.appendChild(faqHeadRow);
 
                     article.faqs.forEach(function (faq, fIdx) {
@@ -1820,15 +1847,12 @@
                 relSec.setAttribute('data-font-part', 'related');
                 relSec.setAttribute('data-part-key', 'related');
                 var relHeadRow = document.createElement('div');
-                relHeadRow.className = 'flex items-center justify-between gap-3';
+                relHeadRow.className = 'dn-font-controls-bar relative z-20 flex items-center justify-between gap-3';
                 var relTitle = document.createElement('h2');
                 relTitle.className = 'text-base sm:text-lg font-bold text-slate-900';
                 relTitle.textContent = 'Artikel & Riset Terkait';
                 relHeadRow.appendChild(relTitle);
-                relHeadRow.appendChild(createPreviewFontControlGroup('related', function (val) {
-                    if (val === null) relSec.style.removeProperty('--part-scale');
-                    else relSec.style.setProperty('--part-scale', String(val));
-                }));
+                relHeadRow.appendChild(createPreviewFontControlGroup());
                 relSec.appendChild(relHeadRow);
                 var relCard = document.createElement('div');
                 relCard.className = 'p-4 rounded-xl border border-slate-200 bg-slate-50/70';
@@ -1843,6 +1867,7 @@
                 relSec.appendChild(relCard);
                 sheet.appendChild(relSec);
 
+                updatePreviewFontScale(previewFontScale, false);
                 renderSlot5Overlay();
             }
 
@@ -1997,6 +2022,7 @@
                     els.studioResetFontsBtn.addEventListener('click', function () {
                         PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
                         applyFontVarsToSheet();
+                        updatePreviewFontScale(1, true);
                         renderFontPartControls();
                         syncVisitorToolbarReadout();
                         showFeedback('Ukuran font seluruh bagian artikel dikembalikan ke 100%.');
@@ -2009,6 +2035,7 @@
                         PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
                         els.globalPublisherIdInput.value = '';
                         try { localStorage.removeItem(slotsApi.STORAGE_KEY); } catch (_e) {}
+                        updatePreviewFontScale(1, true);
                         syncPageGroupUi();
                         renderFontPartControls();
                         renderSlotForms();
