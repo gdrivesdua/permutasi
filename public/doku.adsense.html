@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Panduan Admin — Cara Mengatur Penempatan AdSense di AdSense Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('preferredTheme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col">
+    <header class="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <a href="/adsense-studio/" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">&larr; Buka AdSense Studio</a>
+                <span class="text-slate-300 dark:text-slate-700">/</span>
+                <span class="text-sm font-bold truncate">Panduan Admin AdSense</span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="/admin-articles/" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Article Studio
+                </a>
+                <button id="themeBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    Tema
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-6">
+        <article class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-9 shadow-sm space-y-8">
+            <header class="border-b border-slate-200 dark:border-slate-800 pb-6 space-y-2">
+                <p class="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">Buku Pegangan Admin Monetisasi</p>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Cara Mengatur Penempatan Kode AdSense di AdSense Studio</h1>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Panduan operasional untuk admin dalam memasang, mempratinjau ukuran Desktop/Mobile, mengatur override per bahasa, hingga menayangkan unit iklan Google AdSense secara rapi dan aman pada halaman situs.
+                </p>
+            </header>
+
+            <nav aria-label="Daftar Isi" class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Daftar Isi</p>
+                <ol class="list-decimal pl-5 space-y-1 text-sm text-blue-600 dark:text-blue-400">
+                    <li><a href="#akses-studio" class="hover:underline">Cara Masuk ke AdSense Studio (/adsense-studio/)</a></li>
+                    <li><a href="#target-halaman" class="hover:underline">Memilih Target Halaman &amp; Memahami Posisi Slot</a></li>
+                    <li><a href="#pasang-kode" class="hover:underline">Langkah Memasang Kode AdSense per Slot</a></li>
+                    <li><a href="#override-bahasa" class="hover:underline">Mengatur Unit Khusus Bahasa Tertentu (Opsional)</a></li>
+                    <li><a href="#pratinjau" class="hover:underline">Uji Pratinjau Desktop vs Mobile &amp; Margin</a></li>
+                    <li><a href="#publish-permanen" class="hover:underline">Uji Lokal Browser vs Tayang Permanen untuk Semua Pengunjung</a></li>
+                    <li><a href="#checklist-admin" class="hover:underline">Checklist &amp; Catatan Penting Admin</a></li>
+                </ol>
+            </nav>
+
+            <section id="akses-studio" class="space-y-3 scroll-mt-20">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">1. Cara Masuk ke AdSense Studio (<code class="font-mono text-base">/adsense-studio/</code>)</h2>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    Buka alamat <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">/adsense-studio/</code> di browser Anda (atau klik tab <strong>Layout &amp; AdSense</strong> dari header <em>Article Studio</em>). Layar masuk menggunakan <strong>password editorial yang sama</strong> dengan Article Studio dan Admin Lexicon.
+                </p>
+                <aside class="p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/70 dark:bg-blue-950/30 text-xs sm:text-sm text-blue-950 dark:text-blue-100 leading-relaxed">
+                    <strong>Prinsip Slot Bersih:</strong> Pada halaman publik pengunjung, slot iklan yang masih kosong, masih memakai mode <em>Simulasi Studio</em>, atau dinonaktifkan <strong>otomatis disembunyikan total</strong>. Pengunjung tidak akan pernah melihat kotak putus-putus atau ruang kosong sebelum kode AdSense asli dipasang.
+                </aside>
+            </section>
+
+            <section id="target-halaman" class="space-y-4 scroll-mt-20">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">2. Memilih Target Halaman &amp; Memahami Posisi Slot</h2>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    Pada bagian <strong>Target Halaman Pengaturan</strong> di panel kiri, pilih grup halaman yang ingin Anda atur:
+                </p>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 dark:bg-slate-800 text-left">
+                                <th class="px-4 py-2.5 font-semibold border-b border-slate-200 dark:border-slate-700">Tab Halaman</th>
+                                <th class="px-4 py-2.5 font-semibold border-b border-slate-200 dark:border-slate-700">ID Slot</th>
+                                <th class="px-4 py-2.5 font-semibold border-b border-slate-200 dark:border-slate-700">Letak Penempatan &amp; Rekomendasi Ukuran</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                            <tr>
+                                <td class="px-4 py-2.5 font-semibold align-top" rowspan="5">Artikel (5)</td>
+                                <td class="px-4 py-2.5 font-mono font-semibold">slot1</td>
+                                <td class="px-4 py-2.5"><strong>Di bawah Ringkasan Utama (sebelum Daftar Isi)</strong> — Display Horizontal. Desktop <code class="font-mono text-xs">728×90</code> / <code class="font-mono text-xs">750×200</code>; Mobile <code class="font-mono text-xs">320×100</code> / <code class="font-mono text-xs">300×250</code>.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-mono font-semibold">slot2</td>
+                                <td class="px-4 py-2.5"><strong>Setelah Bagian 2 / Tabel Ringkasan Metrik</strong> — In-article Ad. Desktop Fluid maks. <code class="font-mono text-xs">728px</code>; Mobile <code class="font-mono text-xs">300×250</code> / <code class="font-mono text-xs">336×280</code>.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-mono font-semibold">slot3</td>
+                                <td class="px-4 py-2.5"><strong>Di antara Tabel Kurasi Domain</strong> — Rata Tengah. Desktop <code class="font-mono text-xs">336×280</code> / <code class="font-mono text-xs">728×90</code>; Mobile <code class="font-mono text-xs">300×250</code>.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-mono font-semibold">slot4</td>
+                                <td class="px-4 py-2.5"><strong>Setelah Checklist 4 Langkah / Sebelum FAQ</strong> — Multiplex atau Persegi Panjang Besar. Desktop <code class="font-mono text-xs">2×3</code> / <code class="font-mono text-xs">1×3</code> / <code class="font-mono text-xs">336×280</code>; Mobile Multiplex vertikal / <code class="font-mono text-xs">300×250</code>.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-mono font-semibold">slot5</td>
+                                <td class="px-4 py-2.5"><strong>Overlay Bawah Layar (Anchor Ad)</strong> — Sticky dengan tombol tutup (<code class="font-mono text-xs">×</code>). Desktop <code class="font-mono text-xs">728×90</code> / <code class="font-mono text-xs">970×90</code>; Mobile <code class="font-mono text-xs">320×50</code> / <code class="font-mono text-xs">320×100</code>.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-semibold align-top" rowspan="2">Front Page (2)</td>
+                                <td class="px-4 py-2.5 font-mono font-semibold">home-slot1</td>
+                                <td class="px-4 py-2.5"><strong>Di bawah Hasil Generator (sebelum Kotak Bagikan Tautan)</strong> untuk seluruh 8 edisi bahasa (<code class="font-mono text-xs">/</code> hingga <code class="font-mono text-xs">/ja/</code>).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-mono font-semibold">home-slot2</td>
+                                <td class="px-4 py-2.5"><strong>Di bawah Cara Pakai 3 Langkah (sebelum Footer)</strong> di seluruh 8 bahasa Front Page.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-semibold align-top" rowspan="2">Guide (2)</td>
+                                <td class="px-4 py-2.5 font-mono font-semibold">guide-slot1</td>
+                                <td class="px-4 py-2.5"><strong>Pertengahan <code class="font-mono text-xs">/guide.html</code></strong> setelah Strategi Kata Kunci (berlaku di 8 bahasa).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-mono font-semibold">guide-slot2</td>
+                                <td class="px-4 py-2.5"><strong>Akhir konten <code class="font-mono text-xs">/guide.html</code></strong> setelah contoh domain sebelum tombol CTA.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2.5 font-semibold">FAQ (1)</td>
+                                <td class="px-4 py-2.5 font-mono font-semibold">faq-slot1</td>
+                                <td class="px-4 py-2.5"><strong>Setelah daftar akordeon <code class="font-mono text-xs">/faq.html</code></strong> sebelum kotak CTA penutup (8 bahasa).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="pasang-kode" class="space-y-4 scroll-mt-20">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">3. Langkah Memasang Kode AdSense per Slot</h2>
+                <ol class="list-decimal pl-5 space-y-2.5 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <li>
+                        <strong>Isi Publisher ID Global (Opsional):</strong> Masukkan ID penerbit Anda (format <code class="font-mono text-xs">ca-pub-1234567890123456</code>) pada kolom <em>Publisher ID Global</em> di panel kiri atas. Ini berguna sebagai cadangan otomatis bila cuplikan slot tertentu tidak mencantumkan <code class="font-mono text-xs">data-ad-client</code>, sekaligus dipakai untuk membangun berkas <code class="font-mono text-xs">/ads.txt</code>.
+                    </li>
+                    <li>
+                        <strong>Buka Kartu Slot yang Ingin Diatur:</strong> Klik nama slot atau tombol <strong>Atur</strong> di panel <em>Konfigurasi Slot AdSense</em>. Pastikan kotak centang <strong>Aktif</strong> dalam kondisi tercentang.
+                    </li>
+                    <li>
+                        <strong>Tempel Cuplikan Kode dari Google AdSense:</strong> Salin kode unit iklan dari dashboard Google AdSense (boleh menyertakan blok <code class="font-mono text-xs">&lt;script&gt;</code> dan <code class="font-mono text-xs">&lt;ins class="adsbygoogle" ...&gt;</code> lengkap), lalu tempel ke kolom <strong>Cuplikan Kode AdSense</strong>.
+                    </li>
+                    <li>
+                        <strong>Verifikasi Status Parser:</strong> Di bawah textarea akan muncul status biru seperti <code class="font-mono text-xs">Terdeteksi aman: ca-pub-... · slot 1234567890</code>. Studio secara otomatis mengekstrak atribut <code class="font-mono text-xs">data-ad-client</code>, <code class="font-mono text-xs">data-ad-slot</code>, <code class="font-mono text-xs">data-ad-format</code>, <code class="font-mono text-xs">data-ad-layout</code>, dan <code class="font-mono text-xs">data-ad-layout-key</code> dengan aman, serta otomatis mengarahkan <em>Mode Pratinjau Studio</em> ke <strong>Kode AdSense Asli (&lt;ins&gt;)</strong>.
+                    </li>
+                    <li>
+                        <strong>Pilih Ukuran &amp; Margin:</strong> Pilih preset <strong>Ukuran Desktop</strong> dan <strong>Ukuran Mobile</strong> yang sesuai dengan jenis unit iklan yang Anda buat di AdSense, serta atur <strong>Margin Atas</strong> dan <strong>Margin Bawah</strong> (minimal <code class="font-mono text-xs">20px</code>, default <code class="font-mono text-xs">24px</code>, maksimal <code class="font-mono text-xs">64px</code>) agar iklan tidak menempel pada teks atau tabel.
+                    </li>
+                </ol>
+            </section>
+
+            <section id="override-bahasa" class="space-y-3 scroll-mt-20">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">4. Mengatur Unit Khusus Bahasa Tertentu (Opsional)</h2>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    Untuk halaman multibahasa (<strong>Front Page</strong>, <strong>Guide</strong>, dan <strong>FAQ</strong>), di bagian atas form tiap slot terdapat pilihan <strong>Cakupan Bahasa Kode Iklan</strong>:
+                </p>
+                <ul class="list-disc pl-5 space-y-1.5 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                    <li><strong>Semua Bahasa (Default Global):</strong> Satu kode slot dipakai seragam untuk seluruh 8 edisi bahasa.</li>
+                    <li><strong>Khusus Bahasa Tertentu (EN / ID / ES / PT / FR / DE / RU / JA):</strong> Jika ingin memantau performa atau menonaktifkan slot hanya pada bahasa tertentu, pilih bahasanya di dropdown cakupan lalu tempel cuplikan khusus atau ubah status <em>Aktif</em>-nya. Untuk membatalkan dan kembali memakai pengaturan global, klik tombol <strong>Ikuti Default</strong>.</li>
+                </ul>
+            </section>
+
+            <section id="pratinjau" class="space-y-3 scroll-mt-20">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">5. Uji Pratinjau Desktop vs Mobile &amp; Margin</h2>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    Di kolom kanan studio, gunakan switcher <strong>Desktop (Kolom Konten)</strong> dan <strong>Mobile (390px)</strong> untuk memeriksa posisi iklan relatif terhadap teks, tabel, dan tombol navigasi:
+                </p>
+                <ul class="list-disc pl-5 space-y-1.5 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                    <li>Pada tab <strong>Artikel</strong>, Anda juga dapat memilih artikel sampel di dropdown <em>Artikel Pratinjau</em> serta menguji tombol kontrol huruf <code class="font-mono text-xs">A−</code> / <code class="font-mono text-xs">A+</code> langsung di kanvas pratinjau.</li>
+                    <li>Untuk <strong>Slot 5 (Anchor Ad)</strong>, klik tombol tutup <code class="font-mono text-xs">×</code> untuk memastikan interaksi tutup bekerja rapi, lalu klik <strong>Tampilkan Anchor Ad (Slot 5)</strong> bila ingin memunculkannya kembali di pratinjau.</li>
+                    <li>Pada tab <strong>Front Page</strong>, <strong>Guide</strong>, dan <strong>FAQ</strong>, gunakan dropdown <em>Bahasa Pratinjau (8 Edisi)</em> untuk memastikan judul dan override tiap bahasa tampil sesuai harapan.</li>
+                </ul>
+            </section>
+
+            <section id="publish-permanen" class="space-y-4 scroll-mt-20">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">6. Uji Lokal Browser vs Tayang Permanen untuk Semua Pengunjung</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 space-y-2">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">A. Simpan &amp; Uji di Browser Admin (Sementara)</p>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li>Centang opsi <em>"Terapkan unit AdSense aktif tersimpan saat membuka halaman situs live di browser ini"</em>.</li>
+                            <li>Klik tombol biru <strong>Simpan Konfigurasi</strong> di pojok kanan atas.</li>
+                            <li>Buka tautan <strong>Artikel Live</strong> (atau halaman Front Page/Guide/FAQ) di tab baru pada browser yang sama untuk melihat hasilnya sebelum dipublikasikan ke semua pengunjung.</li>
+                        </ol>
+                    </div>
+                    <div class="p-4 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/70 dark:bg-blue-950/30 space-y-2">
+                        <p class="text-sm font-bold text-blue-950 dark:text-blue-200">B. Tayangkan Permanen ke Seluruh Pengunjung</p>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-xs sm:text-sm text-blue-900 dark:text-blue-100">
+                            <li>Klik tombol <strong>Salin Kode / JSON Konfigurasi</strong> di panel kiri.</li>
+                            <li>Klik <strong>Salin JSON</strong> pada bagian <em>1. JSON Konfigurasi</em>.</li>
+                            <li>Tempel dan gantikan isi objek <code class="font-mono text-xs">"googleAdSense"</code> di berkas <code class="font-mono text-xs">site.config.json</code> pada repositori proyek.</li>
+                            <li>Commit &amp; push ke GitHub. Build statis (<code class="font-mono text-xs">npm run build</code>) otomatis menanamkan unit <code class="font-mono text-xs">&lt;ins&gt;</code> yang valid langsung ke HTML statis serta menghasilkan berkas <code class="font-mono text-xs">/ads.txt</code>.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <section id="checklist-admin" class="space-y-3 scroll-mt-20 pt-2 border-t border-slate-200 dark:border-slate-800">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">7. Checklist &amp; Catatan Penting Admin</h2>
+                <ul class="list-disc pl-5 space-y-1.5 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                    <li>Pastikan ID penerbit (<code class="font-mono text-xs">ca-pub-...</code>) dan nomor <code class="font-mono text-xs">data-ad-slot</code> sudah aktif serta disetujui di akun Google AdSense sebelum di-commit ke <code class="font-mono text-xs">site.config.json</code>.</li>
+                    <li>Untuk menonaktifkan sementara satu slot tanpa menghapus kodenya, cukup matikan centang <strong>Aktif</strong> pada slot tersebut lalu ekspor ulang konfigurasi ke <code class="font-mono text-xs">site.config.json</code>.</li>
+                    <li>Jika ingin mengulang pengaturan awal di browser, gunakan tombol <strong>Reset Default</strong> di panel kiri studio.</li>
+                    <li>Halaman dokumentasi ini (<code class="font-mono text-xs">/public/doku.adsense.html</code>) serta seluruh halaman admin dilindungi header <code class="font-mono text-xs">noindex, nofollow</code> agar tidak terindeks mesin pencari.</li>
+                </ul>
+            </section>
+        </article>
+    </main>
+
+    <script>
+        document.getElementById('themeBtn').addEventListener('click', function() {
+            var isDark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('preferredTheme', isDark ? 'dark' : 'light'); } catch (e) {}
+        });
+    </script>
+</body>
+</html>

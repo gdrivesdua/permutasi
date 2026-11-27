@@ -154,7 +154,7 @@ if (fs.existsSync(adminLexiconSrc)) {
 
 const publicSrcDir = path.join(rootDir, 'public');
 if (fs.existsSync(publicSrcDir)) {
-  const publicDocFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md') || name === 'doku.writer.html');
+  const publicDocFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md') || name === 'doku.writer.html' || name === 'doku.adsense.html');
   if (publicDocFiles.length > 0) {
     const publicDestDir = path.join(distDir, 'public');
     fs.mkdirSync(publicDestDir, { recursive: true });
