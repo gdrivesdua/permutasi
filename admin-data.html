@@ -106,12 +106,15 @@
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Database D1 — Available Domains</h1>
                     <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-                        Cari, saring, edit metadata/skor baris, hapus data yang tidak valid, atau ekspor hasil filter ke CSV, XLS, dan JSON.
+                        Cari, saring, edit metadata/skor baris, hapus data yang tidak valid, atau ekspor hasil filter ke CSV, XLS, JSON, dan Tabel Markdown.
                     </p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <button id="refreshDataBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                         Muat Ulang
+                    </button>
+                    <button id="toggleExportColsBtn" type="button" aria-expanded="false" aria-controls="exportColumnsPanel" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+                        Kolom Export (20/20)
                     </button>
                     <button id="exportCsvBtn" type="button" data-export-format="csv" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
                         Export CSV
@@ -122,7 +125,26 @@
                     <button id="exportJsonBtn" type="button" data-export-format="json" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
                         Export JSON
                     </button>
+                    <button id="exportMdBtn" type="button" data-export-format="md" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors">
+                        Export Markdown
+                    </button>
                 </div>
+            </div>
+
+            <!-- Collapsible Export Columns Selector -->
+            <div id="exportColumnsPanel" class="hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h2 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Pilih Kolom untuk Export (CSV, XLS, JSON, Tabel Markdown)</h2>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Heading tabel Markdown otomatis menyesuaikan kolom yang dicentang.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button id="presetColsAllBtn" type="button" class="px-2.5 py-1 text-[11px] font-medium rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Semua</button>
+                        <button id="presetColsTableBtn" type="button" class="px-2.5 py-1 text-[11px] font-medium rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Sesuai Tabel</button>
+                        <button id="presetColsCompactBtn" type="button" class="px-2.5 py-1 text-[11px] font-medium rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Ringkas (SLD + Ext + Len + Skor)</button>
+                    </div>
+                </div>
+                <div id="exportColumnsGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2"></div>
             </div>
 
             <!-- Metrics Strip -->
@@ -280,8 +302,9 @@
                                     <input id="selectAllPageCheckbox" type="checkbox" aria-label="Pilih semua baris di halaman ini"
                                         class="h-4 w-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500">
                                 </th>
-                                <th class="px-3 py-3 text-left">Domain &amp; SLD</th>
-                                <th class="px-3 py-3 text-left">Ext / Len</th>
+                                <th class="px-3 py-3 text-left">SLD</th>
+                                <th class="px-3 py-3 text-left whitespace-nowrap">Ext TLD</th>
+                                <th class="px-3 py-3 text-left whitespace-nowrap">Len</th>
                                 <th class="px-3 py-3 text-left">Lang</th>
                                 <th class="px-3 py-3 text-left">Source / Method</th>
                                 <th class="px-3 py-3 text-left">Tags</th>
@@ -485,6 +508,13 @@
                 exportCsvBtn: document.getElementById('exportCsvBtn'),
                 exportXlsBtn: document.getElementById('exportXlsBtn'),
                 exportJsonBtn: document.getElementById('exportJsonBtn'),
+                exportMdBtn: document.getElementById('exportMdBtn'),
+                toggleExportColsBtn: document.getElementById('toggleExportColsBtn'),
+                exportColumnsPanel: document.getElementById('exportColumnsPanel'),
+                exportColumnsGrid: document.getElementById('exportColumnsGrid'),
+                presetColsAllBtn: document.getElementById('presetColsAllBtn'),
+                presetColsTableBtn: document.getElementById('presetColsTableBtn'),
+                presetColsCompactBtn: document.getElementById('presetColsCompactBtn'),
                 statTotalRows: document.getElementById('statTotalRows'),
                 statFilteredRows: document.getElementById('statFilteredRows'),
                 statSelectedRows: document.getElementById('statSelectedRows'),
@@ -747,7 +777,7 @@
                 if (state.rows.length === 0) {
                     const tr = document.createElement('tr');
                     const td = document.createElement('td');
-                    td.colSpan = 9;
+                    td.colSpan = 10;
                     td.className = 'px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400';
                     td.textContent = 'Tidak ada baris D1 yang cocok dengan pencarian atau filter aktif.';
                     tr.appendChild(td);
@@ -776,31 +806,43 @@
                     tdCheck.appendChild(cb);
                     tr.appendChild(tdCheck);
 
-                    // 2. Domain & SLD
-                    const tdDomain = document.createElement('td');
-                    tdDomain.className = 'px-3 py-3 align-top';
-                    const domDiv = document.createElement('div');
-                    domDiv.className = 'font-mono font-semibold text-slate-900 dark:text-white break-all';
-                    domDiv.textContent = row.domain;
+                    // 2. SLD only (without full domain)
+                    const tdSld = document.createElement('td');
+                    tdSld.className = 'px-3 py-3 align-top';
+                    let sldText = String(row.sld || '').trim();
+                    if (!sldText && row.domain) {
+                        const extStr = String(row.extension || '').trim();
+                        if (extStr && row.domain.toLowerCase().endsWith(extStr.toLowerCase())) {
+                            sldText = row.domain.slice(0, row.domain.length - extStr.length);
+                        } else {
+                            sldText = row.domain.split('.')[0] || row.domain;
+                        }
+                    }
                     const sldDiv = document.createElement('div');
-                    sldDiv.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-0.5';
-                    sldDiv.textContent = `SLD: ${row.sld || '-'}`;
-                    tdDomain.appendChild(domDiv);
-                    tdDomain.appendChild(sldDiv);
-                    tr.appendChild(tdDomain);
+                    sldDiv.className = 'font-mono font-semibold text-slate-900 dark:text-white break-all';
+                    sldDiv.textContent = sldText || '-';
+                    if (row.domain) sldDiv.title = row.domain;
+                    tdSld.appendChild(sldDiv);
+                    tr.appendChild(tdSld);
 
-                    // 3. Extension / Char Length
+                    // 3. Ext TLD
                     const tdExt = document.createElement('td');
                     tdExt.className = 'px-3 py-3 align-top whitespace-nowrap';
                     const extBadge = document.createElement('span');
                     extBadge.className = 'inline-block px-2 py-0.5 text-[11px] font-mono font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200';
-                    extBadge.textContent = row.extension;
-                    const lenDiv = document.createElement('div');
-                    lenDiv.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-1';
-                    lenDiv.textContent = `${row.char_length} char`;
+                    extBadge.textContent = row.extension || '-';
                     tdExt.appendChild(extBadge);
-                    tdExt.appendChild(lenDiv);
                     tr.appendChild(tdExt);
+
+                    // 4. Len (Char Length)
+                    const tdLen = document.createElement('td');
+                    tdLen.className = 'px-3 py-3 align-top whitespace-nowrap';
+                    const lenSpan = document.createElement('span');
+                    lenSpan.className = 'inline-block px-2 py-0.5 text-[11px] font-mono font-semibold rounded bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800';
+                    lenSpan.textContent = row.char_length != null && row.char_length !== '' ? String(row.char_length) : '-';
+                    lenSpan.title = `${row.char_length ?? 0} karakter`;
+                    tdLen.appendChild(lenSpan);
+                    tr.appendChild(tdLen);
 
                     // 4. Lang
                     const tdLang = document.createElement('td');
@@ -998,10 +1040,99 @@
                 els.deleteModal.classList.add('hidden');
             }
 
+            const EXPORT_COLUMNS_CONFIG = [
+                { key: 'domain', label: 'Domain' },
+                { key: 'sld', label: 'SLD' },
+                { key: 'extension', label: 'Ext TLD' },
+                { key: 'char_length', label: 'Len' },
+                { key: 'lang', label: 'Lang' },
+                { key: 'check_method', label: 'Method' },
+                { key: 'check_source', label: 'Source' },
+                { key: 'checked_at', label: 'Checked At (ms)' },
+                { key: 'checked_at_iso', label: 'Checked At (ISO)' },
+                { key: 'overall_heuristic_score', label: 'Overall Score' },
+                { key: 'pronunciation_comfort_score', label: 'Pronunciation Score' },
+                { key: 'brandability_score', label: 'Brandability Score' },
+                { key: 'structure_length_score', label: 'Structure Length Score' },
+                { key: 'extension_lang_fit_score', label: 'Ext/Lang Fit Score' },
+                { key: 'character_cleanliness_score', label: 'Cleanliness Score' },
+                { key: 'niche_clarity_score', label: 'Niche Clarity Score' },
+                { key: 'emd_pmd_score', label: 'EMD/PMD Score' },
+                { key: 'emd_pmd_match_type', label: 'Match Type' },
+                { key: 'scored_at', label: 'Scored At (ms)' },
+                { key: 'tags', label: 'Tags' }
+            ];
+
+            const selectedExportColumns = new Set(EXPORT_COLUMNS_CONFIG.map((c) => c.key));
+
+            function updateExportColumnsUi() {
+                els.toggleExportColsBtn.textContent = `Kolom Export (${selectedExportColumns.size}/${EXPORT_COLUMNS_CONFIG.length})`;
+                const checkboxes = els.exportColumnsGrid.querySelectorAll('input[type="checkbox"][data-col-key]');
+                checkboxes.forEach((cb) => {
+                    cb.checked = selectedExportColumns.has(cb.dataset.colKey);
+                });
+            }
+
+            function renderExportColumnsSelector() {
+                clearElement(els.exportColumnsGrid);
+                for (const col of EXPORT_COLUMNS_CONFIG) {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 hover:bg-slate-100 dark:hover:bg-slate-800/70 text-xs cursor-pointer select-none';
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.dataset.colKey = col.key;
+                    cb.checked = selectedExportColumns.has(col.key);
+                    cb.className = 'h-3.5 w-3.5 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500';
+                    cb.addEventListener('change', () => {
+                        if (cb.checked) {
+                            selectedExportColumns.add(col.key);
+                        } else if (selectedExportColumns.size > 1) {
+                            selectedExportColumns.delete(col.key);
+                        } else {
+                            cb.checked = true;
+                            showBanner('info', 'Minimal 1 kolom harus dipilih untuk export.');
+                        }
+                        updateExportColumnsUi();
+                    });
+                    const span = document.createElement('span');
+                    span.className = 'truncate font-medium text-slate-700 dark:text-slate-200';
+                    span.textContent = col.label;
+                    span.title = col.key;
+                    label.appendChild(cb);
+                    label.appendChild(span);
+                    els.exportColumnsGrid.appendChild(label);
+                }
+                updateExportColumnsUi();
+            }
+
+            function applyExportColumnPreset(keys) {
+                selectedExportColumns.clear();
+                for (const k of keys) {
+                    if (EXPORT_COLUMNS_CONFIG.some((c) => c.key === k)) {
+                        selectedExportColumns.add(k);
+                    }
+                }
+                if (selectedExportColumns.size === 0) {
+                    EXPORT_COLUMNS_CONFIG.forEach((c) => selectedExportColumns.add(c.key));
+                }
+                updateExportColumnsUi();
+            }
+
+            function getOrderedSelectedExportColumns() {
+                return EXPORT_COLUMNS_CONFIG
+                    .map((c) => c.key)
+                    .filter((k) => selectedExportColumns.has(k));
+            }
+
             async function handleExport(format) {
                 if (!state.authenticated) return;
                 hideBanner();
-                const btnMap = { csv: els.exportCsvBtn, xls: els.exportXlsBtn, json: els.exportJsonBtn };
+                const btnMap = {
+                    csv: els.exportCsvBtn,
+                    xls: els.exportXlsBtn,
+                    json: els.exportJsonBtn,
+                    md: els.exportMdBtn
+                };
                 const btn = btnMap[format];
                 const originalText = btn ? btn.textContent : '';
                 if (btn) {
@@ -1012,6 +1143,10 @@
                 try {
                     const params = buildFilterParams(false);
                     params.set('format', format);
+                    const chosenCols = getOrderedSelectedExportColumns();
+                    if (chosenCols.length > 0 && chosenCols.length < EXPORT_COLUMNS_CONFIG.length) {
+                        params.set('columns', chosenCols.join(','));
+                    }
                     const res = await fetch(`/api/admin-data/export?${params.toString()}`, {
                         credentials: 'same-origin',
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -1148,8 +1283,25 @@
                 openDeleteModal(Array.from(state.selectedDomains));
             });
 
-            [els.exportCsvBtn, els.exportXlsBtn, els.exportJsonBtn].forEach((btn) => {
+            [els.exportCsvBtn, els.exportXlsBtn, els.exportJsonBtn, els.exportMdBtn].forEach((btn) => {
                 btn.addEventListener('click', () => handleExport(btn.dataset.exportFormat));
+            });
+
+            els.toggleExportColsBtn.addEventListener('click', () => {
+                const isHidden = els.exportColumnsPanel.classList.toggle('hidden');
+                els.toggleExportColsBtn.setAttribute('aria-expanded', String(!isHidden));
+            });
+
+            els.presetColsAllBtn.addEventListener('click', () => {
+                applyExportColumnPreset(EXPORT_COLUMNS_CONFIG.map((c) => c.key));
+            });
+
+            els.presetColsTableBtn.addEventListener('click', () => {
+                applyExportColumnPreset(['sld', 'extension', 'char_length', 'lang', 'check_source', 'check_method', 'tags', 'overall_heuristic_score', 'checked_at_iso']);
+            });
+
+            els.presetColsCompactBtn.addEventListener('click', () => {
+                applyExportColumnPreset(['sld', 'extension', 'char_length', 'overall_heuristic_score', 'pronunciation_comfort_score', 'brandability_score', 'tags']);
             });
 
             els.closeEditModalBtn.addEventListener('click', closeEditModal);
@@ -1239,6 +1391,7 @@
                 }
             });
 
+            renderExportColumnsSelector();
             checkAuthSession();
         })();
     </script>

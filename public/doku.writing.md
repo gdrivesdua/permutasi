@@ -11,17 +11,18 @@ Seluruh artikel dikelompokkan ke dalam 3 jalur URL (`section`):
 
 ## 1. Alur Kerja End-to-End (Dari Data D1 ke Halaman Terbit)
 
-1. **Siapkan Data Agregat (jika memakai data `available_domains`)**:
-   - Jalankan query agregasi (`GROUP BY` / statistik) melalui Wrangler D1 CLI:
+1. **Siapkan Data Kurasi atau Agregat (jika memakai data `available_domains`)**:
+   - **Untuk Kurasi Baris & Tabel Artikel (`/admin-data/`)**: Buka **`Database D1` (`/admin-data/`)** setelah login melalui `/admin-articles/`, saring baris menggunakan 7 filter (**SLD**, **Keyword**, **Char Length Min–Max**, **Tags**, **Extension**, **Check Source**, **Lang**) dan pencarian umum, lalu atur kolom di **Kolom Export** (misalnya preset **`Sesuai Tabel`** atau **`Ringkas (SLD + Ext + Len + Skor)`**) dan klik **Export Markdown** (`format=md`) untuk mengunduh tabel Markdown GFM siap pakai (heading dan perataan kolom otomatis menyesuaikan pilihan Anda), selain opsi **CSV**, **XLS**, dan **JSON**.
+   - **Untuk Query Statistik Agregat (`GROUP BY` / Persentase)**: Jalankan query agregasi melalui Wrangler D1 CLI:
      ```bash
      npx wrangler d1 execute domainname_available_domains --remote --command="SELECT ..."
      ```
    - *(Opsional)* Simpan ringkasan snapshot JSON di `content/articles/data/<nama-snapshot>.json` sebagai arsip referensi, lalu pastikan angka `sampleSize` dan `dateRange` pada `dataSnapshot` di `content/articles/manifest.json` (yang langsung dibaca builder untuk metadata E-E-A-T) konsisten dengan isi tabel artikel.
-2. **Buat Direktori Artikel & File Bahasa**:
-   - Buat folder `content/articles/<section>/<id>/` (gunakan slug ASCII huruf kecil + tanda hubung, mis. `domain-scoring-methodology`).
-   - Tulis konten per bahasa yang sudah siap terbit, misalnya `en.json` dan `id.json`.
+2. **Buat / Edit Konten Artikel (via Article Studio atau File JSON)**:
+   - **Cara Visual (`/admin-articles/`)**: Tulis atau tempel naskah langsung di **Article Studio**, termasuk menempel tabel hasil export dari `/admin-data/` lewat tombol **`+Tabel Dalam Paragraf (MD)`**, lalu simpan draft atau terbitkan otomatis ke GitHub.
+   - **Cara Manual di Repo**: Buat folder `content/articles/<section>/<id>/` (gunakan slug ASCII huruf kecil + tanda hubung, mis. `domain-scoring-methodology`) dan tulis konten per bahasa (`en.json`, `id.json`, dst.).
 3. **Daftarkan Artikel di `content/articles/manifest.json`**:
-   - Tambahkan entri artikel ke array `"articles"`.
+   - Tambahkan atau sinkronkan entri artikel di array `"articles"` (otomatis terisi bila memakai `/admin-articles/`).
    - Set `"published": true` **hanya** untuk bahasa yang file `<lang>.json`-nya sudah 100% diterjemahkan secara alami dan selesai ditinjau. Bahasa yang belum siap wajib `"published": false` atau tidak ditulis dulu.
 4. **Preview Lokal via `server.js`**:
    - Jalankan dev server dan buka langsung `http://localhost:3000/<section>/<slug>/` atau `/<lang>/<section>/<slug>/`.
@@ -249,15 +250,17 @@ Bagian ini merangkum pembaruan teknis rendering dan estetika tampilan baca halam
 1. **Estetika Baca Single-Column & Tipografi Nyaman (`templates/article.html`)**:
    - Mempertahankan tata letak artikel satu kolom (*single-column* `max-w-3xl`), latar putih bersih, teks kontras abu-abu tua/hitam, aksen biru tenang, dan jarak antar-elemen (*whitespace*) lega (`gap-8`) untuk kenyamanan baca desktop maupun mobile.
    - Menggunakan `tabular-nums` pada angka tabel agar perbandingan metrik statistik domain sejajar rapi.
-2. **Kontrol Ukuran Font Interaktif `A− / A+` per Bagian (`templates/article.html` + `assets/article-reader.js`)**:
-   - Menambahkan toolbar penyesuaian ukuran font untuk pengunjung dengan pemilih cakupan granular: **Semua Bagian Artikel**, **Paragraf Isi**, **Daftar Poin / Bullets**, **Kotak Sorotan (Callout)**, **Tabel Penutup H2**, **Catatan Metodologi**, dan **FAQ Artikel**.
-   - Implementasi menggunakan CSS Custom Properties (`--art-scale-prose`, `--art-scale-bullets`, `--art-scale-callout`, `--art-scale-table`, `--art-scale-methodology`, `--art-scale-faq`) dengan rentang aman `82%–136%`, tombol `Reset`, serta persistensi otomatis di `localStorage` (`dn_article_font_prefs_v1`).
+2. **Kontrol Ukuran Font Interaktif Terpadu `A− / A+` (`templates/article.html` + `assets/article-reader.js`)**:
+   - Pengunjung dapat langsung memperkecil atau memperbesar seluruh teks bacaan artikel lewat bilah kontrol ringkas (`A−`, lencana persentase aktif untuk klik reset ke `100%`, dan `A+`) yang tersedia di atas setiap bagian artikel (`dn-font-controls`).
+   - Implementasi menggunakan CSS Custom Property global `--article-font-scale` (dengan dukungan baseline opsional per bagian `--art-scale-takeaways`, `--art-scale-toc`, `--art-scale-prose`, `--art-scale-bullets`, `--art-scale-callout`, `--art-scale-table`, `--art-scale-code`, `--art-scale-methodology`, `--art-scale-faq`, `--art-scale-related` dari AdSense Studio `dn_adsense_studio_config_v1`) pada rentang **`85%–130%` (kelipatan `5%`)** serta persistensi otomatis di `localStorage` (`dn_article_font_scale_v1`).
 3. **Dukungan Teknis Gambar & Tabel di Dalam Paragraf (`assets/article-markdown.js`)**:
    - Menambahkan parser gambar Markdown `![alt](url "judul")` yang merender `<figure>` dan `<img>` responsif (`loading="lazy"`) dengan sanitasi protokol ketat (`https://`, `http://`, atau path `/...` saja; menolak `javascript:`/`data:`).
    - Mendukung tabel Markdown pipe langsung di dalam blok paragraf isi, berdampingan dengan `Tabel Penutup H2` terstruktur yang dirender di bagian akhir sub-bab H2 lengkap dengan tag `<caption>` resmi; seluruh HTML mentah tetap di-escape otomatis.
-4. **Integrasi Estetika 5 Slot Iklan di Halaman Artikel (`scripts/site-builder.mjs` + `assets/adsense-slots.js` + `assets/article-reader.js`)**:
-   - Menempatkan 5 titik slot yang menjaga alur baca: `Slot 1` di bawah Ringkasan Utama (sebelum Daftar Isi), `Slot 2` setelah Tabel Ringkasan Metrik / Bagian 2, `Slot 3` rata tengah di antara tabel kurasi Kelompok A dan B, `Slot 4` setelah Bagian 4 / sebelum FAQ, dan `Slot 5` sticky Anchor Ad di bawah layar dengan tombol tutup (`×`) yang diingat selama sesi tab.
-   - Setiap slot inline menerapkan jarak *margin* atas-bawah minimal `20–24px` agar tidak menempel langsung pada paragraf atau tabel artikel.
+4. **Integrasi Estetika Slot Iklan Bersih (`scripts/site-builder.mjs` + `assets/adsense-slots.js` + `assets/article-reader.js`)**:
+   - Mengelola 5 titik slot pada halaman artikel (`Slot 1` di bawah Ringkasan Utama sebelum Daftar Isi, `Slot 2` setelah Tabel Ringkasan Metrik / Bagian 2, `Slot 3` rata tengah di antara tabel kurasi, `Slot 4` setelah Bagian 4 / sebelum Metodologi & FAQ, dan `Slot 5` sticky Anchor Ad di bawah layar dengan tombol tutup `×` tersimpan di `sessionStorage`) serta slot untuk Front Page (`home-slot1/2`), `/guide.html` (`guide-slot1/2`), dan `/faq.html` (`faq-slot1`).
+   - Setiap slot inline menerapkan jarak *margin* atas-bawah minimal `20–24px`, dan slot yang kosong, nonaktif, atau berstatus simulasi otomatis **disembunyikan total (`dn-ad-mount hidden`)** pada halaman publik.
 5. **Validasi Penghapusan Artikel Atomik (`lib/article-schema.js`, `lib/github-articles.js`, `functions/api/articles/delete.js`)**:
    - Menambahkan `applyArticleDeleteToManifest` dan `listRepoDirectoryFiles` serta dukungan penghapusan blob pada `commitRepoFilesAtomic` agar penghapusan artikel membersihkan entri `manifest.json` dan berkas `<lang>.json` secara konsisten dalam satu commit atomik.
+6. **Integrasi Kurasi & Export Tabel Markdown dari `/admin-data/` (`admin-data.html` + `lib/d1-admin-domains.js`)**:
+   - Halaman **Database D1** (`/admin-data/`) kini memisahkan kolom **`SLD`** (SLD murni tanpa domain penuh), **`Ext TLD`**, dan **`Len`** di tabel kurasi, menyediakan **pemilih Kolom Export (`20 kolom`)** dengan preset *Semua*, *Sesuai Tabel*, dan *Ringkas (SLD + Ext + Len + Skor)*, serta tombol **Export Markdown** (`GET /api/admin-data/export?format=md`) yang menghasilkan tabel pipe GFM dengan heading dan perataan kolom otomatis menyesuaikan kolom terpilih—siap disalin langsung ke modal `+Tabel Dalam Paragraf (MD)` di Article Studio.
 

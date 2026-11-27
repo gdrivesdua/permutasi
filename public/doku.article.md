@@ -82,9 +82,15 @@ Halaman alat (*web utility*) yang diperkaya data agregat nyata dari database mem
 
 ---
 
-## 4. Contoh Query Agregasi D1 untuk Bahan Konten
+## 4. Contoh Pengambilan Data & Query Agregasi D1 untuk Bahan Konten
 
-Query berikut dapat dijalankan lewat Wrangler CLI (`npx wrangler d1 execute domainname_available_domains --remote --command="..."`) saat menyusun data artikel:
+Ada dua cara menyiapkan data dari `available_domains` saat menyusun artikel riset atau kurasi:
+1. **Cara Visual Cepat lewat `/admin-data/` (Khusus Daftar Baris Kurasi & Tabel Markdown)**:
+   - Masuk melalui `/admin-articles/` lalu buka tab **Database D1 (`/admin-data/`)**.
+   - Gunakan 7 filter (**SLD**, **Keyword**, **Char Length Min–Max**, **Tags**, **Extension**, **Check Source**, **Lang**) dan kolom **`SLD` / `Ext TLD` / `Len`** yang sudah dipisah agar daftar kandidat domain mudah ditinjau.
+   - Buka **Kolom Export**, pilih kolom yang ingin ditampilkan (misalnya preset **`Ringkas (SLD + Ext + Len + Skor)`** atau **`Sesuai Tabel`**), lalu klik **Export Markdown** (`GET /api/admin-data/export?format=md`) untuk mengunduh tabel Markdown dengan heading otomatis menyesuaikan kolom terpilih—atau pilih **CSV**, **XLS**, dan **JSON** untuk olahan spreadsheet.
+2. **Cara CLI via Wrangler D1 (Khusus Query Agregasi Statistik `GROUP BY`)**:
+   Jalankan query berikut lewat Wrangler CLI (`npx wrangler d1 execute domainname_available_domains --remote --command="..."`) saat menghitung ringkasan angka agregat (`COUNT`, `AVG`, distribusi):
 
 ```sql
 -- 1. Statistik rata-rata panjang & skor per ekstensi (minimal 20 sampel)
@@ -270,7 +276,7 @@ Agar selaras dengan `scripts/site-builder.mjs`, redirect `_redirects` (`/en/*` -
 
 ## 9. Rancangan Arsitektur Direktori & Sumber Konten (`content/articles/`)
 
-Agar artikel pillar, riset data D1, kurasi, dan alat interaktif terkelola rapi tanpa mencampuri halaman inti (`index.html`, `about.html`, `privacy-policy.html`, `terms.html`, `disclaimer.html`, `contact.html`) maupun halaman internal (`/admin-lexicon.html`), seluruh aset editorial dan builder ditempatkan di folder terpisah yang **tidak** di-copy langsung sebagai raw file ke `dist/`:
+Agar artikel pillar, riset data D1, kurasi, dan alat interaktif terkelola rapi tanpa mencampuri halaman inti (`index.html`, `about.html`, `privacy-policy.html`, `terms.html`, `disclaimer.html`, `contact.html`) maupun halaman edukasi (`/guide.html`, `/faq.html`), seluruh aset editorial dan template ditempatkan di folder terpisah:
 
 ```text
 /
@@ -280,26 +286,31 @@ Agar artikel pillar, riset data D1, kurasi, dan alat interaktif terkelola rapi t
 │       ├── hubs.json                             # Copywriting judul, deskripsi, & SEO per bahasa untuk hub /guides/, /research/, /tools/
 │       ├── data/                                 # (Opsional) Arsip snapshot JSON hasil query agregat D1
 │       ├── guides/
+│       │   ├── 40-domain-toko-shop-terkurasi-untuk-toko-shop-kios-online-analisis-skor-ekstensi/ # Terbit (id, slugByLang)
 │       │   ├── rfc-1035-domain-compliance/       # Pillar terbit (8 bahasa)
 │       │   ├── no-tracking-privacy-architecture/ # Pillar terbit (8 bahasa)
-│       │   ├── offline-browser-domain-generator/ # Pillar terbit (8 bahasa)
-│       │   └── domain-scoring-methodology/       # (Rencana) Contoh folder pillar tambahan
-│       ├── research/                             # (Rencana) Folder studi data & kurasi niche
-│       └── tools/                                # (Rencana) Folder halaman alat interaktif
+│       │   └── offline-browser-domain-generator/ # Pillar terbit (8 bahasa)
+│       ├── research/                             # Folder studi data & kurasi niche
+│       └── tools/                                # Folder halaman alat interaktif
 ├── public/
 │   ├── doku.writing.md                           # Panduan penulisan & publikasi artikel (live readable)
-│   └── doku.article.md                           # Dokumen strategi konten & arsitektur ini (live readable)
+│   ├── doku.article.md                           # Dokumen strategi konten & arsitektur ini (live readable)
+│   ├── doku.writer.html                          # Buku pegangan visual penulis (/admin-articles/)
+│   └── doku.adsense.html                         # Panduan admin monetisasi (/adsense-studio/)
 ├── templates/
-│   ├── article.html                              # Template HTML artikel (berisi marker SITE_CONFIG:HEAD_START/END)
-│   └── article-hub.html                          # Template HTML halaman indeks kategori (/guides/, /research/, /tools/)
+│   ├── article.html                              # Template HTML artikel (termasuk kontrol font A−/A+ & marker AdSense)
+│   ├── article-hub.html                          # Template HTML halaman indeks kategori (/guides/, /research/, /tools/)
+│   ├── guide.html                                # Template HTML /guide.html (8 bahasa)
+│   └── faq.html                                  # Template HTML /faq.html (8 bahasa)
 └── scripts/
-    ├── site-builder.mjs                          # Helper existing + validateArticleManifest(), renderArticlePage(), renderArticleHubPage(), & buildSitemapXml()
-    └── build-static.mjs                          # Memanggil static pages + loop render semua hub & artikel ke dist/
+    ├── edu-faq-i18n.json                         # Paket teks 8 bahasa untuk /guide.html & /faq.html
+    ├── site-builder.mjs                          # Helper validasi manifest, render halaman/hub/artikel/guide/faq, _headers, & sitemap.xml
+    └── build-static.mjs                          # Loop render halaman statis, guide/faq, hub, artikel terbit, studio admin, & dist/public/
 ```
 
 **Aturan Isolasi Direktori:**
-- `server.js` **wajib memblokir** akses publik langsung ke `/content/*` dan `/templates/*` (selain `/lib`, `/functions`, `/migrations`, `/scripts`), sehingga pengunjung hanya mengakses HTML hasil render.
-- `scripts/build-static.mjs` hanya menulis output HTML final ke `dist/`, menyalin `dist/assets/`, serta menyalin file dokumentasi Markdown dari `public/` ke `dist/public/`. File sumber `.json`/template mentah di `content/` dan `templates/` tidak pernah ikut ter-deploy ke `dist/`.
+- `server.js` **memblokir** akses publik langsung ke `/content/*`, `/templates/*`, `/lib/*`, `/functions/*`, `/migrations/*`, dan `/scripts/*` (`404`), sehingga pengunjung hanya mengakses HTML hasil render.
+- `scripts/build-static.mjs` hanya menulis output HTML final ke `dist/`, menyalin `dist/assets/`, menyalin 4 antarmuka admin terproteksi (`dist/admin-articles/`, `dist/adsense-studio/`, `dist/admin-lexicon/`, `dist/admin-data/` dengan `noindex, nofollow` & auth server), serta menyalin file dokumentasi dari `public/` ke `dist/public/`. File sumber `.json`/template mentah di `content/` dan `templates/` tidak pernah ikut ter-deploy ke `dist/`.
 
 ---
 
@@ -548,14 +559,15 @@ Setiap artikel menyertakan satu blok `<script type="application/ld+json">` beris
 8. **Footer Kepatuhan (*Trust Pages*)**:
    - Wajib memuat tautan lokal ke `about.html`, `privacy-policy.html`, `terms.html`, `disclaimer.html`, dan `contact.html` sesuai konvensi `assets/trust-i18n.js`.
 
-### B. Disiplin Penempatan Iklan AdSense (Non-Auto Ads)
-Selaras dengan konfigurasi `site.config.json` (`"enableAutoAdsScript": false`) dan kebijakan tata letak di `doku.md`:
-- **Tanpa Auto Ads**: Jangan menyuntikkan skrip `adsbygoogle` dengan parameter Auto Ads global yang memecah struktur *above-the-fold* atau menempel di dalam tabel data.
-- **Maksimal 2 Slot Manual per Artikel Panjang**:
-  - Slot 1: Setelah blok *Key Takeaways* / di antara sub-bagian editorial ke-2 dan ke-3 (memiliki jarak margin vertikal minimal `24px` dari judul/tabel).
-  - Slot 2: Di bawah isi editorial utama (sebelum blok *Baca Juga / Footer*).
-- **Halaman Hub Indeks (`/guides/`, `/research/`, `/tools/`) & Halaman Pendek**: **0 slot iklan** apabila halaman hanya berisi daftar kartu ringkasan dan belum memiliki minimal 500 kata narasi pengantar editorial, guna menghindari pelanggaran *Valuable Inventory: Scraped/Thin Content*.
-- **Halaman `/admin-lexicon` dan `/api/*`**: Dilarang keras memuat skrip AdSense atau analytics publik.
+### B. Disiplin Penempatan Iklan AdSense (Non-Auto Ads & Slot Terstruktur)
+Selaras dengan konfigurasi `site.config.json` (`"enableAutoAdsScript": false`, `googleAdSense.slots[]`) dan studio `/adsense-studio/`:
+- **Tanpa Auto Ads Global**: Jangan menyuntikkan skrip `adsbygoogle` Auto Ads yang memecah struktur *above-the-fold* atau menempel di dalam tabel data.
+- **5 Titik Slot Terstruktur per Artikel + Slot Multi-Halaman**:
+  - **Artikel (`slot1`–`slot5`)**: `slot1` di bawah Ringkasan Utama (sebelum Daftar Isi), `slot2` setelah Bagian 2 / Tabel Ringkasan Metrik, `slot3` rata tengah di antara Tabel Kurasi, `slot4` setelah Bagian 4 / sebelum Metodologi & FAQ, dan `slot5` Anchor Ad sticky bawah dengan tombol tutup (`×`). Setiap slot inline wajib menjaga jarak margin vertikal min. `20–24px`.
+  - **Halaman Lain**: `home-slot1`/`home-slot2` pada Front Page 8 bahasa, `guide-slot1`/`guide-slot2` pada `/guide.html`, dan `faq-slot1` pada `/faq.html`.
+  - **Slot Bersih di Publik**: Slot yang kosong, berstatus simulasi, atau dinonaktifkan otomatis disembunyikan (`dn-ad-mount hidden`) agar tidak meninggalkan kotak kosong.
+- **Halaman Hub Indeks (`/guides/`, `/research/`, `/tools/`)**: **0 slot iklan** karena hanya berisi daftar kartu ringkasan artikel, guna menghindari pelanggaran *Valuable Inventory: Scraped/Thin Content*.
+- **Halaman Admin (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, `/admin-data/`) & `/api/*`**: Dilarang keras memuat skrip AdSense atau analytics publik.
 
 ---
 
@@ -582,23 +594,24 @@ Sebelum hasil build `dist/` di-push ke Cloudflare Pages, `validateArticleManifes
 1. **Integritas Manifest & File Konten**: `schemaVersion === 1`, seluruh entri `published: true` memiliki `title`, `metaDesc`, dan `h1` terisi (ideal `title` 30–65 karakter, `metaDesc` 70–160 karakter), `dateModified >= datePublished`, serta file `<lang>.json` valid dengan minimal 1 item di `sections[]`.
 2. **Anti-Duplikat & Format Slug**: Tidak ada tabrakan URL output antar artikel pada `(lang, section, slug)` yang sama; seluruh `id` dan `slug` cocok dengan `^[a-z0-9]+(?:-[a-z0-9]+)*$`.
 3. **Simetri Bidirectional `hreflang` & Trailing Slash**: Setiap URL yang tercantum di tag `<link rel="alternate">` pada halaman HTML maupun di `sitemap.xml` benar-benar ada di `dist/<path>/index.html` dan diakhiri `/`.
-4. **Kebersihan Output `dist/`**: Pastikan `dist/admin-lexicon.html`, `dist/content/`, `dist/templates/`, serta file rahasia (`.admin-auth.json`, `.env`) **tidak** ada di dalam folder `dist/`.
+4. **Kebersihan & Proteksi Output `dist/`**: Pastikan `dist/content/`, `dist/templates/`, serta file lokal/rahasia (`.admin-auth.json`, `.local-d1.sqlite*`, `.env`) **tidak** ada di dalam folder `dist/`, sedangkan rute studio (`dist/admin-articles/`, `dist/adsense-studio/`, `dist/admin-lexicon/`, `dist/admin-data/`) terlindungi `<meta name="robots" content="noindex, nofollow">`, `_headers`, dan autentikasi server.
 5. **Validitas Syntax & Build**: Menjalankan `npm run lint` dan `npm run build` tanpa error sebelum deploy.
 
 ---
 
 ## Status Implementasi Saat Ini
 1. **Struktur Konten & Template HTML**:
-   - `content/articles/manifest.json` aktif mengelola 3 artikel pillar E-E-A-T terbit di `content/articles/guides/` (`rfc-1035-domain-compliance`, `no-tracking-privacy-architecture`, `offline-browser-domain-generator`) dalam 8 bahasa.
+   - `content/articles/manifest.json` aktif mengelola **4 artikel terbit** di `content/articles/guides/`: 3 artikel pillar E-E-A-T dalam 8 bahasa (`rfc-1035-domain-compliance`, `no-tracking-privacy-architecture`, `offline-browser-domain-generator`) dan 1 studi data/kurasi toko online bahasa Indonesia dengan `slugByLang.id` (`40-domain-toko-shop-terkurasi-untuk-toko-shop-kios-online-analisis-skor-ekstensi`).
    - `content/articles/hubs.json` berisi copywriting lokal 8 bahasa (`en`, `id`, `es`, `pt`, `fr`, `de`, `ru`, `ja`) untuk halaman hub `/guides/` (label nav **Articles**/**Artikel**), `/research/`, dan `/tools/`.
-   - Template (`templates/article.html` & `templates/article-hub.html`) mendukung `<head>` SEO lengkap (`canonical` trailing slash, `hreflang`, Open Graph artikel), JSON-LD `@graph`, bar metadata E-E-A-T, Key Takeaways, TOC otomatis, tabel/callout/kode, catatan metodologi, Hub-and-Spoke Related Articles, dan maksimal 2 slot AdSense manual kondisional.
+   - Template (`templates/article.html`, `templates/article-hub.html`, `templates/guide.html`, `templates/faq.html`) mendukung `<head>` SEO lengkap (`canonical` trailing slash untuk artikel/hub, `hreflang`, Open Graph), JSON-LD `@graph`, bar metadata E-E-A-T, Key Takeaways, TOC otomatis, tabel/callout/kode, catatan metodologi, Hub-and-Spoke Related Articles, kontrol font pembaca `A− / A+` terpadu (`85%–130%`), serta penempatan slot AdSense kondisional (`assets/adsense-slots.js` + `assets/article-reader.js`).
 2. **Builder & Sitemap (`scripts/site-builder.mjs` & `scripts/build-static.mjs`)**:
-   - Menyediakan `loadArticleManifest`, `loadArticleHubs`, `validateArticleManifest`, `findPublishedArticleByRoute`, `getPublishedArticlesForHub`, `getActiveArticleHubs`, `renderArticlePage`, dan `renderArticleHubPage`.
-   - `buildSitemapXml` otomatis menyertakan hub kategori aktif dan artikel `published: true` dengan `<lastmod>` dari `dateModified`.
-   - `scripts/build-static.mjs` memvalidasi manifest terlebih dahulu sebelum merender halaman statis inti, 24 halaman hub kategori (`dist/<section>/index.html` & `dist/<lang>/<section>/index.html`), seluruh artikel terbit, serta menyalin dokumentasi `/public/*.md` ke `dist/public/`.
-3. **Routing Express (`server.js`)**:
-   - Menyediakan route untuk hub dan artikel pada bahasa default (`/<section>/`, `/<section>/<slug>/`) dan 7 bahasa lain (`/<lang>/<section>/`, `/<lang>/<section>/<slug>/`).
-   - Menegakkan redirect `301` untuk `/en/<section>...` -> `/<section>...`, normalisasi non-trailing slash -> trailing `/`, serta `/index.html` -> `/`.
-   - Memblokir akses publik langsung ke `/content/*` dan `/templates/*` (`404`), serta menyajikan `/public/doku.writing.md` dan `/public/doku.article.md` agar bisa dibaca live di browser.
-4. **Panduan Penulisan Artikel (`/public/doku.writing.md`)**:
-   - Menyediakan alur kerja publikasi dari query D1 ke build `dist/`, panduan penulisan spesifik untuk Studi Data & Statistik, Kurasi Niche Editorial, Alat Interaktif, 7 Pillar Articles E-E-A-T, dan Hub Kategori, referensi field JSON konten, standar lokalisasi 8 bahasa, serta checklist QC pra-publikasi.
+   - Menyediakan `loadArticleManifest`, `loadArticleHubs`, `validateArticleManifest`, `findPublishedArticleByRoute`, `getPublishedArticlesForHub`, `getActiveArticleHubs`, `renderGuidePage`, `renderFaqPage`, `renderArticlePage`, dan `renderArticleHubPage`.
+   - `buildSitemapXml` otomatis menyertakan halaman inti, `/guide.html` & `/faq.html` 8 bahasa, hub kategori aktif, dan artikel `published: true` dengan `<lastmod>` dari `dateModified`.
+   - `scripts/build-static.mjs` memvalidasi manifest sebelum merender halaman statis inti (48 file), `/guide.html` & `/faq.html` (16 file), 24 halaman hub kategori, seluruh artikel terbit, 4 halaman admin studio (`admin-articles`, `adsense-studio`, `admin-lexicon`, `admin-data`), serta menyalin `/public/*.md`, `doku.writer.html`, dan `doku.adsense.html` ke `dist/public/`.
+3. **Routing Express (`server.js`) & 4 Studio Terpadu**:
+   - Menyediakan route untuk halaman inti, `/guide.html`, `/faq.html`, hub, dan artikel pada bahasa default (`/<section>/`, `/<section>/<slug>/`) dan 7 bahasa lain (`/<lang>/<section>/`, `/<lang>/<section>/<slug>/`).
+   - Menegakkan redirect `301` untuk `/en/...` -> `/...`, normalisasi non-trailing slash -> trailing `/` pada artikel/hub, serta `/index.html` -> `/`.
+   - Melayani 4 studio saling terhubung (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, `/admin-data/`) dengan sesi admin terpadu, serta adapter SQLite lokal (`lib/local-d1-adapter.js`) untuk `/api/admin-data/*`.
+   - Memblokir akses publik langsung ke `/content/*`, `/templates/*`, `/lib/*`, `/functions/*`, `/migrations/*`, dan `/scripts/*` (`404`), serta menyajikan `/public/doku.writing.md`, `/public/doku.article.md`, `/public/doku.writer.html`, dan `/public/doku.adsense.html`.
+4. **Panduan Penulisan & Pengelolaan (`/public/doku.writing.md`, `doku.writer.html`, `doku.adsense.html`)**:
+   - Menyediakan alur kerja publikasi dari data D1 (`/admin-data/` Export Markdown maupun Wrangler CLI) ke Article Studio / build `dist/`, panduan penulisan spesifik untuk Studi Data & Statistik, Kurasi Niche Editorial, Alat Interaktif, 7 Pillar Articles E-E-A-T, dan Hub Kategori, panduan visual penulis & monetisasi AdSense, serta checklist QC pra-publikasi.

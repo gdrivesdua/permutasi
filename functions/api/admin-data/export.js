@@ -4,7 +4,7 @@ import {
   verifyWorkerArticleSession
 } from '../../../lib/worker-article-auth.js';
 
-const VALID_EXPORT_FORMATS = new Set(['csv', 'xls', 'json']);
+const VALID_EXPORT_FORMATS = new Set(['csv', 'xls', 'json', 'md', 'markdown']);
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -22,7 +22,7 @@ export async function onRequestGet(context) {
     const url = new URL(request.url);
     const rawFormat = String(url.searchParams.get('format') || 'csv').trim().toLowerCase();
     if (!VALID_EXPORT_FORMATS.has(rawFormat)) {
-      return jsonResponse({ ok: false, error: 'Format export harus csv, xls, atau json.' }, 400);
+      return jsonResponse({ ok: false, error: 'Format export harus csv, xls, json, atau md.' }, 400);
     }
 
     const exp = await exportAdminDomains(env.DB, url.searchParams, rawFormat);

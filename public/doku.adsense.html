@@ -44,6 +44,9 @@
                 <a href="/admin-articles/" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
                     Article Studio
                 </a>
+                <a href="/admin-data/" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Database D1
+                </a>
                 <button id="themeBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">
                     Tema
                 </button>
@@ -77,7 +80,7 @@
             <section id="akses-studio" class="space-y-3 scroll-mt-20">
                 <h2 class="text-xl font-bold text-slate-900 dark:text-white">1. Cara Masuk ke AdSense Studio (<code class="font-mono text-base">/adsense-studio/</code>)</h2>
                 <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-                    Buka alamat <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">/adsense-studio/</code> di browser Anda (atau klik tab <strong>Layout &amp; AdSense</strong> dari header <em>Article Studio</em>). Layar masuk menggunakan <strong>password editorial yang sama</strong> dengan Article Studio dan Admin Lexicon.
+                    Buka alamat <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">/adsense-studio/</code> di browser Anda (atau klik tab <strong>Layout &amp; AdSense</strong> dari header <em>Article Studio</em>). Layar masuk menggunakan <strong>password editorial terpadu yang sama</strong> dengan <em>Article Studio</em>, <em>Admin Lexicon</em>, dan <em>Database D1</em> (<code class="font-mono text-xs">/admin-data/</code>).
                 </p>
                 <aside class="p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/70 dark:bg-blue-950/30 text-xs sm:text-sm text-blue-950 dark:text-blue-100 leading-relaxed">
                     <strong>Prinsip Slot Bersih:</strong> Pada halaman publik pengunjung, slot iklan yang masih kosong, masih memakai mode <em>Simulasi Studio</em>, atau dinonaktifkan <strong>otomatis disembunyikan total</strong>. Pengunjung tidak akan pernah melihat kotak putus-putus atau ruang kosong sebelum kode AdSense asli dipasang.
@@ -187,7 +190,7 @@
                     Di kolom kanan studio, gunakan switcher <strong>Desktop (Kolom Konten)</strong> dan <strong>Mobile (390px)</strong> untuk memeriksa posisi iklan relatif terhadap teks, tabel, dan tombol navigasi:
                 </p>
                 <ul class="list-disc pl-5 space-y-1.5 text-sm sm:text-base text-slate-700 dark:text-slate-300">
-                    <li>Pada tab <strong>Artikel</strong>, Anda juga dapat memilih artikel sampel di dropdown <em>Artikel Pratinjau</em> serta menguji tombol kontrol huruf <code class="font-mono text-xs">A−</code> / <code class="font-mono text-xs">A+</code> langsung di kanvas pratinjau.</li>
+                    <li>Pada tab <strong>Artikel</strong>, Anda juga dapat memilih artikel sampel di dropdown <em>Artikel Pratinjau</em>, menguji tombol kontrol huruf terpadu pengunjung <code class="font-mono text-xs">A−</code> / <code class="font-mono text-xs">A+</code> (<code class="font-mono text-xs">85%–130%</code>) di kanvas, serta menyetel skala huruf bawaan per bagian melalui panel <em>Skala Font Bagian Artikel (Opsional)</em> di kolom kiri.</li>
                     <li>Untuk <strong>Slot 5 (Anchor Ad)</strong>, klik tombol tutup <code class="font-mono text-xs">×</code> untuk memastikan interaksi tutup bekerja rapi, lalu klik <strong>Tampilkan Anchor Ad (Slot 5)</strong> bila ingin memunculkannya kembali di pratinjau.</li>
                     <li>Pada tab <strong>Front Page</strong>, <strong>Guide</strong>, dan <strong>FAQ</strong>, gunakan dropdown <em>Bahasa Pratinjau (8 Edisi)</em> untuk memastikan judul dan override tiap bahasa tampil sesuai harapan.</li>
                 </ul>
@@ -209,7 +212,7 @@
                         <ol class="list-decimal pl-4 space-y-1.5 text-xs sm:text-sm text-blue-900 dark:text-blue-100">
                             <li>Klik tombol <strong>Salin Kode / JSON Konfigurasi</strong> di panel kiri.</li>
                             <li>Klik <strong>Salin JSON</strong> pada bagian <em>1. JSON Konfigurasi</em>.</li>
-                            <li>Tempel dan gantikan isi objek <code class="font-mono text-xs">"googleAdSense"</code> di berkas <code class="font-mono text-xs">site.config.json</code> pada repositori proyek.</li>
+                            <li>Tempel dan gantikan isi objek <code class="font-mono text-xs">"googleAdSense"</code> di berkas <code class="font-mono text-xs">site.config.json</code> pada repositori proyek (pastikan <code class="font-mono text-xs">"enableAutoAdsScript": false</code> bila tidak ingin memuat skrip Auto Ads di <code class="font-mono text-xs">&lt;head&gt;</code>; skrip <code class="font-mono text-xs">adsbygoogle.js</code> tetap dimuat otomatis hanya saat ada unit slot aktif).</li>
                             <li>Commit &amp; push ke GitHub. Build statis (<code class="font-mono text-xs">npm run build</code>) otomatis menanamkan unit <code class="font-mono text-xs">&lt;ins&gt;</code> yang valid langsung ke HTML statis serta menghasilkan berkas <code class="font-mono text-xs">/ads.txt</code>.</li>
                         </ol>
                     </div>
@@ -222,7 +225,7 @@
                     <li>Pastikan ID penerbit (<code class="font-mono text-xs">ca-pub-...</code>) dan nomor <code class="font-mono text-xs">data-ad-slot</code> sudah aktif serta disetujui di akun Google AdSense sebelum di-commit ke <code class="font-mono text-xs">site.config.json</code>.</li>
                     <li>Untuk menonaktifkan sementara satu slot tanpa menghapus kodenya, cukup matikan centang <strong>Aktif</strong> pada slot tersebut lalu ekspor ulang konfigurasi ke <code class="font-mono text-xs">site.config.json</code>.</li>
                     <li>Jika ingin mengulang pengaturan awal di browser, gunakan tombol <strong>Reset Default</strong> di panel kiri studio.</li>
-                    <li>Halaman dokumentasi ini (<code class="font-mono text-xs">/public/doku.adsense.html</code>) serta seluruh halaman admin dilindungi header <code class="font-mono text-xs">noindex, nofollow</code> agar tidak terindeks mesin pencari.</li>
+                    <li>Halaman dokumentasi ini (<code class="font-mono text-xs">/public/doku.adsense.html</code>) serta seluruh halaman admin (<code class="font-mono text-xs">/admin-articles/</code>, <code class="font-mono text-xs">/adsense-studio/</code>, <code class="font-mono text-xs">/admin-lexicon</code>, <code class="font-mono text-xs">/admin-data/</code>) dilindungi <code class="font-mono text-xs">noindex, nofollow</code> agar tidak terindeks mesin pencari.</li>
                 </ul>
             </section>
         </article>
