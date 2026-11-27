@@ -160,6 +160,9 @@
                 <a href="/admin-lexicon" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
                     Admin Lexicon
                 </a>
+                <a href="/public/doku.adsense.html" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
+                    Panduan AdSense
+                </a>
                 <a id="openLiveSampleLink" href="/id/guides/pola-nama-domain-toko-shop-paling-mudah-diingat-studi-data-nama-domain-yang-masih-tersedia/" target="_blank" rel="noopener" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
                     Artikel Live
                 </a>
@@ -322,11 +325,16 @@
 
             <!-- Structured AdSense Slot Inputs -->
             <section class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
-                <div>
-                    <h2 id="slotSectionHeading" class="text-sm font-bold text-slate-900">Konfigurasi Slot AdSense Halaman</h2>
-                    <p id="slotSectionSub" class="text-xs text-slate-500 mt-0.5">
-                        Atur kode AdSense atau mode simulasi, ukuran Desktop/Mobile, status aktif, dan jarak margin minimal 20–24px.
-                    </p>
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <h2 id="slotSectionHeading" class="text-sm font-bold text-slate-900">Konfigurasi Slot AdSense Halaman</h2>
+                        <p id="slotSectionSub" class="text-xs text-slate-500 mt-0.5">
+                            Atur kode AdSense atau mode simulasi, ukuran Desktop/Mobile, status aktif, dan jarak margin minimal 20–24px.
+                        </p>
+                    </div>
+                    <button id="toggleAllSlotsBtn" type="button" class="min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0">
+                        Buka Semua
+                    </button>
                 </div>
 
                 <div id="slotFormsContainer" class="space-y-3"></div>
@@ -424,9 +432,9 @@
         </div>
     </div>
 
-    <script src="/assets/article-markdown.js"></script>
-    <script src="/assets/adsense-slots.js"></script>
-    <script src="/assets/adsense-studio-sample.js"></script>
+    <script src="/assets/article-markdown.js?v=20261127c"></script>
+    <script src="/assets/adsense-slots.js?v=20261127c"></script>
+    <script src="/assets/adsense-studio-sample.js?v=20261127c"></script>
     <script>
         (function () {
             'use strict';
@@ -506,8 +514,8 @@
                     methodology: 1,
                     faq: 1
                 },
-                slots: slotsApi.cloneDefaultSlots(),
-                expandedSlotId: 'slot1'
+                slots: slotsApi ? slotsApi.cloneDefaultSlots() : [],
+                expandedSlotMap: { slot1: true, 'home-slot1': true, 'guide-slot1': true, 'faq-slot1': true }
             };
 
             var els = {
@@ -531,6 +539,7 @@
                 fontSectionPanel: document.getElementById('fontSectionPanel'),
                 slotSectionHeading: document.getElementById('slotSectionHeading'),
                 slotSectionSub: document.getElementById('slotSectionSub'),
+                toggleAllSlotsBtn: document.getElementById('toggleAllSlotsBtn'),
                 sampleArticleSelect: document.getElementById('sampleArticleSelect'),
                 globalPublisherIdInput: document.getElementById('globalPublisherIdInput'),
                 applyPreviewToSiteCheckbox: document.getElementById('applyPreviewToSiteCheckbox'),
@@ -614,9 +623,9 @@
                 }
 
                 var visible = getVisibleSlots();
-                var hasExpandedInGroup = visible.some(function (s) { return s.id === state.expandedSlotId; });
+                var hasExpandedInGroup = visible.some(function (s) { return Boolean(state.expandedSlotMap[s.id]); });
                 if (!hasExpandedInGroup && visible[0]) {
-                    state.expandedSlotId = visible[0].id;
+                    state.expandedSlotMap[visible[0].id] = true;
                 }
             }
 
@@ -639,10 +648,15 @@
                             }
                         });
                     }
-                    if (Array.isArray(parsed.slots)) {
-                        state.slots = slotsApi.normalizeSlotsConfig(parsed.slots);
+                    if (Array.isArray(parsed.slots) && parsed.slots.length > 0) {
+                        var normalized = slotsApi.normalizeSlotsConfig(parsed.slots);
+                        if (Array.isArray(normalized) && normalized.length > 0) {
+                            state.slots = normalized;
+                        }
                     }
-                } catch (_e) {}
+                } catch (_e) {
+                    state.slots = slotsApi ? slotsApi.cloneDefaultSlots() : [];
+                }
             }
 
             function serializeLangOverridesForStorage(slot) {
@@ -779,48 +793,72 @@
                 return (editTarget.enabled ? 'Aktif' : 'Nonaktif') + ' · ' + statusMode + ' · Desktop ' + slot.desktopSize + ' · Mobile ' + slot.mobileSize + overrideNote;
             }
 
+            function syncToggleAllSlotsButton(visibleSlots) {
+                if (!els.toggleAllSlotsBtn) return;
+                var list = visibleSlots || getVisibleSlots();
+                var allOpen = list.length > 0 && list.every(function (s) { return Boolean(state.expandedSlotMap[s.id]); });
+                els.toggleAllSlotsBtn.textContent = allOpen ? 'Tutup Semua' : 'Buka Semua';
+                els.toggleAllSlotsBtn.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
+            }
+
             function renderSlotForms() {
                 els.slotFormsContainer.textContent = '';
                 var visibleSlots = getVisibleSlots();
+                syncToggleAllSlotsButton(visibleSlots);
+
+                if (visibleSlots.length === 0) {
+                    var emptyNotice = document.createElement('div');
+                    emptyNotice.className = 'rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800';
+                    emptyNotice.textContent = 'Slot AdSense untuk grup halaman ini belum termuat. Silakan muat ulang halaman atau tekan Reset Default.';
+                    els.slotFormsContainer.appendChild(emptyNotice);
+                    return;
+                }
+
+                var supportedLangs = (slotsApi && Array.isArray(slotsApi.SUPPORTED_LANGS))
+                    ? slotsApi.SUPPORTED_LANGS
+                    : ['en', 'id', 'es', 'pt', 'fr', 'de', 'ru', 'ja'];
 
                 visibleSlots.forEach(function (slot, index) {
-                    var isOpen = state.expandedSlotId === slot.id;
-                    var isMultilingualGroup = slot.pageGroup !== 'article';
+                    var isOpen = Boolean(state.expandedSlotMap[slot.id]);
+                    var isMultilingualGroup = (slot.pageGroup || 'article') !== 'article';
                     var langScope = isMultilingualGroup ? (state.slotLangEditScope[slot.id] || 'default') : 'default';
                     var overrideObj = (langScope !== 'default' && slot.langOverrides) ? slot.langOverrides[langScope] : null;
                     var activeEditTarget = overrideObj || slot;
+                    var cardEnabled = activeEditTarget.enabled !== false;
 
                     var card = document.createElement('div');
-                    card.className = 'rounded-xl border ' + (slot.enabled ? 'border-slate-200 bg-white' : 'border-slate-200 bg-slate-50/70 opacity-85');
+                    card.setAttribute('data-slot-card', slot.id);
+                    card.className = 'rounded-xl border transition-colors ' + (cardEnabled ? 'border-slate-200 bg-white' : 'border-slate-200 bg-slate-50/70 opacity-85');
 
                     // Header row
                     var header = document.createElement('div');
-                    header.className = 'px-4 py-3 flex items-center justify-between gap-2';
+                    header.className = 'px-4 py-3 flex items-start justify-between gap-3';
 
                     var toggleExpandBtn = document.createElement('button');
                     toggleExpandBtn.type = 'button';
+                    toggleExpandBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                     toggleExpandBtn.className = 'flex-1 text-left min-w-0';
                     var titleEl = document.createElement('p');
-                    titleEl.className = 'text-xs font-bold text-slate-900 truncate';
-                    titleEl.textContent = slot.name;
+                    titleEl.className = 'text-xs font-bold text-slate-900 leading-snug';
+                    titleEl.textContent = slot.name || ('Slot ' + (index + 1));
                     var subEl = document.createElement('p');
-                    subEl.className = 'text-[11px] text-slate-500 mt-0.5 tabular-nums truncate';
+                    subEl.className = 'text-[11px] text-slate-500 mt-1 tabular-nums leading-snug';
                     subEl.textContent = buildSlotHeaderSummary(slot, activeEditTarget);
                     toggleExpandBtn.appendChild(titleEl);
                     toggleExpandBtn.appendChild(subEl);
                     toggleExpandBtn.addEventListener('click', function () {
-                        state.expandedSlotId = isOpen ? '' : slot.id;
+                        state.expandedSlotMap[slot.id] = !isOpen;
                         renderSlotForms();
                     });
 
                     var rightCtrl = document.createElement('div');
-                    rightCtrl.className = 'flex items-center gap-2 shrink-0';
+                    rightCtrl.className = 'flex items-center gap-2 shrink-0 pt-0.5';
 
                     var activeLbl = document.createElement('label');
-                    activeLbl.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 cursor-pointer';
+                    activeLbl.className = 'inline-flex items-center gap-1.5 min-h-[36px] px-1 text-[11px] font-semibold text-slate-700 cursor-pointer';
                     var activeCb = document.createElement('input');
                     activeCb.type = 'checkbox';
-                    activeCb.checked = activeEditTarget.enabled !== false;
+                    activeCb.checked = cardEnabled;
                     activeCb.className = 'h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600';
                     activeCb.addEventListener('change', function () {
                         if (langScope !== 'default') {
@@ -843,10 +881,14 @@
 
                     var expandBadge = document.createElement('button');
                     expandBadge.type = 'button';
+                    expandBadge.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                     expandBadge.textContent = isOpen ? 'Tutup' : 'Atur';
-                    expandBadge.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50';
+                    expandBadge.className = 'min-h-[36px] px-3 py-1 text-[11px] font-semibold rounded-md border transition-colors '
+                        + (isOpen
+                            ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100'
+                            : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50');
                     expandBadge.addEventListener('click', function () {
-                        state.expandedSlotId = isOpen ? '' : slot.id;
+                        state.expandedSlotMap[slot.id] = !isOpen;
                         renderSlotForms();
                     });
 
@@ -885,7 +927,7 @@
                             if (langScope === 'default') defOpt.selected = true;
                             scopeSel.appendChild(defOpt);
 
-                            slotsApi.SUPPORTED_LANGS.forEach(function (lc) {
+                            supportedLangs.forEach(function (lc) {
                                 var o = document.createElement('option');
                                 o.value = lc;
                                 var hasOv = Boolean(slot.langOverrides && slot.langOverrides[lc]);
@@ -964,13 +1006,24 @@
                         unitLbl.textContent = 'Jenis Unit AdSense';
                         var unitSel = document.createElement('select');
                         unitSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
-                        slotsApi.UNIT_TYPE_OPTIONS.forEach(function (optText) {
+                        var unitFound = false;
+                        (slotsApi.UNIT_TYPE_OPTIONS || []).forEach(function (optText) {
                             var opt = document.createElement('option');
                             opt.value = optText;
                             opt.textContent = optText;
-                            if (slot.unitType === optText) opt.selected = true;
+                            if (slot.unitType === optText) {
+                                opt.selected = true;
+                                unitFound = true;
+                            }
                             unitSel.appendChild(opt);
                         });
+                        if (slot.unitType && !unitFound) {
+                            var extraUnitOpt = document.createElement('option');
+                            extraUnitOpt.value = slot.unitType;
+                            extraUnitOpt.textContent = slot.unitType;
+                            extraUnitOpt.selected = true;
+                            unitSel.appendChild(extraUnitOpt);
+                        }
                         unitSel.addEventListener('change', function () {
                             slot.unitType = unitSel.value;
                             renderActivePagePreview();
@@ -1026,13 +1079,24 @@
                         deskLbl.textContent = 'Ukuran Desktop';
                         var deskSel = document.createElement('select');
                         deskSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
+                        var deskFound = false;
                         (slotsApi.DESKTOP_SIZE_PRESETS[slot.id] || []).forEach(function (p) {
                             var opt = document.createElement('option');
                             opt.value = p.id;
                             opt.textContent = p.label;
-                            if (slot.desktopSize === p.id) opt.selected = true;
+                            if (slot.desktopSize === p.id) {
+                                opt.selected = true;
+                                deskFound = true;
+                            }
                             deskSel.appendChild(opt);
                         });
+                        if (slot.desktopSize && !deskFound) {
+                            var customDeskOpt = document.createElement('option');
+                            customDeskOpt.value = slot.desktopSize;
+                            customDeskOpt.textContent = 'Kustom (' + slot.desktopSize + ')';
+                            customDeskOpt.selected = true;
+                            deskSel.appendChild(customDeskOpt);
+                        }
                         deskSel.addEventListener('change', function () {
                             slot.desktopSize = deskSel.value;
                             subEl.textContent = buildSlotHeaderSummary(slot, activeEditTarget);
@@ -1047,13 +1111,24 @@
                         mobLbl.textContent = 'Ukuran Mobile';
                         var mobSel = document.createElement('select');
                         mobSel.className = 'w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-800';
+                        var mobFound = false;
                         (slotsApi.MOBILE_SIZE_PRESETS[slot.id] || []).forEach(function (p) {
                             var opt = document.createElement('option');
                             opt.value = p.id;
                             opt.textContent = p.label;
-                            if (slot.mobileSize === p.id) opt.selected = true;
+                            if (slot.mobileSize === p.id) {
+                                opt.selected = true;
+                                mobFound = true;
+                            }
                             mobSel.appendChild(opt);
                         });
+                        if (slot.mobileSize && !mobFound) {
+                            var customMobOpt = document.createElement('option');
+                            customMobOpt.value = slot.mobileSize;
+                            customMobOpt.textContent = 'Kustom (' + slot.mobileSize + ')';
+                            customMobOpt.selected = true;
+                            mobSel.appendChild(customMobOpt);
+                        }
                         mobSel.addEventListener('change', function () {
                             slot.mobileSize = mobSel.value;
                             subEl.textContent = buildSlotHeaderSummary(slot, activeEditTarget);
@@ -1184,24 +1259,171 @@
                 });
             }
 
-            function appendInlineMarkdownSafe(container, rawText) {
-                var nodes = mdApi.renderInlineMarkdownNodes(String(rawText || ''), document);
-                for (var i = 0; i < nodes.length; i++) {
-                    container.appendChild(nodes[i]);
+            function appendInlineTokensDom(parentEl, tokens) {
+                if (!Array.isArray(tokens)) return;
+                for (var i = 0; i < tokens.length; i++) {
+                    var tok = tokens[i];
+                    if (!tok) continue;
+                    if (tok.type === 'text') {
+                        parentEl.appendChild(document.createTextNode(String(tok.value || '')));
+                    } else if (tok.type === 'code') {
+                        var code = document.createElement('code');
+                        code.className = 'px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono text-[0.875em] text-slate-900';
+                        code.textContent = String(tok.value || '');
+                        parentEl.appendChild(code);
+                    } else if (tok.type === 'bold') {
+                        var strong = document.createElement('strong');
+                        strong.className = 'font-semibold text-slate-900';
+                        appendInlineTokensDom(strong, tok.children || []);
+                        parentEl.appendChild(strong);
+                    } else if (tok.type === 'italic') {
+                        var em = document.createElement('em');
+                        em.className = 'italic';
+                        appendInlineTokensDom(em, tok.children || []);
+                        parentEl.appendChild(em);
+                    } else if (tok.type === 'boldItalic') {
+                        var bStrong = document.createElement('strong');
+                        bStrong.className = 'font-semibold text-slate-900';
+                        var bEm = document.createElement('em');
+                        bEm.className = 'italic';
+                        appendInlineTokensDom(bEm, tok.children || []);
+                        bStrong.appendChild(bEm);
+                        parentEl.appendChild(bStrong);
+                    } else if (tok.type === 'link') {
+                        var a = document.createElement('a');
+                        a.href = tok.href;
+                        if (tok.external) {
+                            a.target = '_blank';
+                            a.rel = 'noopener noreferrer';
+                        }
+                        a.className = 'text-blue-600 underline underline-offset-2 hover:text-blue-700 break-words';
+                        appendInlineTokensDom(a, tok.children || []);
+                        parentEl.appendChild(a);
+                    } else if (tok.type === 'image') {
+                        var img = document.createElement('img');
+                        img.src = tok.src;
+                        img.alt = tok.alt || '';
+                        if (tok.title) img.title = tok.title;
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        img.referrerPolicy = 'no-referrer';
+                        img.className = 'inline-block max-w-full h-auto rounded-lg border border-slate-200 my-1.5';
+                        parentEl.appendChild(img);
+                    }
                 }
             }
 
-            function appendBlocksSafe(container, rawText) {
-                var blocks = mdApi.parseMarkdownBlocks(String(rawText || ''));
+            function appendInlineMarkdownSafe(container, rawText) {
+                var text = String(rawText == null ? '' : rawText);
+                if (!mdApi || typeof mdApi.parseInlineTokens !== 'function') {
+                    container.appendChild(document.createTextNode(text));
+                    return;
+                }
+                appendInlineTokensDom(container, mdApi.parseInlineTokens(text));
+            }
+
+            function renderParsedBlocksSafe(container, blocks) {
+                if (!Array.isArray(blocks)) return;
                 for (var i = 0; i < blocks.length; i++) {
                     var block = blocks[i];
+                    if (!block) continue;
                     if (block.type === 'paragraph') {
                         var p = document.createElement('p');
                         p.className = 'text-slate-700 leading-relaxed';
                         appendInlineMarkdownSafe(p, block.text);
                         container.appendChild(p);
+                    } else if (block.type === 'ul') {
+                        var ul = document.createElement('ul');
+                        ul.className = 'list-disc pl-5 space-y-1.5 text-slate-700';
+                        (block.items || []).forEach(function (item) {
+                            var li = document.createElement('li');
+                            appendInlineMarkdownSafe(li, item);
+                            ul.appendChild(li);
+                        });
+                        container.appendChild(ul);
+                    } else if (block.type === 'ol') {
+                        var ol = document.createElement('ol');
+                        ol.className = 'list-decimal pl-5 space-y-1.5 text-slate-700';
+                        if (block.start && block.start !== 1) ol.start = block.start;
+                        (block.items || []).forEach(function (item) {
+                            var li = document.createElement('li');
+                            appendInlineMarkdownSafe(li, item);
+                            ol.appendChild(li);
+                        });
+                        container.appendChild(ol);
+                    } else if (block.type === 'blockquote') {
+                        var bq = document.createElement('blockquote');
+                        bq.className = 'border-l-4 border-blue-500 pl-4 py-1 my-2 text-slate-600 italic bg-slate-50/70 rounded-r-lg space-y-2';
+                        renderParsedBlocksSafe(bq, block.blocks || []);
+                        container.appendChild(bq);
+                    } else if (block.type === 'image') {
+                        var fig = document.createElement('figure');
+                        fig.className = 'my-4 space-y-2';
+                        var img = document.createElement('img');
+                        img.src = block.src;
+                        img.alt = block.alt || '';
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        img.referrerPolicy = 'no-referrer';
+                        img.className = 'w-full max-h-[540px] object-contain rounded-xl border border-slate-200 bg-slate-50';
+                        fig.appendChild(img);
+                        if (block.title) {
+                            var cap = document.createElement('figcaption');
+                            cap.className = 'text-xs text-center text-slate-500';
+                            cap.textContent = block.title;
+                            fig.appendChild(cap);
+                        }
+                        container.appendChild(fig);
+                    } else if (block.type === 'table') {
+                        var wrap = document.createElement('div');
+                        wrap.className = 'overflow-x-auto rounded-xl border border-slate-200';
+                        var tbl = document.createElement('table');
+                        tbl.className = 'article-table min-w-full border-collapse text-xs sm:text-sm';
+                        var thead = document.createElement('thead');
+                        var htr = document.createElement('tr');
+                        (block.headers || []).forEach(function (h, idx) {
+                            var align = (block.alignments && block.alignments[idx]) || 'left';
+                            var alignCls = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
+                            var th = document.createElement('th');
+                            th.scope = 'col';
+                            th.className = 'px-3.5 py-2.5 ' + alignCls + ' text-xs font-semibold uppercase tracking-wider text-slate-700 bg-slate-100 border-b border-slate-200 whitespace-nowrap';
+                            appendInlineMarkdownSafe(th, h);
+                            htr.appendChild(th);
+                        });
+                        thead.appendChild(htr);
+                        var tbody = document.createElement('tbody');
+                        (block.rows || []).forEach(function (row) {
+                            var rtr = document.createElement('tr');
+                            rtr.className = 'hover:bg-slate-50';
+                            row.forEach(function (cell, idx) {
+                                var align = (block.alignments && block.alignments[idx]) || 'left';
+                                var alignCls = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
+                                var td = document.createElement('td');
+                                td.className = 'px-3.5 py-2.5 ' + alignCls + ' text-xs sm:text-sm text-slate-700 border-b border-slate-200';
+                                appendInlineMarkdownSafe(td, cell);
+                                rtr.appendChild(td);
+                            });
+                            tbody.appendChild(rtr);
+                        });
+                        tbl.appendChild(thead);
+                        tbl.appendChild(tbody);
+                        wrap.appendChild(tbl);
+                        container.appendChild(wrap);
                     }
                 }
+            }
+
+            function appendBlocksSafe(container, rawText) {
+                var text = String(rawText == null ? '' : rawText);
+                if (!mdApi || typeof mdApi.parseMarkdownBlocks !== 'function') {
+                    var p = document.createElement('p');
+                    p.className = 'text-slate-700 leading-relaxed';
+                    p.textContent = text;
+                    container.appendChild(p);
+                    return;
+                }
+                var blocks = mdApi.parseMarkdownBlocks(text);
+                renderParsedBlocksSafe(container, blocks);
             }
 
             function buildPreviewAdNode(baseSlot, langCode) {
@@ -1872,15 +2094,25 @@
             }
 
             function renderActivePagePreview() {
-                applyDeviceFrameGeometry();
-                if (state.activePageGroup === 'home') {
-                    renderHomePreview();
-                } else if (state.activePageGroup === 'guide') {
-                    renderGuidePreview();
-                } else if (state.activePageGroup === 'faq') {
-                    renderFaqPreview();
-                } else {
-                    renderArticlePreview();
+                try {
+                    applyDeviceFrameGeometry();
+                    if (state.activePageGroup === 'home') {
+                        renderHomePreview();
+                    } else if (state.activePageGroup === 'guide') {
+                        renderGuidePreview();
+                    } else if (state.activePageGroup === 'faq') {
+                        renderFaqPreview();
+                    } else {
+                        renderArticlePreview();
+                    }
+                } catch (err) {
+                    if (els.previewArticleSheet) {
+                        els.previewArticleSheet.textContent = '';
+                        var errBox = document.createElement('div');
+                        errBox.className = 'rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800';
+                        errBox.textContent = 'Pratinjau tidak dapat dimuat: ' + ((err && err.message) || 'Terjadi kesalahan render.');
+                        els.previewArticleSheet.appendChild(errBox);
+                    }
                 }
             }
 
@@ -1969,13 +2201,25 @@
                     els.previewLangSelect.value = state.previewLang;
 
                     els.pageGroupTabs.addEventListener('click', function (e) {
-                        var btn = e.target.closest('[data-page-group]');
+                        var targetEl = e.target && e.target.nodeType === 3 ? e.target.parentElement : e.target;
+                        var btn = targetEl && targetEl.closest ? targetEl.closest('[data-page-group]') : null;
                         if (!btn) return;
                         state.activePageGroup = btn.getAttribute('data-page-group') || 'article';
                         syncPageGroupUi();
                         renderSlotForms();
                         renderActivePagePreview();
                     });
+
+                    if (els.toggleAllSlotsBtn) {
+                        els.toggleAllSlotsBtn.addEventListener('click', function () {
+                            var visible = getVisibleSlots();
+                            var allOpen = visible.length > 0 && visible.every(function (s) { return Boolean(state.expandedSlotMap[s.id]); });
+                            visible.forEach(function (s) {
+                                state.expandedSlotMap[s.id] = !allOpen;
+                            });
+                            renderSlotForms();
+                        });
+                    }
 
                     els.previewLangSelect.addEventListener('change', function () {
                         state.previewLang = els.previewLangSelect.value || 'id';
@@ -2032,6 +2276,7 @@
                         state.globalPublisherId = '';
                         state.slotLangEditScope = {};
                         state.slot5DismissedInPreview = false;
+                        state.expandedSlotMap = { slot1: true, 'home-slot1': true, 'guide-slot1': true, 'faq-slot1': true };
                         PART_DEFINITIONS.forEach(function (p) { state.fontScales[p.key] = 1; });
                         els.globalPublisherIdInput.value = '';
                         try { localStorage.removeItem(slotsApi.STORAGE_KEY); } catch (_e) {}

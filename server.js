@@ -894,8 +894,9 @@ app.get(['/public/doku.writing.md', '/public/doku.article.md'], (req, res) => {
   return res.sendFile(filePath);
 });
 
-app.get('/public/doku.writer.html', (_req, res) => {
-  const filePath = path.join(__dirname, 'public', 'doku.writer.html');
+app.get(['/public/doku.writer.html', '/public/doku.adsense.html'], (req, res) => {
+  const filename = path.basename(req.path);
+  const filePath = path.join(__dirname, 'public', filename);
   if (!fs.existsSync(filePath)) {
     return res.status(404).type('text/plain; charset=utf-8').send('Not found');
   }
