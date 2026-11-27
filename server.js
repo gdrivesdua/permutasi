@@ -986,8 +986,8 @@ app.get('/api/admin-data/export', async (req, res) => {
   }
   try {
     const rawFormat = String(req.query?.format || 'csv').trim().toLowerCase();
-    if (!['csv', 'xls', 'json'].includes(rawFormat)) {
-      return res.status(400).json({ ok: false, error: 'Format export harus csv, xls, atau json.' });
+    if (!['csv', 'xls', 'json', 'md', 'markdown'].includes(rawFormat)) {
+      return res.status(400).json({ ok: false, error: 'Format export harus csv, xls, json, atau md.' });
     }
     const db = getLocalD1Database(__dirname);
     const exp = await exportAdminDomains(db, req.query, rawFormat);

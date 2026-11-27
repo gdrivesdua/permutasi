@@ -10,13 +10,13 @@ Berdasarkan audit langsung terhadap seluruh file sumber (`package.json`, `site.c
 
 | Komponen | Status | Keterangan & Hasil Audit |
 | --- | --- | --- |
-| **Keamanan GitHub (`.gitignore`)** | Siap | `node_modules/`, `dist/`, `.env`, `.env.local`, `.env.*.local`, `*.log`, `.DS_Store`, dan `.admin-auth.json` sudah dikecualikan agar tidak ikut ter-commit. |
-| **Kebersihan Kode Sumber** | Siap | `site.config.json` bebas dari token/ID sensitif (`measurementId`, `verificationToken`, `publisherId` kosong). Tidak ada `localhost` atau *hardcoded secret* di HTML/JS. `ADMIN_PASSWORD` dibaca eksklusif dari environment/secret. |
-| **Build Statis (`npm run build`)** | Siap | Menjalankan `node scripts/build-static.mjs` tanpa bergantung pada `express` atau library native eksternal; menghasilkan **48 file HTML** (`en` di root, `id/es/pt/fr/de/ru/ja` di subdirektori), `robots.txt`, `sitemap.xml`, `_redirects`, `_headers`, `assets/`, dan `ads.txt` (jika `ADSENSE_CLIENT_ID` terisi). `admin-lexicon.html` **tidak** ikut di-build ke `dist/`. |
-| **Validasi Sintaks (`npm run lint`)** | Siap | Memverifikasi `server.js`, `scripts/site-builder.mjs`, `scripts/build-static.mjs`, `assets/trust-i18n.js`, `lib/domain-tagger.js`, `lib/lexicon-store.js`, `lib/admin-auth.js`, `lib/lexicon/bundle.js`, dan `functions/api/log-available-domain.js` menggunakan `node --check`. |
+| **Keamanan GitHub (`.gitignore`)** | Siap | `node_modules/`, `dist/`, `.env`, `.env.local`, `.env.*.local`, `*.log`, `.DS_Store`, `.admin-auth.json`, dan `.local-d1.sqlite*` sudah dikecualikan agar tidak ikut ter-commit. |
+| **Kebersihan Kode Sumber** | Siap | `site.config.json` bebas dari token/ID sensitif (`measurementId`, `verificationToken`, `publisherId` kosong). Tidak ada `localhost` atau *hardcoded secret* di HTML/JS. Password admin dan token GitHub dibaca eksklusif dari environment/secret sisi server. |
+| **Build Statis (`npm run build`)** | Siap | Menjalankan `node scripts/build-static.mjs` tanpa bergantung pada `express` atau library native eksternal; menghasilkan **48 file HTML halaman inti** (`index.html`, `about.html`, `privacy-policy.html`, `terms.html`, `disclaimer.html`, `contact.html` × 8 bahasa), **16 file HTML edukasi** (`guide.html` & `faq.html` × 8 bahasa), **24 hub artikel** (`guides`, `research`, `tools` × 8 bahasa), seluruh artikel `published: true` di `content/articles/manifest.json`, `robots.txt`, `sitemap.xml`, `_redirects`, `_headers`, `assets/`, `ads.txt` (jika `ADSENSE_CLIENT_ID` terisi), 4 UI studio (`dist/admin-articles/`, `dist/adsense-studio/`, `dist/admin-lexicon/`, `dist/admin-data/` berlabel `noindex, nofollow`), serta salinan dokumen di `dist/public/`. |
+| **Validasi Sintaks (`npm run lint`)** | Siap | Memverifikasi **26 file JS/MJS** menggunakan `node --check`: `server.js`, `scripts/*`, `assets/*` (`trust-i18n.js`, `article-markdown.js`, `adsense-slots.js`, `article-reader.js`, `adsense-studio-sample.js`), `lib/*` (`domain-tagger.js`, `lexicon-store.js`, `admin-auth.js`, `lexicon/bundle.js`, `article-schema.js`, `github-articles.js`, `worker-article-auth.js`, `d1-admin-domains.js`, `local-d1-adapter.js`), serta `functions/api/*` (`log-available-domain.js`, `articles/{auth,index,save,delete}.js`, `admin-data/{index,update,delete,export}.js`). |
 | **Cache Ketersediaan (`localStorage` / `sessionStorage`)** | Siap | Hasil cek RDAP/DNS disimpan di cache memori + `localStorage` dengan fallback `sessionStorage` (`domainAvailabilityCacheV1`), kunci lowercase ternormalisasi, TTL (default 6 jam untuk `available`/`taken`, 5 menit untuk `check`), pruning otomatis, fallback aman `try...catch`, serta tombol re-check per baris yang mem-bypass cache. |
-| **Cloudflare Secrets / Env Vars** | Siap | `scripts/site-builder.mjs` membaca override dari `process.env` saat proses build Cloudflare berjalan (`SITE_URL`, `CONTACT_EMAIL`, `GA_MEASUREMENT_ID`, `GSC_VERIFICATION`, `ADSENSE_CLIENT_ID`, `ADSENSE_DIRECT_SELLER_ID`, `ADSENSE_ENABLE_AUTO_ADS`, `BING_VERIFICATION`, `YANDEX_VERIFICATION`, `AHREFS_SITE_VERIFICATION`). `ADMIN_PASSWORD` digunakan di server lokal `/admin-lexicon` dan di Worker D1 untuk aksi `backfill-*`. |
-| **Mode AdSense Non-Auto Ads** | Siap | `enableAutoAdsScript` bernilai `false` di `site.config.json` dan dapat dikontrol via `ADSENSE_ENABLE_AUTO_ADS=false`. Seluruh halaman memiliki penanda kotak putih putus-putus maksimal 2 slot (1 slot di `contact.html`). |
+| **Cloudflare Secrets / Env Vars** | Siap | `scripts/site-builder.mjs` membaca override dari `process.env` saat proses build Cloudflare berjalan (`SITE_URL`, `CONTACT_EMAIL`, `GA_MEASUREMENT_ID`, `GSC_VERIFICATION`, `ADSENSE_CLIENT_ID`, `ADSENSE_DIRECT_SELLER_ID`, `ADSENSE_ENABLE_AUTO_ADS`, `BING_VERIFICATION`, `YANDEX_VERIFICATION`, `AHREFS_SITE_VERIFICATION`). Sisi server/Functions membaca `ARTICLE_ADMIN_PASSWORD`, `ADMIN_PASSWORD`, `ARTICLE_SESSION_SECRET`, dan `GITHUB_TOKEN`/`OWNER`/`REPO`/`BRANCH` untuk 4 studio terpadu & D1 `backfill-*`. |
+| **Mode AdSense Non-Auto Ads** | Siap | `enableAutoAdsScript` bernilai `false` di `site.config.json` dan dapat dikontrol via `ADSENSE_ENABLE_AUTO_ADS=false`. Penempatan iklan dikelola terstruktur untuk **10 slot lintas 4 grup halaman** (`Artikel` 5 slot, `Front Page` 2 slot, `Guide` 2 slot, `FAQ` 1 slot) via `/adsense-studio/` dan `site.config.json`; slot kosong/simulasi/nonaktif otomatis disembunyikan (`hidden`) di halaman publik. |
 | **Security & Cache Headers (`_headers`)** | Siap | Build otomatis menghasilkan `dist/_headers` (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, dan `Cache-Control`). |
 | **Redirect Bahasa Inggris (`_redirects`)** | Siap | Build otomatis menghasilkan `dist/_redirects` untuk mengarahkan `/en`, `/en/`, dan `/en/*` ke `/` dengan status `301`. |
 
@@ -93,18 +93,22 @@ Sebelum (atau tepat setelah) klik **Save and Deploy**, masuk ke project Cloudfla
 
 | Nama Variabel | Tipe di Cloudflare | Contoh Nilai / Keterangan |
 | --- | --- | --- |
-| `NODE_VERSION` | Text (Plaintext) | `20` (memastikan Node.js modern untuk ESM & `fs.cpSync`) |
+| `NODE_VERSION` | Text (Plaintext) | `22` (memastikan Node.js 22+ untuk ESM, `fs.cpSync`, dan dukungan `node:sqlite` lokal; proyek memakai `npm`) |
 | `SITE_URL` | Text (Plaintext) | `https://domainname.web.id` |
 | `CONTACT_EMAIL` | Secret / Text | `admin@domainname.web.id` |
 | `GA_MEASUREMENT_ID` | **Secret** | `G-XXXXXXXXXX` (ID Google Analytics 4 Anda) |
 | `GSC_VERIFICATION` | **Secret** | Token dari tag `<meta name="google-site-verification" content="TOKEN">` |
 | `ADSENSE_CLIENT_ID` | **Secret** | `ca-pub-XXXXXXXXXXXXXXXX` (otomatis mengisi meta tag & membuat `dist/ads.txt`) |
 | `ADSENSE_DIRECT_SELLER_ID` | Text / Secret | `f08c47fec0942fa0` (ID Google di `ads.txt`, biarkan default jika tidak berubah) |
-| `ADSENSE_ENABLE_AUTO_ADS` | Text (Plaintext) | `false` (wajib `false` karena memakai iklan manual non-Auto Ads) |
+| `ADSENSE_ENABLE_AUTO_ADS` | Text (Plaintext) | `false` (wajib `false` karena memakai unit iklan terstruktur non-Auto Ads) |
 | `BING_VERIFICATION` | **Secret** | Token `msvalidate.01` (opsional) |
 | `YANDEX_VERIFICATION` | **Secret** | Token `yandex-verification` (opsional) |
 | `AHREFS_SITE_VERIFICATION` | **Secret** | Token `ahrefs-site-verification` (opsional) |
-| `ADMIN_PASSWORD` | **Secret** | Password admin untuk otorisasi endpoint D1 `action=backfill-*` di Cloudflare Pages Functions (dan Admin UI lokal `/admin-lexicon`) |
+| `ADMIN_PASSWORD` | **Secret** | Password admin untuk otorisasi D1 `action=backfill-*` dan fallback login 4 studio (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, `/admin-data/`) |
+| `ARTICLE_ADMIN_PASSWORD` | **Secret** | Password login utama untuk 4 studio terpadu (jika kosong, memakai fallback `ADMIN_PASSWORD`) |
+| `ARTICLE_SESSION_SECRET` | **Secret** | Kunci acak HMAC-SHA256 min. 32 karakter untuk menandatangani cookie sesi `dn_article_session` |
+| `GITHUB_TOKEN` | **Secret** | Fine-grained GitHub PAT (**Contents: Read & Write**) untuk simpan/hapus artikel dari `/admin-articles/` |
+| `GITHUB_OWNER` / `GITHUB_REPO` / `GITHUB_BRANCH` | Text (Plaintext) | Pemilik repo, nama repo, dan branch target auto-deploy (default: `main`) |
 
 > **Penting**: Setiap kali Anda menambah atau mengubah *Secret / Environment Variable* di Cloudflare Pages, Cloudflare **tidak otomatis** membangun ulang HTML lama. Buka tab **Deployments -> titik tiga pada deployment terbaru -> Retry deployment** agar `npm run build` berjalan ulang dengan nilai secret yang baru.
 
@@ -340,9 +344,9 @@ npm run build
 
 Skor akhir disimpan di kolom `overall_heuristic_score` (skala integer `0–100`) dan dihitung secara deterministik dari **7 kolom sub-skor** melalui fungsi `computeOverallHeuristicScore` di `functions/api/log-available-domain.js` (dan identik di sisi klien pada `index.html`).
 
-#### 1. Pengelompokan 17 Kolom pada Tabel `available_domains`
-- **Identitas & Metadata Pengecekan** *(tidak ikut bobot skor, kecuali `domain`, `extension`, `lang` sebagai input evaluator)*:
-  - `domain`, `extension`, `char_length`, `lang`
+#### 1. Pengelompokan 19 Kolom pada Tabel `available_domains`
+- **Identitas & Metadata Pengecekan** *(tidak ikut bobot skor, kecuali `domain`, `sld`, `extension`, `lang` sebagai input evaluator)*:
+  - `domain`, `sld`, `extension`, `char_length`, `lang`
   - `check_method` (`NS` / `RDAP`), `check_source` (`auto` / `manual`), `checked_at` (epoch ms), `scored_at` (epoch ms)
 - **7 Kolom Sub-Skor** *(input langsung ke `overall_heuristic_score`, masing-masing bernilai `0–100`, total bobot = `1.00`)*:
   - `pronunciation_comfort_score` (`P`) — bobot **`0.22`**
@@ -355,6 +359,7 @@ Skor akhir disimpan di kolom `overall_heuristic_score` (skala integer `0–100`)
 - **Kolom Kategori Pendukung & Output Akhir**:
   - `emd_pmd_match_type` — label hemat 2 huruf (`nk`, `np`, `up`, `be`, `nc`, `nn`, `os`, `of`, `ol`) sebagai penjelas kategori `emd_pmd_score` (tidak masuk rumus bobot).
   - `overall_heuristic_score` — skor akhir hasil penjumlahan terbobot dikurangi penalti penjaga (*safeguard*).
+  - `tags` — array JSON berisi hingga 6 tag topik/niche hasil auto-tagging 8 bahasa (`lib/domain-tagger.js`, tidak masuk rumus bobot).
 
 #### 2. Rumus Exact `overall_heuristic_score`
 
@@ -433,28 +438,24 @@ Kamus untuk segmentasi dan auto-tagging domain D1 (`lib/domain-tagger.js`) dipis
 | `lib/lexicon/bundle.js` | Modul ES hasil generasi otomatis dari seluruh `lib/lexicon/*.json` agar `lib/domain-tagger.js` bisa berjalan di Node.js ESM maupun Cloudflare Workers tanpa `fs` runtime | Ya | Tidak (dibundel otomatis ke Worker Function) |
 | `lib/lexicon-store.js` | Helper validasi entri, baca/tulis JSON aman (path confinement), dan generator `bundle.js` | Ya | Tidak |
 | `lib/admin-auth.js` | Verifikasi password admin (`ADMIN_PASSWORD` / hash `scrypt` lokal), token sesi HMAC-SHA256 Bearer, dan rate limiting | Ya | Tidak |
-| `admin-lexicon.html` | Antarmuka Admin UI lokal (`/admin-lexicon`) | Ya | **Tidak** (tidak masuk `STATIC_HTML_PAGES`) |
-| `.admin-auth.json` | Penyimpan hash `scrypt` ber-salt saat mode *First-Run Setup* lokal (jika `ADMIN_PASSWORD` env belum diset) | **Tidak** (`.gitignore`) | Tidak |
+| `admin-lexicon.html` | Antarmuka Admin UI kamus (`/admin-lexicon` -> `dist/admin-lexicon/index.html`) | Ya | Ya (berlabel `noindex, nofollow` & terhubung sesi terpadu; endpoint tulis `/api/admin/lexicon*` khusus server lokal/Express) |
+| `.admin-auth.json` | Penyimpan hash `scrypt` ber-salt saat mode *First-Run Setup* lokal (jika `ARTICLE_ADMIN_PASSWORD` / `ADMIN_PASSWORD` env belum diset) | **Tidak** (`.gitignore`) | Tidak |
 
 #### 2. Mekanisme Password Admin (Tanpa Menyimpan Rahasia di GitHub)
-- **Prioritas 1 — Environment Variable `ADMIN_PASSWORD`**:
-  - Di lokal: set `ADMIN_PASSWORD=...` di `.env` (masuk `.gitignore`) atau environment container/Secrets.
-  - Di produksi Cloudflare Pages: tambahkan `ADMIN_PASSWORD` sebagai **Secret** di **Settings -> Environment variables** untuk melindungi endpoint `action=backfill-*` pada `POST /api/log-available-domain`.
+- **Prioritas 1 — Environment Variable (`ARTICLE_ADMIN_PASSWORD` atau `ADMIN_PASSWORD`)**:
+  - Di lokal: set `ARTICLE_ADMIN_PASSWORD=...` / `ADMIN_PASSWORD=...` di `.env` (masuk `.gitignore`) atau environment container/Secrets.
+  - Di produksi Cloudflare Pages: tambahkan sebagai **Secret** di **Settings -> Environment variables** untuk melindungi login 4 studio (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, `/admin-data/`), endpoint `/api/articles/*`, `/api/admin-data/*`, serta `action=backfill-*` pada `POST /api/log-available-domain`.
 - **Prioritas 2 — First-Run Setup Lokal (`.admin-auth.json`)**:
-  - Jika `ADMIN_PASSWORD` belum diisi saat menjalankan preview lokal (`npm run dev`), membuka `/admin-lexicon` akan menampilkan form pembuatan password admin awal (minimal 8 karakter).
+  - Jika `ARTICLE_ADMIN_PASSWORD` dan `ADMIN_PASSWORD` belum diisi saat menjalankan preview lokal (`npm run dev`), membuka `/admin-lexicon` atau `/admin-articles/` akan menampilkan form pembuatan password admin awal (minimal 8 karakter).
   - Server menyimpannya sebagai hash `scrypt` ber-salt ke `.admin-auth.json` (bukan plaintext dan diabaikan oleh `.gitignore`), lalu mengunci form setup secara otomatis.
 - **Keamanan Sesi & Endpoint**:
-  - Token sesi (`Authorization: Bearer`) bertanda tangan HMAC-SHA256 hanya disimpan di memori JavaScript browser (bukan `localStorage`), dengan masa berlaku 12 jam dan rate limit 10 kali gagal login / 15 menit.
-  - Server Express lokal memblokir akses HTTP ke dotfiles (`.env`, `.admin-auth.json`) serta direktori `/lib`, `/functions`, `/migrations`, dan `/scripts`.
+  - Sesi login terpadu memakai cookie `HttpOnly` bertanda tangan HMAC-SHA256 (`dn_article_session` lewat `/api/articles/auth`) dan/atau token Bearer HMAC-SHA256 di memori (`/api/admin/auth/*`), dengan masa berlaku 12 jam dan rate limit 10 kali gagal login / 15 menit.
+  - Endpoint `/api/admin/lexicon*` di `server.js` dilindungi `requireUnifiedAdminAuth` beserta verifikasi `Origin`/`X-Requested-With` anti-CSRF.
+  - Server Express lokal memblokir akses HTTP ke dotfiles (`.env`, `.admin-auth.json`, `.local-d1.sqlite*`) serta direktori `/lib`, `/functions`, `/migrations`, `/scripts`, `/content`, dan `/templates`.
 
-#### 3. Di Mana `/admin-lexicon` Bisa Dibuka?
-Halaman `/admin-lexicon` dilayani oleh server Express (`server.js`), sehingga **tidak terkunci di Google AI Studio saja** dan dapat dibuka di lingkungan mana pun yang menjalankan `node server.js` (`npm run dev` / `npm start`):
-- **Komputer / Laptop Lokal**: Setelah `git clone` dan `npm install`, jalankan `npm run dev` lalu buka `http://localhost:3000/admin-lexicon`. Perubahan langsung tersimpan ke folder `lib/lexicon/` lokal agar siap di-`git commit` dan `git push`.
-- **Google AI Studio Preview (dan Server Node.js / Container Lain)**: Dapat diakses melalui `<URL_PREVIEW>/admin-lexicon`. Karena filesystem container bersifat sementara (*ephemeral*), perubahan kamus di preview tetap perlu di-commit/ekspor ke GitHub agar permanen. Jika Anda membagikan **Shared App URL** AI Studio (yang juga menjalankan `server.js`), pastikan `ADMIN_PASSWORD` sudah diatur di Secrets atau sudah di-claim terlebih dahulu.
-- **Cloudflare Pages Produksi (`dist/`) — Tidak Tersedia (404)**: Saat `npm run build` dijalankan untuk Cloudflare Pages, `admin-lexicon.html` **tidak ikut dibangun** ke folder `dist/` dan endpoint `/api/admin/*` tidak ada di `functions/`, sehingga halaman admin aman dan tidak terekspos di domain publik (`https://domainname.web.id/admin-lexicon`).
-
-
-- Gunakan SiBotak?
+#### 3. Di Mana `/admin-lexicon` Bisa Dibuka & Mode Eksekusinya?
+- **Komputer / Laptop Lokal & Preview Node.js (`server.js`)**: Jalankan `npm run dev` (`node server.js`), lalu buka `http://localhost:3000/admin-lexicon` (atau `<URL_PREVIEW>/admin-lexicon`). Seluruh operasi baca, tambah/ubah kata (`PUT /api/admin/lexicon/:lang`), hapus (`DELETE /api/admin/lexicon/:lang/:word`), regenerasi `lib/lexicon/bundle.js`, dan *Live Tagger Test Sandbox* (`POST /api/admin/lexicon/test`) berjalan penuh secara lokal agar siap di-`git commit` dan `git push`.
+- **Cloudflare Pages Produksi (`dist/admin-lexicon/index.html`)**: Halaman UI ikut disalin ke `dist/admin-lexicon/index.html` dengan `<meta name="robots" content="noindex, nofollow">` dan header `_headers` (`X-Robots-Tag: noindex, nofollow`, `Cache-Control: no-store`) agar navigasi 4 studio tetap konsisten. Namun karena `lib/lexicon/*.json` merupakan berkas repositori lokal yang dibundel ke Worker, endpoint mutasi `/api/admin/lexicon*` **tidak** disediakan di Cloudflare Pages Functions (`404`); perubahan kamus tetap dilakukan lewat server lokal (`npm run dev`) lalu di-commit ke GitHub.
 
 
 #### 4. How-To: Menambah atau Mengubah Entri Dictionary via Admin UI (`/admin-lexicon`)
@@ -526,7 +527,7 @@ Jika Anda mengedit file `lib/lexicon/<lang>.json` langsung di editor teks tanpa 
 
 ### G. Kebijakan Generasi Domain, Pemeringkatan Ejaan Alami, Auto-Check 24 Teratas & Filter Default (`index.html`)
 
-Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, dan pengecekan ketersediaan sisi klien di `index.html` (yang dikompilasi ke seluruh 48 halaman statis di `dist/`):
+Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, dan pengecekan ketersediaan sisi klien di `index.html` (yang dikompilasi ke halaman beranda statis 8 bahasa di `dist/`):
 
 #### 1. Ekstensi Default per Bahasa (`defaultExts` & `extPlaceholder`)
 - **Bahasa Indonesia (`id`)**: `.my.id, .web.id, .biz.id, .id, .com`
@@ -583,27 +584,27 @@ Bagian ini mendokumentasikan arsitektur sistem editor artikel berbasis blok di w
 #### 1. Struktur File & Kompatibilitas Dual-Runtime
 | Komponen | Lokasi | Peran Teknis |
 | --- | --- | --- |
-| **UI Editor Web** | `admin-articles.html` -> `dist/admin-articles/index.html` | Antarmuka editor blok (login 1 kolom Password, daftar artikel lintas 8 bahasa, editor blok `sections[]`, tabel, callout, FAQ, lencana indikator sintaks Markdown `MD`, live SEO meter, pratinjau aman berbasis DOM API). Memakai `<meta name="robots" content="noindex, nofollow">` dan tidak masuk `sitemap.xml`. |
-| **Mesin Markdown Bersama** | `assets/article-markdown.js` | Parser & renderer Markdown UMD nol-dependensi (`globalThis.__ARTICLE_MARKDOWN__`) untuk **bold**, *italic*, `` `code` ``, `[link](url)`, daftar (`-`/`1.`), `> blockquote`, dan tabel pipe. Men-escape seluruh HTML mentah, membatasi protokol tautan ke `https:`/`http:`/`/`/`#`, serta menyediakan `stripMarkdownToPlainText` untuk penghitungan kata & JSON-LD `FAQPage`. |
-| **Panduan Penulis** | `public/doku.writer.html` -> `dist/public/doku.writer.html` | Buku pegangan penulis non-teknis (`noindex, nofollow`) yang dapat dibaca langsung di `/public/doku.writer.html`. |
-| **Validasi & Normalisasi** | `lib/article-schema.js` | Modul ESM murni (`validateAndNormalizeArticleSave`, `applyArticleSaveToManifest`, `countArticleWords` berbasis `stripMarkdownToPlainText`) yang menyamakan aturan validasi `scripts/site-builder.mjs` (`slug` `^[a-z0-9]+(?:-[a-z0-9]+)*$`, `section`, `articleType`, `dateModified >= datePublished`, `published: true` wajib punya `title`/`metaDesc`/`h1` dan min. 1 section, bebas tabrakan rute). |
-| **Klien GitHub Atomik** | `lib/github-articles.js` | Memakai Web `fetch()` standar (`getRepoFileText`, `commitRepoFilesAtomic`) dengan **Git Data API** (`git/ref` -> `git/commits` -> `git/blobs` -> `git/trees` -> `git/commits` -> `PATCH git/refs`) sehingga perubahan `content/articles/manifest.json` dan `content/articles/<section>/<id>/<lang>.json` masuk dalam **1 commit atomik** (mencegah 2 build bertumpuk atau error *race condition* di Cloudflare Pages). |
+| **UI Editor Web** | `admin-articles.html` -> `dist/admin-articles/index.html` | Antarmuka editor blok (login 1 kolom Password, daftar artikel lintas 8 bahasa, editor blok `sections[]`, 3 tingkat panel lipat, **Mode Fokus**, tombol **Batal Edit** & **Hapus Artikel**, sisip tabel Markdown `+Tabel Dalam Paragraf (MD)` & gambar `![alt](url)`, callout, FAQ, live SEO meter, pratinjau aman berbasis DOM API). Memakai `<meta name="robots" content="noindex, nofollow">` dan tidak masuk `sitemap.xml`. |
+| **Mesin Markdown Bersama** | `assets/article-markdown.js` | Parser & renderer Markdown UMD nol-dependensi (`globalThis.__ARTICLE_MARKDOWN__`) untuk **bold**, *italic*, `` `code` ``, `[link](url)`, gambar `![alt](url "judul")`, daftar (`-`/`1.`), `> blockquote`, dan tabel pipe. Men-escape seluruh HTML mentah, membatasi protokol tautan/gambar ke `https:`/`http:`/`/`/`#`, serta menyediakan `stripMarkdownToPlainText` untuk penghitungan kata & JSON-LD `FAQPage`. |
+| **Panduan Penulis & AdSense** | `public/doku.writer.html`, `public/doku.adsense.html` -> `dist/public/` | Buku pegangan penulis & admin monetisasi (`noindex, nofollow`) yang dapat dibaca langsung di `/public/doku.writer.html` dan `/public/doku.adsense.html`. |
+| **Validasi & Normalisasi** | `lib/article-schema.js` | Modul ESM murni (`validateAndNormalizeArticleSave`, `applyArticleSaveToManifest`, `applyArticleDeleteToManifest`, `countArticleWords` berbasis `stripMarkdownToPlainText`) yang menyamakan aturan validasi `scripts/site-builder.mjs` (`slug` `^[a-z0-9]+(?:-[a-z0-9]+)*$`, `section`, `articleType`, `dateModified >= datePublished`, `published: true` wajib punya `title`/`metaDesc`/`h1` dan min. 1 section, bebas tabrakan rute). |
+| **Klien GitHub Atomik** | `lib/github-articles.js` | Memakai Web `fetch()` standar (`getRepoFileText`, `listRepoDirectoryFiles`, `commitRepoFilesAtomic` dengan dukungan tulis & hapus blob) memakai **Git Data API** (`git/ref` -> `git/commits` -> `git/blobs` -> `git/trees` -> `git/commits` -> `PATCH git/refs`) sehingga perubahan `content/articles/manifest.json` dan berkas `<lang>.json` masuk dalam **1 commit atomik** (mencegah 2 build bertumpuk atau *race condition* di Cloudflare Pages). |
 | **Auth & Sesi Edge** | `lib/worker-article-auth.js` | Autentikasi password-only (SHA-256 constant-time), verifikasi `Origin`/`X-Requested-With` anti-CSRF, rate limiter IP, cookie **`HttpOnly; SameSite=None; Secure; Partitioned`** (`dn_article_session`), serta tabel D1 `article_editor_sessions` (auto-bootstrap saat login) untuk pelacakan & pencabutan sesi sisi server. |
-| **Cloudflare Pages Functions** | `functions/api/articles/auth.js`, `index.js`, `save.js` | Endpoint produksi `/api/articles/auth` (`GET`/`POST`/`DELETE`), `/api/articles` (`GET`), dan `/api/articles/save` (`POST`). |
-| **Preview Express Lokal** | `server.js` | Melayani `/admin-articles/` dan `/api/articles/*`: otomatis memakai mode GitHub bila `GITHUB_TOKEN`/`GITHUB_OWNER`/`GITHUB_REPO` terisi, atau membaca/menulis ke disk `content/articles/` dengan pengecekan batas direktori (`resolveConfinedArticleFile`) bila berjalan lokal tanpa token GitHub. |
+| **Cloudflare Pages Functions** | `functions/api/articles/auth.js`, `index.js`, `save.js`, `delete.js` | Endpoint produksi `/api/articles/auth` (`GET`/`POST`/`DELETE`), `/api/articles` (`GET`), `/api/articles/save` (`POST`), dan `/api/articles/delete` (`POST`). |
+| **Preview Express Lokal** | `server.js` | Melayani `/admin-articles/` dan `/api/articles/*`: otomatis memakai mode GitHub bila `GITHUB_TOKEN`/`GITHUB_OWNER`/`GITHUB_REPO` terisi, atau membaca/menulis/menghapus ke disk `content/articles/` dengan pengecekan batas direktori (`resolveConfinedArticleFile`) bila berjalan lokal tanpa token GitHub. |
 
 #### 2. Perlindungan SEO, Keamanan & Sesi
-- **Tidak Terindeks Search Engine**: `scripts/site-builder.mjs` menambahkan `Disallow: /admin-articles/` dan `Disallow: /api/articles/` pada `robots.txt`, serta header `X-Robots-Tag: noindex, nofollow` + `Cache-Control: no-store` pada `_headers` dan `server.js`.
-- **Sanitasi Markdown & Zero Raw HTML**: Baik pratinjau DOM (`admin-articles.html`) maupun output HTML statis (`scripts/site-builder.mjs`) mem-parsing Markdown melalui `assets/article-markdown.js`. Tag HTML mentah (`<script>`, `<iframe>`, `<object>`, atribut `onclick`/`onerror`) selalu di-escape menjadi teks biasa, dan tautan `[label](url)` hanya menerima `https://`, `http://`, path relatif `/...`, atau `#anchor`.
+- **Tidak Terindeks Search Engine**: `scripts/site-builder.mjs` menambahkan `Disallow: /admin-articles/`, `Disallow: /admin-data/`, `Disallow: /api/articles/`, dan `Disallow: /api/admin-data/` pada `robots.txt`, serta header `X-Robots-Tag: noindex, nofollow` + `Cache-Control: no-store` pada `_headers` dan `server.js`.
+- **Sanitasi Markdown & Zero Raw HTML**: Baik pratinjau DOM (`admin-articles.html`) maupun output HTML statis (`scripts/site-builder.mjs`) mem-parsing Markdown melalui `assets/article-markdown.js`. Tag HTML mentah (`<script>`, `<iframe>`, `<object>`, atribut `onclick`/`onerror`) selalu di-escape menjadi teks biasa, dan tautan/gambar hanya menerima protokol aman (`https://`, `http://`, path relatif `/...`, atau `#anchor` untuk tautan).
 - **Zero Secret di Browser**: Password editor, `ARTICLE_SESSION_SECRET`, dan `GITHUB_TOKEN` hanya dibaca di server/Pages Function. Token sesi tidak pernah ditulis ke `localStorage`/`sessionStorage`, melainkan disimpan sebagai cookie `HttpOnly` bertanda tangan HMAC-SHA256 dengan validasi `jti` di D1 (`article_editor_sessions`) / memori server Express.
-- **Proteksi CSRF**: Semua endpoint mutasi (`POST`/`DELETE` `/api/articles/auth`, `POST` `/api/articles/save`) memvalidasi kesesuaian header `Origin` dengan `Host`/`X-Forwarded-Host` serta header `X-Requested-With`.
+- **Proteksi CSRF**: Semua endpoint mutasi (`POST`/`DELETE` `/api/articles/auth`, `POST` `/api/articles/save`, `POST` `/api/articles/delete`) memvalidasi kesesuaian header `Origin` dengan `Host`/`X-Forwarded-Host` serta header `X-Requested-With`.
 
 #### 3. Environment Variables / Secrets Cloudflare yang Diperlukan
-Tambahkan variabel berikut di **Cloudflare Pages -> Settings -> Environment variables** sebelum menguji login dan publish dari `/admin-articles/`:
+Tambahkan variabel berikut di **Cloudflare Pages -> Settings -> Environment variables** sebelum menguji login, publish/hapus artikel, maupun manajemen D1:
 
 | Variabel | Tipe | Keterangan |
 | --- | --- | --- |
-| `ARTICLE_ADMIN_PASSWORD` | **Secret** | Password login tunggal untuk `/admin-articles/`. Bila dikosongkan, backend memakai fallback `ADMIN_PASSWORD`. |
+| `ARTICLE_ADMIN_PASSWORD` | **Secret** | Password login tunggal untuk `/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, dan `/admin-data/`. Bila dikosongkan, backend memakai fallback `ADMIN_PASSWORD`. |
 | `ARTICLE_SESSION_SECRET` | **Secret** *(Disarankan)* | String acak min. 32 karakter untuk menandatangani cookie sesi HMAC-SHA256 di Cloudflare Workers. |
 | `GITHUB_TOKEN` | **Secret** | Fine-grained Personal Access Token GitHub dengan izin **Contents: Read & Write** khusus ke repositori proyek ini. |
 | `GITHUB_OWNER` | Text (Plaintext) | Username atau nama organisasi GitHub pemilik repositori. |
@@ -612,25 +613,51 @@ Tambahkan variabel berikut di **Cloudflare Pages -> Settings -> Environment vari
 
 ---
 
-### I. Riwayat Perubahan Sistem Non-Penulisan Artikel
+### I. Riwayat Perubahan Infrastruktur, Studio Admin, AdSense & Database D1
 
-Bagian ini mencatat pembaruan infrastruktur, monetisasi AdSense, autentikasi admin, interlink antar-studio, serta konfigurasi build dan keamanan di luar alur penulisan artikel:
+Bagian ini mencatat pembaruan infrastruktur, monetisasi AdSense multi-halaman, autentikasi admin terpadu lintas 4 studio, manajemen Database D1, serta konfigurasi build dan runtime:
 
-#### 1. Autentikasi Terpadu & Interlink Lintas 3 Studio (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`)
-- **Satu Password & Satu Sesi Terpadu**: Halaman **Layout & AdSense Studio** (`/adsense-studio/`) dan **Admin Lexicon** (`/admin-lexicon`) kini menggunakan sistem autentikasi dan sesi yang sama dengan **Article Studio** (`/api/articles/auth` dengan cookie `HttpOnly` `dn_article_session`).
-- **Urutan Prioritas Kredensial Server**: Backend Express (`server.js`) maupun Cloudflare Pages Functions (`lib/worker-article-auth.js`) membaca `ARTICLE_ADMIN_PASSWORD`, lalu fallback ke `ADMIN_PASSWORD`, dan pada mode lokal/preview memakai berkas hash lokal `.admin-auth.json` (`lib/admin-auth.js`) yang juga mendukung reset lokal dengan menghapus berkas `.admin-auth.json`.
-- **Middleware Sesi Terpadu (`requireUnifiedAdminAuth`)**: Endpoint mutasi lexicon (`/api/lexicon/*`) di `server.js` menerima cookie sesi terpadu `dn_article_session` maupun `Authorization: Bearer`, disertai verifikasi `Origin`/`X-Requested-With` anti-CSRF.
-- **Navigasi Interlinked**: Sticky header pada `admin-articles.html`, `admin-adsense.html`, dan `admin-lexicon.html` kini saling terhubung langsung (**Article Studio**, **Layout & AdSense**, dan **Admin Lexicon**) sehingga berpindah antar-studio tidak memerlukan login ulang selama sesi masih aktif.
+#### 1. Autentikasi Terpadu & Interlink Lintas 4 Studio (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, `/admin-data/`)
+- **Satu Password & Satu Sesi Terpadu**: Halaman **Article Studio** (`/admin-articles/`), **Layout & AdSense Studio** (`/adsense-studio/`), **Admin Lexicon** (`/admin-lexicon`), dan **Database D1** (`/admin-data/`) menggunakan sistem autentikasi dan sesi yang sama (`/api/articles/auth` dengan cookie `HttpOnly` `dn_article_session`).
+- **Gerbang Akses Ketat di `/admin-data/`**: Halaman `/admin-data/` tidak menyediakan form login sendiri; bila belum terautentikasi, layar terkunci dan mengarahkan admin untuk login lewat `/admin-articles/` terlebih dahulu sebelum membuka workspace data D1 maupun memanggil `/api/admin-data/*`.
+- **Urutan Prioritas Kredensial Server**: Backend Express (`server.js`) maupun Cloudflare Pages Functions (`lib/worker-article-auth.js`) membaca `ARTICLE_ADMIN_PASSWORD`, lalu fallback ke `ADMIN_PASSWORD`, dan pada mode lokal/preview memakai berkas hash lokal `.admin-auth.json` (`lib/admin-auth.js`).
+- **Middleware Sesi Terpadu (`requireUnifiedAdminAuth`)**: Endpoint kamus (`/api/admin/lexicon`, `PUT /api/admin/lexicon/:lang`, `DELETE /api/admin/lexicon/:lang/:word`, `POST /api/admin/lexicon/test`) di `server.js` menerima cookie sesi terpadu `dn_article_session` maupun `Authorization: Bearer`, disertai verifikasi `Origin`/`X-Requested-With` anti-CSRF.
+- **Navigasi Interlinked**: Sticky header pada `admin-articles.html`, `admin-adsense.html`, `admin-lexicon.html`, dan `admin-data.html` saling terhubung langsung (**Article Studio**, **Layout & AdSense**, **Admin Lexicon**, dan **Database D1**) sehingga berpindah antar-studio tidak memerlukan login ulang selama sesi masih aktif.
 
-#### 2. Studio Konfigurasi & Pratinjau Google AdSense 5 Slot (`/adsense-studio/`)
-- **Berkas Terkait**: `admin-adsense.html`, `assets/adsense-slots.js` (UMD dual-runtime Node/Browser), `assets/adsense-studio-sample.js`, dan `site.config.json` (dukungan konfigurasi `googleAdSense.slots`).
-- **Pengaturan 5 Slot Terstruktur**: Mendukung nama slot, jenis unit, preset ukuran terpisah **Desktop** vs **Mobile** (termasuk grid Multiplex `2x3` / `1x3` / vertikal dan Anchor Ad sticky yang dapat ditutup dengan tombol `×`), jarak margin atas-bawah min. `20–24px`, toggle aktif/nonaktif, serta pemilihan mode **Simulasi** vs **Live AdSense**.
-- **Parser Cuplikan AdSense Aman (`parseAdSenseSnippet`)**: Mengekstrak hanya atribut `<ins class="adsbygoogle">` yang masuk allowlist (`data-ad-client`, `data-ad-slot`, `data-ad-format`, `data-ad-layout`, `data-ad-layout-key`, `data-full-width-responsive`) tanpa pernah mengeksekusi atau menyisipkan tag `<script>`/`<iframe>` mentah ke DOM.
-- **Switcher Viewport & Ekspor**: Menyediakan switcher pratinjau **Desktop vs Mobile**, penyimpanan preferensi ke `localStorage` (`dn_adsense_studio_config_v1`), serta tombol **Salin JSON / Cuplikan Kode** untuk dipindahkan ke konfigurasi produksi.
+#### 2. Studio Konfigurasi & Pratinjau Google AdSense Multi-Halaman 10 Slot (`/adsense-studio/`) & Tipografi Baca Artikel
+- **Berkas Terkait**: `admin-adsense.html`, `assets/adsense-slots.js` (UMD dual-runtime Node/Browser), `assets/adsense-studio-sample.js`, `assets/article-reader.js`, `templates/article.html`, `templates/guide.html`, `templates/faq.html`, `index.html`, dan `site.config.json` (`googleAdSense.slots`).
+- **Pengaturan 10 Slot Lintas 4 Grup Halaman (`PAGE_GROUPS`)**:
+  - **`Artikel` (5 slot)**: `slot1` (di bawah Key Takeaways, sebelum TOC), `slot2` (setelah Bagian 2 / Tabel Ringkasan Metrik), `slot3` (rata tengah di antara Tabel Kurasi), `slot4` (setelah Bagian 4 / sebelum Metodologi & FAQ), dan `slot5` (Anchor Ad sticky bawah layar dengan tombol tutup `×` tersimpan di `sessionStorage` `dn_adsense_anchor_dismissed_v1`).
+  - **`Front Page` (2 slot)**: `home-slot1` dan `home-slot2` pada `index.html` & 7 edisi bahasa (`/id/`–`/ja/`).
+  - **`Guide` (2 slot)**: `guide-slot1` dan `guide-slot2` pada `/guide.html` & 7 edisi bahasa.
+  - **`FAQ` (1 slot)**: `faq-slot1` pada `/faq.html` & 7 edisi bahasa.
+  - Mendukung ukuran terpisah **Desktop** vs **Mobile** (termasuk Multiplex `2x3` / `1x3` / vertikal), margin vertikal min. `20–24px` (maks. `64px`), toggle aktif/nonaktif, tombol `Buka Semua` / `Tutup Semua`, serta **Override per Bahasa (`langOverrides`)** khusus halaman multibahasa (`Front Page`, `Guide`, `FAQ`).
+- **Prinsip Slot Bersih di Publik & Parser Aman (`parseAdSenseSnippet`)**: Hanya mengekstrak atribut `<ins class="adsbygoogle">` yang masuk allowlist (`data-ad-client`, `data-ad-slot`, `data-ad-format`, `data-ad-layout`, `data-ad-layout-key`, `data-full-width-responsive`). Pada situs publik, slot yang masih kosong, nonaktif, atau masih berstatus `simulation` **tidak pernah** merender kotak putus-putus (*wireframe*), melainkan tersembunyi bersih (`dn-ad-mount hidden`).
+- **Switcher Viewport, Uji Lokal & Ekspor**: Menyediakan pratinjau **Desktop vs Mobile (390px)**, switcher 8 bahasa pratinjau, opsi simpan uji lokal ke `localStorage` (`dn_adsense_studio_config_v1`), serta modal **Salin JSON / Cuplikan Kode HTML** untuk diterapkan permanen ke `site.config.json`.
+- **Kontrol Ukuran Font Pengunjung Terpadu (`A− / A+`)**: Halaman artikel publik (`templates/article.html` + `assets/article-reader.js`) menyediakan tombol `A−`, badge persentase yang dapat diklik untuk reset ke `100%`, dan `A+` secara global (`--article-font-scale`, rentang `85%–130%`, step `5%`, tersimpan di `localStorage` `dn_article_font_scale_v1`), sementara baseline per bagian (`--art-scale-*`) dapat disetel di pratinjau AdSense Studio.
 
-#### 3. Build Statis, Routing, & Pengamanan SEO Non-Publik
-- **Output Build Statis (`scripts/build-static.mjs`)**: Menyalin `admin-adsense.html` ke `dist/adsense-studio/index.html`, `admin-lexicon.html` ke `dist/admin-lexicon/index.html`, serta menyalin seluruh berkas `.md` dan `doku.writer.html` di `/public/` ke `dist/public/`.
-- **Proteksi Indeks & Header Keamanan (`server.js`, `scripts/site-builder.mjs`)**: Rute `/adsense-studio/`, `/admin-lexicon`, `/admin-articles/`, dan `/api/articles/*` ditandai `noindex, nofollow`, `Cache-Control: no-store`, serta tercantum pada `Disallow` di `robots.txt` dan aturan `_headers` Cloudflare Pages.
-- **Pembersihan Terminologi**: Menghapus seluruh penyebutan kata bertrademark pihak ketiga di antarmuka admin dan dokumentasi sistem.
+#### 3. Build Statis, Halaman Edukasi/FAQ Terpisah, Routing, & Normalisasi Runtime (Node 22 + npm)
+- **Normalisasi Runtime & Paket (`package.json`)**: Proyek distandardisasi untuk Node.js 22+ dan `npm` (berkas `bun.lock` telah dihapus). Server lokal `server.js` berjalan dengan `express` v5 pada port `3000` dan memakai modul bawaan Node **`node:sqlite`** (`DatabaseSync`) tanpa dependensi native tambahan.
+- **Pemisahan Template Edukasi & FAQ**: Menambahkan `templates/guide.html`, `templates/faq.html`, dan data terjemahan `scripts/edu-faq-i18n.json` sehingga `/guide.html` dan `/faq.html` (beserta `/<lang>/guide.html` dan `/<lang>/faq.html`) dirender di `dist/` dan `server.js` terpisah dari hub artikel `/guides/`.
+- **Output Build Statis (`scripts/build-static.mjs`)**: Selain halaman inti, `/guide.html`, `/faq.html`, 24 hub, dan artikel terbit, skrip menyalin `admin-articles.html` -> `dist/admin-articles/index.html`, `admin-adsense.html` -> `dist/adsense-studio/index.html`, `admin-lexicon.html` -> `dist/admin-lexicon/index.html`, `admin-data.html` -> `dist/admin-data/index.html`, serta menyalin `/public/*.md`, `doku.writer.html`, dan `doku.adsense.html` ke `dist/public/`.
+- **Proteksi Indeks & Header Keamanan (`server.js`, `scripts/site-builder.mjs`)**: Rute `/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`, `/admin-data/`, `/api/articles/*`, `/api/admin-data/*`, `/public/doku.writer.html`, dan `/public/doku.adsense.html` ditandai `noindex, nofollow` pada `_headers` (dan `Cache-Control: no-store` untuk area admin/API); `/admin-articles/`, `/admin-data/`, `/api/articles/`, dan `/api/admin-data/` tercantum pada `Disallow` di `robots.txt`.
+
+#### 4. Manajemen Database D1, Filter Lanjutan & Export Multi-Format (`/admin-data/`)
+- **Berkas Terkait**: `admin-data.html`, `lib/d1-admin-domains.js`, `lib/local-d1-adapter.js` (SQLite lokal `.local-d1.sqlite` berbasis `node:sqlite` + 12 domain seed contoh untuk preview lokal), serta endpoint `functions/api/admin-data/index.js` (`GET /api/admin-data`), `update.js` (`POST`/`PATCH /api/admin-data/update`), `delete.js` (`POST`/`DELETE /api/admin-data/delete`), dan `export.js` (`GET /api/admin-data/export`).
+- **7 Filter + Pencarian Umum + Facets Autocomplete**:
+  - Pencarian umum (`q`), **SLD** (`sld`), **Keyword** (`keyword`), **Char Length Min–Max** (`charLenMin`/`charLenMax`), **Tags** (`tags` + `<datalist>` tag teratas dari D1), **Extension** (`extension` multi-nilai + `<datalist>` ekstensi), **Check Source** (`auto` / `manual`), dan **Lang** (`en`–`ja`).
+  - Mendukung pengurutan (`sortBy`) pada 12 kolom (`checked_at`, `overall_heuristic_score`, `brandability_score`, `pronunciation_comfort_score`, `emd_pmd_score`, `domain`, `sld`, `char_length`, `extension`, `lang`, `check_source`, `check_method`), arah `DESC`/`ASC`, dan paginasi `25 / 50 / 100 / 200` baris per halaman.
+- **Tampilan Kolom Tabel Terpisah (`SLD`, `Ext TLD`, `Len`)**:
+  - Kolom `SLD` hanya menampilkan teks SLD murni (tanpa domain penuh; domain lengkap tampil di atribut `title` tooltip), dipisahkan dari kolom **`Ext TLD`** (`extension`) dan kolom **`Len`** (`char_length`) di sebelahnya, diikuti `Lang`, `Source / Method`, `Tags`, `Skor Heuristik`, `Checked At`, dan `Aksi`.
+- **Edit & Hapus Baris Aman**:
+  - Modal **Edit** memperbarui `sld`, `extension`, `char_length`, `lang`, `check_method`, `check_source`, `emd_pmd_match_type`, `tags`, dan 8 kolom skor.
+  - Modal **Hapus** mendukung hapus tunggal per baris maupun hapus massal hingga **200 domain** dalam satu batch.
+- **Pemilih Kolom Export (`EXPORT_COLUMN_META`, 20 Kolom) & 4 Format Unduhan**:
+  - Tombol **Kolom Export (`20/20`)** membuka panel ceklis **20 kolom** (`domain`, `sld`, `extension`, `char_length`, `lang`, `check_method`, `check_source`, `checked_at`, `checked_at_iso`, `overall_heuristic_score`, `pronunciation_comfort_score`, `brandability_score`, `structure_length_score`, `extension_lang_fit_score`, `character_cleanliness_score`, `niche_clarity_score`, `emd_pmd_score`, `emd_pmd_match_type`, `scored_at`, `tags`) lengkap dengan 3 tombol preset: **`Semua`**, **`Sesuai Tabel`**, dan **`Ringkas (SLD + Ext + Len + Skor)`**.
+  - Hasil terfilter (maks. 10.000 baris per export) dapat langsung diunduh ke 4 format sesuai filter & kolom yang dipilih:
+    - **`CSV`** (UTF-8 BOM dengan netralisasi sel formula spreadsheet),
+    - **`XLS`** (SpreadsheetML XML),
+    - **`JSON`** (menyertakan `columns` terpilih & `rows` terproyeksi), dan
+    - **Tabel Markdown (`format=md` / `markdown`)** yang menghasilkan tabel GFM (`d1-available-domains-YYYY-MM-DD.md`) dengan **heading kolom (`EXPORT_COLUMN_META.label`) dan perataan (`:---`, `:---:`, `---:`) otomatis menyesuaikan kolom yang di-export**.
 
 

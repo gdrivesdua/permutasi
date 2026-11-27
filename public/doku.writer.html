@@ -40,9 +40,17 @@
                 <span class="text-slate-300 dark:text-slate-700">/</span>
                 <span class="text-sm font-bold truncate">Panduan Penulis</span>
             </div>
-            <button id="themeBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">
-                Tema
-            </button>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="/admin-data/" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Database D1
+                </a>
+                <a href="/adsense-studio/" class="hidden sm:inline-flex px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    AdSense Studio
+                </a>
+                <button id="themeBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    Tema
+                </button>
+            </div>
         </div>
     </header>
 
@@ -122,9 +130,9 @@
                     <li><strong>Poin Inti (Key Takeaways)</strong>: Tambahkan 3–5 poin ringkasan temuan atau kesimpulan penting yang muncul di kotak sorotan atas artikel (mendukung format Markdown inline seperti <code class="font-mono text-xs">**tebal**</code>, <code class="font-mono text-xs">*miring*</code>, <code class="font-mono text-xs">`kode`</code>, dan <code class="font-mono text-xs">[tautan](https://...)</code>).</li>
                     <li><strong>Isi Artikel per Bagian (H2) &amp; Sintaks Markdown</strong>: Klik <strong>+ Tambah Bagian (H2)</strong> untuk menambah sub-bab baru. Kolom bertanda lencana <code class="font-mono text-xs">MD</code> (paragraf, key takeaways, callout, catatan metodologi, dan jawaban FAQ) mendukung format <strong>Markdown standar</strong> (jangan mengetik tag HTML mentah seperti <code class="font-mono text-xs">&lt;script&gt;</code> atau <code class="font-mono text-xs">&lt;iframe&gt;</code> karena otomatis di-escape demi keamanan). Untuk memisahkan antar-paragraf, cukup tekan <strong>Enter dua kali</strong> (beri 1 baris kosong). Format yang didukung:
                         <ul class="list-circle pl-5 mt-1.5 space-y-1 text-sm">
-                            <li><strong>Inline</strong>: <code class="font-mono text-xs">**tebal**</code>, <code class="font-mono text-xs">*miring*</code>, <code class="font-mono text-xs">`kode inline`</code>, dan <code class="font-mono text-xs">[teks tautan](https://contoh.com)</code>.</li>
+                            <li><strong>Inline &amp; Gambar</strong>: <code class="font-mono text-xs">**tebal**</code>, <code class="font-mono text-xs">*miring*</code>, <code class="font-mono text-xs">`kode inline`</code>, <code class="font-mono text-xs">[teks tautan](https://contoh.com)</code>, serta <code class="font-mono text-xs">![alt gambar](https://.../gambar.png "judul")</code>.</li>
                             <li><strong>Daftar &amp; Kutipan</strong>: awali baris dengan <code class="font-mono text-xs">- item</code> (daftar poin), <code class="font-mono text-xs">1. langkah</code> (daftar bernomor), atau <code class="font-mono text-xs">&gt; kutipan</code> (blockquote).</li>
-                            <li><strong>Tabel Pipe Markdown</strong>: <code class="font-mono text-xs">| Kolom A | Kolom B |</code> diikuti baris pemisah <code class="font-mono text-xs">| --- | --- |</code> dan baris data.</li>
+                            <li><strong>Tabel Pipe Markdown</strong>: <code class="font-mono text-xs">| Kolom A | Kolom B |</code> diikuti baris pemisah <code class="font-mono text-xs">| --- | --- |</code> dan baris data. Penulis dapat mengunduh tabel siap pakai langsung dari tombol <strong>Export Markdown</strong> di halaman <a href="/admin-data/" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Database D1</a> lalu menempelkannya ke tombol <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
                         </ul>
                     </li>
                     <li><strong>Blok Opsional di Dalam Bagian</strong>: Setiap bagian H2 memiliki panel lipat <em>Blok Opsional</em> untuk menambahkan:
@@ -203,7 +211,14 @@
                             <li>Struktur editor disusun menjadi <strong>3 tingkat panel lipat (collapsible)</strong>: Tingkat 1 (panel utama seperti Identitas/Slug, SEO, Poin Inti, Isi Artikel H2, Metodologi, FAQ, dan 4 panel sidebar kanan), Tingkat 2 (kartu tiap <em>Bagian #N</em> dan <em>FAQ #N</em>), serta Tingkat 3 (<em>Blok Opsional</em> dan <em>Tabel Penutup H2</em>).</li>
                             <li>Penambahan tombol <strong>Mode Fokus</strong> (menutup panel sekunder agar penulis berkonsentrasi penuh pada judul H1 dan isi bagian H2) serta tombol <strong>Tutup Semua H2</strong> / <strong>Buka Semua H2</strong>.</li>
                             <li>Penambahan strip panduan fungsi pada tiap panel menggunakan aksen abu-abu editorial <code class="font-mono text-xs">#eaeef3</code> agar penulis cepat memahami kegunaan setiap blok.</li>
-                            <li>Penambahan tautan langsung antar-studio di header atas (<strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, dan <strong>Admin Lexicon</strong>) dengan satu login sesi editorial terpadu.</li>
+                            <li>Penambahan tautan langsung antar-studio di header atas (<strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, <strong>Admin Lexicon</strong>, dan <strong>Database D1</strong>) dengan satu login sesi editorial terpadu.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-1.5">
+                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 4 — Integrasi Data Kurasi dari Database D1 (<code class="font-mono text-xs">/admin-data/</code>) &amp; Export Tabel Markdown</p>
+                        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
+                            <li>Halaman <strong>Database D1</strong> (<code class="font-mono text-xs">/admin-data/</code>) kini memisahkan kolom <strong>SLD</strong> (hanya SLD murni tanpa domain penuh), <strong>Ext TLD</strong>, dan <strong>Len</strong> pada tampilan tabel kurasi agar penulis mudah memeriksa pola penamaan.</li>
+                            <li>Tersedia menu <strong>Kolom Export</strong> (20 kolom dengan preset <em>Semua</em>, <em>Sesuai Tabel</em>, dan <em>Ringkas</em>) serta tombol <strong>Export Markdown</strong> yang otomatis menghasilkan tabel pipe GFM dengan heading dan perataan kolom menyesuaikan kolom yang dipilih—siap ditempel langsung ke <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
                         </ul>
                     </div>
                 </div>
