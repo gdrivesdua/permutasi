@@ -57,6 +57,14 @@ import {
   buildSessionCookieHeader,
   parseCookieValue
 } from './lib/worker-article-auth.js';
+import { getLocalD1Database } from './lib/local-d1-adapter.js';
+import {
+  deleteAdminDomainRows,
+  exportAdminDomains,
+  getAdminDomainFacets,
+  queryAdminDomains,
+  updateAdminDomainRow
+} from './lib/d1-admin-domains.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -569,6 +577,19 @@ app.get(['/adsense-studio', '/adsense-studio/', '/adsense-studio/index.html', '/
   return res.type('html').send(fs.readFileSync(studioPath, 'utf8'));
 });
 
+app.get(['/admin-data', '/admin-data/', '/admin-data/index.html', '/admin-data.html'], (req, res) => {
+  if (req.path !== '/admin-data/') {
+    return res.redirect(301, '/admin-data/');
+  }
+  const adminDataPath = path.join(__dirname, 'admin-data.html');
+  if (!fs.existsSync(adminDataPath)) {
+    return res.status(404).end();
+  }
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  return res.type('html').send(fs.readFileSync(adminDataPath, 'utf8'));
+});
+
 app.get('/api/articles/auth', (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
@@ -879,6 +900,103 @@ app.post('/api/articles/delete', express.json({ limit: '4kb' }), async (req, res
     });
   } catch (err) {
     return res.status(500).json({ ok: false, error: err?.message || 'Failed to delete article.' });
+  }
+});
+
+app.get('/api/admin-data', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized. Silakan login terlebih dahulu melalui /admin-articles/.' });
+  }
+  try {
+    const db = getLocalD1Database(__dirname);
+    const includeFacets = String(req.query?.includeFacets || '') === '1';
+    const result = await queryAdminDomains(db, req.query);
+    const facets = includeFacets ? await getAdminDomainFacets(db) : undefined;
+    return res.json({
+      ok: true,
+      storageMode: 'local-sqlite-d1',
+      ...result,
+      ...(facets ? { facets } : {})
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Gagal membaca data D1.' });
+  }
+});
+
+const handleExpressAdminDataUpdate = async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized. Silakan login terlebih dahulu melalui /admin-articles/.' });
+  }
+  try {
+    const db = getLocalD1Database(__dirname);
+    const result = await updateAdminDomainRow(db, req.body);
+    if (!result.ok) {
+      return res.status(result.status || 400).json({ ok: false, error: result.error });
+    }
+    return res.json({ ok: true, storageMode: 'local-sqlite-d1', row: result.row });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Gagal memperbarui row D1.' });
+  }
+};
+
+app.post('/api/admin-data/update', express.json({ limit: '16kb' }), handleExpressAdminDataUpdate);
+app.patch('/api/admin-data/update', express.json({ limit: '16kb' }), handleExpressAdminDataUpdate);
+
+const handleExpressAdminDataDelete = async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (!verifyExpressSameOrigin(req)) {
+    return res.status(403).json({ ok: false, error: 'Invalid request origin.' });
+  }
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized. Silakan login terlebih dahulu melalui /admin-articles/.' });
+  }
+  try {
+    const db = getLocalD1Database(__dirname);
+    const domainsInput = req.body?.domains ?? req.body?.domain ?? req.query?.domain ?? null;
+    const result = await deleteAdminDomainRows(db, domainsInput);
+    if (!result.ok) {
+      return res.status(result.status || 400).json({ ok: false, error: result.error });
+    }
+    return res.json({ ok: true, storageMode: 'local-sqlite-d1', ...result });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Gagal menghapus row D1.' });
+  }
+};
+
+app.post('/api/admin-data/delete', express.json({ limit: '32kb' }), handleExpressAdminDataDelete);
+app.delete('/api/admin-data/delete', express.json({ limit: '32kb' }), handleExpressAdminDataDelete);
+
+app.get('/api/admin-data/export', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  const session = verifyExpressArticleSession(req);
+  if (!session) {
+    return res.status(401).json({ ok: false, error: 'Unauthorized. Silakan login terlebih dahulu melalui /admin-articles/.' });
+  }
+  try {
+    const rawFormat = String(req.query?.format || 'csv').trim().toLowerCase();
+    if (!['csv', 'xls', 'json'].includes(rawFormat)) {
+      return res.status(400).json({ ok: false, error: 'Format export harus csv, xls, atau json.' });
+    }
+    const db = getLocalD1Database(__dirname);
+    const exp = await exportAdminDomains(db, req.query, rawFormat);
+    res.setHeader('Content-Type', exp.contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${exp.filename}"`);
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    return res.send(exp.body);
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Gagal mengekspor data D1.' });
   }
 });
 

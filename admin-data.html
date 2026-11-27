@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Database D1 Admin — Available Domains Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('preferredTheme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col">
+
+    <!-- Top Admin Header -->
+    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <a href="/" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap shrink-0">&larr; Situs Utama</a>
+                <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">/</span>
+                <span class="text-sm sm:text-base font-bold tracking-tight truncate">Database D1</span>
+                <span id="storageModeBadge" class="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 whitespace-nowrap">
+                    Memeriksa...
+                </span>
+            </div>
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto">
+                <a href="/admin-articles/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Article Studio
+                </a>
+                <a href="/adsense-studio/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Layout &amp; AdSense
+                </a>
+                <a href="/admin-lexicon" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Admin Lexicon
+                </a>
+                <a href="/admin-data/" aria-current="page" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 whitespace-nowrap">
+                    Database D1
+                </a>
+                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Tema
+                </button>
+                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900/70 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors whitespace-nowrap">
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+        <!-- Strict Auth Gate (Only Accessible After Login at /admin-articles/) -->
+        <section id="authLockSection" class="max-w-lg mx-auto mt-8 sm:mt-14 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-sm space-y-5">
+            <div id="authLoadingBox" class="text-sm text-slate-500 dark:text-slate-400 text-center py-6">
+                Memeriksa sesi admin editorial (/admin-articles/)...
+            </div>
+
+            <div id="authLockedBox" class="hidden space-y-4">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/70 text-amber-800 dark:text-amber-300 text-xs font-semibold">
+                    Akses Terbatas — Wajib Login Editorial
+                </div>
+                <div class="space-y-1.5">
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Manajemen Database D1 Terkunci</h1>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Halaman <code class="font-mono text-xs px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800">/admin-data/</code> hanya dapat diakses menggunakan sesi login admin aktif dari <strong>Article Studio</strong> (<code class="font-mono text-xs px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800">/admin-articles/</code>).
+                    </p>
+                </div>
+                <p id="authLockReason" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 rounded-lg px-3 py-2"></p>
+                <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+                    <a href="/admin-articles/" class="flex-1 inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors text-center">
+                        Masuk melalui /admin-articles/ &rarr;
+                    </a>
+                    <button id="recheckAuthBtn" type="button" class="px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs sm:text-sm font-medium transition-colors">
+                        Periksa Ulang Sesi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Authenticated D1 CRUD Workspace (Edit & Delete Only + Search/Filters/Export) -->
+        <section id="dataWorkspace" class="hidden space-y-5">
+
+            <!-- Title + Export Toolbar -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Database D1 — Available Domains</h1>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+                        Cari, saring, edit metadata/skor baris, hapus data yang tidak valid, atau ekspor hasil filter ke CSV, XLS, dan JSON.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button id="refreshDataBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        Muat Ulang
+                    </button>
+                    <button id="exportCsvBtn" type="button" data-export-format="csv" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
+                        Export CSV
+                    </button>
+                    <button id="exportXlsBtn" type="button" data-export-format="xls" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                        Export XLS
+                    </button>
+                    <button id="exportJsonBtn" type="button" data-export-format="json" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+                        Export JSON
+                    </button>
+                </div>
+            </div>
+
+            <!-- Metrics Strip -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Baris D1</div>
+                    <div id="statTotalRows" class="mt-1 text-xl font-bold font-mono text-slate-900 dark:text-white">0</div>
+                </div>
+                <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Hasil Filter</div>
+                    <div id="statFilteredRows" class="mt-1 text-xl font-bold font-mono text-blue-600 dark:text-blue-400">0</div>
+                </div>
+                <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Baris Terpilih</div>
+                    <div id="statSelectedRows" class="mt-1 text-xl font-bold font-mono text-amber-600 dark:text-amber-400">0</div>
+                </div>
+                <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
+                    <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Rentang Panjang Char</div>
+                    <div id="statCharRange" class="mt-1 text-xl font-bold font-mono text-slate-700 dark:text-slate-200">-</div>
+                </div>
+            </div>
+
+            <!-- Feedback Banner -->
+            <div id="workspaceBanner" class="hidden rounded-xl border p-3.5 text-xs sm:text-sm"></div>
+
+            <!-- Search & 7 Filters Card -->
+            <form id="filterForm" class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 shadow-sm space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                    <!-- General Search -->
+                    <div class="md:col-span-5">
+                        <label for="filterQuery" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Pencarian Umum</label>
+                        <input id="filterQuery" type="search" placeholder="Cari domain, SLD, ekstensi, atau tag..."
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Filter 1: SLD -->
+                    <div class="md:col-span-3">
+                        <label for="filterSld" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">SLD</label>
+                        <input id="filterSld" type="text" placeholder="mis. shopal"
+                            class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Filter 2: Keyword -->
+                    <div class="md:col-span-4">
+                        <label for="filterKeyword" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Keyword</label>
+                        <input id="filterKeyword" type="text" placeholder="Cari kata kunci di SLD / domain / tags..."
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
+                    <!-- Filter 3: Char Length (Min / Max) -->
+                    <div class="lg:col-span-3">
+                        <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Char Length (Min – Max)</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input id="filterCharMin" type="number" min="1" max="253" placeholder="Min" aria-label="Char length minimum"
+                                class="w-full px-2.5 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input id="filterCharMax" type="number" min="1" max="253" placeholder="Max" aria-label="Char length maksimum"
+                                class="w-full px-2.5 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Filter 4: Tags -->
+                    <div class="lg:col-span-3">
+                        <label for="filterTags" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Tags</label>
+                        <input id="filterTags" type="text" list="tagsDatalist" placeholder="mis. ecommerce, id"
+                            class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <datalist id="tagsDatalist"></datalist>
+                    </div>
+
+                    <!-- Filter 5: Extension -->
+                    <div class="lg:col-span-2">
+                        <label for="filterExtension" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Extension</label>
+                        <input id="filterExtension" type="text" list="extensionsDatalist" placeholder="mis. .com, .id"
+                            class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <datalist id="extensionsDatalist"></datalist>
+                    </div>
+
+                    <!-- Filter 6: Check Source -->
+                    <div class="lg:col-span-2">
+                        <label for="filterCheckSource" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Check Source</label>
+                        <select id="filterCheckSource" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Semua Source</option>
+                            <option value="auto">auto</option>
+                            <option value="manual">manual</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter 7: Lang -->
+                    <div class="lg:col-span-2">
+                        <label for="filterLang" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Lang</label>
+                        <select id="filterLang" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Semua Bahasa</option>
+                            <option value="en">en</option>
+                            <option value="id">id</option>
+                            <option value="es">es</option>
+                            <option value="pt">pt</option>
+                            <option value="fr">fr</option>
+                            <option value="de">de</option>
+                            <option value="ru">ru</option>
+                            <option value="ja">ja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sorting & Action Controls -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <label for="sortBySelect" class="text-xs font-medium text-slate-500 dark:text-slate-400">Urutkan:</label>
+                        <select id="sortBySelect" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            <option value="checked_at">Waktu Cek (checked_at)</option>
+                            <option value="overall_heuristic_score">Skor Overall</option>
+                            <option value="brandability_score">Skor Brandability</option>
+                            <option value="pronunciation_comfort_score">Skor Pelafalan</option>
+                            <option value="emd_pmd_score">Skor EMD/PMD</option>
+                            <option value="domain">Domain (A–Z)</option>
+                            <option value="sld">SLD (A–Z)</option>
+                            <option value="char_length">Char Length</option>
+                            <option value="extension">Extension</option>
+                            <option value="lang">Lang</option>
+                            <option value="check_source">Check Source</option>
+                        </select>
+                        <select id="sortDirSelect" aria-label="Arah urut" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            <option value="desc">Turun (DESC)</option>
+                            <option value="asc">Naik (ASC)</option>
+                        </select>
+                        <select id="pageSizeSelect" aria-label="Jumlah per halaman" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            <option value="25">25 / hal</option>
+                            <option value="50" selected>50 / hal</option>
+                            <option value="100">100 / hal</option>
+                            <option value="200">200 / hal</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="bulkDeleteBtn" type="button" disabled class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                            Hapus Terpilih (0)
+                        </button>
+                        <button id="resetFiltersBtn" type="button" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            Reset Filter
+                        </button>
+                        <button type="submit" class="px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                            Terapkan Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Data Table -->
+            <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-xs sm:text-sm">
+                        <thead class="bg-slate-50 dark:bg-slate-900/80 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            <tr>
+                                <th class="w-10 px-3 py-3 text-center">
+                                    <input id="selectAllPageCheckbox" type="checkbox" aria-label="Pilih semua baris di halaman ini"
+                                        class="h-4 w-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500">
+                                </th>
+                                <th class="px-3 py-3 text-left">Domain &amp; SLD</th>
+                                <th class="px-3 py-3 text-left">Ext / Len</th>
+                                <th class="px-3 py-3 text-left">Lang</th>
+                                <th class="px-3 py-3 text-left">Source / Method</th>
+                                <th class="px-3 py-3 text-left">Tags</th>
+                                <th class="px-3 py-3 text-left">Skor Heuristik</th>
+                                <th class="px-3 py-3 text-left whitespace-nowrap">Checked At</th>
+                                <th class="px-3 py-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="domainsTableBody" class="divide-y divide-slate-200 dark:divide-slate-800"></tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Footer -->
+                <div class="px-4 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600 dark:text-slate-400">
+                    <div id="paginationInfo">Menampilkan 0 hasil</div>
+                    <div class="flex items-center gap-2">
+                        <button id="prevPageBtn" type="button" disabled class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                            &larr; Sebelumnya
+                        </button>
+                        <span id="pageIndicator" class="font-mono px-2">Hal 1 / 1</span>
+                        <button id="nextPageBtn" type="button" disabled class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                            Berikutnya &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Row Modal -->
+    <div id="editModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-4 overflow-y-auto flex items-start sm:items-center justify-center">
+        <div role="dialog" aria-modal="true" aria-labelledby="editModalTitle" class="w-full max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl overflow-hidden my-4">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-900/90">
+                <div>
+                    <h2 id="editModalTitle" class="text-base font-bold text-slate-900 dark:text-white">Edit Baris Domain D1</h2>
+                    <p id="editModalDomainBadge" class="text-xs font-mono text-blue-600 dark:text-blue-400 mt-0.5"></p>
+                </div>
+                <button id="closeEditModalBtn" type="button" class="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    Tutup
+                </button>
+            </div>
+            <form id="editRowForm" class="p-5 space-y-4">
+                <input id="editDomainPk" type="hidden">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label for="editSld" class="block text-xs font-semibold mb-1">SLD</label>
+                        <input id="editSld" type="text" required class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="editExtension" class="block text-xs font-semibold mb-1">Extension</label>
+                        <input id="editExtension" type="text" required class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="editCharLength" class="block text-xs font-semibold mb-1">Char Length</label>
+                        <input id="editCharLength" type="number" min="1" max="253" required class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label for="editLang" class="block text-xs font-semibold mb-1">Lang</label>
+                        <input id="editLang" type="text" required maxlength="8" class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="editCheckMethod" class="block text-xs font-semibold mb-1">Check Method</label>
+                        <select id="editCheckMethod" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="RDAP">RDAP</option>
+                            <option value="NS">NS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editCheckSource" class="block text-xs font-semibold mb-1">Check Source</label>
+                        <select id="editCheckSource" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="auto">auto</option>
+                            <option value="manual">manual</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editMatchType" class="block text-xs font-semibold mb-1">Match Type</label>
+                        <select id="editMatchType" class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">(kosong)</option>
+                            <option value="nk">nk</option>
+                            <option value="np">np</option>
+                            <option value="up">up</option>
+                            <option value="be">be</option>
+                            <option value="nc">nc</option>
+                            <option value="nn">nn</option>
+                            <option value="os">os</option>
+                            <option value="of">of</option>
+                            <option value="ol">ol</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="editTags" class="block text-xs font-semibold mb-1">Tags (pisahkan dengan koma, maks 12 tag)</label>
+                    <input id="editTags" type="text" placeholder="mis. ecommerce, id, toko" class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="border-t border-slate-200 dark:border-slate-800 pt-3">
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">Skor Heuristik (0–100 atau kosong)</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <div>
+                            <label for="editOverallScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Overall</label>
+                            <input id="editOverallScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editPronScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Pronunciation</label>
+                            <input id="editPronScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editBrandScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Brandability</label>
+                            <input id="editBrandScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editStructScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Structure Len</label>
+                            <input id="editStructScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editExtFitScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Ext/Lang Fit</label>
+                            <input id="editExtFitScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editCleanScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Cleanliness</label>
+                            <input id="editCleanScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editNicheScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Niche Clarity</label>
+                            <input id="editNicheScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                        <div>
+                            <label for="editEmdScore" class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">EMD/PMD</label>
+                            <input id="editEmdScore" type="number" min="0" max="100" class="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                        </div>
+                    </div>
+                </div>
+
+                <p id="editModalError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg px-3 py-2"></p>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <button id="cancelEditModalBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button id="submitEditModalBtn" type="submit" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-4 flex items-center justify-center">
+        <div role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-rose-50/70 dark:bg-rose-950/30">
+                <h2 id="deleteModalTitle" class="text-base font-bold text-rose-800 dark:text-rose-300">Konfirmasi Hapus Baris D1</h2>
+            </div>
+            <div class="p-5 space-y-3 text-xs sm:text-sm">
+                <p id="deleteModalDesc" class="text-slate-700 dark:text-slate-300"></p>
+                <ul id="deleteModalList" class="max-h-40 overflow-y-auto rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 space-y-1 font-mono text-xs text-slate-800 dark:text-slate-200"></ul>
+                <p id="deleteModalError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button id="cancelDeleteModalBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button id="confirmDeleteModalBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition-colors">
+                        Ya, Hapus Permanen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const state = {
+                authenticated: false,
+                page: 1,
+                pageSize: 50,
+                total: 0,
+                totalPages: 1,
+                rows: [],
+                facets: null,
+                selectedDomains: new Set(),
+                pendingDeleteDomains: [],
+                isLoading: false
+            };
+
+            const els = {
+                storageModeBadge: document.getElementById('storageModeBadge'),
+                themeToggleBtn: document.getElementById('themeToggleBtn'),
+                logoutBtn: document.getElementById('logoutBtn'),
+                authLockSection: document.getElementById('authLockSection'),
+                authLoadingBox: document.getElementById('authLoadingBox'),
+                authLockedBox: document.getElementById('authLockedBox'),
+                authLockReason: document.getElementById('authLockReason'),
+                recheckAuthBtn: document.getElementById('recheckAuthBtn'),
+                dataWorkspace: document.getElementById('dataWorkspace'),
+                refreshDataBtn: document.getElementById('refreshDataBtn'),
+                exportCsvBtn: document.getElementById('exportCsvBtn'),
+                exportXlsBtn: document.getElementById('exportXlsBtn'),
+                exportJsonBtn: document.getElementById('exportJsonBtn'),
+                statTotalRows: document.getElementById('statTotalRows'),
+                statFilteredRows: document.getElementById('statFilteredRows'),
+                statSelectedRows: document.getElementById('statSelectedRows'),
+                statCharRange: document.getElementById('statCharRange'),
+                workspaceBanner: document.getElementById('workspaceBanner'),
+                filterForm: document.getElementById('filterForm'),
+                filterQuery: document.getElementById('filterQuery'),
+                filterSld: document.getElementById('filterSld'),
+                filterKeyword: document.getElementById('filterKeyword'),
+                filterCharMin: document.getElementById('filterCharMin'),
+                filterCharMax: document.getElementById('filterCharMax'),
+                filterTags: document.getElementById('filterTags'),
+                tagsDatalist: document.getElementById('tagsDatalist'),
+                filterExtension: document.getElementById('filterExtension'),
+                extensionsDatalist: document.getElementById('extensionsDatalist'),
+                filterCheckSource: document.getElementById('filterCheckSource'),
+                filterLang: document.getElementById('filterLang'),
+                sortBySelect: document.getElementById('sortBySelect'),
+                sortDirSelect: document.getElementById('sortDirSelect'),
+                pageSizeSelect: document.getElementById('pageSizeSelect'),
+                bulkDeleteBtn: document.getElementById('bulkDeleteBtn'),
+                resetFiltersBtn: document.getElementById('resetFiltersBtn'),
+                selectAllPageCheckbox: document.getElementById('selectAllPageCheckbox'),
+                domainsTableBody: document.getElementById('domainsTableBody'),
+                paginationInfo: document.getElementById('paginationInfo'),
+                pageIndicator: document.getElementById('pageIndicator'),
+                prevPageBtn: document.getElementById('prevPageBtn'),
+                nextPageBtn: document.getElementById('nextPageBtn'),
+                editModal: document.getElementById('editModal'),
+                editModalDomainBadge: document.getElementById('editModalDomainBadge'),
+                closeEditModalBtn: document.getElementById('closeEditModalBtn'),
+                cancelEditModalBtn: document.getElementById('cancelEditModalBtn'),
+                submitEditModalBtn: document.getElementById('submitEditModalBtn'),
+                editRowForm: document.getElementById('editRowForm'),
+                editDomainPk: document.getElementById('editDomainPk'),
+                editSld: document.getElementById('editSld'),
+                editExtension: document.getElementById('editExtension'),
+                editCharLength: document.getElementById('editCharLength'),
+                editLang: document.getElementById('editLang'),
+                editCheckMethod: document.getElementById('editCheckMethod'),
+                editCheckSource: document.getElementById('editCheckSource'),
+                editMatchType: document.getElementById('editMatchType'),
+                editTags: document.getElementById('editTags'),
+                editOverallScore: document.getElementById('editOverallScore'),
+                editPronScore: document.getElementById('editPronScore'),
+                editBrandScore: document.getElementById('editBrandScore'),
+                editStructScore: document.getElementById('editStructScore'),
+                editExtFitScore: document.getElementById('editExtFitScore'),
+                editCleanScore: document.getElementById('editCleanScore'),
+                editNicheScore: document.getElementById('editNicheScore'),
+                editEmdScore: document.getElementById('editEmdScore'),
+                editModalError: document.getElementById('editModalError'),
+                deleteModal: document.getElementById('deleteModal'),
+                deleteModalDesc: document.getElementById('deleteModalDesc'),
+                deleteModalList: document.getElementById('deleteModalList'),
+                deleteModalError: document.getElementById('deleteModalError'),
+                cancelDeleteModalBtn: document.getElementById('cancelDeleteModalBtn'),
+                confirmDeleteModalBtn: document.getElementById('confirmDeleteModalBtn')
+            };
+
+            function clearElement(node) {
+                while (node.firstChild) node.removeChild(node.firstChild);
+            }
+
+            function showBanner(type, message) {
+                const base = 'rounded-xl border p-3.5 text-xs sm:text-sm ';
+                if (type === 'error') {
+                    els.workspaceBanner.className = base + 'border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200';
+                } else if (type === 'success') {
+                    els.workspaceBanner.className = base + 'border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200';
+                } else {
+                    els.workspaceBanner.className = base + 'border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-200';
+                }
+                els.workspaceBanner.textContent = String(message || '');
+                els.workspaceBanner.classList.remove('hidden');
+            }
+
+            function hideBanner() {
+                els.workspaceBanner.classList.add('hidden');
+                els.workspaceBanner.textContent = '';
+            }
+
+            async function apiFetch(url, options = {}) {
+                const res = await fetch(url, {
+                    credentials: 'same-origin',
+                    ...options,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        ...(options.headers || {})
+                    }
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401 && state.authenticated) {
+                    lockWorkspace('Sesi admin /admin-articles/ telah berakhir. Silakan login kembali.');
+                }
+                if (!res.ok) {
+                    const err = new Error(data?.error || `HTTP ${res.status}`);
+                    err.status = res.status;
+                    throw err;
+                }
+                return data;
+            }
+
+            function lockWorkspace(reasonMessage = '') {
+                state.authenticated = false;
+                state.rows = [];
+                state.selectedDomains.clear();
+                els.dataWorkspace.classList.add('hidden');
+                els.logoutBtn.classList.add('hidden');
+                els.authLockSection.classList.remove('hidden');
+                els.authLoadingBox.classList.add('hidden');
+                els.authLockedBox.classList.remove('hidden');
+                els.storageModeBadge.textContent = 'Terkunci';
+                if (reasonMessage) {
+                    els.authLockReason.textContent = reasonMessage;
+                    els.authLockReason.classList.remove('hidden');
+                } else {
+                    els.authLockReason.classList.add('hidden');
+                }
+                closeEditModal();
+                closeDeleteModal();
+            }
+
+            async function checkAuthSession() {
+                els.authLockSection.classList.remove('hidden');
+                els.authLoadingBox.classList.remove('hidden');
+                els.authLockedBox.classList.add('hidden');
+                els.dataWorkspace.classList.add('hidden');
+
+                try {
+                    const res = await fetch('/api/articles/auth', {
+                        credentials: 'same-origin',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const info = await res.json().catch(() => ({}));
+                    if (!res.ok || !info.authenticated) {
+                        const hint = !info.configured && !info.needsSetup
+                            ? 'Password editorial server belum dikonfigurasi. Atur terlebih dahulu di /admin-articles/.'
+                            : '';
+                        lockWorkspace(hint);
+                        return;
+                    }
+                    state.authenticated = true;
+                    els.authLockSection.classList.add('hidden');
+                    els.dataWorkspace.classList.remove('hidden');
+                    els.logoutBtn.classList.remove('hidden');
+                    await loadDomains({ includeFacets: true });
+                } catch (err) {
+                    lockWorkspace(err?.message || 'Gagal memeriksa sesi admin.');
+                }
+            }
+
+            function buildFilterParams(includePagination = true) {
+                const params = new URLSearchParams();
+                const q = els.filterQuery.value.trim();
+                const sld = els.filterSld.value.trim();
+                const keyword = els.filterKeyword.value.trim();
+                const charMin = els.filterCharMin.value.trim();
+                const charMax = els.filterCharMax.value.trim();
+                const tags = els.filterTags.value.trim();
+                const ext = els.filterExtension.value.trim();
+                const src = els.filterCheckSource.value.trim();
+                const lang = els.filterLang.value.trim();
+
+                if (q) params.set('q', q);
+                if (sld) params.set('sld', sld);
+                if (keyword) params.set('keyword', keyword);
+                if (charMin) params.set('charLenMin', charMin);
+                if (charMax) params.set('charLenMax', charMax);
+                if (tags) params.set('tags', tags);
+                if (ext) params.set('extension', ext);
+                if (src) params.set('checkSource', src);
+                if (lang) params.set('lang', lang);
+
+                params.set('sortBy', els.sortBySelect.value || 'checked_at');
+                params.set('sortDir', els.sortDirSelect.value || 'desc');
+
+                if (includePagination) {
+                    params.set('page', String(state.page));
+                    params.set('pageSize', String(state.pageSize));
+                }
+                return params;
+            }
+
+            function updateSelectionUi() {
+                const count = state.selectedDomains.size;
+                els.statSelectedRows.textContent = String(count);
+                els.bulkDeleteBtn.textContent = `Hapus Terpilih (${count})`;
+                els.bulkDeleteBtn.disabled = count === 0;
+
+                if (state.rows.length === 0) {
+                    els.selectAllPageCheckbox.checked = false;
+                    els.selectAllPageCheckbox.indeterminate = false;
+                    return;
+                }
+                let selectedOnPage = 0;
+                for (const r of state.rows) {
+                    if (state.selectedDomains.has(r.domain)) selectedOnPage++;
+                }
+                els.selectAllPageCheckbox.checked = selectedOnPage === state.rows.length;
+                els.selectAllPageCheckbox.indeterminate = selectedOnPage > 0 && selectedOnPage < state.rows.length;
+            }
+
+            function populateFacets(facets) {
+                if (!facets) return;
+                state.facets = facets;
+                els.statTotalRows.textContent = Number(facets.totalRows || 0).toLocaleString('id-ID');
+                if (facets.minCharLength != null && facets.maxCharLength != null) {
+                    els.statCharRange.textContent = `${facets.minCharLength}–${facets.maxCharLength}`;
+                } else {
+                    els.statCharRange.textContent = '-';
+                }
+
+                clearElement(els.extensionsDatalist);
+                for (const item of (facets.extensions || [])) {
+                    const opt = document.createElement('option');
+                    opt.value = item.value;
+                    opt.label = `${item.value} (${item.count})`;
+                    els.extensionsDatalist.appendChild(opt);
+                }
+
+                clearElement(els.tagsDatalist);
+                for (const item of (facets.topTags || [])) {
+                    const opt = document.createElement('option');
+                    opt.value = item.tag;
+                    opt.label = `${item.tag} (${item.count})`;
+                    els.tagsDatalist.appendChild(opt);
+                }
+
+                const existingLangs = new Set(Array.from(els.filterLang.options).map((o) => o.value));
+                for (const item of (facets.langs || [])) {
+                    if (item.value && !existingLangs.has(item.value)) {
+                        const opt = document.createElement('option');
+                        opt.value = item.value;
+                        opt.textContent = item.value;
+                        els.filterLang.appendChild(opt);
+                        existingLangs.add(item.value);
+                    }
+                }
+            }
+
+            function formatTimestamp(ms) {
+                if (!ms) return '-';
+                try {
+                    return new Date(ms).toLocaleString('id-ID', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch {
+                    return String(ms);
+                }
+            }
+
+            function renderTableRows() {
+                clearElement(els.domainsTableBody);
+
+                if (state.rows.length === 0) {
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.colSpan = 9;
+                    td.className = 'px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400';
+                    td.textContent = 'Tidak ada baris D1 yang cocok dengan pencarian atau filter aktif.';
+                    tr.appendChild(td);
+                    els.domainsTableBody.appendChild(tr);
+                    updateSelectionUi();
+                    return;
+                }
+
+                for (const row of state.rows) {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors';
+
+                    // 1. Checkbox
+                    const tdCheck = document.createElement('td');
+                    tdCheck.className = 'px-3 py-3 text-center align-top';
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.checked = state.selectedDomains.has(row.domain);
+                    cb.setAttribute('aria-label', `Pilih ${row.domain}`);
+                    cb.className = 'h-4 w-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 cursor-pointer';
+                    cb.addEventListener('change', () => {
+                        if (cb.checked) state.selectedDomains.add(row.domain);
+                        else state.selectedDomains.delete(row.domain);
+                        updateSelectionUi();
+                    });
+                    tdCheck.appendChild(cb);
+                    tr.appendChild(tdCheck);
+
+                    // 2. Domain & SLD
+                    const tdDomain = document.createElement('td');
+                    tdDomain.className = 'px-3 py-3 align-top';
+                    const domDiv = document.createElement('div');
+                    domDiv.className = 'font-mono font-semibold text-slate-900 dark:text-white break-all';
+                    domDiv.textContent = row.domain;
+                    const sldDiv = document.createElement('div');
+                    sldDiv.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-0.5';
+                    sldDiv.textContent = `SLD: ${row.sld || '-'}`;
+                    tdDomain.appendChild(domDiv);
+                    tdDomain.appendChild(sldDiv);
+                    tr.appendChild(tdDomain);
+
+                    // 3. Extension / Char Length
+                    const tdExt = document.createElement('td');
+                    tdExt.className = 'px-3 py-3 align-top whitespace-nowrap';
+                    const extBadge = document.createElement('span');
+                    extBadge.className = 'inline-block px-2 py-0.5 text-[11px] font-mono font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200';
+                    extBadge.textContent = row.extension;
+                    const lenDiv = document.createElement('div');
+                    lenDiv.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-1';
+                    lenDiv.textContent = `${row.char_length} char`;
+                    tdExt.appendChild(extBadge);
+                    tdExt.appendChild(lenDiv);
+                    tr.appendChild(tdExt);
+
+                    // 4. Lang
+                    const tdLang = document.createElement('td');
+                    tdLang.className = 'px-3 py-3 align-top whitespace-nowrap';
+                    const langBadge = document.createElement('span');
+                    langBadge.className = 'inline-block px-2 py-0.5 text-[11px] font-mono uppercase rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300';
+                    langBadge.textContent = row.lang;
+                    tdLang.appendChild(langBadge);
+                    tr.appendChild(tdLang);
+
+                    // 5. Source / Method
+                    const tdSrc = document.createElement('td');
+                    tdSrc.className = 'px-3 py-3 align-top whitespace-nowrap';
+                    const srcBadge = document.createElement('span');
+                    srcBadge.className = row.check_source === 'auto'
+                        ? 'inline-block px-2 py-0.5 text-[11px] font-mono font-semibold rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                        : 'inline-block px-2 py-0.5 text-[11px] font-mono font-semibold rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800';
+                    srcBadge.textContent = row.check_source;
+                    const methodDiv = document.createElement('div');
+                    methodDiv.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-1';
+                    methodDiv.textContent = row.check_method;
+                    tdSrc.appendChild(srcBadge);
+                    tdSrc.appendChild(methodDiv);
+                    tr.appendChild(tdSrc);
+
+                    // 6. Tags
+                    const tdTags = document.createElement('td');
+                    tdTags.className = 'px-3 py-3 align-top max-w-[240px]';
+                    const tagsWrap = document.createElement('div');
+                    tagsWrap.className = 'flex flex-wrap gap-1';
+                    const tagsList = Array.isArray(row.tagsList) ? row.tagsList : [];
+                    if (tagsList.length === 0) {
+                        const emptySpan = document.createElement('span');
+                        emptySpan.className = 'text-[11px] text-slate-400 italic';
+                        emptySpan.textContent = '-';
+                        tagsWrap.appendChild(emptySpan);
+                    } else {
+                        for (const tg of tagsList) {
+                            const chip = document.createElement('span');
+                            chip.className = 'inline-block px-1.5 py-0.5 text-[11px] font-mono rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700';
+                            chip.textContent = tg;
+                            tagsWrap.appendChild(chip);
+                        }
+                    }
+                    tdTags.appendChild(tagsWrap);
+                    tr.appendChild(tdTags);
+
+                    // 7. Scores
+                    const tdScore = document.createElement('td');
+                    tdScore.className = 'px-3 py-3 align-top whitespace-nowrap font-mono';
+                    const overall = row.overall_heuristic_score;
+                    const scoreMain = document.createElement('div');
+                    scoreMain.className = 'text-xs font-bold ' + (overall >= 85
+                        ? 'text-emerald-600 dark:text-emerald-400'
+                        : (overall >= 70 ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300'));
+                    scoreMain.textContent = overall != null ? `Overall: ${overall}` : 'Overall: -';
+                    const scoreSub = document.createElement('div');
+                    scoreSub.className = 'text-[10.5px] text-slate-500 dark:text-slate-400 mt-0.5';
+                    scoreSub.textContent = `Br:${row.brandability_score ?? '-'} Pr:${row.pronunciation_comfort_score ?? '-'} Em:${row.emd_pmd_score ?? '-'}`;
+                    tdScore.appendChild(scoreMain);
+                    tdScore.appendChild(scoreSub);
+                    tr.appendChild(tdScore);
+
+                    // 8. Checked At
+                    const tdTime = document.createElement('td');
+                    tdTime.className = 'px-3 py-3 align-top whitespace-nowrap text-xs text-slate-600 dark:text-slate-300';
+                    tdTime.textContent = formatTimestamp(row.checked_at);
+                    tr.appendChild(tdTime);
+
+                    // 9. Actions (Edit & Delete ONLY)
+                    const tdActions = document.createElement('td');
+                    tdActions.className = 'px-3 py-3 align-top text-right whitespace-nowrap';
+                    const actionWrap = document.createElement('div');
+                    actionWrap.className = 'inline-flex items-center gap-1.5';
+
+                    const editBtn = document.createElement('button');
+                    editBtn.type = 'button';
+                    editBtn.className = 'px-2.5 py-1 text-xs font-medium rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors';
+                    editBtn.textContent = 'Edit';
+                    editBtn.addEventListener('click', () => openEditModal(row));
+
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.className = 'px-2.5 py-1 text-xs font-medium rounded-md border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors';
+                    delBtn.textContent = 'Hapus';
+                    delBtn.addEventListener('click', () => openDeleteModal([row.domain]));
+
+                    actionWrap.appendChild(editBtn);
+                    actionWrap.appendChild(delBtn);
+                    tdActions.appendChild(actionWrap);
+                    tr.appendChild(tdActions);
+
+                    els.domainsTableBody.appendChild(tr);
+                }
+
+                updateSelectionUi();
+            }
+
+            async function loadDomains(opts = {}) {
+                if (!state.authenticated || state.isLoading) return;
+                state.isLoading = true;
+                els.refreshDataBtn.disabled = true;
+
+                try {
+                    const params = buildFilterParams(true);
+                    if (opts.includeFacets) params.set('includeFacets', '1');
+                    const data = await apiFetch(`/api/admin-data?${params.toString()}`);
+
+                    state.rows = Array.isArray(data.rows) ? data.rows : [];
+                    state.total = Number(data.total || 0);
+                    state.page = Number(data.page || 1);
+                    state.pageSize = Number(data.pageSize || state.pageSize);
+                    state.totalPages = Number(data.totalPages || 1);
+
+                    els.storageModeBadge.textContent = data.storageMode === 'd1' ? 'Cloudflare D1' : 'Local SQLite (D1)';
+                    els.statFilteredRows.textContent = state.total.toLocaleString('id-ID');
+                    if (data.facets) populateFacets(data.facets);
+
+                    const startIdx = state.total === 0 ? 0 : ((state.page - 1) * state.pageSize + 1);
+                    const endIdx = Math.min(state.total, startIdx + state.rows.length - 1);
+                    els.paginationInfo.textContent = state.total === 0
+                        ? 'Menampilkan 0 hasil'
+                        : `Menampilkan ${startIdx}–${endIdx} dari ${state.total.toLocaleString('id-ID')} baris`;
+                    els.pageIndicator.textContent = `Hal ${state.page} / ${state.totalPages}`;
+                    els.prevPageBtn.disabled = state.page <= 1;
+                    els.nextPageBtn.disabled = state.page >= state.totalPages;
+
+                    renderTableRows();
+                } catch (err) {
+                    showBanner('error', err?.message || 'Gagal memuat data D1.');
+                } finally {
+                    state.isLoading = false;
+                    els.refreshDataBtn.disabled = false;
+                }
+            }
+
+            function openEditModal(row) {
+                els.editModalError.classList.add('hidden');
+                els.editModalError.textContent = '';
+                els.editDomainPk.value = row.domain;
+                els.editModalDomainBadge.textContent = row.domain;
+                els.editSld.value = row.sld || '';
+                els.editExtension.value = row.extension || '';
+                els.editCharLength.value = String(row.char_length || '');
+                els.editLang.value = row.lang || 'en';
+                els.editCheckMethod.value = row.check_method || 'RDAP';
+                els.editCheckSource.value = row.check_source || 'manual';
+                els.editMatchType.value = row.emd_pmd_match_type || '';
+                els.editTags.value = Array.isArray(row.tagsList) ? row.tagsList.join(', ') : '';
+
+                els.editOverallScore.value = row.overall_heuristic_score ?? '';
+                els.editPronScore.value = row.pronunciation_comfort_score ?? '';
+                els.editBrandScore.value = row.brandability_score ?? '';
+                els.editStructScore.value = row.structure_length_score ?? '';
+                els.editExtFitScore.value = row.extension_lang_fit_score ?? '';
+                els.editCleanScore.value = row.character_cleanliness_score ?? '';
+                els.editNicheScore.value = row.niche_clarity_score ?? '';
+                els.editEmdScore.value = row.emd_pmd_score ?? '';
+
+                els.editModal.classList.remove('hidden');
+                els.editSld.focus();
+            }
+
+            function closeEditModal() {
+                els.editModal.classList.add('hidden');
+            }
+
+            function openDeleteModal(domains) {
+                const list = Array.isArray(domains) ? domains.filter(Boolean) : [];
+                if (list.length === 0) return;
+                state.pendingDeleteDomains = list;
+                els.deleteModalError.classList.add('hidden');
+                els.deleteModalError.textContent = '';
+                els.deleteModalDesc.textContent = `Anda akan menghapus permanen ${list.length} baris berikut dari database D1. Tindakan ini tidak dapat dibatalkan.`;
+
+                clearElement(els.deleteModalList);
+                const previewLimit = 20;
+                for (const dom of list.slice(0, previewLimit)) {
+                    const li = document.createElement('li');
+                    li.textContent = dom;
+                    els.deleteModalList.appendChild(li);
+                }
+                if (list.length > previewLimit) {
+                    const li = document.createElement('li');
+                    li.className = 'text-slate-500 italic';
+                    li.textContent = `... dan ${list.length - previewLimit} domain lainnya`;
+                    els.deleteModalList.appendChild(li);
+                }
+
+                els.deleteModal.classList.remove('hidden');
+            }
+
+            function closeDeleteModal() {
+                state.pendingDeleteDomains = [];
+                els.deleteModal.classList.add('hidden');
+            }
+
+            async function handleExport(format) {
+                if (!state.authenticated) return;
+                hideBanner();
+                const btnMap = { csv: els.exportCsvBtn, xls: els.exportXlsBtn, json: els.exportJsonBtn };
+                const btn = btnMap[format];
+                const originalText = btn ? btn.textContent : '';
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = `Mengekspor ${format.toUpperCase()}...`;
+                }
+
+                try {
+                    const params = buildFilterParams(false);
+                    params.set('format', format);
+                    const res = await fetch(`/api/admin-data/export?${params.toString()}`, {
+                        credentials: 'same-origin',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    if (res.status === 401) {
+                        lockWorkspace('Sesi admin /admin-articles/ telah berakhir.');
+                        return;
+                    }
+                    if (!res.ok) {
+                        const errBody = await res.json().catch(() => ({}));
+                        throw new Error(errBody?.error || `Export gagal (HTTP ${res.status})`);
+                    }
+
+                    const blob = await res.blob();
+                    const cd = res.headers.get('Content-Disposition') || '';
+                    const match = /filename="([^"]+)"/i.exec(cd);
+                    const filename = match ? match[1] : `d1-available-domains.${format}`;
+
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+                    showBanner('success', `Berhasil mengekspor data terfilter sebagai ${filename}.`);
+                } catch (err) {
+                    showBanner('error', err?.message || 'Gagal mengekspor data.');
+                } finally {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                    }
+                }
+            }
+
+            // Event Listeners
+            els.themeToggleBtn.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                try { localStorage.setItem('preferredTheme', isDark ? 'dark' : 'light'); } catch (e) {}
+            });
+
+            els.recheckAuthBtn.addEventListener('click', checkAuthSession);
+
+            els.logoutBtn.addEventListener('click', async () => {
+                try {
+                    await fetch('/api/articles/auth', {
+                        method: 'DELETE',
+                        credentials: 'same-origin',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                } catch {}
+                lockWorkspace('Anda telah keluar dari sesi editorial.');
+            });
+
+            els.filterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                hideBanner();
+                state.page = 1;
+                loadDomains();
+            });
+
+            let debounceTimer = null;
+            [els.filterQuery, els.filterSld, els.filterKeyword, els.filterTags, els.filterExtension].forEach((inputEl) => {
+                inputEl.addEventListener('input', () => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        state.page = 1;
+                        loadDomains();
+                    }, 320);
+                });
+            });
+
+            [els.filterCharMin, els.filterCharMax, els.filterCheckSource, els.filterLang, els.sortBySelect, els.sortDirSelect].forEach((ctrl) => {
+                ctrl.addEventListener('change', () => {
+                    state.page = 1;
+                    loadDomains();
+                });
+            });
+
+            els.pageSizeSelect.addEventListener('change', () => {
+                state.pageSize = Number(els.pageSizeSelect.value) || 50;
+                state.page = 1;
+                loadDomains();
+            });
+
+            els.resetFiltersBtn.addEventListener('click', () => {
+                els.filterQuery.value = '';
+                els.filterSld.value = '';
+                els.filterKeyword.value = '';
+                els.filterCharMin.value = '';
+                els.filterCharMax.value = '';
+                els.filterTags.value = '';
+                els.filterExtension.value = '';
+                els.filterCheckSource.value = '';
+                els.filterLang.value = '';
+                els.sortBySelect.value = 'checked_at';
+                els.sortDirSelect.value = 'desc';
+                state.page = 1;
+                hideBanner();
+                loadDomains();
+            });
+
+            els.refreshDataBtn.addEventListener('click', () => {
+                hideBanner();
+                loadDomains({ includeFacets: true });
+            });
+
+            els.prevPageBtn.addEventListener('click', () => {
+                if (state.page > 1) {
+                    state.page -= 1;
+                    loadDomains();
+                }
+            });
+
+            els.nextPageBtn.addEventListener('click', () => {
+                if (state.page < state.totalPages) {
+                    state.page += 1;
+                    loadDomains();
+                }
+            });
+
+            els.selectAllPageCheckbox.addEventListener('change', () => {
+                for (const row of state.rows) {
+                    if (els.selectAllPageCheckbox.checked) state.selectedDomains.add(row.domain);
+                    else state.selectedDomains.delete(row.domain);
+                }
+                renderTableRows();
+            });
+
+            els.bulkDeleteBtn.addEventListener('click', () => {
+                openDeleteModal(Array.from(state.selectedDomains));
+            });
+
+            [els.exportCsvBtn, els.exportXlsBtn, els.exportJsonBtn].forEach((btn) => {
+                btn.addEventListener('click', () => handleExport(btn.dataset.exportFormat));
+            });
+
+            els.closeEditModalBtn.addEventListener('click', closeEditModal);
+            els.cancelEditModalBtn.addEventListener('click', closeEditModal);
+            els.editRowForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                els.editModalError.classList.add('hidden');
+                els.submitEditModalBtn.disabled = true;
+                els.submitEditModalBtn.textContent = 'Menyimpan...';
+
+                const numOrNull = (el) => {
+                    const v = el.value.trim();
+                    return v === '' ? null : Number(v);
+                };
+
+                try {
+                    const payload = {
+                        domain: els.editDomainPk.value,
+                        sld: els.editSld.value.trim(),
+                        extension: els.editExtension.value.trim(),
+                        char_length: Number(els.editCharLength.value),
+                        lang: els.editLang.value.trim(),
+                        check_method: els.editCheckMethod.value,
+                        check_source: els.editCheckSource.value,
+                        emd_pmd_match_type: els.editMatchType.value,
+                        tags: els.editTags.value,
+                        overall_heuristic_score: numOrNull(els.editOverallScore),
+                        pronunciation_comfort_score: numOrNull(els.editPronScore),
+                        brandability_score: numOrNull(els.editBrandScore),
+                        structure_length_score: numOrNull(els.editStructScore),
+                        extension_lang_fit_score: numOrNull(els.editExtFitScore),
+                        character_cleanliness_score: numOrNull(els.editCleanScore),
+                        niche_clarity_score: numOrNull(els.editNicheScore),
+                        emd_pmd_score: numOrNull(els.editEmdScore)
+                    };
+
+                    await apiFetch('/api/admin-data/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    closeEditModal();
+                    showBanner('success', `Baris "${payload.domain}" berhasil diperbarui di D1.`);
+                    await loadDomains({ includeFacets: true });
+                } catch (err) {
+                    els.editModalError.textContent = err?.message || 'Gagal menyimpan perubahan.';
+                    els.editModalError.classList.remove('hidden');
+                } finally {
+                    els.submitEditModalBtn.disabled = false;
+                    els.submitEditModalBtn.textContent = 'Simpan Perubahan';
+                }
+            });
+
+            els.cancelDeleteModalBtn.addEventListener('click', closeDeleteModal);
+            els.confirmDeleteModalBtn.addEventListener('click', async () => {
+                if (state.pendingDeleteDomains.length === 0) return;
+                els.deleteModalError.classList.add('hidden');
+                els.confirmDeleteModalBtn.disabled = true;
+                els.confirmDeleteModalBtn.textContent = 'Menghapus...';
+
+                try {
+                    const res = await apiFetch('/api/admin-data/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ domains: state.pendingDeleteDomains })
+                    });
+                    for (const dom of state.pendingDeleteDomains) {
+                        state.selectedDomains.delete(dom);
+                    }
+                    closeDeleteModal();
+                    showBanner('success', `Berhasil menghapus ${res.deletedCount} baris dari database D1.`);
+                    await loadDomains({ includeFacets: true });
+                } catch (err) {
+                    els.deleteModalError.textContent = err?.message || 'Gagal menghapus baris.';
+                    els.deleteModalError.classList.remove('hidden');
+                } finally {
+                    els.confirmDeleteModalBtn.disabled = false;
+                    els.confirmDeleteModalBtn.textContent = 'Ya, Hapus Permanen';
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!els.editModal.classList.contains('hidden')) closeEditModal();
+                    if (!els.deleteModal.classList.contains('hidden')) closeDeleteModal();
+                }
+            });
+
+            checkAuthSession();
+        })();
+    </script>
+</body>
+</html>

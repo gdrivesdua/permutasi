@@ -6,3 +6,5 @@ dist/
 *.log
 .DS_Store
 .admin-auth.json
+.local-d1.sqlite*
+
