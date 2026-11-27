@@ -548,161 +548,129 @@
                             </div>
                         </div>
 
-                        <!-- Box 3: Add Your Own Patterns (Deep Blue Base #131354, White Text) -->
-                        <div id="patternOptionsBlock" onclick="setActiveGenerateSlot('pattern')" onfocusin="setActiveGenerateSlot('pattern')" class="bg-[#131354] text-[#FFFFFF] rounded-xl p-4 sm:p-5 md:p-6 shadow-sm flex flex-col gap-4">
+                        <!-- Box 3: Add Your Own Patterns (Bright Light Cheerful Surface Matching Site Palette) -->
+                        <div id="patternOptionsBlock" onclick="setActiveGenerateSlot('pattern')" onfocusin="setActiveGenerateSlot('pattern')" class="bg-gradient-to-br from-[#F7FAFC] via-[#FFFFFF] to-[#ECF2F2] text-[#0F172A] rounded-xl p-4 sm:p-5 md:p-6 border border-[#C3D6D6] shadow-sm flex flex-col gap-4">
                             <div class="flex items-center justify-between gap-2">
-                                <label for="formulaInput" id="uiFormulaLabel" class="block text-[15px] font-semibold text-[#FFFFFF] leading-[1.45]">Add Your Own Patterns:</label>
-                                <button type="button" onclick="clearFormula()" id="uiClearBtn" class="min-h-[36px] px-3 py-1.5 text-[13px] font-semibold text-rose-700 bg-[#FFFFFF] hover:bg-rose-50 border border-white/90 shadow-sm rounded-md transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                                <label for="formulaInput" id="uiFormulaLabel" class="block text-[15px] font-semibold text-[#0F172A] leading-[1.45]">Add Your Own Patterns:</label>
+                                <button type="button" onclick="clearFormula()" id="uiClearBtn" class="min-h-[36px] px-3 py-1.5 text-[13px] font-semibold text-rose-700 bg-[#FFFFFF] hover:bg-rose-50 border border-rose-200 shadow-sm rounded-md transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
                                     Clear Pattern
                                 </button>
                             </div>
-                            <textarea id="formulaInput" rows="2" onfocus="setActiveGenerateSlot('pattern')" onclick="recordFormulaSelection(this)" onkeyup="recordFormulaSelection(this)" onselect="recordFormulaSelection(this)" oninput="setActiveGenerateSlot('pattern'); recordFormulaSelection(this); syncActivePresetUi(); generateDomains()" class="w-full min-w-0 max-w-full px-3 sm:px-4 py-2.5 bg-[#FFFFFF] text-[#292929] placeholder:text-[#3F3042]/70 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#131354] font-mono text-[14px] leading-[1.5] resize-y break-words" placeholder="e.g. [primary] + [number]">[any] + [vowel] + [consonant]</textarea>
+                            <textarea id="formulaInput" rows="2" onfocus="setActiveGenerateSlot('pattern')" onclick="recordFormulaSelection(this)" onkeyup="recordFormulaSelection(this)" onselect="recordFormulaSelection(this)" oninput="setActiveGenerateSlot('pattern'); recordFormulaSelection(this); syncActivePresetUi(); generateDomains()" class="w-full min-w-0 max-w-full px-3 sm:px-4 py-2.5 bg-[#FFFFFF] text-[#1E293B] placeholder:text-slate-400 border border-[#C7D7D7] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2165b3] focus:border-[#2165b3] font-mono text-[14px] leading-[1.5] resize-y break-words" placeholder="e.g. [primary] + [number]">[any] + [vowel] + [consonant]</textarea>
 
                             <div class="flex flex-wrap gap-2 items-center">
-                                <span id="uiClickToAdd" class="text-[11px] uppercase tracking-wider text-[#FFFFFF] font-semibold mr-1 leading-[1.4]">Click to insert:</span>
-                                <button type="button" onclick="addPlaceholderToken('primary')" id="btnKw1" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 text-[12px] font-mono font-semibold rounded-md border border-blue-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [primary]</button>
-                                <button type="button" onclick="addPlaceholderToken('secondary')" id="btnKw2" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[12px] font-mono font-semibold rounded-md border border-emerald-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [secondary]</button>
-                                <button type="button" onclick="addPlaceholderToken('tertiary')" id="btnKw3" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-violet-50 hover:bg-violet-100 text-violet-800 text-[12px] font-mono font-semibold rounded-md border border-violet-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [tertiary]</button>
-                                <button type="button" onclick="addPlaceholderToken('any')" id="btnKwAny" title="Use all filled keywords (primary, secondary, tertiary) one by one" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-[12px] font-mono font-semibold rounded-md border border-indigo-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [any]</button>
-                                <button type="button" onclick="addPlaceholder('[dash]')" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[12px] font-mono font-semibold rounded-md border border-slate-300 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [dash]</button>
-                                <button type="button" onclick="addPlaceholderToken('number')" id="btnNum" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 text-[12px] font-mono font-semibold rounded-md border border-amber-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [number]</button>
-                                <button type="button" onclick="addPlaceholderToken('vowel')" id="btnVowel" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[12px] font-mono font-semibold rounded-md border border-rose-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [vowel]</button>
-                                <button type="button" onclick="addPlaceholderToken('consonant')" id="btnCons" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-900 text-[12px] font-mono font-semibold rounded-md border border-cyan-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">+ [consonant]</button>
+                                <span id="uiClickToAdd" class="text-[11px] uppercase tracking-wider text-slate-600 font-semibold mr-1 leading-[1.4]">Click to insert:</span>
+                                <button type="button" onclick="addPlaceholderToken('primary')" id="btnKw1" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 text-[12px] font-mono font-semibold rounded-md border border-blue-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [primary]</button>
+                                <button type="button" onclick="addPlaceholderToken('secondary')" id="btnKw2" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[12px] font-mono font-semibold rounded-md border border-emerald-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [secondary]</button>
+                                <button type="button" onclick="addPlaceholderToken('tertiary')" id="btnKw3" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-violet-50 hover:bg-violet-100 text-violet-800 text-[12px] font-mono font-semibold rounded-md border border-violet-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [tertiary]</button>
+                                <button type="button" onclick="addPlaceholderToken('any')" id="btnKwAny" title="Use all filled keywords (primary, secondary, tertiary) one by one" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-[12px] font-mono font-semibold rounded-md border border-indigo-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [any]</button>
+                                <button type="button" onclick="addPlaceholder('[dash]')" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[12px] font-mono font-semibold rounded-md border border-slate-300 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [dash]</button>
+                                <button type="button" onclick="addPlaceholderToken('number')" id="btnNum" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 text-[12px] font-mono font-semibold rounded-md border border-amber-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [number]</button>
+                                <button type="button" onclick="addPlaceholderToken('vowel')" id="btnVowel" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[12px] font-mono font-semibold rounded-md border border-rose-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [vowel]</button>
+                                <button type="button" onclick="addPlaceholderToken('consonant')" id="btnCons" class="min-h-[38px] sm:min-h-[36px] px-2.5 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-900 text-[12px] font-mono font-semibold rounded-md border border-cyan-200 shadow-sm transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">+ [consonant]</button>
                             </div>
 
                             <!-- Pronounceable Styles -->
-                            <div id="pronouncePresetsSection" class="pt-3.5 border-t border-white/15 flex flex-col gap-3">
+                            <div id="pronouncePresetsSection" class="pt-4 border-t border-[#D7E4E4] flex flex-col gap-3">
                                 <div class="flex flex-col gap-0.5 min-w-0">
                                     <div class="flex flex-wrap items-center gap-2 min-w-0">
-                                        <span id="uiPresetsLabel" class="text-[11px] uppercase tracking-wider text-white font-semibold leading-[1.4]">Pronounceable Styles</span>
-                                        <span id="presetAppliedBadge" role="status" aria-live="polite" class="hidden inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-400/25 border border-emerald-300/50 text-[11px] font-semibold text-emerald-100 whitespace-nowrap">✓ Style applied</span>
+                                        <span id="uiPresetsLabel" class="text-[12px] uppercase tracking-wider text-[#131354] font-bold leading-[1.4]">Pronounceable Styles</span>
+                                        <span id="presetAppliedBadge" role="status" aria-live="polite" class="hidden inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 border border-emerald-300 text-[11px] font-semibold text-emerald-800 whitespace-nowrap">✓ Style applied</span>
                                     </div>
-                                    <p id="uiPresetsHelper" class="text-[12px] text-white/80 leading-[1.4]">Click any style to insert its pattern · Live examples use your keyword</p>
+                                    <p id="uiPresetsHelper" class="text-[12.5px] text-slate-600 leading-[1.4]">Click any style to apply it and jump to the results table below</p>
                                 </div>
 
-                                <div id="presetCardsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                                    <!-- Primary 1: Smooth Ending -->
-                                    <button type="button" data-preset-id="any-cv" onclick="applyPatternPreset('any-cv')" class="preset-pattern-btn min-h-[76px] sm:min-h-[96px] text-left px-3.5 py-3 rounded-xl bg-emerald-700/55 hover:bg-emerald-600/70 border border-emerald-300/80 transition-all duration-150 flex flex-col justify-between gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetAnyCvTitle" class="text-[14px] font-bold text-white leading-[1.3] truncate">Smooth Ending</span>
-                                            <span id="uiPresetRecBadge" class="shrink-0 text-[10px] font-bold uppercase tracking-wide text-emerald-200 whitespace-nowrap">★ Recommended</span>
+                                <div id="presetCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                                    <!-- 1: Smooth Ending -->
+                                    <button type="button" data-preset-id="any-cv" onclick="applyPatternPreset('any-cv')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100/90 border-2 border-emerald-200 hover:border-emerald-400 text-emerald-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span class="flex items-start justify-between gap-2 w-full">
+                                            <span id="uiPresetAnyCvTitle" class="text-[15.5px] sm:text-[16px] font-bold text-emerald-950 leading-[1.25]">Smooth Ending</span>
+                                            <span id="uiPresetRecBadge" class="shrink-0 text-[10px] font-bold uppercase tracking-wide text-emerald-700 whitespace-nowrap pt-0.5">★ Top Pick</span>
                                         </span>
-                                        <span id="uiPresetAnyCvSample" data-preset-sample="any-cv" class="font-mono text-[15px] sm:text-[14.5px] font-bold text-white tracking-tight leading-tight truncate"><span class="text-white/90">business</span><span class="text-emerald-200">ra</span></span>
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetAnyCvSub" class="text-[12px] sm:text-[11.5px] text-white/85 leading-[1.35] truncate">Soft &amp; easy to say</span>
-                                            <span class="hidden sm:inline font-mono text-[10px] text-white/55 shrink-0">[any]+[cons]+[v]</span>
-                                        </span>
+                                        <span class="font-mono text-[11px] lowercase text-emerald-700/90 leading-snug break-words">[any] + [consonant] + [vowel]</span>
                                     </button>
 
-                                    <!-- Primary 2: Short & Catchy -->
-                                    <button type="button" data-preset-id="cv-cv" onclick="applyPatternPreset('cv-cv')" class="preset-pattern-btn min-h-[76px] sm:min-h-[96px] text-left px-3.5 py-3 rounded-xl bg-cyan-700/55 hover:bg-cyan-600/70 border border-cyan-300/80 transition-all duration-150 flex flex-col justify-between gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetCvCvTitle" class="text-[14px] font-bold text-white leading-[1.3] truncate">Short &amp; Catchy</span>
-                                        </span>
-                                        <span id="uiPresetCvCvSample" data-preset-sample="cv-cv" class="font-mono text-[15px] sm:text-[14.5px] font-bold text-cyan-200 tracking-tight leading-tight truncate">mira</span>
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetCvCvSub" class="text-[12px] sm:text-[11.5px] text-white/85 leading-[1.35] truncate">4 letters, memorable</span>
-                                            <span class="hidden sm:inline font-mono text-[10px] text-white/55 shrink-0">[c]+[v]+[c]+[v]</span>
-                                        </span>
+                                    <!-- 2: Short & Catchy -->
+                                    <button type="button" data-preset-id="cv-cv" onclick="applyPatternPreset('cv-cv')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100/90 border-2 border-cyan-200 hover:border-cyan-400 text-cyan-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetCvCvTitle" class="text-[15.5px] sm:text-[16px] font-bold text-cyan-950 leading-[1.25]">Short &amp; Catchy</span>
+                                        <span class="font-mono text-[11px] lowercase text-cyan-700/90 leading-snug break-words">[&le;4 letters] + [cvc / vcv]</span>
                                     </button>
 
-                                    <!-- Primary 3 (Desktop 3rd card, Mobile inside Bottom Sheet): Modern Ending -->
-                                    <button type="button" data-preset-id="any-vc" onclick="applyPatternPreset('any-vc')" class="preset-pattern-btn hidden sm:flex min-h-[76px] sm:min-h-[96px] text-left px-3.5 py-3 rounded-xl bg-rose-700/55 hover:bg-rose-600/70 border border-rose-300/80 transition-all duration-150 flex-col justify-between gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetAnyVcTitle" class="text-[14px] font-bold text-white leading-[1.3] truncate">Modern Ending</span>
-                                        </span>
-                                        <span id="uiPresetAnyVcSample" data-preset-sample="any-vc" class="font-mono text-[15px] sm:text-[14.5px] font-bold text-white tracking-tight leading-tight truncate"><span class="text-white/90">business</span><span class="text-rose-200">al</span></span>
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetAnyVcSub" class="text-[12px] sm:text-[11.5px] text-white/85 leading-[1.35] truncate">Clean vowel + consonant finish</span>
-                                            <span class="hidden sm:inline font-mono text-[10px] text-white/55 shrink-0">[any]+[v]+[cons]</span>
-                                        </span>
+                                    <!-- 3: Modern Ending -->
+                                    <button type="button" data-preset-id="any-vc" onclick="applyPatternPreset('any-vc')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-rose-50 hover:bg-rose-100/90 border-2 border-rose-200 hover:border-rose-400 text-rose-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetAnyVcTitle" class="text-[15.5px] sm:text-[16px] font-bold text-rose-950 leading-[1.25]">Modern Ending</span>
+                                        <span class="font-mono text-[11px] lowercase text-rose-700/90 leading-snug break-words">[any] + [vowel] + [consonant]</span>
                                     </button>
 
-                                    <!-- Secondary 4 (More styles on Desktop): With Prefix -->
-                                    <button type="button" data-preset-id="cv-any" data-preset-tier="more" onclick="applyPatternPreset('cv-any')" class="preset-pattern-btn preset-more-card hidden min-h-[76px] sm:min-h-[96px] text-left px-3.5 py-3 rounded-xl bg-violet-700/55 hover:bg-violet-600/70 border border-violet-300/80 transition-all duration-150 flex-col justify-between gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetCvAnyTitle" class="text-[14px] font-bold text-white leading-[1.3] truncate">With Prefix</span>
-                                        </span>
-                                        <span id="uiPresetCvAnySample" data-preset-sample="cv-any" class="font-mono text-[15px] sm:text-[14.5px] font-bold text-white tracking-tight leading-tight truncate"><span class="text-violet-200">ra</span><span class="text-white/90">business</span></span>
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetCvAnySub" class="text-[12px] sm:text-[11.5px] text-white/85 leading-[1.35] truncate">Add 2 letters in front</span>
-                                            <span class="hidden sm:inline font-mono text-[10px] text-white/55 shrink-0">[c]+[v]+[any]</span>
-                                        </span>
+                                    <!-- 4: With Prefix -->
+                                    <button type="button" data-preset-id="cv-any" onclick="applyPatternPreset('cv-any')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-violet-50 hover:bg-violet-100/90 border-2 border-violet-200 hover:border-violet-400 text-violet-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetCvAnyTitle" class="text-[15.5px] sm:text-[16px] font-bold text-violet-950 leading-[1.25]">With Prefix</span>
+                                        <span class="font-mono text-[11px] lowercase text-violet-700/90 leading-snug break-words">[consonant] + [vowel] + [any]</span>
                                     </button>
 
-                                    <!-- Secondary 5 (More styles on Desktop): With Dash -->
-                                    <button type="button" data-preset-id="cvc-v" data-preset-tier="more" onclick="applyPatternPreset('cvc-v')" class="preset-pattern-btn preset-more-card hidden min-h-[76px] sm:min-h-[96px] text-left px-3.5 py-3 rounded-xl bg-amber-700/55 hover:bg-amber-600/70 border border-amber-300/80 transition-all duration-150 flex-col justify-between gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetCvcVTitle" class="text-[14px] font-bold text-white leading-[1.3] truncate">With Dash</span>
-                                        </span>
-                                        <span id="uiPresetCvcVSample" data-preset-sample="cvc-v" class="font-mono text-[15px] sm:text-[14.5px] font-bold text-white tracking-tight leading-tight truncate"><span class="text-white/90">bar</span><span class="text-amber-200">-</span><span class="text-white/90">a</span></span>
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetCvcVSub" class="text-[12px] sm:text-[11.5px] text-white/85 leading-[1.35] truncate">Easier to read</span>
-                                            <span class="hidden sm:inline font-mono text-[10px] text-white/55 shrink-0">[c]+[v]+[c]+[-]+[v]</span>
-                                        </span>
+                                    <!-- 5: With Dash -->
+                                    <button type="button" data-preset-id="cvc-v" onclick="applyPatternPreset('cvc-v')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100/90 border-2 border-amber-200 hover:border-amber-400 text-amber-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetCvcVTitle" class="text-[15.5px] sm:text-[16px] font-bold text-amber-950 leading-[1.25]">With Dash (-)</span>
+                                        <span class="font-mono text-[11px] lowercase text-amber-800/90 leading-snug break-words">[words-dash] | [syllable-dash]</span>
                                     </button>
 
-                                    <!-- Secondary 6 (More styles on Desktop): Two Words Bridge -->
-                                    <button type="button" data-preset-id="natural-3" data-preset-tier="more" onclick="applyPatternPreset('natural-3')" class="preset-pattern-btn preset-more-card hidden min-h-[76px] sm:min-h-[96px] text-left px-3.5 py-3 rounded-xl bg-sky-700/55 hover:bg-sky-600/70 border border-sky-300/80 transition-all duration-150 flex-col justify-between gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetNatural3Title" class="text-[14px] font-bold text-white leading-[1.3] truncate">Two Words Bridge</span>
-                                        </span>
-                                        <span id="uiPresetNatural3Sample" data-preset-sample="natural-3" class="font-mono text-[15px] sm:text-[14.5px] font-bold text-white tracking-tight leading-tight truncate"><span class="text-white/90">business</span><span class="text-sky-200">a</span><span class="text-white/90">pro</span></span>
-                                        <span class="flex items-center justify-between gap-2 w-full">
-                                            <span id="uiPresetNatural3Sub" class="text-[12px] sm:text-[11.5px] text-white/85 leading-[1.35] truncate">Link 2 words with a vowel</span>
-                                            <span class="hidden sm:inline font-mono text-[10px] text-white/55 shrink-0">[any]+[v]+[sec]</span>
-                                        </span>
+                                    <!-- 6: 2 Words + Vowel Bridge -->
+                                    <button type="button" data-preset-id="natural-3" onclick="applyPatternPreset('natural-3')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-sky-50 hover:bg-sky-100/90 border-2 border-sky-200 hover:border-sky-400 text-sky-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetNatural3Title" class="text-[15.5px] sm:text-[16px] font-bold text-sky-950 leading-[1.25]">2 Words + Vowel</span>
+                                        <span class="font-mono text-[11px] lowercase text-sky-700/90 leading-snug break-words">[any] + [vowel] + [secondary]</span>
+                                    </button>
+
+                                    <!-- 7: Change Last Vowel -->
+                                    <button type="button" data-preset-id="swap-vowel" onclick="applyPatternPreset('swap-vowel')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-pink-50 hover:bg-pink-100/90 border-2 border-pink-200 hover:border-pink-400 text-pink-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetSwapVowelTitle" class="text-[15.5px] sm:text-[16px] font-bold text-pink-950 leading-[1.25]">Change Last Vowel</span>
+                                        <span class="font-mono text-[11px] lowercase text-pink-700/90 leading-snug break-words">[swap-last-vowel]</span>
+                                    </button>
+
+                                    <!-- 8: Change Last Consonant -->
+                                    <button type="button" data-preset-id="swap-cons" onclick="applyPatternPreset('swap-cons')" class="preset-pattern-btn min-h-[78px] text-left px-4 py-3 rounded-xl bg-indigo-50 hover:bg-indigo-100/90 border-2 border-indigo-200 hover:border-indigo-400 text-indigo-950 shadow-sm transition-all duration-150 flex flex-col justify-between gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3]">
+                                        <span id="uiPresetSwapConsTitle" class="text-[15.5px] sm:text-[16px] font-bold text-indigo-950 leading-[1.25]">Change Last Consonant</span>
+                                        <span class="font-mono text-[11px] lowercase text-indigo-700/90 leading-snug break-words">[swap-last-cons]</span>
                                     </button>
                                 </div>
 
-                                <!-- Style Controls Row (Mobile Bottom Sheet trigger / Desktop More Styles + Soft Letters Toggle) -->
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-0.5">
-                                    <button type="button" id="openMobileStylesBtn" onclick="openStylesBottomSheet()" class="sm:hidden inline-flex items-center justify-center gap-2 w-full min-h-[44px] px-4 py-2 rounded-xl bg-white/15 hover:bg-white/20 border border-white/30 text-[13px] font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                                        <span id="uiViewAllStylesLabel">View all styles (6)</span>
-                                        <svg aria-hidden="true" class="w-4 h-4 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-
-                                    <button type="button" id="toggleMoreStylesBtn" aria-expanded="false" onclick="toggleMorePresetStyles()" class="hidden sm:inline-flex items-center gap-1.5 min-h-[34px] px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/[0.16] border border-white/25 text-[12px] font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white w-fit">
-                                        <span id="uiMoreStylesLabel">More styles</span>
-                                        <svg id="uiMoreStylesChevron" aria-hidden="true" class="w-3.5 h-3.5 text-white/80 transition-transform duration-150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-
-                                    <label for="softConsonantsCheckbox" id="uiSoftConsTooltip" title="Exclude heavy letters (k, q, x, z) for smoother startup-style domain names" class="inline-flex items-center gap-2 min-h-[36px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/20 text-[12px] font-medium text-white/95 cursor-pointer select-none transition-colors w-full sm:w-auto justify-start">
-                                        <input type="checkbox" id="softConsonantsCheckbox" checked onchange="syncSoftConsonantsCheckboxes(this.checked); setActiveGenerateSlot('pattern'); generateDomains()" class="h-3.5 w-3.5 rounded border-white/70 bg-white text-blue-600 focus:ring-white cursor-pointer shrink-0">
+                                <!-- Style Controls Row (Soft Letters Toggle) -->
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-0.5">
+                                    <label for="softConsonantsCheckbox" id="uiSoftConsTooltip" title="Exclude heavy letters (k, q, x, z) for smoother startup-style domain names" class="inline-flex items-center gap-2 min-h-[38px] px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-[12px] font-medium text-slate-800 cursor-pointer select-none shadow-sm transition-colors w-full sm:w-auto justify-start">
+                                        <input type="checkbox" id="softConsonantsCheckbox" checked onchange="syncSoftConsonantsCheckboxes(this.checked); setActiveGenerateSlot('pattern'); generateDomains()" class="h-3.5 w-3.5 rounded border-slate-400 bg-white text-[#2165b3] focus:ring-[#2165b3] cursor-pointer shrink-0">
                                         <span id="uiSoftConsLabel">Use softer letters (no k, q, x, z)</span>
                                     </label>
                                 </div>
 
                                 <!-- Pronunciation Micro-Tips (Collapsed by Default) -->
-                                <details id="pronounceTipsDetails" class="group rounded-lg bg-white/[0.07] border border-white/15 text-white">
-                                    <summary class="flex items-center justify-between gap-2 px-3 py-2.5 min-h-[40px] cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden text-[12px] sm:text-[13px] font-semibold text-white/95 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-lg">
+                                <details id="pronounceTipsDetails" class="group rounded-lg bg-white/90 border border-[#CFE0E0] text-[#0F172A]">
+                                    <summary class="flex items-center justify-between gap-2 px-3 py-2.5 min-h-[40px] cursor-pointer select-none list-none [&amp;::-webkit-details-marker]:hidden text-[12px] sm:text-[13px] font-semibold text-[#0F172A] hover:text-[#2165b3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3] rounded-lg">
                                         <span class="inline-flex items-center gap-2 min-w-0">
-                                            <svg aria-hidden="true" class="w-4 h-4 text-amber-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                                            <svg aria-hidden="true" class="w-4 h-4 text-[#2165b3] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
                                             <span id="uiPronounceTipsTitle">Pronunciation Micro-Tips</span>
                                         </span>
-                                        <svg aria-hidden="true" class="w-4 h-4 text-white/80 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        <svg aria-hidden="true" class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </summary>
-                                    <div class="px-3 pb-3 pt-2 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[12px] leading-[1.5] text-white/90">
-                                        <div class="rounded-md bg-white/[0.06] border border-white/10 p-2.5">
-                                            <p id="uiTipRuleTitle" class="font-semibold text-white mb-0.5">Basic Rule</p>
-                                            <p id="uiTipRuleDesc" class="text-white/85">Alternating [consonant] and [vowel] creates open syllables that are easy to read and remember.</p>
+                                    <div class="px-3 pb-3 pt-2 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[12px] leading-[1.5] text-slate-700">
+                                        <div class="rounded-md bg-[#F4F8FA] border border-slate-200 p-2.5">
+                                            <p id="uiTipRuleTitle" class="font-semibold text-slate-900 mb-0.5">Basic Rule</p>
+                                            <p id="uiTipRuleDesc" class="text-slate-600">Alternating [consonant] and [vowel] creates open syllables that are easy to read and remember.</p>
                                         </div>
-                                        <div class="rounded-md bg-white/[0.06] border border-white/10 p-2.5">
-                                            <p id="uiTipBridgeTitle" class="font-semibold text-white mb-0.5">Vowel Bridge</p>
-                                            <p id="uiTipBridgeDesc" class="text-white/85">Insert [vowel] between two keywords or consonants so the tongue never stumbles when spoken.</p>
+                                        <div class="rounded-md bg-[#F4F8FA] border border-slate-200 p-2.5">
+                                            <p id="uiTipBridgeTitle" class="font-semibold text-slate-900 mb-0.5">Vowel Bridge</p>
+                                            <p id="uiTipBridgeDesc" class="text-slate-600">Insert [vowel] between two keywords or consonants so the tongue never stumbles when spoken.</p>
                                         </div>
-                                        <div class="rounded-md bg-white/[0.06] border border-white/10 p-2.5">
-                                            <p id="uiTipClusterTitle" class="font-semibold text-white mb-0.5">Avoid Heavy Clusters</p>
-                                            <p id="uiTipClusterDesc" class="text-white/85">Limit letters like q, x, or stacked consonants when targeting global brandable names.</p>
+                                        <div class="rounded-md bg-[#F4F8FA] border border-slate-200 p-2.5">
+                                            <p id="uiTipClusterTitle" class="font-semibold text-slate-900 mb-0.5">Avoid Heavy Clusters</p>
+                                            <p id="uiTipClusterDesc" class="text-slate-600">Limit letters like q, x, or stacked consonants when targeting global brandable names.</p>
                                         </div>
                                     </div>
                                 </details>
                             </div>
 
                             <!-- Bottom-of-Options Generate Action (Mutually Exclusive with Top Button) -->
-                            <div id="genBtnPatternWrap" class="hidden pt-3 border-t border-white/25">
+                            <div id="genBtnPatternWrap" class="hidden pt-3 border-t border-[#D7E4E4]">
                                 <div class="flex justify-center">
-                                    <button type="button" onclick="generateDomains({ scrollToResults: true, resetStatusFilter: true, showSkeleton: true })" id="uiAdvGenBtn" class="inline-flex items-center justify-center w-auto min-h-[48px] px-6 py-2.5 bg-[#c83e0c] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#c83e0c] text-[15px] font-bold rounded-lg shadow-md border-2 border-white/95 hover:border-[#f05422] transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#131354]">
+                                    <button type="button" onclick="generateDomains({ scrollToResults: true, resetStatusFilter: true, showSkeleton: true })" id="uiAdvGenBtn" class="inline-flex items-center justify-center w-auto min-h-[48px] px-6 py-2.5 bg-[#c83e0c] hover:bg-[#a93308] text-[#FFFFFF] text-[15px] font-bold rounded-lg shadow-md transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2165b3] focus-visible:ring-offset-2 focus-visible:ring-offset-white">
                                         Generate Domain Names
                                     </button>
                                 </div>
@@ -1073,77 +1041,69 @@
         </div>
     </div>
 
-    <!-- Mobile Bottom Sheet: All Pronounceable Styles -->
-    <div id="stylesBottomSheet" role="dialog" aria-modal="true" aria-labelledby="uiSheetStylesTitle" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm">
-        <div class="w-full max-w-lg max-h-[86vh] rounded-t-2xl sm:rounded-2xl bg-[#131354] border-t sm:border border-white/20 shadow-2xl flex flex-col overflow-hidden text-white">
-            <div class="pt-2.5 px-4 pb-3 border-b border-white/15 flex flex-col gap-2">
-                <div aria-hidden="true" class="w-10 h-1 rounded-full bg-white/30 mx-auto sm:hidden"></div>
+    <!-- Modal Bottom Sheet: All Pronounceable Styles (Bright Light Palette) -->
+    <div id="stylesBottomSheet" role="dialog" aria-modal="true" aria-labelledby="uiSheetStylesTitle" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/60 backdrop-blur-sm">
+        <div class="w-full max-w-lg max-h-[86vh] rounded-t-2xl sm:rounded-2xl bg-gradient-to-br from-[#F7FAFC] via-[#FFFFFF] to-[#ECF2F2] border-t sm:border border-[#C3D6D6] shadow-2xl flex flex-col overflow-hidden text-[#0F172A]">
+            <div class="pt-2.5 px-4 pb-3 border-b border-[#D7E4E4] flex flex-col gap-2">
+                <div aria-hidden="true" class="w-10 h-1 rounded-full bg-slate-300 mx-auto sm:hidden"></div>
                 <div class="flex items-center justify-between gap-3">
                     <div class="min-w-0">
-                        <h3 id="uiSheetStylesTitle" class="text-[16px] font-bold text-white leading-tight">Choose a Name Style</h3>
-                        <p id="uiSheetStylesSub" class="text-[12px] text-white/75 leading-snug mt-0.5">Tap a style to apply it to your formula</p>
+                        <h3 id="uiSheetStylesTitle" class="text-[16px] font-bold text-[#0F172A] leading-tight">Choose a Name Style</h3>
+                        <p id="uiSheetStylesSub" class="text-[12px] text-slate-600 leading-snug mt-0.5">Tap a style to apply it and view generated domains</p>
                     </div>
-                    <button type="button" onclick="closeStylesBottomSheet()" aria-label="Close styles sheet" class="min-h-[38px] min-w-[38px] inline-flex items-center justify-center rounded-lg text-white/75 hover:text-white hover:bg-white/15 transition-colors shrink-0">
+                    <button type="button" onclick="closeStylesBottomSheet()" aria-label="Close styles sheet" class="min-h-[38px] min-w-[38px] inline-flex items-center justify-center rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors shrink-0">
                         <svg aria-hidden="true" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
             </div>
 
             <div class="overflow-y-auto px-4 py-3.5 flex flex-col gap-2.5">
-                <label for="mobileSheetSoftConsCheckbox" class="inline-flex items-center gap-2.5 min-h-[42px] px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-[12.5px] font-medium text-white cursor-pointer select-none">
-                    <input type="checkbox" id="mobileSheetSoftConsCheckbox" checked onchange="syncSoftConsonantsCheckboxes(this.checked); setActiveGenerateSlot('pattern'); generateDomains()" class="h-4 w-4 rounded border-white/70 bg-white text-blue-600 focus:ring-white cursor-pointer shrink-0">
+                <label for="mobileSheetSoftConsCheckbox" class="inline-flex items-center gap-2.5 min-h-[42px] px-3 py-2 rounded-xl bg-white border border-slate-300 text-[12.5px] font-medium text-slate-800 cursor-pointer select-none shadow-sm">
+                    <input type="checkbox" id="mobileSheetSoftConsCheckbox" checked onchange="syncSoftConsonantsCheckboxes(this.checked); setActiveGenerateSlot('pattern'); generateDomains()" class="h-4 w-4 rounded border-slate-400 bg-white text-[#2165b3] focus:ring-[#2165b3] cursor-pointer shrink-0">
                     <span id="uiMobileSheetSoftConsLabel">Use softer letters (no k, q, x, z)</span>
                 </label>
 
-                <button type="button" data-preset-id="any-cv" onclick="applyPatternPreset('any-cv', { closeSheet: true })" class="preset-pattern-btn min-h-[72px] w-full text-left px-4 py-3 rounded-xl bg-emerald-700/60 hover:bg-emerald-600/75 border border-emerald-300/80 transition-all flex items-center justify-between gap-3">
-                    <span class="min-w-0 flex flex-col gap-0.5">
-                        <span class="flex items-center gap-2">
-                            <span id="uiSheetAnyCvTitle" class="text-[14px] font-bold text-white leading-tight">Smooth Ending</span>
-                            <span id="uiSheetRecBadge" class="text-[10px] font-bold uppercase tracking-wide text-emerald-200 whitespace-nowrap">★ Recommended</span>
-                        </span>
-                        <span id="uiSheetAnyCvSub" class="text-[12px] text-white/85 leading-snug">Soft &amp; easy to say</span>
+                <button type="button" data-preset-id="any-cv" onclick="applyPatternPreset('any-cv', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-200 text-emerald-950 transition-all flex flex-col justify-between gap-1">
+                    <span class="flex items-center justify-between gap-2 w-full">
+                        <span id="uiSheetAnyCvTitle" class="text-[15.5px] font-bold text-emerald-950 leading-tight">Smooth Ending</span>
+                        <span id="uiSheetRecBadge" class="text-[10px] font-bold uppercase tracking-wide text-emerald-700 whitespace-nowrap">★ Top Pick</span>
                     </span>
-                    <span data-preset-sample="any-cv" class="font-mono text-[15px] font-bold text-white whitespace-nowrap shrink-0"><span class="text-white/90">business</span><span class="text-emerald-200">ra</span></span>
+                    <span class="font-mono text-[11px] lowercase text-emerald-700/90">[any] + [consonant] + [vowel]</span>
                 </button>
 
-                <button type="button" data-preset-id="cv-cv" onclick="applyPatternPreset('cv-cv', { closeSheet: true })" class="preset-pattern-btn min-h-[72px] w-full text-left px-4 py-3 rounded-xl bg-cyan-700/60 hover:bg-cyan-600/75 border border-cyan-300/80 transition-all flex items-center justify-between gap-3">
-                    <span class="min-w-0 flex flex-col gap-0.5">
-                        <span id="uiSheetCvCvTitle" class="text-[14px] font-bold text-white leading-tight">Short &amp; Catchy</span>
-                        <span id="uiSheetCvCvSub" class="text-[12px] text-white/85 leading-snug">4 letters, memorable</span>
-                    </span>
-                    <span data-preset-sample="cv-cv" class="font-mono text-[15px] font-bold text-cyan-200 whitespace-nowrap shrink-0">mira</span>
+                <button type="button" data-preset-id="cv-cv" onclick="applyPatternPreset('cv-cv', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 border-2 border-cyan-200 text-cyan-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetCvCvTitle" class="text-[15.5px] font-bold text-cyan-950 leading-tight">Short &amp; Catchy</span>
+                    <span class="font-mono text-[11px] lowercase text-cyan-700/90">[&le;4 letters] + [cvc / vcv]</span>
                 </button>
 
-                <button type="button" data-preset-id="any-vc" onclick="applyPatternPreset('any-vc', { closeSheet: true })" class="preset-pattern-btn min-h-[72px] w-full text-left px-4 py-3 rounded-xl bg-rose-700/60 hover:bg-rose-600/75 border border-rose-300/80 transition-all flex items-center justify-between gap-3">
-                    <span class="min-w-0 flex flex-col gap-0.5">
-                        <span id="uiSheetAnyVcTitle" class="text-[14px] font-bold text-white leading-tight">Modern Ending</span>
-                        <span id="uiSheetAnyVcSub" class="text-[12px] text-white/85 leading-snug">Clean vowel + consonant finish</span>
-                    </span>
-                    <span data-preset-sample="any-vc" class="font-mono text-[15px] font-bold text-white whitespace-nowrap shrink-0"><span class="text-white/90">business</span><span class="text-rose-200">al</span></span>
+                <button type="button" data-preset-id="any-vc" onclick="applyPatternPreset('any-vc', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-rose-50 hover:bg-rose-100 border-2 border-rose-200 text-rose-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetAnyVcTitle" class="text-[15.5px] font-bold text-rose-950 leading-tight">Modern Ending</span>
+                    <span class="font-mono text-[11px] lowercase text-rose-700/90">[any] + [vowel] + [consonant]</span>
                 </button>
 
-                <button type="button" data-preset-id="cv-any" onclick="applyPatternPreset('cv-any', { closeSheet: true })" class="preset-pattern-btn min-h-[72px] w-full text-left px-4 py-3 rounded-xl bg-violet-700/60 hover:bg-violet-600/75 border border-violet-300/80 transition-all flex items-center justify-between gap-3">
-                    <span class="min-w-0 flex flex-col gap-0.5">
-                        <span id="uiSheetCvAnyTitle" class="text-[14px] font-bold text-white leading-tight">With Prefix</span>
-                        <span id="uiSheetCvAnySub" class="text-[12px] text-white/85 leading-snug">Add 2 letters in front</span>
-                    </span>
-                    <span data-preset-sample="cv-any" class="font-mono text-[15px] font-bold text-white whitespace-nowrap shrink-0"><span class="text-violet-200">ra</span><span class="text-white/90">business</span></span>
+                <button type="button" data-preset-id="cv-any" onclick="applyPatternPreset('cv-any', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-violet-50 hover:bg-violet-100 border-2 border-violet-200 text-violet-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetCvAnyTitle" class="text-[15.5px] font-bold text-violet-950 leading-tight">With Prefix</span>
+                    <span class="font-mono text-[11px] lowercase text-violet-700/90">[consonant] + [vowel] + [any]</span>
                 </button>
 
-                <button type="button" data-preset-id="cvc-v" onclick="applyPatternPreset('cvc-v', { closeSheet: true })" class="preset-pattern-btn min-h-[72px] w-full text-left px-4 py-3 rounded-xl bg-amber-700/60 hover:bg-amber-600/75 border border-amber-300/80 transition-all flex items-center justify-between gap-3">
-                    <span class="min-w-0 flex flex-col gap-0.5">
-                        <span id="uiSheetCvcVTitle" class="text-[14px] font-bold text-white leading-tight">With Dash</span>
-                        <span id="uiSheetCvcVSub" class="text-[12px] text-white/85 leading-snug">Easier to read</span>
-                    </span>
-                    <span data-preset-sample="cvc-v" class="font-mono text-[15px] font-bold text-white whitespace-nowrap shrink-0"><span class="text-white/90">bar</span><span class="text-amber-200">-</span><span class="text-white/90">a</span></span>
+                <button type="button" data-preset-id="cvc-v" onclick="applyPatternPreset('cvc-v', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-200 text-amber-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetCvcVTitle" class="text-[15.5px] font-bold text-amber-950 leading-tight">With Dash (-)</span>
+                    <span class="font-mono text-[11px] lowercase text-amber-800/90">[words-dash] | [syllable-dash]</span>
                 </button>
 
-                <button type="button" data-preset-id="natural-3" onclick="applyPatternPreset('natural-3', { closeSheet: true })" class="preset-pattern-btn min-h-[72px] w-full text-left px-4 py-3 rounded-xl bg-sky-700/60 hover:bg-sky-600/75 border border-sky-300/80 transition-all flex items-center justify-between gap-3">
-                    <span class="min-w-0 flex flex-col gap-0.5">
-                        <span id="uiSheetNatural3Title" class="text-[14px] font-bold text-white leading-tight">Two Words Bridge</span>
-                        <span id="uiSheetNatural3Sub" class="text-[12px] text-white/85 leading-snug">Link 2 words with a vowel</span>
-                    </span>
-                    <span data-preset-sample="natural-3" class="font-mono text-[15px] font-bold text-white whitespace-nowrap shrink-0"><span class="text-white/90">business</span><span class="text-sky-200">a</span><span class="text-white/90">pro</span></span>
+                <button type="button" data-preset-id="natural-3" onclick="applyPatternPreset('natural-3', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 text-sky-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetNatural3Title" class="text-[15.5px] font-bold text-sky-950 leading-tight">2 Words + Vowel</span>
+                    <span class="font-mono text-[11px] lowercase text-sky-700/90">[any] + [vowel] + [secondary]</span>
+                </button>
+
+                <button type="button" data-preset-id="swap-vowel" onclick="applyPatternPreset('swap-vowel', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 text-pink-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetSwapVowelTitle" class="text-[15.5px] font-bold text-pink-950 leading-tight">Change Last Vowel</span>
+                    <span class="font-mono text-[11px] lowercase text-pink-700/90">[swap-last-vowel]</span>
+                </button>
+
+                <button type="button" data-preset-id="swap-cons" onclick="applyPatternPreset('swap-cons', { closeSheet: true })" class="preset-pattern-btn min-h-[68px] w-full text-left px-4 py-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 text-indigo-950 transition-all flex flex-col justify-between gap-1">
+                    <span id="uiSheetSwapConsTitle" class="text-[15.5px] font-bold text-indigo-950 leading-tight">Change Last Consonant</span>
+                    <span class="font-mono text-[11px] lowercase text-indigo-700/90">[swap-last-cons]</span>
                 </button>
             </div>
         </div>
@@ -3177,35 +3137,31 @@
         const pronounceablePresetsI18n = {
             en: {
                 presetsLabel: 'Pronounceable Styles',
-                presetsHelper: 'Click any style to insert its pattern · Live examples use your keyword',
-                presetRecBadge: '★ Recommended',
+                presetsHelper: 'Click any style to apply it and jump to the results table below',
+                presetRecBadge: '★ Top Pick',
                 presetAppliedMsg: '✓ Style applied',
                 softConsLabel: 'Use softer letters (no k, q, x, z)',
                 softConsTitle: 'Exclude heavy letters (k, q, x, z) for smoother startup-style domain names',
                 moreStylesLabel: 'More styles',
                 lessStylesLabel: 'Fewer styles',
-                viewAllStylesLabel: 'View all styles (6)',
+                viewAllStylesLabel: 'View all styles (8)',
                 sheetStylesTitle: 'Choose a Name Style',
-                sheetStylesSub: 'Tap a style to apply it to your formula',
+                sheetStylesSub: 'Tap a style to apply it and view generated domains',
                 presetAnyCvTitle: 'Smooth Ending',
-                presetAnyCvSub: 'Soft & easy to say',
                 presetCvCvTitle: 'Short & Catchy',
-                presetCvCvSub: '4 letters, memorable',
                 presetAnyVcTitle: 'Modern Ending',
-                presetAnyVcSub: 'Clean vowel + consonant finish',
                 presetCvAnyTitle: 'With Prefix',
-                presetCvAnySub: 'Add 2 letters in front',
-                presetCvcVTitle: 'With Dash',
-                presetCvcVSub: 'Easier to read',
-                presetNatural3Title: 'Two Words Bridge',
-                presetNatural3Sub: 'Link 2 words with a vowel',
+                presetCvcVTitle: 'With Dash (-)',
+                presetNatural3Title: '2 Words + Vowel',
+                presetSwapVowelTitle: 'Change Last Vowel',
+                presetSwapConsTitle: 'Change Last Consonant',
                 pronounceTipsTitle: 'Pronunciation Micro-Tips',
                 tipRuleTitle: 'Basic Rule',
                 tipRuleDesc: 'Alternating [consonant] and [vowel] creates open syllables that are easy to read and remember.',
                 tipBridgeTitle: 'Vowel Bridge',
                 tipBridgeDesc: 'Insert [vowel] between two keywords or consonants so the tongue never stumbles when spoken.',
                 tipClusterTitle: 'Avoid Heavy Clusters',
-                tipClusterDesc: 'Limit letters like k, q, x, z or stacked consonants when targeting global brandable names.',
+                tipClusterDesc: 'Limit letters like q, x, z or stacked consonants when targeting global brandable names.',
                 thScore: 'Score',
                 scorePronounce: 'Pronunciation',
                 scoreBrand: 'Brandability',
@@ -3217,28 +3173,24 @@
             },
             id: {
                 presetsLabel: 'Gaya Nama Mudah Dilafalkan',
-                presetsHelper: 'Klik salah satu untuk memasukkan pola ke formula · Contoh memakai keyword Anda',
+                presetsHelper: 'Klik salah satu gaya untuk langsung generate dan melihat tabel hasil di bawah',
                 presetRecBadge: '★ Rekomendasi',
                 presetAppliedMsg: '✓ Gaya diterapkan',
                 softConsLabel: 'Gunakan huruf yang lebih lembut (tanpa q, x, z)',
                 softConsTitle: 'Kecualikan huruf berat (q, x, z) agar hasil tetap natural dan mendukung akhiran huruf k',
                 moreStylesLabel: 'Gaya lainnya',
                 lessStylesLabel: 'Tampilkan lebih sedikit',
-                viewAllStylesLabel: 'Lihat semua gaya (6)',
+                viewAllStylesLabel: 'Lihat semua gaya (8)',
                 sheetStylesTitle: 'Pilih Gaya Nama',
-                sheetStylesSub: 'Ketuk salah satu gaya untuk langsung memakainya',
+                sheetStylesSub: 'Ketuk gaya untuk langsung melihat hasil domain di bawah',
                 presetAnyCvTitle: 'Akhiran Halus',
-                presetAnyCvSub: 'Lembut & mudah diucapkan',
                 presetCvCvTitle: 'Singkat & Menarik',
-                presetCvCvSub: '4 huruf, mudah diingat',
                 presetAnyVcTitle: 'Akhiran Modern',
-                presetAnyVcSub: 'Penutup vokal + konsonan',
-                presetCvAnyTitle: 'Dengan Awalan',
-                presetCvAnySub: 'Tambah 2 huruf di depan',
-                presetCvcVTitle: 'Dengan Tanda Hubung',
-                presetCvcVSub: 'Lebih mudah dibaca',
-                presetNatural3Title: 'Gabung 2 Kata',
-                presetNatural3Sub: 'Hubungkan 2 kata dengan vokal',
+                presetCvAnyTitle: 'Tambah Awalan',
+                presetCvcVTitle: 'Dengan Dash (-)',
+                presetNatural3Title: '2 Kata + Vokal',
+                presetSwapVowelTitle: 'Ubah Vokal Terakhir',
+                presetSwapConsTitle: 'Ubah Konsonan Terakhir',
                 pronounceTipsTitle: 'Panduan Singkat Pelafalan',
                 tipRuleTitle: 'Aturan Dasar',
                 tipRuleDesc: 'Selang-seling [consonant] dan [vowel] menciptakan suku kata terbuka yang mudah dibaca dan diingat.',
@@ -3257,28 +3209,24 @@
             },
             es: {
                 presetsLabel: 'Estilos Pronunciables',
-                presetsHelper: 'Haz clic en un estilo para insertar su patrón · Ejemplos con tu palabra clave',
+                presetsHelper: 'Haz clic en un estilo para aplicarlo y ver la tabla de resultados abajo',
                 presetRecBadge: '★ Recomendado',
                 presetAppliedMsg: '✓ Estilo aplicado',
                 softConsLabel: 'Usar letras más suaves (sin k, q, x, z)',
                 softConsTitle: 'Excluye letras pesadas (k, q, x, z) para lograr nombres más fluidos',
                 moreStylesLabel: 'Más estilos',
                 lessStylesLabel: 'Menos estilos',
-                viewAllStylesLabel: 'Ver todos los estilos (6)',
+                viewAllStylesLabel: 'Ver todos los estilos (8)',
                 sheetStylesTitle: 'Elige un Estilo de Nombre',
-                sheetStylesSub: 'Toca un estilo para aplicarlo a tu fórmula',
+                sheetStylesSub: 'Toca un estilo para aplicarlo y ver los dominios',
                 presetAnyCvTitle: 'Cierre Suave',
-                presetAnyCvSub: 'Fluido y fácil de decir',
                 presetCvCvTitle: 'Corto y Pegadizo',
-                presetCvCvSub: '4 letras, fácil de recordar',
                 presetAnyVcTitle: 'Final Moderno',
-                presetAnyVcSub: 'Cierre limpio vocal + consonante',
                 presetCvAnyTitle: 'Con Prefijo',
-                presetCvAnySub: 'Añade 2 letras al inicio',
-                presetCvcVTitle: 'Con Guion',
-                presetCvcVSub: 'Más fácil de leer',
-                presetNatural3Title: 'Puente de 2 Palabras',
-                presetNatural3Sub: 'Une 2 palabras con una vocal',
+                presetCvcVTitle: 'Con Guion (-)',
+                presetNatural3Title: '2 Palabras + Vocal',
+                presetSwapVowelTitle: 'Cambiar Última Vocal',
+                presetSwapConsTitle: 'Cambiar Última Consonante',
                 pronounceTipsTitle: 'Micro-Guía de Pronunciación',
                 tipRuleTitle: 'Regla Básica',
                 tipRuleDesc: 'Alternar [consonant] y [vowel] crea sílabas abiertas fáciles de leer y recordar.',
@@ -3297,28 +3245,24 @@
             },
             pt: {
                 presetsLabel: 'Estilos Pronunciáveis',
-                presetsHelper: 'Clique em um estilo para inserir o padrão · Exemplos com sua palavra-chave',
+                presetsHelper: 'Clique em um estilo para aplicar e ir direto para a tabela de resultados',
                 presetRecBadge: '★ Recomendado',
                 presetAppliedMsg: '✓ Estilo aplicado',
                 softConsLabel: 'Usar letras mais suaves (sem k, q, x, z)',
                 softConsTitle: 'Exclui letras pesadas (k, q, x, z) para nomes mais naturais',
                 moreStylesLabel: 'Mais estilos',
                 lessStylesLabel: 'Menos estilos',
-                viewAllStylesLabel: 'Ver todos os estilos (6)',
+                viewAllStylesLabel: 'Ver todos os estilos (8)',
                 sheetStylesTitle: 'Escolha um Estilo de Nome',
-                sheetStylesSub: 'Toque em um estilo para aplicar à fórmula',
+                sheetStylesSub: 'Toque em um estilo para ver os domínios gerados',
                 presetAnyCvTitle: 'Final Suave',
-                presetAnyCvSub: 'Leve e fácil de pronunciar',
                 presetCvCvTitle: 'Curto e Marcante',
-                presetCvCvSub: '4 letras, fácil de lembrar',
                 presetAnyVcTitle: 'Final Moderno',
-                presetAnyVcSub: 'Fechamento limpo vogal + consoante',
                 presetCvAnyTitle: 'Com Prefixo',
-                presetCvAnySub: 'Adiciona 2 letras no início',
-                presetCvcVTitle: 'Com Hífen',
-                presetCvcVSub: 'Mais fácil de ler',
-                presetNatural3Title: 'Ponte de 2 Palavras',
-                presetNatural3Sub: 'Liga 2 palavras com uma vogal',
+                presetCvcVTitle: 'Com Hífen (-)',
+                presetNatural3Title: '2 Palavras + Vogal',
+                presetSwapVowelTitle: 'Mudar Última Vogal',
+                presetSwapConsTitle: 'Mudar Última Consoante',
                 pronounceTipsTitle: 'Micro-Dicas de Pronúncia',
                 tipRuleTitle: 'Regra Básica',
                 tipRuleDesc: 'Alternar [consonant] e [vowel] cria sílabas abertas fáceis de ler e memorizar.',
@@ -3337,28 +3281,24 @@
             },
             fr: {
                 presetsLabel: 'Styles Prononçables',
-                presetsHelper: 'Cliquez sur un style pour insérer son motif · Exemples avec votre mot-clé',
+                presetsHelper: 'Cliquez sur un style pour l’appliquer et voir les résultats ci-dessous',
                 presetRecBadge: '★ Recommandé',
                 presetAppliedMsg: '✓ Style appliqué',
                 softConsLabel: 'Utiliser des lettres plus douces (sans k, q, x, z)',
                 softConsTitle: 'Exclut les lettres lourdes (k, q, x, z) pour des noms plus fluides',
                 moreStylesLabel: 'Plus de styles',
                 lessStylesLabel: 'Moins de styles',
-                viewAllStylesLabel: 'Voir tous les styles (6)',
+                viewAllStylesLabel: 'Voir tous les styles (8)',
                 sheetStylesTitle: 'Choisir un Style de Nom',
-                sheetStylesSub: 'Touchez un style pour l’appliquer à votre formule',
+                sheetStylesSub: 'Touchez un style pour afficher les domaines générés',
                 presetAnyCvTitle: 'Finale Douce',
-                presetAnyCvSub: 'Fluide et facile à dire',
                 presetCvCvTitle: 'Court & Accrocheur',
-                presetCvCvSub: '4 lettres, facile à retenir',
                 presetAnyVcTitle: 'Finale Moderne',
-                presetAnyVcSub: 'Terminaison nette voyelle + consonne',
                 presetCvAnyTitle: 'Avec Préfixe',
-                presetCvAnySub: 'Ajoute 2 lettres au début',
-                presetCvcVTitle: 'Avec Tiret',
-                presetCvcVSub: 'Plus facile à lire',
-                presetNatural3Title: 'Lien à 2 Mots',
-                presetNatural3Sub: 'Relie 2 mots par une voyelle',
+                presetCvcVTitle: 'Avec Tiret (-)',
+                presetNatural3Title: '2 Mots + Voyelle',
+                presetSwapVowelTitle: 'Changer Dernière Voyelle',
+                presetSwapConsTitle: 'Changer Dernière Consonne',
                 pronounceTipsTitle: 'Micro-Conseils de Prononciation',
                 tipRuleTitle: 'Règle de Base',
                 tipRuleDesc: 'Alterner [consonant] et [vowel] crée des syllabes ouvertes faciles à lire et retenir.',
@@ -3377,28 +3317,24 @@
             },
             de: {
                 presetsLabel: 'Aussprechbare Stile',
-                presetsHelper: 'Stil anklicken, um das Muster einzufügen · Beispiele mit Ihrem Keyword',
+                presetsHelper: 'Stil anklicken, um ihn anzuwenden und direkt zur Ergebnistabelle zu springen',
                 presetRecBadge: '★ Empfohlen',
                 presetAppliedMsg: '✓ Stil übernommen',
                 softConsLabel: 'Weichere Buchstaben nutzen (ohne k, q, x, z)',
                 softConsTitle: 'Schließt harte Buchstaben (k, q, x, z) für flüssigere Namen aus',
                 moreStylesLabel: 'Weitere Stile',
                 lessStylesLabel: 'Weniger Stile',
-                viewAllStylesLabel: 'Alle Stile ansehen (6)',
+                viewAllStylesLabel: 'Alle Stile ansehen (8)',
                 sheetStylesTitle: 'Namensstil wählen',
-                sheetStylesSub: 'Tippen Sie auf einen Stil, um ihn anzuwenden',
+                sheetStylesSub: 'Tippen Sie auf einen Stil für sofortige Ergebnisse',
                 presetAnyCvTitle: 'Weiche Endung',
-                presetAnyCvSub: 'Flüssig & leicht auszusprechen',
                 presetCvCvTitle: 'Kurz & Einprägsam',
-                presetCvCvSub: '4 Buchstaben, gut merkbar',
                 presetAnyVcTitle: 'Moderne Endung',
-                presetAnyVcSub: 'Klarer Vokal + Konsonant-Schluss',
                 presetCvAnyTitle: 'Mit Präfix',
-                presetCvAnySub: '2 Buchstaben voranstellen',
-                presetCvcVTitle: 'Mit Bindestrich',
-                presetCvcVSub: 'Leichter zu lesen',
-                presetNatural3Title: '2-Wort-Brücke',
-                presetNatural3Sub: '2 Wörter mit Vokal verbinden',
+                presetCvcVTitle: 'Mit Bindestrich (-)',
+                presetNatural3Title: '2 Wörter + Vokal',
+                presetSwapVowelTitle: 'Letzten Vokal ändern',
+                presetSwapConsTitle: 'Letzten Konsonant ändern',
                 pronounceTipsTitle: 'Aussprache-Kurztipps',
                 tipRuleTitle: 'Grundregel',
                 tipRuleDesc: 'Der Wechsel von [consonant] und [vowel] erzeugt offene, leicht merkbare Silben.',
@@ -3417,28 +3353,24 @@
             },
             ru: {
                 presetsLabel: 'Звучные стили',
-                presetsHelper: 'Нажмите на стиль, чтобы вставить шаблон · Примеры с вашим словом',
+                presetsHelper: 'Нажмите на стиль, чтобы применить его и перейти к таблице результатов ниже',
                 presetRecBadge: '★ Рекомендуем',
                 presetAppliedMsg: '✓ Стиль применен',
                 softConsLabel: 'Использовать мягкие буквы (без k, q, x, z)',
                 softConsTitle: 'Исключает резкие и редкие буквы (k, q, x, z) для более плавного звучания',
                 moreStylesLabel: 'Другие стили',
                 lessStylesLabel: 'Скрыть лишние',
-                viewAllStylesLabel: 'Показать все стили (6)',
+                viewAllStylesLabel: 'Показать все стили (8)',
                 sheetStylesTitle: 'Выберите стиль имени',
-                sheetStylesSub: 'Нажмите на стиль, чтобы применить шаблон',
+                sheetStylesSub: 'Нажмите на стиль, чтобы сразу увидеть результаты',
                 presetAnyCvTitle: 'Плавное окончание',
-                presetAnyCvSub: 'Мягко и легко произносится',
                 presetCvCvTitle: 'Короткий и броский',
-                presetCvCvSub: '4 буквы, легко запомнить',
                 presetAnyVcTitle: 'Современный финал',
-                presetAnyVcSub: 'Четкая концовка: гласная + согласная',
                 presetCvAnyTitle: 'С префиксом',
-                presetCvAnySub: 'Добавить 2 буквы в начале',
-                presetCvcVTitle: 'Через дефис',
-                presetCvcVSub: 'Проще читать с первого взгляда',
-                presetNatural3Title: 'Связка 2 слов',
-                presetNatural3Sub: 'Соединить 2 слова гласной',
+                presetCvcVTitle: 'Через дефис (-)',
+                presetNatural3Title: '2 слова + гласная',
+                presetSwapVowelTitle: 'Заменить последнюю гласную',
+                presetSwapConsTitle: 'Заменить последнюю согласную',
                 pronounceTipsTitle: 'Краткие советы по звучанию',
                 tipRuleTitle: 'Базовое правило',
                 tipRuleDesc: 'Чередование [consonant] и [vowel] создает открытые слоги, которые легко читать и запоминать.',
@@ -3457,28 +3389,24 @@
             },
             ja: {
                 presetsLabel: '発音しやすいスタイル',
-                presetsHelper: 'クリックでパターンを数式に挿入 · あなたのキーワードで例を表示',
+                presetsHelper: 'クリックするとパターンを適用して下の生成結果テーブルへ移動します',
                 presetRecBadge: '★ おすすめ',
                 presetAppliedMsg: '✓ 適用しました',
                 softConsLabel: '柔らかい音を使う（k, q, x, z 除外）',
                 softConsTitle: 'k, q, x, z を除外して自然で呼びやすい名前を生成します',
                 moreStylesLabel: 'その他のスタイル',
                 lessStylesLabel: '閉じる',
-                viewAllStylesLabel: 'すべてのスタイルを見る (6)',
+                viewAllStylesLabel: 'すべてのスタイルを見る (8)',
                 sheetStylesTitle: 'ネーミングスタイルを選択',
-                sheetStylesSub: 'タップして数式にパターンを適用します',
+                sheetStylesSub: 'タップして下の生成結果を確認します',
                 presetAnyCvTitle: 'なめらかな語尾',
-                presetAnyCvSub: '発音しやすくスタートアップ風',
                 presetCvCvTitle: '短くてキャッチー',
-                presetCvCvSub: '覚えやすい4文字スタイル',
                 presetAnyVcTitle: 'モダンな語尾',
-                presetAnyVcSub: '母音＋子音でシャープに結ぶ',
                 presetCvAnyTitle: '接頭語プラス',
-                presetCvAnySub: '先頭に2文字を追加',
-                presetCvcVTitle: 'ハイフン区切り',
-                presetCvcVSub: '視認性が高く読みやすい',
-                presetNatural3Title: '2語を母音でつなぐ',
-                presetNatural3Sub: '2つの単語を母音で滑らかに結合',
+                presetCvcVTitle: 'ハイフン区切り (-)',
+                presetNatural3Title: '2語 + 母音つなぎ',
+                presetSwapVowelTitle: '最後の母音を変更',
+                presetSwapConsTitle: '最後の子音を変更',
                 pronounceTipsTitle: '発音しやすいネーミングのヒント',
                 tipRuleTitle: '基本ルール',
                 tipRuleDesc: '[consonant] と [vowel] を交互に並べると、読みやすく覚えやすい開音節になります。',
@@ -4308,29 +4236,21 @@
                 uiSheetStylesTitle: t.sheetStylesTitle,
                 uiSheetStylesSub: t.sheetStylesSub,
                 uiPresetAnyCvTitle: t.presetAnyCvTitle,
-                uiPresetAnyCvSub: t.presetAnyCvSub,
                 uiSheetAnyCvTitle: t.presetAnyCvTitle,
-                uiSheetAnyCvSub: t.presetAnyCvSub,
                 uiPresetCvCvTitle: t.presetCvCvTitle,
-                uiPresetCvCvSub: t.presetCvCvSub,
                 uiSheetCvCvTitle: t.presetCvCvTitle,
-                uiSheetCvCvSub: t.presetCvCvSub,
                 uiPresetCvAnyTitle: t.presetCvAnyTitle,
-                uiPresetCvAnySub: t.presetCvAnySub,
                 uiSheetCvAnyTitle: t.presetCvAnyTitle,
-                uiSheetCvAnySub: t.presetCvAnySub,
                 uiPresetCvcVTitle: t.presetCvcVTitle,
-                uiPresetCvcVSub: t.presetCvcVSub,
                 uiSheetCvcVTitle: t.presetCvcVTitle,
-                uiSheetCvcVSub: t.presetCvcVSub,
                 uiPresetAnyVcTitle: t.presetAnyVcTitle,
-                uiPresetAnyVcSub: t.presetAnyVcSub,
                 uiSheetAnyVcTitle: t.presetAnyVcTitle,
-                uiSheetAnyVcSub: t.presetAnyVcSub,
                 uiPresetNatural3Title: t.presetNatural3Title,
-                uiPresetNatural3Sub: t.presetNatural3Sub,
                 uiSheetNatural3Title: t.presetNatural3Title,
-                uiSheetNatural3Sub: t.presetNatural3Sub,
+                uiPresetSwapVowelTitle: t.presetSwapVowelTitle,
+                uiSheetSwapVowelTitle: t.presetSwapVowelTitle,
+                uiPresetSwapConsTitle: t.presetSwapConsTitle,
+                uiSheetSwapConsTitle: t.presetSwapConsTitle,
                 uiPronounceTipsTitle: t.pronounceTipsTitle,
                 uiTipRuleTitle: t.tipRuleTitle,
                 uiTipRuleDesc: t.tipRuleDesc,
@@ -4865,6 +4785,394 @@
             }
         }
 
+        function splitWordIntoSyllables(word) {
+            const clean = String(word || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (!clean || clean.length <= 2) return clean ? [clean] : [];
+
+            const vowelRe = /[aeiou]/;
+            const nuclei = [];
+            for (let i = 0; i < clean.length; i++) {
+                const ch = clean[i];
+                const isVowel = vowelRe.test(ch) || (ch === 'y' && i > 0 && !vowelRe.test(clean[i - 1]));
+                if (isVowel) {
+                    if (nuclei.length > 0 && nuclei[nuclei.length - 1].end === i - 1) {
+                        nuclei[nuclei.length - 1].end = i;
+                    } else {
+                        nuclei.push({ start: i, end: i });
+                    }
+                }
+            }
+
+            if (nuclei.length <= 1) {
+                if (nuclei.length === 1 && clean.length >= 3) {
+                    const nStart = nuclei[0].start;
+                    const nEnd = nuclei[0].end;
+                    if (nStart > 0 && nStart < clean.length - 1) {
+                        return [clean.slice(0, nStart), clean.slice(nStart)];
+                    }
+                    if (nEnd + 1 < clean.length && nEnd > 0) {
+                        return [clean.slice(0, nEnd + 1), clean.slice(nEnd + 1)];
+                    }
+                }
+                const mid = Math.ceil(clean.length / 2);
+                return [clean.slice(0, mid), clean.slice(mid)].filter(Boolean);
+            }
+
+            const onsetPairs = new Set([
+                'bl', 'br', 'ch', 'cl', 'cr', 'dr', 'fl', 'fr', 'gl', 'gr',
+                'kh', 'kl', 'kr', 'ng', 'ny', 'ph', 'pl', 'pr', 'sc', 'sh',
+                'sk', 'sl', 'sm', 'sn', 'sp', 'st', 'sw', 'sy', 'th', 'tr', 'tw', 'wh', 'wr'
+            ]);
+
+            const splits = [0];
+            for (let i = 0; i < nuclei.length - 1; i++) {
+                const gapStart = nuclei[i].end + 1;
+                const gapEnd = nuclei[i + 1].start;
+                const cluster = clean.slice(gapStart, gapEnd);
+
+                if (cluster.length === 0) {
+                    splits.push(gapEnd);
+                } else if (cluster.length === 1) {
+                    splits.push(gapStart);
+                } else if (cluster.length === 2) {
+                    if (cluster[0] !== cluster[1] && onsetPairs.has(cluster)) {
+                        splits.push(gapStart);
+                    } else {
+                        splits.push(gapStart + 1);
+                    }
+                } else {
+                    const tail2 = cluster.slice(-2);
+                    if (tail2[0] !== tail2[1] && onsetPairs.has(tail2)) {
+                        splits.push(gapEnd - 2);
+                    } else {
+                        splits.push(gapStart + 1);
+                    }
+                }
+            }
+            splits.push(clean.length);
+
+            const parts = [];
+            for (let i = 0; i < splits.length - 1; i++) {
+                const seg = clean.slice(splits[i], splits[i + 1]);
+                if (seg) parts.push(seg);
+            }
+            return parts.length > 0 ? parts : [clean];
+        }
+
+        function buildWordsDashVariants(activeKeywords) {
+            const words = (activeKeywords || []).map(w => String(w || '').replace(/^-+|-+$/g, '')).filter(Boolean);
+            if (words.length === 0) return [];
+            const out = [];
+            const seen = new Set();
+            const add = (val) => {
+                const clean = String(val || '').replace(/-{2,}/g, '-').replace(/^-+|-+$/g, '');
+                if (clean && !seen.has(clean)) {
+                    seen.add(clean);
+                    out.push(clean);
+                }
+            };
+
+            if (words.length >= 2) {
+                add(words.join('-'));
+                permuteWords(words).forEach(order => add(order.join('-')));
+                if (words.length >= 3) {
+                    for (let i = 0; i < words.length; i++) {
+                        for (let j = i + 1; j < words.length; j++) {
+                            permuteWords([words[i], words[j]]).forEach(pair => add(pair.join('-')));
+                        }
+                    }
+                }
+                return out;
+            }
+
+            const single = words[0];
+            const syllables = splitWordIntoSyllables(single);
+            if (syllables.length >= 2) {
+                add(syllables.join('-'));
+                if (syllables.length >= 3) {
+                    for (let i = 1; i < syllables.length; i++) {
+                        add(syllables.slice(0, i).join('') + '-' + syllables.slice(i).join(''));
+                    }
+                }
+            } else if (single.length >= 2) {
+                const mid = Math.ceil(single.length / 2);
+                add(single.slice(0, mid) + '-' + single.slice(mid));
+            } else {
+                add(single);
+            }
+            return out;
+        }
+
+        function buildShort4Stems(activeKeywords) {
+            const words = (activeKeywords || []).map(w => String(w || '').toLowerCase().replace(/[^a-z0-9]/g, '')).filter(Boolean);
+            if (words.length === 0) return [];
+            const rawSources = [];
+            words.forEach(w => rawSources.push(w));
+            if (words.length >= 2) {
+                permuteWords(words).forEach(order => rawSources.push(order.join('')));
+                rawSources.push(words[0].slice(0, 2) + words[1].slice(0, 2));
+                if (words.length >= 2) {
+                    rawSources.push(words[1].slice(0, 2) + words[0].slice(0, 2));
+                }
+            }
+
+            const stems = [];
+            const seen = new Set();
+            const addStem = (s) => {
+                if (s && s.length <= 4 && !seen.has(s)) {
+                    seen.add(s);
+                    stems.push(s);
+                }
+            };
+            rawSources.forEach(src => {
+                if (!src) return;
+                if (src.length <= 4) {
+                    addStem(src);
+                } else {
+                    addStem(src.slice(0, 4));
+                    addStem(src.slice(0, 3));
+                }
+            });
+            return stems.slice(0, 6);
+        }
+
+        function buildCvcVcvSuffixPool(activeConsonants) {
+            const cons = (activeConsonants && activeConsonants.length > 0) ? activeConsonants : softConsonants;
+            const smoothCoda = ['n', 'r', 'l', 's', 't', 'm', 'd', 'k', 'x', 'z'].filter(c => cons.includes(c));
+            const codaPool = smoothCoda.length > 0 ? smoothCoda : cons;
+            const suffixes = [];
+            const seen = new Set();
+
+            // [c] + [v] + [c] variations
+            for (let i = 0; i < cons.length; i++) {
+                const c1 = cons[i];
+                for (let j = 0; j < vowels.length; j++) {
+                    const v = vowels[j];
+                    for (let k = 0; k < codaPool.length; k++) {
+                        const c2 = codaPool[k];
+                        if (c1 === c2) continue;
+                        const s = c1 + v + c2;
+                        if (!seen.has(s)) {
+                            seen.add(s);
+                            suffixes.push(s);
+                        }
+                    }
+                }
+            }
+            // [v] + [c] + [v] variations
+            for (let i = 0; i < vowels.length; i++) {
+                const v1 = vowels[i];
+                for (let j = 0; j < cons.length; j++) {
+                    const c = cons[j];
+                    for (let k = 0; k < vowels.length; k++) {
+                        const v2 = vowels[k];
+                        const s = v1 + c + v2;
+                        if (!seen.has(s)) {
+                            seen.add(s);
+                            suffixes.push(s);
+                        }
+                    }
+                }
+            }
+            return suffixes;
+        }
+
+        function buildShort4CvcVcvPatterns(activeKeywords, activeConsonants) {
+            const stems = buildShort4Stems(activeKeywords);
+            if (stems.length === 0) return [];
+            const cons = (activeConsonants && activeConsonants.length > 0) ? activeConsonants : softConsonants;
+            const smoothOnset = ['r', 'l', 'n', 'm', 's', 't', 'v', 'b', 'd', 'k', 'z'].filter(c => cons.includes(c));
+            const onsetPool = smoothOnset.length > 0 ? smoothOnset : cons;
+            const smoothCoda = ['n', 'r', 'l', 's', 't', 'm', 'd', 'k', 'x', 'z'].filter(c => cons.includes(c));
+            const codaPool = smoothCoda.length > 0 ? smoothCoda : cons;
+
+            const out = [];
+            const seen = new Set();
+            const addPat = (p) => {
+                if (p && !seen.has(p)) {
+                    seen.add(p);
+                    out.push(p);
+                }
+            };
+
+            stems.forEach(stem => {
+                const lastCh = stem[stem.length - 1] || '';
+                const endsInVowel = /[aeiou]/.test(lastCh);
+
+                if (endsInVowel) {
+                    // Stem ends in vowel -> favor [c]+[v]+[c]
+                    for (let i = 0; i < cons.length; i++) {
+                        const c1 = cons[i];
+                        for (let j = 0; j < vowels.length; j++) {
+                            const v = vowels[j];
+                            for (let k = 0; k < codaPool.length; k++) {
+                                const c2 = codaPool[k];
+                                if (c1 === c2) continue;
+                                addPat(stem + c1 + v + c2);
+                            }
+                        }
+                    }
+                    // Plus contrasting [v]+[c]+[v] variation
+                    for (let i = 0; i < vowels.length; i++) {
+                        const v1 = vowels[i];
+                        if (v1 === lastCh) continue;
+                        for (let j = 0; j < onsetPool.length; j++) {
+                            const c = onsetPool[j];
+                            for (let k = 0; k < vowels.length; k++) {
+                                addPat(stem + v1 + c + vowels[k]);
+                            }
+                        }
+                    }
+                } else {
+                    // Stem ends in consonant/digit -> favor [v]+[c]+[v]
+                    for (let i = 0; i < vowels.length; i++) {
+                        const v1 = vowels[i];
+                        for (let j = 0; j < cons.length; j++) {
+                            const c = cons[j];
+                            for (let k = 0; k < vowels.length; k++) {
+                                addPat(stem + v1 + c + vowels[k]);
+                            }
+                        }
+                    }
+                    // Plus smooth non-doubling [c]+[v]+[c] variation
+                    for (let i = 0; i < onsetPool.length; i++) {
+                        const c1 = onsetPool[i];
+                        if (c1 === lastCh) continue;
+                        for (let j = 0; j < vowels.length; j++) {
+                            const v = vowels[j];
+                            for (let k = 0; k < codaPool.length; k++) {
+                                const c2 = codaPool[k];
+                                if (c1 === c2) continue;
+                                addPat(stem + c1 + v + c2);
+                            }
+                        }
+                    }
+                }
+            });
+            return out;
+        }
+
+        function buildLastWordTuples(activeKeywords) {
+            const words = (activeKeywords || []).map(w => String(w || '').toLowerCase().replace(/[^a-z0-9]/g, '')).filter(Boolean);
+            const tuples = [];
+            const seen = new Set();
+            const addTuple = (arr) => {
+                if (!arr || arr.length === 0) return;
+                const key = arr.join('\u0000');
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    tuples.push(arr);
+                }
+            };
+            words.forEach(w => addTuple([w]));
+            if (words.length >= 2) {
+                if (words.length === 2) {
+                    permuteWords(words).forEach(addTuple);
+                } else {
+                    permuteWords(words).forEach(addTuple);
+                    for (let i = 0; i < words.length; i++) {
+                        for (let j = i + 1; j < words.length; j++) {
+                            permuteWords([words[i], words[j]]).forEach(addTuple);
+                        }
+                    }
+                }
+            }
+            return tuples;
+        }
+
+        function buildLastVowelVariants(activeKeywords, wordPermOptions) {
+            const tuples = buildLastWordTuples(activeKeywords);
+            const includeDash = wordPermOptions ? wordPermOptions.includeDash !== false : true;
+            const out = [];
+            const seen = new Set();
+            const add = (val) => {
+                if (val && !seen.has(val)) {
+                    seen.add(val);
+                    out.push(val);
+                }
+            };
+
+            tuples.forEach(words => {
+                const lastWord = words[words.length - 1];
+                let lastVowelIdx = -1;
+                for (let i = lastWord.length - 1; i >= 0; i--) {
+                    if (/[aeiou]/.test(lastWord[i])) {
+                        lastVowelIdx = i;
+                        break;
+                    }
+                }
+                const prefixNoDash = words.slice(0, -1).join('');
+                const prefixDash = words.slice(0, -1).join('-');
+                const variantsOfLast = [];
+                if (lastVowelIdx !== -1) {
+                    const origV = lastWord[lastVowelIdx];
+                    vowels.forEach(v => {
+                        if (v !== origV) {
+                            variantsOfLast.push(lastWord.slice(0, lastVowelIdx) + v + lastWord.slice(lastVowelIdx + 1));
+                        }
+                    });
+                } else {
+                    vowels.forEach(v => {
+                        variantsOfLast.push(lastWord + v);
+                    });
+                }
+                variantsOfLast.forEach(mutLast => {
+                    add(prefixNoDash + mutLast);
+                    if (words.length > 1 && includeDash) {
+                        add(prefixDash + '-' + mutLast);
+                    }
+                });
+            });
+            return out;
+        }
+
+        function buildLastConsonantVariants(activeKeywords, activeConsonants, wordPermOptions) {
+            const tuples = buildLastWordTuples(activeKeywords);
+            const cons = (activeConsonants && activeConsonants.length > 0) ? activeConsonants : softConsonants;
+            const includeDash = wordPermOptions ? wordPermOptions.includeDash !== false : true;
+            const out = [];
+            const seen = new Set();
+            const add = (val) => {
+                if (val && !seen.has(val)) {
+                    seen.add(val);
+                    out.push(val);
+                }
+            };
+
+            tuples.forEach(words => {
+                const lastWord = words[words.length - 1];
+                let lastConsIdx = -1;
+                for (let i = lastWord.length - 1; i >= 0; i--) {
+                    if (/[bcdfghjklmnpqrstvwxyz]/.test(lastWord[i])) {
+                        lastConsIdx = i;
+                        break;
+                    }
+                }
+                const prefixNoDash = words.slice(0, -1).join('');
+                const prefixDash = words.slice(0, -1).join('-');
+                const variantsOfLast = [];
+                if (lastConsIdx !== -1) {
+                    const origC = lastWord[lastConsIdx];
+                    cons.forEach(c => {
+                        if (c !== origC) {
+                            variantsOfLast.push(lastWord.slice(0, lastConsIdx) + c + lastWord.slice(lastConsIdx + 1));
+                        }
+                    });
+                } else {
+                    cons.forEach(c => {
+                        variantsOfLast.push(lastWord + c);
+                    });
+                }
+                variantsOfLast.forEach(mutLast => {
+                    add(prefixNoDash + mutLast);
+                    if (words.length > 1 && includeDash) {
+                        add(prefixDash + '-' + mutLast);
+                    }
+                });
+            });
+            return out;
+        }
+
         function generateDomains(options) {
             if (analysisSkeletonTimer) {
                 clearTimeout(analysisSkeletonTimer);
@@ -4916,6 +5224,12 @@
             const softConsEl = document.getElementById('softConsonantsCheckbox');
             const activeConsonants = (softConsEl && softConsEl.checked) ? getSoftConsonantsForLang(activeUiLang) : consonants;
             const anyKeywords = [...new Set(activeKeywords)];
+            const short4Stems = buildShort4Stems(activeKeywords);
+            const wordsDashVariants = buildWordsDashVariants(activeKeywords);
+            const swapLastVowelVariants = buildLastVowelVariants(activeKeywords, wordPermOptions);
+            const swapLastConsVariants = buildLastConsonantVariants(activeKeywords, activeConsonants, wordPermOptions);
+            const short4CvcVcvCombined = buildShort4CvcVcvPatterns(activeKeywords, activeConsonants);
+            const cvcVcvSuffixes = buildCvcVcvSuffixPool(activeConsonants);
             const placeholderMap = {
                 '[primary]': [keyword],
                 '[keyword]': [keyword],
@@ -4942,6 +5256,11 @@
                 '[ключевое_слово3]': [keyword3],
                 '[キーワード3]': [keyword3],
                 '[any]': anyKeywords.length > 0 ? anyKeywords : [''],
+                '[short4]': short4Stems.length > 0 ? short4Stems : [''],
+                '[cvc|vcv]': cvcVcvSuffixes,
+                '[words-dash]': wordsDashVariants.length > 0 ? wordsDashVariants : [''],
+                '[swap-last-vowel]': swapLastVowelVariants.length > 0 ? swapLastVowelVariants : [''],
+                '[swap-last-cons]': swapLastConsVariants.length > 0 ? swapLastConsVariants : [''],
                 '[vokal]': vowels,
                 '[vowel]': vowels,
                 '[vocal]': vowels,
@@ -5004,7 +5323,9 @@
             }
 
             if (formula) {
-                const formulaPatterns = expand(formula);
+                const formulaPatterns = (/^\s*\[short4\]\s*\+\s*\[cvc\|vcv\]\s*$/i.test(formula))
+                    ? short4CvcVcvCombined
+                    : expand(formula);
                 formulaPatterns.forEach(pat => {
                     if (pat) rawPatternSet.add(pat);
                 });
@@ -8247,11 +8568,13 @@
 
         const PATTERN_PRESETS = {
             'any-cv': '[any] + [consonant] + [vowel]',
-            'cv-cv': '[consonant] + [vowel] + [consonant] + [vowel]',
-            'cv-any': '[consonant] + [vowel] + [any]',
-            'cvc-v': '[consonant] + [vowel] + [consonant] + [dash] + [vowel]',
+            'cv-cv': '[short4] + [cvc|vcv]',
             'any-vc': '[any] + [vowel] + [consonant]',
-            'natural-3': '[any] + [vowel] + [secondary]'
+            'cv-any': '[consonant] + [vowel] + [any]',
+            'cvc-v': '[words-dash]',
+            'natural-3': '[any] + [vowel] + [secondary]',
+            'swap-vowel': '[swap-last-vowel]',
+            'swap-cons': '[swap-last-cons]'
         };
         let presetBadgeTimer = null;
         let formulaHasCursorPlacement = false;
@@ -8377,53 +8700,8 @@
             document.body.classList.remove('overflow-hidden');
         }
 
-        function renderSampleSegments(el, segments) {
-            if (!el) return;
-            const frag = document.createDocumentFragment();
-            segments.forEach((seg) => {
-                const span = document.createElement('span');
-                span.className = seg.cls;
-                span.textContent = seg.text;
-                frag.appendChild(span);
-            });
-            el.replaceChildren(frag);
-        }
-
-        function updatePresetLiveExamples(kw, kw2) {
-            const base = (kw || 'business').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 8) || 'business';
-            const sec = (kw2 || 'pro').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 6) || 'pro';
-            const samples = {
-                'any-cv': [
-                    { text: base, cls: 'text-white/90' },
-                    { text: 'ra', cls: 'text-emerald-200' }
-                ],
-                'cv-cv': [
-                    { text: 'mira', cls: 'text-cyan-200' }
-                ],
-                'any-vc': [
-                    { text: base, cls: 'text-white/90' },
-                    { text: 'al', cls: 'text-rose-200' }
-                ],
-                'cv-any': [
-                    { text: 'ra', cls: 'text-violet-200' },
-                    { text: base, cls: 'text-white/90' }
-                ],
-                'cvc-v': [
-                    { text: 'bar', cls: 'text-white/90' },
-                    { text: '-', cls: 'text-amber-200' },
-                    { text: 'a', cls: 'text-white/90' }
-                ],
-                'natural-3': [
-                    { text: base, cls: 'text-white/90' },
-                    { text: 'a', cls: 'text-sky-200' },
-                    { text: sec, cls: 'text-white/90' }
-                ]
-            };
-            Object.entries(samples).forEach(([pid, segments]) => {
-                document.querySelectorAll('[data-preset-sample="' + pid + '"]').forEach((el) => {
-                    renderSampleSegments(el, segments);
-                });
-            });
+        function updatePresetLiveExamples() {
+            // Live examples intentionally removed for fast glance-readable style cards.
         }
 
         function syncActivePresetUi(explicitPresetId) {
@@ -8436,11 +8714,10 @@
                 const isActive = explicitPresetId ? pid === explicitPresetId : (Boolean(currentFormula) && currentFormula === targetFormula);
                 btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
                 btn.classList.toggle('ring-2', isActive);
-                btn.classList.toggle('ring-white', isActive);
-                btn.classList.toggle('ring-offset-1', isActive);
-                btn.classList.toggle('ring-offset-[#131354]', isActive);
-                btn.classList.toggle('shadow-lg', isActive);
-                btn.classList.toggle('brightness-110', isActive);
+                btn.classList.toggle('ring-[#2165b3]', isActive);
+                btn.classList.toggle('ring-offset-2', isActive);
+                btn.classList.toggle('ring-offset-white', isActive);
+                btn.classList.toggle('shadow-md', isActive);
             });
         }
 
@@ -8449,7 +8726,10 @@
             const input = document.getElementById('formulaInput');
             if (!formula || !input) return;
             setActiveGenerateSlot('pattern');
-            insertFormulaSnippetAtCursor(input, formula);
+            input.value = formula;
+            formulaHasCursorPlacement = true;
+            formulaSelectionStart = formula.length;
+            formulaSelectionEnd = formula.length;
             syncActivePresetUi(presetId);
 
             if (options && options.closeSheet) {
@@ -8467,7 +8747,7 @@
                 }, 1800);
             }
 
-            generateDomains();
+            generateDomains({ scrollToResults: true, resetStatusFilter: true, showSkeleton: true });
         }
 
         function addPlaceholder(token) {
