@@ -653,12 +653,47 @@ function localizeTrustPageHtml(rawHtml, pageFile, lang, config) {
   return html;
 }
 
+function renderConfiguredPageSlot(config, slotId, lang) {
+  if (!adsenseSlotsHelper) return '';
+  const adsense = normalizeAdSenseIds(config?.googleAdSense?.publisherId);
+  const configuredSlots = adsenseSlotsHelper.normalizeSlotsConfig(config?.googleAdSense?.slots);
+  const found = configuredSlots.find((s) => s.id === slotId);
+  if (!found) return '';
+  return adsenseSlotsHelper.buildSlotSsrHtml(found, adsense.clientId, {
+    lang,
+    renderSimulationPlaceholder: false
+  });
+}
+
+function injectHomeAdSlotsIntoHtml(html, lang, config) {
+  let out = html;
+  const homeSlot1Html = renderConfiguredPageSlot(config, 'home-slot1', lang);
+  const homeSlot2Html = renderConfiguredPageSlot(config, 'home-slot2', lang);
+  if (homeSlot1Html) {
+    out = out.replace(
+      /<!-- ADSENSE_HOME_SLOT_1[\s\S]*?<!-- \/ADSENSE_HOME_SLOT_1 -->/,
+      homeSlot1Html
+    );
+  }
+  if (homeSlot2Html) {
+    out = out.replace(
+      /<!-- ADSENSE_HOME_SLOT_2[\s\S]*?<!-- \/ADSENSE_HOME_SLOT_2 -->/,
+      homeSlot2Html
+    );
+  }
+  return out;
+}
+
 function localizeIndexHtml(rawHtml, lang, config) {
-  if (!lang || lang === 'en' || !INDEX_SEO_BY_LANG[lang]) {
-    return renderStaticHtml(rawHtml, config);
+  const effectiveLang = SUPPORTED_LANGUAGES.includes(lang) ? lang : 'en';
+  if (!effectiveLang || effectiveLang === 'en' || !INDEX_SEO_BY_LANG[effectiveLang]) {
+    let enHtml = renderStaticHtml(rawHtml, config);
+    enHtml = injectHomeAdSlotsIntoHtml(enHtml, effectiveLang || 'en', config);
+    enHtml = enHtml.replace('</head>', `    <script>window.__STATIC_PAGE_LANG__ = "en";</script>\n</head>`);
+    return enHtml;
   }
 
-  const seo = INDEX_SEO_BY_LANG[lang];
+  const seo = INDEX_SEO_BY_LANG[effectiveLang];
   const siteUrl = config.siteUrl;
   const canonicalUrl = `${siteUrl}/${lang}/`;
 
@@ -1210,6 +1245,7 @@ function localizeIndexHtml(rawHtml, lang, config) {
     (_m, page) => `href="${escapeHtmlAttr(trustI18n.localizeInternalHref(`${page}.html`, lang))}"`
   );
 
+  html = injectHomeAdSlotsIntoHtml(html, lang, config);
   html = updateSelectedLangOption(html, lang);
   html = html.replace('</head>', `    <script>window.__STATIC_PAGE_LANG__ = ${JSON.stringify(lang)};</script>\n</head>`);
   return html;
@@ -1803,23 +1839,75 @@ function buildLanguageTargetsMarkup(currentLang, config, resolveHrefForLang) {
   return { selectOptions, footerLinks };
 }
 
-function renderArticleSectionsHtml(sections, inlineAds = {}) {
+function buildFontControlsGroupHtml() {
+  return '<div class="inline-flex items-center rounded-lg border border-slate-200 dark:border-slate-700/80 bg-slate-50/90 dark:bg-slate-800/70 divide-x divide-slate-200 dark:divide-slate-700/80 shadow-sm shrink-0 select-none" role="group" aria-label="Adjust text size">'
+    + '<button type="button" data-font-act="dec" aria-label="Decrease text size" title="A−" class="min-h-[30px] min-w-[32px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-40 rounded-l-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">A&minus;</button>'
+    + '<button type="button" data-font-pct title="Reset to 100%" class="hidden min-h-[30px] px-1.5 inline-flex items-center justify-center text-[10px] font-mono font-semibold text-blue-600 dark:text-blue-400 hover:bg-white dark:hover:bg-slate-700 tabular-nums transition-colors">100%</button>'
+    + '<button type="button" data-font-act="inc" aria-label="Increase text size" title="A+" class="min-h-[30px] min-w-[32px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-40 rounded-r-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">A+</button>'
+    + '</div>';
+}
+
+function wrapFontPartHtml(partType, partIdx, bodyHtml, partKey = '', extraClass = '') {
+  if (!bodyHtml) return '';
+  const cls = extraClass ? `dn-font-part ${extraClass}` : 'dn-font-part';
+  const keyAttr = partKey ? ` data-part-key="${escapeHtmlAttr(partKey)}"` : '';
+  return `<div class="${escapeHtmlAttr(cls)}" data-font-part="${escapeHtmlAttr(partType)}" data-part-idx="${escapeHtmlAttr(String(partIdx))}"${keyAttr}>`
+    + `<div class="flex items-center justify-end mb-1.5">${buildFontControlsGroupHtml()}</div>`
+    + bodyHtml
+    + `</div>`;
+}
+
+function renderSplitMarkdownWithPartControls(rawTextList, nextPartIdx, trailingHtml = '', keyPrefix = 'sec') {
+  const out = [];
+  let proseBlocks = [];
+  let proseSeq = 0;
+  let tableSeq = 0;
+  const flushProse = (extraAfter = '') => {
+    const blocksHtml = proseBlocks.length > 0 ? articleMarkdown.renderBlocksToHtml(proseBlocks) : '';
+    proseBlocks = [];
+    const combined = `${blocksHtml}${extraAfter ? `\n${extraAfter}` : ''}`.trim();
+    if (combined) {
+      proseSeq += 1;
+      out.push(wrapFontPartHtml('prose', nextPartIdx(), `<div class="space-y-4">${combined}</div>`, `${keyPrefix}:prose:${proseSeq}`));
+    }
+  };
+
+  for (const rawText of rawTextList) {
+    const blocks = articleMarkdown.parseMarkdownBlocks(rawText);
+    for (const blk of blocks) {
+      if (blk.type === 'table') {
+        flushProse();
+        const tableHtml = articleMarkdown.renderBlocksToHtml([blk]);
+        if (tableHtml) {
+          tableSeq += 1;
+          out.push(wrapFontPartHtml('table', nextPartIdx(), tableHtml, `${keyPrefix}:mdtable:${tableSeq}`));
+        }
+      } else {
+        proseBlocks.push(blk);
+      }
+    }
+  }
+
+  flushProse(trailingHtml);
+  return out;
+}
+
+function renderArticleSectionsHtml(sections, inlineAds = {}, partCounter = { n: 0 }) {
   if (!Array.isArray(sections)) return '';
+  const nextPartIdx = () => ++partCounter.n;
   const slot2Idx = sections.length >= 2 ? 1 : 0;
   const slot3Idx = sections.length >= 4 ? 2 : (sections.length === 3 ? 1 : -1);
 
   return sections.map((sec, idx) => {
-    const anchor = escapeHtmlAttr(sec?.anchor || `section-${idx + 1}`);
+    const rawAnchor = String(sec?.anchor || `section-${idx + 1}`);
+    const anchor = escapeHtmlAttr(rawAnchor);
+    const secKeyPrefix = `sec:${rawAnchor}`;
     const parts = [`<section id="${anchor}" class="space-y-4 scroll-mt-20">`];
     if (sec?.heading) {
       parts.push(`<h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white pt-2">${escapeHtmlText(sec.heading)}</h2>`);
     }
-    if (Array.isArray(sec?.paragraphs)) {
-      for (const p of sec.paragraphs) {
-        const rendered = articleMarkdown.renderMarkdownBlocksHtml(p);
-        if (rendered) parts.push(rendered);
-      }
-    }
+
+    let bulletsHtml = '';
     if (Array.isArray(sec?.bullets) && sec.bullets.length > 0) {
       const items = sec.bullets.map((b) => {
         if (b && typeof b === 'object' && b.label) {
@@ -1827,8 +1915,15 @@ function renderArticleSectionsHtml(sections, inlineAds = {}) {
         }
         return `<li>${articleMarkdown.renderInlineMarkdownHtml(b)}</li>`;
       }).join('');
-      parts.push(`<ul class="article-bullets list-disc pl-5 space-y-2">${items}</ul>`);
+      bulletsHtml = `<ul class="article-bullets list-disc pl-5 space-y-2">${items}</ul>`;
     }
+
+    const paraList = Array.isArray(sec?.paragraphs) ? sec.paragraphs : [];
+    const renderedParagraphParts = renderSplitMarkdownWithPartControls(paraList, nextPartIdx, bulletsHtml, secKeyPrefix);
+    for (const chunk of renderedParagraphParts) {
+      parts.push(chunk);
+    }
+
     if (sec?.callout && sec.callout.body) {
       const tone = sec.callout.tone === 'warning'
         ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/70 text-amber-900 dark:text-amber-100'
@@ -1837,13 +1932,13 @@ function renderArticleSectionsHtml(sections, inlineAds = {}) {
         ? `<p class="font-semibold text-sm mb-1">${articleMarkdown.renderInlineMarkdownHtml(sec.callout.title)}</p>`
         : '';
       const bodyHtml = articleMarkdown.renderMarkdownBlocksHtml(sec.callout.body);
-      parts.push(`<aside class="article-callout p-4 rounded-xl border ${tone} text-sm leading-relaxed space-y-2">${titleHtml}${bodyHtml}</aside>`);
+      parts.push(wrapFontPartHtml('callout', nextPartIdx(), `<aside class="article-callout p-4 rounded-xl border ${tone} text-sm leading-relaxed space-y-2">${titleHtml}${bodyHtml}</aside>`, `${secKeyPrefix}:callout`));
     }
     if (sec?.codeBlock && sec.codeBlock.code) {
       const codeCaption = sec.codeBlock.caption
         ? `<p class="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">${escapeHtmlText(sec.codeBlock.caption)}</p>`
         : '';
-      parts.push(`<div>${codeCaption}<pre class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800"><code>${escapeHtmlText(sec.codeBlock.code)}</code></pre></div>`);
+      parts.push(wrapFontPartHtml('code', nextPartIdx(), `<div>${codeCaption}<pre class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800"><code>${escapeHtmlText(sec.codeBlock.code)}</code></pre></div>`, `${secKeyPrefix}:code`));
     }
     if (sec?.table && Array.isArray(sec.table.headers) && Array.isArray(sec.table.rows)) {
       const captionHtml = sec.table.caption
@@ -1858,26 +1953,26 @@ function renderArticleSectionsHtml(sections, inlineAds = {}) {
           .join('');
         return `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">${tds}</tr>`;
       }).join('');
-      parts.push(`<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800"><table class="article-table min-w-full border-collapse">${captionHtml}<thead><tr>${thHtml}</tr></thead><tbody>${trHtml}</tbody></table></div>`);
+      parts.push(wrapFontPartHtml('table', nextPartIdx(), `<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800"><table class="article-table min-w-full border-collapse">${captionHtml}<thead><tr>${thHtml}</tr></thead><tbody>${trHtml}</tbody></table></div>`, `${secKeyPrefix}:table`));
     }
     if (Array.isArray(sec?.subsections)) {
-      for (const sub of sec.subsections) {
+      sec.subsections.forEach((sub, subIdx) => {
         parts.push('<div class="space-y-2.5 pt-1">');
         if (sub?.heading) {
           parts.push(`<h3 class="text-base sm:text-lg font-semibold text-slate-900 dark:text-white">${escapeHtmlText(sub.heading)}</h3>`);
         }
-        if (Array.isArray(sub?.paragraphs)) {
-          for (const sp of sub.paragraphs) {
-            const spHtml = articleMarkdown.renderMarkdownBlocksHtml(sp);
-            if (spHtml) parts.push(spHtml);
-          }
-        }
+        let subBulletsHtml = '';
         if (Array.isArray(sub?.bullets) && sub.bullets.length > 0) {
           const sItems = sub.bullets.map((b) => `<li>${articleMarkdown.renderInlineMarkdownHtml(b)}</li>`).join('');
-          parts.push(`<ul class="article-bullets list-disc pl-5 space-y-1.5">${sItems}</ul>`);
+          subBulletsHtml = `<ul class="article-bullets list-disc pl-5 space-y-1.5">${sItems}</ul>`;
+        }
+        const subParas = Array.isArray(sub?.paragraphs) ? sub.paragraphs : [];
+        const renderedSubParts = renderSplitMarkdownWithPartControls(subParas, nextPartIdx, subBulletsHtml, `${secKeyPrefix}:sub:${subIdx + 1}`);
+        for (const subChunk of renderedSubParts) {
+          parts.push(subChunk);
         }
         parts.push('</div>');
-      }
+      });
     }
     parts.push('</section>');
     if (idx === slot2Idx && inlineAds.slot2) {
@@ -1954,11 +2049,28 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   }
   const eeatMetaBar = `<div class="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-xs text-slate-500 dark:text-slate-400">${metaPills.join('')}</div>`;
 
+  const partCounter = { n: 0 };
+  const nextPartIdx = () => ++partCounter.n;
+
+  const interactiveWidgetHtml = content.interactiveWidgetNotice
+    ? wrapFontPartHtml(
+      'callout',
+      nextPartIdx(),
+      `<aside class="article-callout p-4 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-200">${articleMarkdown.renderInlineMarkdownHtml(content.interactiveWidgetNotice)}</aside>`,
+      'interactive-widget'
+    )
+    : '';
+
   const keyTakeawaysHtml = Array.isArray(content.keyTakeaways) && content.keyTakeaways.length > 0
-    ? `<section aria-label="${escapeHtmlAttr(labels.keyTakeawaysTitle)}" class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2.5">
+    ? wrapFontPartHtml(
+      'takeaways',
+      nextPartIdx(),
+      `<section aria-label="${escapeHtmlAttr(labels.keyTakeawaysTitle)}" class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2.5">
         <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.keyTakeawaysTitle)}</h2>
         <ul class="article-takeaways list-disc pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">${content.keyTakeaways.map((k) => `<li>${articleMarkdown.renderInlineMarkdownHtml(k)}</li>`).join('')}</ul>
-      </section>`
+      </section>`,
+      'takeaways'
+    )
     : '';
 
   const tocEntries = (Array.isArray(content.sections) ? content.sections : [])
@@ -1968,23 +2080,38 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
       heading: s.heading
     }));
   const tocHtml = tocEntries.length >= 2
-    ? `<nav aria-label="${escapeHtmlAttr(labels.tocTitle)}" class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
-        <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">${escapeHtmlText(labels.tocTitle)}</p>
-        <ol class="list-decimal pl-5 space-y-1 text-sm text-blue-600 dark:text-blue-400">${tocEntries.map((t) => `<li><a href="#${escapeHtmlAttr(t.anchor)}" class="hover:underline">${escapeHtmlText(t.heading)}</a></li>`).join('')}</ol>
-      </nav>`
+    ? wrapFontPartHtml(
+      'toc',
+      nextPartIdx(),
+      `<nav aria-label="${escapeHtmlAttr(labels.tocTitle)}" class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+        <p class="article-toc-title text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">${escapeHtmlText(labels.tocTitle)}</p>
+        <ol class="article-toc-list list-decimal pl-5 space-y-1 text-sm text-blue-600 dark:text-blue-400">${tocEntries.map((t) => `<li><a href="#${escapeHtmlAttr(t.anchor)}" class="hover:underline">${escapeHtmlText(t.heading)}</a></li>`).join('')}</ol>
+      </nav>`,
+      'toc'
+    )
     : '';
 
+  const articleSectionsHtml = renderArticleSectionsHtml(content.sections, { slot2: '__SLOT2_PLACEHOLDER__', slot3: '__SLOT3_PLACEHOLDER__' }, partCounter);
+
   const methodologyNoteHtml = content.methodologyNote
-    ? `<section class="article-methodology p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
+    ? wrapFontPartHtml(
+      'methodology',
+      nextPartIdx(),
+      `<section class="article-methodology p-5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
         <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.methodologyTitle)}</h2>
         <div class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(content.methodologyNote)}</div>
-      </section>`
+      </section>`,
+      'methodology'
+    )
     : '';
 
   const faqsList = Array.isArray(content.faqs) ? content.faqs.filter((f) => f?.q && f?.a) : [];
   const faqsHtml = faqsList.length > 0
-    ? `<section class="article-faq space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
-        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.faqTitle)}</h2>
+    ? `<section class="dn-font-part article-faq space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800" data-font-part="faq" data-part-idx="${escapeHtmlAttr(String(nextPartIdx()))}" data-part-key="faq">
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.faqTitle)}</h2>
+          ${buildFontControlsGroupHtml()}
+        </div>
         <div class="space-y-3">${faqsList.map((f) => `<details class="group p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40"><summary class="font-semibold text-sm sm:text-base text-slate-900 dark:text-white cursor-pointer">${escapeHtmlText(f.q)}</summary><div class="article-faq-answer mt-2.5 space-y-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${articleMarkdown.renderMarkdownBlocksHtml(f.a)}</div></details>`).join('')}</div>
       </section>`
     : '';
@@ -1997,17 +2124,19 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     const relHref = getArticlePath(rel.section, resolveArticleSlug(rel, targetLang), targetLang);
     return `<a href="${escapeHtmlAttr(relHref)}" class="block p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 transition-colors bg-slate-50/70 dark:bg-slate-800/40">
       <p class="text-[11px] uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400 mb-1">${escapeHtmlText(getSectionLabel(hubsData, rel.section, targetLang))}</p>
-      <p class="font-semibold text-sm text-slate-900 dark:text-white mb-1">${escapeHtmlText(relMeta.h1 || relMeta.title)}</p>
-      <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">${escapeHtmlText(relMeta.excerpt || relMeta.metaDesc)}</p>
+      <p class="article-related-card-title font-semibold text-sm text-slate-900 dark:text-white mb-1">${escapeHtmlText(relMeta.h1 || relMeta.title)}</p>
+      <p class="article-related-card-desc text-xs text-slate-600 dark:text-slate-400 line-clamp-2">${escapeHtmlText(relMeta.excerpt || relMeta.metaDesc)}</p>
     </a>`;
   }).join('');
 
-  const relatedArticlesHtml = `<section class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-4">
-      ${relatedCards ? `<div class="space-y-3"><h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.relatedTitle)}</h2><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${relatedCards}</div></div>` : ''}
+  const relatedArticlesHtml = `<section class="dn-font-part pt-4 border-t border-slate-200 dark:border-slate-800 space-y-4" data-font-part="related" data-part-idx="${escapeHtmlAttr(String(nextPartIdx()))}" data-part-key="related">
+      ${relatedCards
+        ? `<div class="space-y-3"><div class="flex items-center justify-between gap-3"><h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.relatedTitle)}</h2>${buildFontControlsGroupHtml()}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${relatedCards}</div></div>`
+        : `<div class="flex items-center justify-end">${buildFontControlsGroupHtml()}</div>`}
       <div class="p-5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="space-y-1">
-          <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.ctaTitle)}</h3>
-          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">${escapeHtmlText(labels.ctaDesc)}</p>
+          <h3 class="article-related-cta-title text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.ctaTitle)}</h3>
+          <p class="article-related-cta-desc text-xs sm:text-sm text-slate-600 dark:text-slate-300">${escapeHtmlText(labels.ctaDesc)}</p>
         </div>
         <a href="${escapeHtmlAttr(homeHref)}" class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors">${escapeHtmlText(labels.ctaButton)}</a>
       </div>
@@ -2021,11 +2150,11 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   for (const s of configuredSlots) {
     slotById[s.id] = s;
   }
-  const shouldRenderSimulationSsr = Boolean(config.googleAdSense.hasCustomSlots);
   const renderConfiguredSlot = (slotId) => {
     if (!adsenseSlotsHelper || !slotById[slotId]) return '';
     return adsenseSlotsHelper.buildSlotSsrHtml(slotById[slotId], adsense.clientId, {
-      renderSimulationPlaceholder: shouldRenderSimulationSsr
+      lang: targetLang,
+      renderSimulationPlaceholder: false
     });
   };
   const adSlot1 = renderConfiguredSlot('slot1');
@@ -2114,13 +2243,13 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     ARTICLE_H1: escapeHtmlText(localeMeta.h1 || localeMeta.title),
     ARTICLE_EXCERPT: escapeHtmlText(localeMeta.excerpt || localeMeta.metaDesc),
     EEAT_META_BAR: eeatMetaBar,
-    INTERACTIVE_WIDGET_HTML: content.interactiveWidgetNotice
-      ? `<aside class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-200">${articleMarkdown.renderInlineMarkdownHtml(content.interactiveWidgetNotice)}</aside>`
-      : '',
+    INTERACTIVE_WIDGET_HTML: interactiveWidgetHtml,
     KEY_TAKEAWAYS_HTML: keyTakeawaysHtml,
     ADSENSE_SLOT_1: adSlot1,
     TOC_HTML: tocHtml,
-    ARTICLE_SECTIONS_HTML: renderArticleSectionsHtml(content.sections, { slot2: adSlot2, slot3: adSlot3 }),
+    ARTICLE_SECTIONS_HTML: articleSectionsHtml
+      .replace('__SLOT2_PLACEHOLDER__', adSlot2)
+      .replace('__SLOT3_PLACEHOLDER__', adSlot3),
     ADSENSE_SLOT_4: adSlot4,
     METHODOLOGY_NOTE_HTML: methodologyNoteHtml,
     FAQS_HTML: faqsHtml,
@@ -2402,13 +2531,8 @@ export function renderGuidePage(rootDir, lang = 'en', config = loadSiteConfig(ro
     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">${escapeHtmlText(pack[`good${i}Reason`])}</p>
   </article>`).join('\n');
 
-  const adsense = normalizeAdSenseIds(config.googleAdSense.publisherId);
-  const adSlot1 = adsense.clientId
-    ? `<div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="guide-mid-content" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[728px] mx-auto min-h-[100px] sm:min-h-[90px] bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl"></div>`
-    : '<!-- ADSENSE MANUAL SLOT 1: rendered when googleAdSense.publisherId is configured -->';
-  const adSlot2 = adsense.clientId
-    ? `<div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="guide-post-content" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="w-full max-w-[336px] sm:max-w-[728px] mx-auto min-h-[280px] sm:min-h-[250px] bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl"></div>`
-    : '<!-- ADSENSE MANUAL SLOT 2: rendered when googleAdSense.publisherId is configured -->';
+  const adSlot1 = renderConfiguredPageSlot(config, 'guide-slot1', targetLang);
+  const adSlot2 = renderConfiguredPageSlot(config, 'guide-slot2', targetLang);
 
   const schemaGraph = [
     {
@@ -2534,10 +2658,7 @@ export function renderFaqPage(rootDir, lang = 'en', config = loadSiteConfig(root
     </div>
   </details>`).join('\n');
 
-  const adsense = normalizeAdSenseIds(config.googleAdSense.publisherId);
-  const adSlot1 = adsense.clientId
-    ? `<div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="faq-post-list" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[728px] mx-auto min-h-[100px] sm:min-h-[90px] bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl"></div>`
-    : '<!-- ADSENSE MANUAL SLOT 1: rendered when googleAdSense.publisherId is configured -->';
+  const adSlot1 = renderConfiguredPageSlot(config, 'faq-slot1', targetLang);
 
   const schemaGraph = [
     {

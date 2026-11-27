@@ -863,8 +863,9 @@
             </div>
         </section>
 
-        <!-- ADSENSE MANUAL SLOT 1: Desktop 970x90 / 728x90 Leaderboard | Mobile 320x100 Large Banner -->
-        <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="index-below-workspace" data-ad-recommended-size="970x90 / 728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[970px] mx-auto min-h-[100px] sm:min-h-[90px] bg-white dark:bg-slate-900/60 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl flex items-center justify-center"></div>
+        <!-- ADSENSE_HOME_SLOT_1: Desktop 970x90 / 728x90 Leaderboard | Mobile 320x100 Large Banner -->
+        <div role="region" aria-label="AdSense Placement Front Page Slot 1" data-ad-slot-id="home-slot1" data-ad-slot-position="index-below-workspace" data-ad-mode="mount" data-ad-recommended-size="970x90 / 728x90 (Desktop) | 320x100 (Mobile)" class="dn-ad-mount hidden"></div>
+        <!-- /ADSENSE_HOME_SLOT_1 -->
 
         <!-- Slim Collapsible Share & Export Link Section -->
         <details id="shareExportSection" class="group bg-[#FFFFFF] text-[#292929] rounded-xl shadow-sm border border-[#C9D8D8]">
@@ -959,8 +960,9 @@
             </div>
         </section>
 
-        <!-- ADSENSE MANUAL SLOT 2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->
-        <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="index-between-guide-and-faq" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="w-full max-w-[336px] md:max-w-[728px] mx-auto min-h-[280px] md:min-h-[250px] bg-white dark:bg-slate-900/60 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl flex items-center justify-center"></div>
+        <!-- ADSENSE_HOME_SLOT_2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->
+        <div role="region" aria-label="AdSense Placement Front Page Slot 2" data-ad-slot-id="home-slot2" data-ad-slot-position="index-between-guide-and-faq" data-ad-mode="mount" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="dn-ad-mount hidden"></div>
+        <!-- /ADSENSE_HOME_SLOT_2 -->
     </main>
 
     <!-- Multi-Column Clean Footer -->
@@ -4159,6 +4161,10 @@
 
             // Update HTML lang & Meta Tags for Multilingual SEO
             document.getElementById('htmlRoot').setAttribute('lang', t.htmlLang);
+            window.__STATIC_PAGE_LANG__ = lang;
+            if (typeof window.__REFRESH_ADSENSE_SLOTS__ === 'function') {
+                window.__REFRESH_ADSENSE_SLOTS__();
+            }
             updateDynamicSEO();
 
             // Update UI Section Headings, Landmarks, Placeholders, Labels & Buttons
@@ -8884,5 +8890,7 @@
             });
         });
     </script>
+    <script src="/assets/adsense-slots.js" defer></script>
+    <script src="/assets/article-reader.js" defer></script>
 </body>
 </html>

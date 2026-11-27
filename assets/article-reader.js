@@ -1,31 +1,16 @@
 /**
- * Visitor-facing Article Reading Typography (+/- per content part) & Safe 5-Slot AdSense Hydrator.
+ * Visitor-facing Article Reading Typography (Per-Part A− / A+ Controls) & Safe AdSense Hydrator.
  */
 (function () {
   'use strict';
 
-  var FONT_PREFS_KEY = 'dn_article_font_prefs_v1';
+  var PART_PREFS_KEY = 'dn_article_part_font_prefs_v1';
   var STUDIO_CONFIG_KEY = 'dn_adsense_studio_config_v1';
   var ANCHOR_DISMISSED_KEY = 'dn_adsense_anchor_dismissed_v1';
 
-  var PART_KEYS = ['prose', 'bullets', 'callout', 'table', 'methodology', 'faq'];
-  var PART_VAR_MAP = {
-    prose: '--art-scale-prose',
-    bullets: '--art-scale-bullets',
-    callout: '--art-scale-callout',
-    table: '--art-scale-table',
-    methodology: '--art-scale-methodology',
-    faq: '--art-scale-faq'
-  };
-
-  var DEFAULT_SCALES = {
-    prose: 1,
-    bullets: 1,
-    callout: 1,
-    table: 1,
-    methodology: 1,
-    faq: 1
-  };
+  var STUDIO_SCALE_KEYS = [
+    'takeaways', 'toc', 'prose', 'bullets', 'callout', 'table', 'code', 'methodology', 'faq', 'related'
+  ];
 
   function clampScale(val) {
     var num = Number(val);
@@ -33,110 +18,202 @@
     return Math.round(Math.max(0.82, Math.min(1.36, num)) * 100) / 100;
   }
 
-  function loadFontScales() {
-    var scales = Object.assign({}, DEFAULT_SCALES);
-    try {
-      var raw = localStorage.getItem(FONT_PREFS_KEY);
-      if (raw) {
-        var parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === 'object') {
-          for (var i = 0; i < PART_KEYS.length; i++) {
-            var k = PART_KEYS[i];
-            if (parsed[k] !== undefined) scales[k] = clampScale(parsed[k]);
-          }
-        }
-      }
-    } catch (_e) {}
-    return scales;
-  }
-
-  function saveFontScales(scales) {
-    try {
-      localStorage.setItem(FONT_PREFS_KEY, JSON.stringify(scales));
-    } catch (_e) {}
-  }
-
-  function applyFontScalesToRoot(articleEl, scales) {
-    if (!articleEl) return;
-    for (var i = 0; i < PART_KEYS.length; i++) {
-      var k = PART_KEYS[i];
-      articleEl.style.setProperty(PART_VAR_MAP[k], String(scales[k]));
-    }
-  }
-
   function formatPercent(scale) {
     return Math.round(clampScale(scale) * 100) + '%';
   }
 
+  function getArticleStorageScopeKey() {
+    var id = '';
+    var lang = '';
+    try {
+      if (document.body) {
+        id = document.body.getAttribute('data-article-id') || '';
+        lang = document.body.getAttribute('data-page-lang') || '';
+      }
+    } catch (_e) {}
+    if (id) {
+      return lang ? (id + ':' + lang) : id;
+    }
+    return window.location.pathname || 'default';
+  }
+
+  function getPartSpotKey(partEl) {
+    if (!partEl) return '';
+    return partEl.getAttribute('data-part-key') || partEl.getAttribute('data-part-idx') || '';
+  }
+
+  function loadAllPartPrefs() {
+    try {
+      var raw = localStorage.getItem(PART_PREFS_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') return parsed;
+      }
+    } catch (_e) {}
+    return {};
+  }
+
+  function loadPartScalesForArticle(scopeKey) {
+    var all = loadAllPartPrefs();
+    var entry = all[scopeKey];
+    if (!entry || typeof entry !== 'object') {
+      // Fallback check if earlier version stored bare articleId without :lang suffix
+      var bareId = scopeKey.indexOf(':') !== -1 ? scopeKey.split(':')[0] : '';
+      if (bareId && all[bareId] && typeof all[bareId] === 'object') {
+        entry = all[bareId];
+      }
+    }
+    if (!entry || typeof entry !== 'object') return {};
+    var clean = {};
+    Object.keys(entry).forEach(function (k) {
+      var val = clampScale(entry[k]);
+      if (Math.abs(val - 1) > 0.005) {
+        clean[k] = val;
+      }
+    });
+    return clean;
+  }
+
+  function savePartScalesForArticle(scopeKey, scalesByKey) {
+    try {
+      var all = loadAllPartPrefs();
+      var hasCustom = Object.keys(scalesByKey).length > 0;
+      if (hasCustom) {
+        all[scopeKey] = scalesByKey;
+      } else {
+        delete all[scopeKey];
+      }
+      localStorage.setItem(PART_PREFS_KEY, JSON.stringify(all));
+    } catch (_e) {}
+  }
+
+  function getStudioDefaultScales() {
+    var defaults = {};
+    try {
+      var raw = localStorage.getItem(STUDIO_CONFIG_KEY);
+      if (!raw) return defaults;
+      var parsed = JSON.parse(raw);
+      if (!parsed || !parsed.applyPreviewToSite || !parsed.fontScales) return defaults;
+      for (var i = 0; i < STUDIO_SCALE_KEYS.length; i++) {
+        var key = STUDIO_SCALE_KEYS[i];
+        if (parsed.fontScales[key] !== undefined) {
+          defaults[key] = clampScale(parsed.fontScales[key]);
+        }
+      }
+    } catch (_e) {}
+    return defaults;
+  }
+
+  function applyStudioDefaultScales(articleEl, studioDefaults) {
+    if (!articleEl || !studioDefaults) return;
+    Object.keys(studioDefaults).forEach(function (key) {
+      articleEl.style.setProperty('--art-scale-' + key, String(studioDefaults[key]));
+    });
+  }
+
+  function syncPartUi(partEl, customScale, studioBaseScale) {
+    if (!partEl) return;
+    var hasCustom = typeof customScale === 'number' && Math.abs(customScale - 1) > 0.005;
+    var effectiveScale = hasCustom ? clampScale(customScale) : clampScale(studioBaseScale || 1);
+
+    if (hasCustom) {
+      partEl.style.setProperty('--part-scale', String(effectiveScale));
+    } else {
+      partEl.style.removeProperty('--part-scale');
+    }
+
+    var decBtn = partEl.querySelector('[data-font-act="dec"]');
+    var incBtn = partEl.querySelector('[data-font-act="inc"]');
+    var pctBtn = partEl.querySelector('[data-font-pct]');
+    if (decBtn) decBtn.disabled = effectiveScale <= 0.83;
+    if (incBtn) incBtn.disabled = effectiveScale >= 1.35;
+    if (pctBtn) {
+      pctBtn.textContent = formatPercent(effectiveScale);
+      pctBtn.classList.toggle('hidden', !hasCustom);
+    }
+  }
+
   function initFontSizeControls() {
     var articleEl = document.getElementById('articleRoot');
-    var toolbar = document.getElementById('articleFontToolbar');
-    if (!articleEl || !toolbar) return;
+    if (!articleEl) return;
 
-    var scopeSelect = document.getElementById('articleFontScopeSelect');
-    var decBtn = document.getElementById('articleFontDecreaseBtn');
-    var incBtn = document.getElementById('articleFontIncreaseBtn');
-    var resetBtn = document.getElementById('articleFontResetBtn');
-    var valueLabel = document.getElementById('articleFontValueLabel');
+    var studioDefaults = getStudioDefaultScales();
+    applyStudioDefaultScales(articleEl, studioDefaults);
 
-    var scales = loadFontScales();
-    applyFontScalesToRoot(articleEl, scales);
+    var scopeKey = getArticleStorageScopeKey();
+    var savedByKey = loadPartScalesForArticle(scopeKey);
+    var partEls = articleEl.querySelectorAll('.dn-font-part');
+    if (!partEls || partEls.length === 0) return;
 
-    function currentDisplayScale() {
-      var scope = scopeSelect ? scopeSelect.value : 'all';
-      if (scope === 'all') {
-        return scales.prose;
-      }
-      return scales[scope] || 1;
-    }
+    function syncAllPartsFromState() {
+      var list = articleEl.querySelectorAll('.dn-font-part');
+      for (var i = 0; i < list.length; i++) {
+        var partEl = list[i];
+        var spotKey = getPartSpotKey(partEl);
+        var legacyIdx = partEl.getAttribute('data-part-idx') || '';
+        var partType = partEl.getAttribute('data-font-part') || 'prose';
+        var baseScale = studioDefaults[partType] !== undefined ? studioDefaults[partType] : 1;
 
-    function isAnyCustomized() {
-      for (var i = 0; i < PART_KEYS.length; i++) {
-        if (Math.abs((scales[PART_KEYS[i]] || 1) - 1) > 0.01) return true;
-      }
-      return false;
-    }
-
-    function syncUi() {
-      var val = currentDisplayScale();
-      if (valueLabel) {
-        valueLabel.textContent = formatPercent(val);
-      }
-      if (decBtn) decBtn.disabled = val <= 0.83;
-      if (incBtn) incBtn.disabled = val >= 1.35;
-      if (resetBtn) {
-        resetBtn.classList.toggle('hidden', !isAnyCustomized());
-      }
-    }
-
-    function adjustScale(delta) {
-      var scope = scopeSelect ? scopeSelect.value : 'all';
-      if (scope === 'all') {
-        var nextAll = clampScale((scales.prose || 1) + delta);
-        for (var i = 0; i < PART_KEYS.length; i++) {
-          scales[PART_KEYS[i]] = nextAll;
+        var customVal;
+        if (spotKey && savedByKey[spotKey] !== undefined) {
+          customVal = clampScale(savedByKey[spotKey]);
+        } else if (legacyIdx && savedByKey[legacyIdx] !== undefined) {
+          customVal = clampScale(savedByKey[legacyIdx]);
+          if (spotKey && spotKey !== legacyIdx) {
+            savedByKey[spotKey] = customVal;
+            delete savedByKey[legacyIdx];
+            savePartScalesForArticle(scopeKey, savedByKey);
+          }
         }
-      } else if (PART_VAR_MAP[scope]) {
-        scales[scope] = clampScale((scales[scope] || 1) + delta);
+        syncPartUi(partEl, customVal, baseScale);
       }
-      applyFontScalesToRoot(articleEl, scales);
-      saveFontScales(scales);
-      syncUi();
     }
 
-    if (decBtn) decBtn.addEventListener('click', function () { adjustScale(-0.06); });
-    if (incBtn) incBtn.addEventListener('click', function () { adjustScale(0.06); });
-    if (scopeSelect) scopeSelect.addEventListener('change', syncUi);
-    if (resetBtn) {
-      resetBtn.addEventListener('click', function () {
-        scales = Object.assign({}, DEFAULT_SCALES);
-        applyFontScalesToRoot(articleEl, scales);
-        saveFontScales(scales);
-        syncUi();
+    syncAllPartsFromState();
+
+    articleEl.addEventListener('click', function (ev) {
+      var btn = ev.target && ev.target.closest ? ev.target.closest('[data-font-act], [data-font-pct]') : null;
+      if (!btn || !articleEl.contains(btn)) return;
+
+      var partEl = btn.closest('.dn-font-part');
+      if (!partEl) return;
+
+      var spotKey = getPartSpotKey(partEl);
+      var partType = partEl.getAttribute('data-font-part') || 'prose';
+      var baseScale = studioDefaults[partType] !== undefined ? studioDefaults[partType] : 1;
+      var currentScale = (spotKey && savedByKey[spotKey] !== undefined)
+        ? clampScale(savedByKey[spotKey])
+        : baseScale;
+      var nextScale = 1;
+
+      if (btn.hasAttribute('data-font-pct')) {
+        nextScale = 1;
+      } else {
+        var act = btn.getAttribute('data-font-act');
+        var delta = act === 'inc' ? 0.06 : (act === 'dec' ? -0.06 : 0);
+        if (!delta) return;
+        nextScale = clampScale(currentScale + delta);
+      }
+
+      var isDefault = Math.abs(nextScale - 1) <= 0.005;
+      if (isDefault) {
+        if (spotKey) delete savedByKey[spotKey];
+      } else if (spotKey) {
+        savedByKey[spotKey] = nextScale;
+      }
+
+      syncPartUi(partEl, isDefault ? undefined : nextScale, baseScale);
+      savePartScalesForArticle(scopeKey, savedByKey);
+    });
+
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      window.addEventListener('storage', function (ev) {
+        if (ev && ev.key === PART_PREFS_KEY) {
+          savedByKey = loadPartScalesForArticle(scopeKey);
+          syncAllPartsFromState();
+        }
       });
     }
-
-    syncUi();
   }
 
   function ensureAdSenseScriptLoaded(clientId) {
@@ -148,51 +225,6 @@
     script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(clientId);
     script.crossOrigin = 'anonymous';
     document.head.appendChild(script);
-  }
-
-  function createSimulationCardDom(slot, desktopSpec, mobileSpec, isAnchor) {
-    var box = document.createElement('div');
-    if (isAnchor) {
-      box.className = 'w-full max-w-[' + desktopSpec.width + 'px] rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3 py-2 flex items-center justify-center text-center';
-      box.style.minHeight = mobileSpec.height + 'px';
-      var txt = document.createElement('span');
-      txt.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400';
-      txt.textContent = slot.name + ' · Desktop ' + desktopSpec.id + ' / Mobile ' + mobileSpec.id;
-      box.appendChild(txt);
-      return box;
-    }
-
-    box.className = 'w-full rounded-xl border border-dashed border-blue-200 dark:border-blue-900/60 bg-slate-50/80 dark:bg-slate-900/50 p-4 flex flex-col items-center justify-center text-center';
-    var isMobileViewport = window.innerWidth < 640;
-    var activeSpec = isMobileViewport ? mobileSpec : desktopSpec;
-    box.style.minHeight = activeSpec.height + 'px';
-
-    var title = document.createElement('p');
-    title.className = 'text-xs font-semibold text-blue-700 dark:text-blue-400';
-    title.textContent = slot.name;
-
-    var meta = document.createElement('p');
-    meta.className = 'text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-1 tabular-nums';
-    meta.textContent = slot.unitType + ' · Desktop ' + desktopSpec.id + ' · Mobile ' + mobileSpec.id;
-
-    box.appendChild(title);
-    box.appendChild(meta);
-
-    if (activeSpec.multiplexCols && activeSpec.multiplexRows) {
-      var grid = document.createElement('div');
-      grid.className = 'mt-3 w-full grid gap-2';
-      grid.style.gridTemplateColumns = 'repeat(' + activeSpec.multiplexCols + ', minmax(0, 1fr))';
-      var count = activeSpec.multiplexCols * activeSpec.multiplexRows;
-      for (var c = 0; c < count; c++) {
-        var cell = document.createElement('div');
-        cell.className = 'h-14 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-center text-[10px] font-mono text-slate-400';
-        cell.textContent = 'Unit #' + (c + 1);
-        grid.appendChild(cell);
-      }
-      box.appendChild(grid);
-    }
-
-    return box;
   }
 
   function createSafeInsDom(insInfo) {
@@ -230,6 +262,30 @@
     }
   }
 
+  function detectActivePageLang(helper) {
+    var raw = '';
+    try {
+      if (typeof window.__STATIC_PAGE_LANG__ === 'string' && window.__STATIC_PAGE_LANG__) {
+        raw = window.__STATIC_PAGE_LANG__;
+      } else if (document.body && document.body.getAttribute('data-page-lang')) {
+        raw = document.body.getAttribute('data-page-lang');
+      } else if (document.documentElement && document.documentElement.lang) {
+        raw = document.documentElement.lang;
+      }
+    } catch (_e) {}
+    return helper && helper.normalizeLangCode ? (helper.normalizeLangCode(raw) || 'en') : 'en';
+  }
+
+  function hideMount(mount) {
+    if (!mount) return;
+    mount.className = 'dn-ad-mount hidden';
+    mount.removeAttribute('data-ad-mode');
+    mount.style.marginTop = '';
+    mount.style.marginBottom = '';
+    mount.style.maxWidth = '';
+    mount.textContent = '';
+  }
+
   function initAdSenseHydration() {
     var anchorBar = document.getElementById('articleAnchorAdBar');
     wireAnchorCloseButton(anchorBar);
@@ -237,7 +293,10 @@
     var helper = window.__ADSENSE_SLOTS__;
     if (!helper) return;
 
-    // 1. Apply any locally saved Studio configuration if present and marked applyToArticleView
+    var pageLang = detectActivePageLang(helper);
+
+    // 1. Apply locally saved Studio configuration ONLY for slots that have valid live AdSense credentials.
+    // Unfilled slots never render wireframe/dashed indicators on public visitor pages.
     var studioConfig = null;
     try {
       var raw = localStorage.getItem(STUDIO_CONFIG_KEY);
@@ -250,27 +309,31 @@
       var normalized = helper.normalizeSlotsConfig(studioConfig.slots);
       var globalClient = helper.normalizeClientId(studioConfig.globalPublisherId || '');
       for (var i = 0; i < normalized.length; i++) {
-        var slot = normalized[i];
+        var baseSlot = normalized[i];
+        var slot = helper.resolveSlotForLang ? helper.resolveSlotForLang(baseSlot, pageLang) : baseSlot;
         var mount = document.querySelector('[data-ad-slot-id="' + slot.id + '"]');
         if (!mount) continue;
 
-        if (!slot.enabled) {
-          mount.classList.add('hidden');
-          mount.textContent = '';
+        var insInfo = helper.buildSafeInsAttributes(slot, globalClient);
+        var isLive = slot.enabled !== false && slot.mode === 'live' && insInfo.valid;
+
+        if (!isLive) {
+          hideMount(mount);
           continue;
         }
 
         var desktopSpec = helper.resolveSizeSpec(slot.id, slot.desktopSize, 'desktop');
-        var mobileSpec = helper.resolveSizeSpec(slot.id, slot.mobileSize, 'mobile');
-        var insInfo = helper.buildSafeInsAttributes(slot, globalClient);
-        var isLive = slot.mode === 'live' && insInfo.valid;
 
         if (slot.id === 'slot5') {
           var dismissed = false;
           try { dismissed = sessionStorage.getItem(ANCHOR_DISMISSED_KEY) === '1'; } catch (_e) {}
-          if (dismissed) continue;
+          if (dismissed) {
+            hideMount(mount);
+            continue;
+          }
 
           mount.className = 'fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur shadow-lg';
+          mount.setAttribute('data-ad-mode', 'live');
           mount.textContent = '';
 
           var inner = document.createElement('div');
@@ -278,12 +341,8 @@
 
           var adHolder = document.createElement('div');
           adHolder.className = 'flex-1 flex justify-center min-w-0';
-          if (isLive) {
-            ensureAdSenseScriptLoaded(insInfo.clientId);
-            adHolder.appendChild(createSafeInsDom(insInfo));
-          } else {
-            adHolder.appendChild(createSimulationCardDom(slot, desktopSpec, mobileSpec, true));
-          }
+          ensureAdSenseScriptLoaded(insInfo.clientId);
+          adHolder.appendChild(createSafeInsDom(insInfo));
 
           var closeBtn = document.createElement('button');
           closeBtn.id = 'adSlot5CloseBtn';
@@ -297,29 +356,24 @@
           inner.appendChild(closeBtn);
           mount.appendChild(inner);
           wireAnchorCloseButton(mount);
-          if (isLive) {
-            try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (_e) {}
-          }
+          try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (_e) {}
           continue;
         }
 
         mount.className = 'w-full mx-auto flex flex-col items-center justify-center';
+        mount.setAttribute('data-ad-mode', 'live');
         mount.style.marginTop = helper.clampMargin(slot.marginTop, 24) + 'px';
         mount.style.marginBottom = helper.clampMargin(slot.marginBottom, 24) + 'px';
         mount.style.maxWidth = desktopSpec.width + 'px';
         mount.textContent = '';
 
-        if (isLive) {
-          ensureAdSenseScriptLoaded(insInfo.clientId);
-          var adLabel = document.createElement('span');
-          adLabel.className = 'text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5 select-none';
-          adLabel.textContent = 'Iklan';
-          mount.appendChild(adLabel);
-          mount.appendChild(createSafeInsDom(insInfo));
-          try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (_e) {}
-        } else {
-          mount.appendChild(createSimulationCardDom(slot, desktopSpec, mobileSpec, false));
-        }
+        ensureAdSenseScriptLoaded(insInfo.clientId);
+        var adLabel = document.createElement('span');
+        adLabel.className = 'text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5 select-none';
+        adLabel.textContent = 'Iklan';
+        mount.appendChild(adLabel);
+        mount.appendChild(createSafeInsDom(insInfo));
+        try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (_e) {}
       }
       return;
     }
@@ -334,6 +388,8 @@
       }
     }
   }
+
+  window.__REFRESH_ADSENSE_SLOTS__ = initAdSenseHydration;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {

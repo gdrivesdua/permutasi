@@ -1089,9 +1089,9 @@
                 : '';
             let adAfterHtml = '';
             if (idx === 1 && (pageType === 'privacy' || pageType === 'terms' || pageType === 'disclaimer')) {
-                adAfterHtml = `\n            <!-- ADSENSE MANUAL SLOT 1: Desktop 728x90 Leaderboard | Mobile 320x100 Large Banner -->\n            <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="${pageType}-after-s2" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[728px] mx-auto h-[100px] sm:h-[90px] bg-white border-2 border-dashed border-slate-300 rounded-xl"></div>`;
+                adAfterHtml = `\n            <!-- ADSENSE MANUAL SLOT 1: Desktop 728x90 Leaderboard | Mobile 320x100 Large Banner -->\n            <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="${pageType}-after-s2" data-ad-mode="mount" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="dn-ad-mount hidden"></div>`;
             } else if (idx === 4 && (pageType === 'privacy' || pageType === 'terms')) {
-                adAfterHtml = `\n            <!-- ADSENSE MANUAL SLOT 2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->\n            <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="${pageType}-after-s5" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="w-full max-w-[336px] sm:max-w-[728px] mx-auto h-[280px] sm:h-[250px] bg-white border-2 border-dashed border-slate-300 rounded-xl"></div>`;
+                adAfterHtml = `\n            <!-- ADSENSE MANUAL SLOT 2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->\n            <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="${pageType}-after-s5" data-ad-mode="mount" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="dn-ad-mount hidden"></div>`;
             }
             return `<section class="${cls}">
                 <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${sec.h}</h2>
@@ -1134,7 +1134,7 @@
                         <p>${rewriteLinksInHtml(d.s1p2, targetLang)}</p>
                     </section>
                     <!-- ADSENSE MANUAL SLOT 1: Desktop 728x90 Leaderboard | Mobile 320x100 Large Banner -->
-                    <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="about-mid-article" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[728px] mx-auto h-[100px] sm:h-[90px] bg-white border-2 border-dashed border-slate-300 rounded-xl"></div>
+                    <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="about-mid-article" data-ad-mode="mount" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="dn-ad-mount hidden"></div>
                     <section class="space-y-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${d.s2h}</h2>
                         <ul class="list-disc pl-5 space-y-2">${d.s2l.map((li) => `<li>${rewriteLinksInHtml(li, targetLang)}</li>`).join('')}</ul>
@@ -1150,14 +1150,14 @@
                     </section>
                 </article>
                 <!-- ADSENSE MANUAL SLOT 2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->
-                <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="about-post-article" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="w-full max-w-[336px] sm:max-w-[728px] mx-auto h-[280px] sm:h-[250px] bg-white border-2 border-dashed border-slate-300 rounded-xl"></div>`;
+                <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="about-post-article" data-ad-mode="mount" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="dn-ad-mount hidden"></div>`;
         }
 
         if (pageType === 'privacy' || pageType === 'terms' || pageType === 'disclaimer') {
             const pack = getPagePack(pageType, targetLang);
             if (!pack) return null;
             const postArticleAdHtml = pageType === 'disclaimer'
-                ? `\n                <!-- ADSENSE MANUAL SLOT 2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->\n                <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="disclaimer-post-article" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="w-full max-w-[336px] sm:max-w-[728px] mx-auto h-[280px] sm:h-[250px] bg-white border-2 border-dashed border-slate-300 rounded-xl"></div>`
+                ? `\n                <!-- ADSENSE MANUAL SLOT 2: Desktop 728x250 / 336x280 | Mobile 336x280 Rectangle -->\n                <div role="region" aria-label="AdSense Placement Slot 2" data-ad-slot-position="disclaimer-post-article" data-ad-mode="mount" data-ad-recommended-size="728x250 / 336x280 (Desktop) | 336x280 (Mobile)" class="dn-ad-mount hidden"></div>`
                 : '';
             return `
                 <nav aria-label="Breadcrumb" class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
@@ -1240,7 +1240,7 @@
                     </section>
                 </div>
                 <!-- ADSENSE MANUAL SLOT 1 (Max 1 on Contact Page, safely spaced below form): Desktop 728x90 | Mobile 320x100 -->
-                <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="contact-below-grid" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="w-full max-w-[728px] mx-auto h-[100px] sm:h-[90px] bg-white border-2 border-dashed border-slate-300 rounded-xl"></div>`;
+                <div role="region" aria-label="AdSense Placement Slot 1" data-ad-slot-position="contact-below-grid" data-ad-mode="mount" data-ad-recommended-size="728x90 (Desktop) | 320x100 (Mobile)" class="dn-ad-mount hidden"></div>`;
         }
 
         return null;
