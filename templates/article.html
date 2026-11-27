@@ -57,6 +57,7 @@
     </script>
     <style>
         #articleRoot {
+            --article-font-scale: 1;
             --art-scale-takeaways: 1;
             --art-scale-toc: 1;
             --art-scale-prose: 1;
@@ -68,8 +69,62 @@
             --art-scale-faq: 1;
             --art-scale-related: 1;
         }
+        #articleRoot .dn-font-controls-bar {
+            position: relative;
+            z-index: 20;
+        }
+        #articleRoot .dn-font-controls {
+            position: relative;
+            z-index: 20;
+            display: inline-flex;
+            align-items: center;
+        }
+        #articleRoot .dn-font-btn {
+            position: relative;
+            z-index: 20;
+            min-width: 36px;
+            min-height: 36px;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #articleRoot .dn-font-btn:disabled,
+        #articleRoot .dn-font-btn[aria-disabled="true"] {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        #articleRoot .article-prose p,
+        #articleRoot .article-prose blockquote {
+            font-size: calc(1rem * var(--article-font-scale, 1));
+            line-height: 1.75;
+        }
+        #articleRoot .article-prose ul,
+        #articleRoot .article-prose ol,
+        #articleRoot .article-prose li,
+        #articleRoot .article-prose .article-bullets {
+            font-size: calc(0.95rem * var(--article-font-scale, 1));
+            line-height: 1.7;
+        }
+        #articleRoot .article-prose h2 {
+            font-size: calc(1.2rem * var(--article-font-scale, 1));
+            line-height: 1.35;
+        }
+        #articleRoot .article-prose h3 {
+            font-size: calc(1.125rem * var(--article-font-scale, 1));
+            line-height: 1.4;
+        }
+        #articleRoot .article-prose .article-table th {
+            font-size: calc(0.75rem * var(--article-font-scale, 1));
+        }
+        #articleRoot .article-prose .article-table td {
+            font-size: calc(0.875rem * var(--article-font-scale, 1));
+            font-variant-numeric: tabular-nums;
+        }
+        #articleRoot .article-prose .article-table caption {
+            font-size: calc(0.8125rem * var(--article-font-scale, 1));
+        }
         #articleRoot [data-font-part="takeaways"] {
-            --part-scale: var(--art-scale-takeaways, 1);
+            --part-scale: calc(var(--art-scale-takeaways, 1) * var(--article-font-scale, 1));
         }
         #articleRoot [data-font-part="takeaways"] h2 {
             font-size: calc(0.95rem * var(--part-scale));
@@ -80,7 +135,7 @@
             line-height: 1.7;
         }
         #articleRoot [data-font-part="toc"] {
-            --part-scale: var(--art-scale-toc, 1);
+            --part-scale: calc(var(--art-scale-toc, 1) * var(--article-font-scale, 1));
         }
         #articleRoot [data-font-part="toc"] .article-toc-title {
             font-size: calc(0.75rem * var(--part-scale));
@@ -91,7 +146,7 @@
             line-height: 1.65;
         }
         #articleRoot [data-font-part="prose"] {
-            --part-scale: var(--art-scale-prose, 1);
+            --part-scale: calc(var(--art-scale-prose, 1) * var(--article-font-scale, 1));
         }
         #articleRoot [data-font-part="prose"] p,
         #articleRoot [data-font-part="prose"] blockquote {
@@ -100,7 +155,8 @@
         }
         #articleRoot [data-font-part="prose"] .article-bullets,
         #articleRoot [data-font-part="prose"] ul,
-        #articleRoot [data-font-part="prose"] ol {
+        #articleRoot [data-font-part="prose"] ol,
+        #articleRoot [data-font-part="prose"] li {
             font-size: calc(0.95rem * var(--part-scale));
             line-height: 1.7;
         }
@@ -109,16 +165,18 @@
             line-height: 1.4;
         }
         #articleRoot [data-font-part="callout"] {
-            --part-scale: var(--art-scale-callout, 1);
+            --part-scale: calc(var(--art-scale-callout, 1) * var(--article-font-scale, 1));
         }
         #articleRoot [data-font-part="callout"] .article-callout,
         #articleRoot [data-font-part="callout"] .article-callout p,
+        #articleRoot [data-font-part="callout"] .article-callout ul,
+        #articleRoot [data-font-part="callout"] .article-callout ol,
         #articleRoot [data-font-part="callout"] .article-callout li {
             font-size: calc(0.9375rem * var(--part-scale));
             line-height: 1.65;
         }
         #articleRoot [data-font-part="table"] {
-            --part-scale: var(--art-scale-table, 1);
+            --part-scale: calc(var(--art-scale-table, 1) * var(--article-font-scale, 1));
         }
         #articleRoot [data-font-part="table"] .article-table th {
             font-size: calc(0.75rem * var(--part-scale));
@@ -131,37 +189,48 @@
             font-size: calc(0.8125rem * var(--part-scale));
         }
         #articleRoot [data-font-part="code"] {
-            --part-scale: var(--art-scale-code, 1);
+            --part-scale: calc(var(--art-scale-code, 1) * var(--article-font-scale, 1));
         }
-        #articleRoot [data-font-part="code"] pre {
+        #articleRoot [data-font-part="code"] pre,
+        #articleRoot [data-font-part="code"] p {
             font-size: calc(0.75rem * var(--part-scale));
         }
         #articleRoot [data-font-part="methodology"] {
-            --part-scale: var(--art-scale-methodology, 1);
+            --part-scale: calc(var(--art-scale-methodology, 1) * var(--article-font-scale, 1));
         }
         #articleRoot [data-font-part="methodology"] h2 {
             font-size: calc(0.95rem * var(--part-scale));
         }
         #articleRoot [data-font-part="methodology"] .article-methodology,
         #articleRoot [data-font-part="methodology"] .article-methodology p,
+        #articleRoot [data-font-part="methodology"] .article-methodology ul,
+        #articleRoot [data-font-part="methodology"] .article-methodology ol,
         #articleRoot [data-font-part="methodology"] .article-methodology li {
             font-size: calc(0.875rem * var(--part-scale));
             line-height: 1.65;
         }
         #articleRoot [data-font-part="faq"] {
-            --part-scale: var(--art-scale-faq, 1);
+            --part-scale: calc(var(--art-scale-faq, 1) * var(--article-font-scale, 1));
+        }
+        #articleRoot [data-font-part="faq"] h2 {
+            font-size: calc(1.15rem * var(--part-scale));
         }
         #articleRoot [data-font-part="faq"] .article-faq summary {
             font-size: calc(0.975rem * var(--part-scale));
         }
         #articleRoot [data-font-part="faq"] .article-faq .article-faq-answer,
         #articleRoot [data-font-part="faq"] .article-faq .article-faq-answer p,
+        #articleRoot [data-font-part="faq"] .article-faq .article-faq-answer ul,
+        #articleRoot [data-font-part="faq"] .article-faq .article-faq-answer ol,
         #articleRoot [data-font-part="faq"] .article-faq .article-faq-answer li {
             font-size: calc(0.9375rem * var(--part-scale));
             line-height: 1.65;
         }
         #articleRoot [data-font-part="related"] {
-            --part-scale: var(--art-scale-related, 1);
+            --part-scale: calc(var(--art-scale-related, 1) * var(--article-font-scale, 1));
+        }
+        #articleRoot [data-font-part="related"] h2 {
+            font-size: calc(1.0625rem * var(--part-scale));
         }
         #articleRoot [data-font-part="related"] .article-related-card-title {
             font-size: calc(0.875rem * var(--part-scale));
@@ -251,30 +320,114 @@
     </main>
     <script>
         (function() {
-            try {
-                var root = document.getElementById('articleRoot');
-                var raw = localStorage.getItem('dn_article_part_font_prefs_v1');
-                if (!root || !raw) return;
-                var all = JSON.parse(raw);
-                if (!all || typeof all !== 'object') return;
-                var id = document.body.getAttribute('data-article-id') || '';
-                var lang = document.body.getAttribute('data-page-lang') || '';
-                var scopeKey = id ? (lang ? id + ':' + lang : id) : window.location.pathname;
-                var entry = all[scopeKey] || (id ? all[id] : null);
-                if (!entry || typeof entry !== 'object') return;
-                var parts = root.querySelectorAll('.dn-font-part');
-                for (var i = 0; i < parts.length; i++) {
-                    var el = parts[i];
-                    var key = el.getAttribute('data-part-key') || el.getAttribute('data-part-idx') || '';
-                    var idx = el.getAttribute('data-part-idx') || '';
-                    var rawVal = entry[key] !== undefined ? entry[key] : entry[idx];
-                    var num = Number(rawVal);
-                    if (Number.isFinite(num) && Math.abs(num - 1) > 0.005) {
-                        var clamped = Math.round(Math.max(0.82, Math.min(1.36, num)) * 100) / 100;
-                        el.style.setProperty('--part-scale', String(clamped));
-                    }
+            var FONT_SCALE_KEY = 'dn_article_font_scale_v1';
+            var MIN_SCALE = 0.85;
+            var MAX_SCALE = 1.3;
+            var STEP_SCALE = 0.05;
+
+            function normalizeScale(val) {
+                var num = Number(val);
+                if (!Number.isFinite(num)) return 1;
+                var clamped = Math.max(MIN_SCALE, Math.min(MAX_SCALE, num));
+                return Number((Math.round(clamped * 20) / 20).toFixed(2));
+            }
+
+            function readSavedScale() {
+                try {
+                    var raw = localStorage.getItem(FONT_SCALE_KEY);
+                    if (raw === null || raw === '') return 1;
+                    return normalizeScale(raw);
+                } catch (_e) {
+                    return 1;
                 }
-            } catch (e) {}
+            }
+
+            function saveScale(scale) {
+                try {
+                    if (scale === 1) {
+                        localStorage.removeItem(FONT_SCALE_KEY);
+                    } else {
+                        localStorage.setItem(FONT_SCALE_KEY, String(scale));
+                    }
+                } catch (_e) {}
+            }
+
+            var root = document.getElementById('articleRoot');
+            if (!root) return;
+
+            var fontScale = readSavedScale();
+
+            function syncAllButtons() {
+                var isMin = fontScale <= MIN_SCALE + 0.001;
+                var isMax = fontScale >= MAX_SCALE - 0.001;
+                var isDefault = Math.abs(fontScale - 1) <= 0.001;
+                var pctText = Math.round(fontScale * 100) + '%';
+
+                var decBtns = root.querySelectorAll('[data-font-act="dec"]');
+                for (var i = 0; i < decBtns.length; i++) {
+                    decBtns[i].disabled = isMin;
+                    decBtns[i].setAttribute('aria-disabled', isMin ? 'true' : 'false');
+                }
+                var incBtns = root.querySelectorAll('[data-font-act="inc"]');
+                for (var j = 0; j < incBtns.length; j++) {
+                    incBtns[j].disabled = isMax;
+                    incBtns[j].setAttribute('aria-disabled', isMax ? 'true' : 'false');
+                }
+                var pctBtns = root.querySelectorAll('[data-font-pct]');
+                for (var k = 0; k < pctBtns.length; k++) {
+                    pctBtns[k].textContent = pctText;
+                    pctBtns[k].classList.toggle('hidden', isDefault);
+                }
+            }
+
+            function updateFontScale(nextScale, persist) {
+                fontScale = normalizeScale(nextScale);
+                root.style.setProperty('--article-font-scale', String(fontScale));
+                syncAllButtons();
+                if (persist !== false) {
+                    saveScale(fontScale);
+                }
+                return fontScale;
+            }
+
+            updateFontScale(fontScale, false);
+
+            if (root.dataset.fontScaleWired !== '1') {
+                root.dataset.fontScaleWired = '1';
+                root.addEventListener('click', function(ev) {
+                    var target = ev.target && ev.target.nodeType === 1
+                        ? ev.target
+                        : (ev.target && ev.target.parentElement ? ev.target.parentElement : null);
+                    var btn = target && target.closest ? target.closest('[data-font-act], [data-font-pct]') : null;
+                    if (!btn || !root.contains(btn)) return;
+                    if (btn.disabled) return;
+
+                    if (btn.hasAttribute('data-font-pct')) {
+                        updateFontScale(1, true);
+                        return;
+                    }
+                    var act = btn.getAttribute('data-font-act');
+                    if (act === 'inc') {
+                        updateFontScale(fontScale + STEP_SCALE, true);
+                    } else if (act === 'dec') {
+                        updateFontScale(fontScale - STEP_SCALE, true);
+                    }
+                });
+
+                if (typeof window !== 'undefined' && window.addEventListener) {
+                    window.addEventListener('storage', function(ev) {
+                        if (ev && ev.key === FONT_SCALE_KEY) {
+                            updateFontScale(readSavedScale(), false);
+                        }
+                    });
+                }
+            }
+
+            window.__DN_ARTICLE_FONT_CTRL__ = {
+                getScale: function() { return fontScale; },
+                updateFontScale: updateFontScale,
+                syncAllButtons: syncAllButtons
+            };
         })();
     </script>
 
@@ -322,7 +475,7 @@
             }
         }
     </script>
-    <script src="/assets/adsense-slots.js" defer></script>
-    <script src="/assets/article-reader.js" defer></script>
+    <script src="/assets/adsense-slots.js?v=20261127b" defer></script>
+    <script src="/assets/article-reader.js?v=20261127b" defer></script>
 </body>
 </html>

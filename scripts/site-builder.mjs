@@ -1840,10 +1840,10 @@ function buildLanguageTargetsMarkup(currentLang, config, resolveHrefForLang) {
 }
 
 function buildFontControlsGroupHtml() {
-  return '<div class="inline-flex items-center rounded-lg border border-slate-200 dark:border-slate-700/80 bg-slate-50/90 dark:bg-slate-800/70 divide-x divide-slate-200 dark:divide-slate-700/80 shadow-sm shrink-0 select-none" role="group" aria-label="Adjust text size">'
-    + '<button type="button" data-font-act="dec" aria-label="Decrease text size" title="A−" class="min-h-[30px] min-w-[32px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-40 rounded-l-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">A&minus;</button>'
-    + '<button type="button" data-font-pct title="Reset to 100%" class="hidden min-h-[30px] px-1.5 inline-flex items-center justify-center text-[10px] font-mono font-semibold text-blue-600 dark:text-blue-400 hover:bg-white dark:hover:bg-slate-700 tabular-nums transition-colors">100%</button>'
-    + '<button type="button" data-font-act="inc" aria-label="Increase text size" title="A+" class="min-h-[30px] min-w-[32px] px-2 inline-flex items-center justify-center text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-40 rounded-r-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">A+</button>'
+  return '<div class="dn-font-controls relative z-20 inline-flex items-center rounded-lg border border-slate-200 dark:border-slate-700/80 bg-slate-50/90 dark:bg-slate-800/70 divide-x divide-slate-200 dark:divide-slate-700/80 shadow-sm shrink-0 select-none" role="group" aria-label="Adjust text size">'
+    + '<button type="button" data-font-act="dec" aria-label="Decrease text size" title="A−" class="dn-font-btn relative z-20 min-h-[36px] min-w-[36px] px-2.5 inline-flex items-center justify-center text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation rounded-l-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">A&minus;</button>'
+    + '<button type="button" data-font-pct title="Reset to 100%" class="dn-font-btn hidden relative z-20 min-h-[36px] min-w-[36px] px-2 inline-flex items-center justify-center text-[11px] font-mono font-semibold text-blue-600 dark:text-blue-400 hover:bg-white dark:hover:bg-slate-700 touch-manipulation tabular-nums transition-colors">100%</button>'
+    + '<button type="button" data-font-act="inc" aria-label="Increase text size" title="A+" class="dn-font-btn relative z-20 min-h-[36px] min-w-[36px] px-2.5 inline-flex items-center justify-center text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation rounded-r-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">A+</button>'
     + '</div>';
 }
 
@@ -1852,7 +1852,7 @@ function wrapFontPartHtml(partType, partIdx, bodyHtml, partKey = '', extraClass 
   const cls = extraClass ? `dn-font-part ${extraClass}` : 'dn-font-part';
   const keyAttr = partKey ? ` data-part-key="${escapeHtmlAttr(partKey)}"` : '';
   return `<div class="${escapeHtmlAttr(cls)}" data-font-part="${escapeHtmlAttr(partType)}" data-part-idx="${escapeHtmlAttr(String(partIdx))}"${keyAttr}>`
-    + `<div class="flex items-center justify-end mb-1.5">${buildFontControlsGroupHtml()}</div>`
+    + `<div class="dn-font-controls-bar relative z-20 flex items-center justify-end mb-1.5">${buildFontControlsGroupHtml()}</div>`
     + bodyHtml
     + `</div>`;
 }
@@ -2108,7 +2108,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
   const faqsList = Array.isArray(content.faqs) ? content.faqs.filter((f) => f?.q && f?.a) : [];
   const faqsHtml = faqsList.length > 0
     ? `<section class="dn-font-part article-faq space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800" data-font-part="faq" data-part-idx="${escapeHtmlAttr(String(nextPartIdx()))}" data-part-key="faq">
-        <div class="flex items-center justify-between gap-3">
+        <div class="dn-font-controls-bar relative z-20 flex items-center justify-between gap-3">
           <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.faqTitle)}</h2>
           ${buildFontControlsGroupHtml()}
         </div>
@@ -2131,8 +2131,8 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
 
   const relatedArticlesHtml = `<section class="dn-font-part pt-4 border-t border-slate-200 dark:border-slate-800 space-y-4" data-font-part="related" data-part-idx="${escapeHtmlAttr(String(nextPartIdx()))}" data-part-key="related">
       ${relatedCards
-        ? `<div class="space-y-3"><div class="flex items-center justify-between gap-3"><h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.relatedTitle)}</h2>${buildFontControlsGroupHtml()}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${relatedCards}</div></div>`
-        : `<div class="flex items-center justify-end">${buildFontControlsGroupHtml()}</div>`}
+        ? `<div class="space-y-3"><div class="dn-font-controls-bar relative z-20 flex items-center justify-between gap-3"><h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.relatedTitle)}</h2>${buildFontControlsGroupHtml()}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${relatedCards}</div></div>`
+        : `<div class="dn-font-controls-bar relative z-20 flex items-center justify-end">${buildFontControlsGroupHtml()}</div>`}
       <div class="p-5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="space-y-1">
           <h3 class="article-related-cta-title text-sm sm:text-base font-bold text-slate-900 dark:text-white">${escapeHtmlText(labels.ctaTitle)}</h3>

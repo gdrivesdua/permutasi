@@ -1,89 +1,45 @@
 /**
- * Visitor-facing Article Reading Typography (Per-Part A− / A+ Controls) & Safe AdSense Hydrator.
+ * Visitor-facing Article Reading Typography (Unified Global fontScale A− / A+ Controls) & Safe AdSense Hydrator.
  */
 (function () {
   'use strict';
 
-  var PART_PREFS_KEY = 'dn_article_part_font_prefs_v1';
+  var FONT_SCALE_KEY = 'dn_article_font_scale_v1';
   var STUDIO_CONFIG_KEY = 'dn_adsense_studio_config_v1';
   var ANCHOR_DISMISSED_KEY = 'dn_adsense_anchor_dismissed_v1';
+
+  var MIN_SCALE = 0.85;
+  var MAX_SCALE = 1.3;
+  var STEP_SCALE = 0.05;
 
   var STUDIO_SCALE_KEYS = [
     'takeaways', 'toc', 'prose', 'bullets', 'callout', 'table', 'code', 'methodology', 'faq', 'related'
   ];
 
-  function clampScale(val) {
+  function normalizeFontScale(val) {
     var num = Number(val);
     if (!Number.isFinite(num)) return 1;
-    return Math.round(Math.max(0.82, Math.min(1.36, num)) * 100) / 100;
+    var clamped = Math.max(MIN_SCALE, Math.min(MAX_SCALE, num));
+    return Number((Math.round(clamped * 20) / 20).toFixed(2));
   }
 
-  function formatPercent(scale) {
-    return Math.round(clampScale(scale) * 100) + '%';
-  }
-
-  function getArticleStorageScopeKey() {
-    var id = '';
-    var lang = '';
+  function readSavedFontScale() {
     try {
-      if (document.body) {
-        id = document.body.getAttribute('data-article-id') || '';
-        lang = document.body.getAttribute('data-page-lang') || '';
-      }
-    } catch (_e) {}
-    if (id) {
-      return lang ? (id + ':' + lang) : id;
+      var raw = localStorage.getItem(FONT_SCALE_KEY);
+      if (raw === null || raw === '') return 1;
+      return normalizeFontScale(raw);
+    } catch (_e) {
+      return 1;
     }
-    return window.location.pathname || 'default';
   }
 
-  function getPartSpotKey(partEl) {
-    if (!partEl) return '';
-    return partEl.getAttribute('data-part-key') || partEl.getAttribute('data-part-idx') || '';
-  }
-
-  function loadAllPartPrefs() {
+  function saveFontScale(scale) {
     try {
-      var raw = localStorage.getItem(PART_PREFS_KEY);
-      if (raw) {
-        var parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === 'object') return parsed;
-      }
-    } catch (_e) {}
-    return {};
-  }
-
-  function loadPartScalesForArticle(scopeKey) {
-    var all = loadAllPartPrefs();
-    var entry = all[scopeKey];
-    if (!entry || typeof entry !== 'object') {
-      // Fallback check if earlier version stored bare articleId without :lang suffix
-      var bareId = scopeKey.indexOf(':') !== -1 ? scopeKey.split(':')[0] : '';
-      if (bareId && all[bareId] && typeof all[bareId] === 'object') {
-        entry = all[bareId];
-      }
-    }
-    if (!entry || typeof entry !== 'object') return {};
-    var clean = {};
-    Object.keys(entry).forEach(function (k) {
-      var val = clampScale(entry[k]);
-      if (Math.abs(val - 1) > 0.005) {
-        clean[k] = val;
-      }
-    });
-    return clean;
-  }
-
-  function savePartScalesForArticle(scopeKey, scalesByKey) {
-    try {
-      var all = loadAllPartPrefs();
-      var hasCustom = Object.keys(scalesByKey).length > 0;
-      if (hasCustom) {
-        all[scopeKey] = scalesByKey;
+      if (scale === 1) {
+        localStorage.removeItem(FONT_SCALE_KEY);
       } else {
-        delete all[scopeKey];
+        localStorage.setItem(FONT_SCALE_KEY, String(scale));
       }
-      localStorage.setItem(PART_PREFS_KEY, JSON.stringify(all));
     } catch (_e) {}
   }
 
@@ -97,7 +53,7 @@
       for (var i = 0; i < STUDIO_SCALE_KEYS.length; i++) {
         var key = STUDIO_SCALE_KEYS[i];
         if (parsed.fontScales[key] !== undefined) {
-          defaults[key] = clampScale(parsed.fontScales[key]);
+          defaults[key] = normalizeFontScale(parsed.fontScales[key]);
         }
       }
     } catch (_e) {}
@@ -111,28 +67,6 @@
     });
   }
 
-  function syncPartUi(partEl, customScale, studioBaseScale) {
-    if (!partEl) return;
-    var hasCustom = typeof customScale === 'number' && Math.abs(customScale - 1) > 0.005;
-    var effectiveScale = hasCustom ? clampScale(customScale) : clampScale(studioBaseScale || 1);
-
-    if (hasCustom) {
-      partEl.style.setProperty('--part-scale', String(effectiveScale));
-    } else {
-      partEl.style.removeProperty('--part-scale');
-    }
-
-    var decBtn = partEl.querySelector('[data-font-act="dec"]');
-    var incBtn = partEl.querySelector('[data-font-act="inc"]');
-    var pctBtn = partEl.querySelector('[data-font-pct]');
-    if (decBtn) decBtn.disabled = effectiveScale <= 0.83;
-    if (incBtn) incBtn.disabled = effectiveScale >= 1.35;
-    if (pctBtn) {
-      pctBtn.textContent = formatPercent(effectiveScale);
-      pctBtn.classList.toggle('hidden', !hasCustom);
-    }
-  }
-
   function initFontSizeControls() {
     var articleEl = document.getElementById('articleRoot');
     if (!articleEl) return;
@@ -140,80 +74,85 @@
     var studioDefaults = getStudioDefaultScales();
     applyStudioDefaultScales(articleEl, studioDefaults);
 
-    var scopeKey = getArticleStorageScopeKey();
-    var savedByKey = loadPartScalesForArticle(scopeKey);
-    var partEls = articleEl.querySelectorAll('.dn-font-part');
-    if (!partEls || partEls.length === 0) return;
+    // If inline template script already initialized unified controller, simply sync and reuse it.
+    if (articleEl.dataset.fontScaleWired === '1' && window.__DN_ARTICLE_FONT_CTRL__) {
+      window.__DN_ARTICLE_FONT_CTRL__.syncAllButtons();
+      return;
+    }
 
-    function syncAllPartsFromState() {
-      var list = articleEl.querySelectorAll('.dn-font-part');
-      for (var i = 0; i < list.length; i++) {
-        var partEl = list[i];
-        var spotKey = getPartSpotKey(partEl);
-        var legacyIdx = partEl.getAttribute('data-part-idx') || '';
-        var partType = partEl.getAttribute('data-font-part') || 'prose';
-        var baseScale = studioDefaults[partType] !== undefined ? studioDefaults[partType] : 1;
+    var fontScale = readSavedFontScale();
 
-        var customVal;
-        if (spotKey && savedByKey[spotKey] !== undefined) {
-          customVal = clampScale(savedByKey[spotKey]);
-        } else if (legacyIdx && savedByKey[legacyIdx] !== undefined) {
-          customVal = clampScale(savedByKey[legacyIdx]);
-          if (spotKey && spotKey !== legacyIdx) {
-            savedByKey[spotKey] = customVal;
-            delete savedByKey[legacyIdx];
-            savePartScalesForArticle(scopeKey, savedByKey);
-          }
-        }
-        syncPartUi(partEl, customVal, baseScale);
+    function syncAllButtons() {
+      var isMin = fontScale <= MIN_SCALE + 0.001;
+      var isMax = fontScale >= MAX_SCALE - 0.001;
+      var isDefault = Math.abs(fontScale - 1) <= 0.001;
+      var pctText = Math.round(fontScale * 100) + '%';
+
+      var decBtns = articleEl.querySelectorAll('[data-font-act="dec"]');
+      for (var i = 0; i < decBtns.length; i++) {
+        decBtns[i].disabled = isMin;
+        decBtns[i].setAttribute('aria-disabled', isMin ? 'true' : 'false');
+      }
+      var incBtns = articleEl.querySelectorAll('[data-font-act="inc"]');
+      for (var j = 0; j < incBtns.length; j++) {
+        incBtns[j].disabled = isMax;
+        incBtns[j].setAttribute('aria-disabled', isMax ? 'true' : 'false');
+      }
+      var pctBtns = articleEl.querySelectorAll('[data-font-pct]');
+      for (var k = 0; k < pctBtns.length; k++) {
+        pctBtns[k].textContent = pctText;
+        pctBtns[k].classList.toggle('hidden', isDefault);
       }
     }
 
-    syncAllPartsFromState();
+    function updateFontScale(nextScale, persist) {
+      fontScale = normalizeFontScale(nextScale);
+      articleEl.style.setProperty('--article-font-scale', String(fontScale));
+      syncAllButtons();
+      if (persist !== false) {
+        saveFontScale(fontScale);
+      }
+      return fontScale;
+    }
 
-    articleEl.addEventListener('click', function (ev) {
-      var btn = ev.target && ev.target.closest ? ev.target.closest('[data-font-act], [data-font-pct]') : null;
-      if (!btn || !articleEl.contains(btn)) return;
+    updateFontScale(fontScale, false);
 
-      var partEl = btn.closest('.dn-font-part');
-      if (!partEl) return;
+    if (articleEl.dataset.fontScaleWired !== '1') {
+      articleEl.dataset.fontScaleWired = '1';
+      articleEl.addEventListener('click', function (ev) {
+        var target = ev.target && ev.target.nodeType === 1
+          ? ev.target
+          : (ev.target && ev.target.parentElement ? ev.target.parentElement : null);
+        var btn = target && target.closest ? target.closest('[data-font-act], [data-font-pct]') : null;
+        if (!btn || !articleEl.contains(btn)) return;
+        if (btn.disabled) return;
 
-      var spotKey = getPartSpotKey(partEl);
-      var partType = partEl.getAttribute('data-font-part') || 'prose';
-      var baseScale = studioDefaults[partType] !== undefined ? studioDefaults[partType] : 1;
-      var currentScale = (spotKey && savedByKey[spotKey] !== undefined)
-        ? clampScale(savedByKey[spotKey])
-        : baseScale;
-      var nextScale = 1;
-
-      if (btn.hasAttribute('data-font-pct')) {
-        nextScale = 1;
-      } else {
+        if (btn.hasAttribute('data-font-pct')) {
+          updateFontScale(1, true);
+          return;
+        }
         var act = btn.getAttribute('data-font-act');
-        var delta = act === 'inc' ? 0.06 : (act === 'dec' ? -0.06 : 0);
-        if (!delta) return;
-        nextScale = clampScale(currentScale + delta);
-      }
-
-      var isDefault = Math.abs(nextScale - 1) <= 0.005;
-      if (isDefault) {
-        if (spotKey) delete savedByKey[spotKey];
-      } else if (spotKey) {
-        savedByKey[spotKey] = nextScale;
-      }
-
-      syncPartUi(partEl, isDefault ? undefined : nextScale, baseScale);
-      savePartScalesForArticle(scopeKey, savedByKey);
-    });
-
-    if (typeof window !== 'undefined' && window.addEventListener) {
-      window.addEventListener('storage', function (ev) {
-        if (ev && ev.key === PART_PREFS_KEY) {
-          savedByKey = loadPartScalesForArticle(scopeKey);
-          syncAllPartsFromState();
+        if (act === 'inc') {
+          updateFontScale(fontScale + STEP_SCALE, true);
+        } else if (act === 'dec') {
+          updateFontScale(fontScale - STEP_SCALE, true);
         }
       });
+
+      if (typeof window !== 'undefined' && window.addEventListener) {
+        window.addEventListener('storage', function (ev) {
+          if (ev && ev.key === FONT_SCALE_KEY) {
+            updateFontScale(readSavedFontScale(), false);
+          }
+        });
+      }
     }
+
+    window.__DN_ARTICLE_FONT_CTRL__ = {
+      getScale: function () { return fontScale; },
+      updateFontScale: updateFontScale,
+      syncAllButtons: syncAllButtons
+    };
   }
 
   function ensureAdSenseScriptLoaded(clientId) {
