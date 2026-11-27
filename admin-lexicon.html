@@ -34,67 +34,83 @@
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased">
     <header class="sticky top-0 z-30 border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3 min-w-0">
-                <a href="/" class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">&larr; Generator</a>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <a href="/" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">&larr; Situs Utama</a>
                 <span class="text-slate-300 dark:text-slate-700">/</span>
-                <h1 class="text-sm sm:text-base font-bold truncate">Tagger Lexicon Admin</h1>
-                <span class="hidden sm:inline-block px-2 py-0.5 text-[11px] font-mono rounded bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">Local Git Workflow</span>
+                <h1 class="text-sm sm:text-base font-bold truncate">Admin Lexicon</h1>
+                <span class="hidden md:inline-block px-2 py-0.5 text-[11px] font-mono rounded bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">Local Git Workflow</span>
             </div>
-            <div class="flex items-center gap-2">
-                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    Theme
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto">
+                <a href="/admin-articles/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Article Studio
+                </a>
+                <a href="/adsense-studio/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Layout &amp; AdSense
+                </a>
+                <a href="/admin-lexicon" aria-current="page" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 whitespace-nowrap">
+                    Admin Lexicon
+                </a>
+                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Tema
                 </button>
-                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900/70 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors">
-                    Logout
+                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900/70 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors whitespace-nowrap">
+                    Keluar
                 </button>
             </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <!-- Auth Card -->
-        <section id="authSection" class="max-w-md mx-auto mt-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-            <div id="authLoading" class="text-sm text-slate-500 dark:text-slate-400">Checking admin authentication state...</div>
+        <!-- Auth Card (Unified with Article Studio & Layout/AdSense Studio) -->
+        <section id="authSection" class="max-w-md mx-auto mt-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-4">
+            <div id="authLoading" class="text-sm text-slate-500 dark:text-slate-400">Memeriksa sesi admin terpadu...</div>
+
+            <div id="authUnconfiguredBox" class="hidden space-y-3 text-sm">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Password Admin Belum Dikonfigurasi</h2>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Secret password editorial (<code class="font-mono">ARTICLE_ADMIN_PASSWORD</code> atau <code class="font-mono">ADMIN_PASSWORD</code>) belum diatur pada environment server.
+                </p>
+            </div>
 
             <form id="setupForm" class="hidden space-y-4">
                 <div>
-                    <h2 class="text-lg font-bold">First-Run Admin Setup</h2>
+                    <h2 class="text-lg font-bold">Inisialisasi Password Admin Terpadu</h2>
                     <p class="mt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        <code class="font-mono">ADMIN_PASSWORD</code> is not set in the server environment yet. Set an initial admin password (min. 8 characters). Its salted hash is stored only in gitignored <code class="font-mono">.admin-auth.json</code>; for production/sharing, configure <code class="font-mono">ADMIN_PASSWORD</code> in Secrets or <code class="font-mono">.env</code>.
+                        Password ini berlaku bersama untuk <strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, dan <strong>Admin Lexicon</strong> (minimal 8 karakter).
                     </p>
                 </div>
                 <div>
-                    <label for="setupPassword" class="block text-xs font-semibold mb-1.5">New Admin Password</label>
+                    <label for="setupPassword" class="block text-xs font-semibold mb-1.5">Password Baru</label>
                     <input id="setupPassword" type="password" minlength="8" maxlength="128" required autocomplete="new-password"
                         class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="setupPasswordConfirm" class="block text-xs font-semibold mb-1.5">Confirm Password</label>
+                    <label for="setupPasswordConfirm" class="block text-xs font-semibold mb-1.5">Konfirmasi Password</label>
                     <input id="setupPasswordConfirm" type="password" minlength="8" maxlength="128" required autocomplete="new-password"
                         class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <p id="setupError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
                 <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
-                    Initialize Admin Password &amp; Enter
+                    Simpan Password &amp; Masuk
                 </button>
             </form>
 
             <form id="loginForm" class="hidden space-y-4">
                 <div>
-                    <h2 class="text-lg font-bold">Admin Sign In</h2>
+                    <h2 class="text-lg font-bold">Masuk ke Admin Lexicon</h2>
                     <p id="loginSubtitle" class="mt-1 text-xs text-slate-600 dark:text-slate-400">
-                        Enter your admin password to edit <code class="font-mono">lib/lexicon/*.json</code>.
+                        Gunakan password yang sama dengan <strong>Article Studio</strong> untuk mengelola kamus tagger &amp; berpindah antar studio.
                     </p>
                 </div>
                 <div>
-                    <label for="loginPassword" class="block text-xs font-semibold mb-1.5">Admin Password</label>
-                    <input id="loginPassword" type="password" required autocomplete="current-password"
+                    <label for="loginPassword" class="block text-xs font-semibold mb-1.5">Password Admin</label>
+                    <input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Masukkan password editorial..."
                         class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <p id="loginError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
                 <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
-                    Unlock Lexicon Editor
+                    Masuk ke Lexicon Editor
                 </button>
             </form>
         </section>
@@ -257,6 +273,7 @@
 
             const authSection = document.getElementById('authSection');
             const authLoading = document.getElementById('authLoading');
+            const authUnconfiguredBox = document.getElementById('authUnconfiguredBox');
             const setupForm = document.getElementById('setupForm');
             const loginForm = document.getElementById('loginForm');
             const setupError = document.getElementById('setupError');
@@ -321,13 +338,13 @@
             }
 
             async function apiFetch(url, options = {}) {
-                const headers = Object.assign({}, options.headers || {});
+                const headers = Object.assign({ 'X-Requested-With': 'XMLHttpRequest' }, options.headers || {});
                 if (sessionToken) {
                     headers['Authorization'] = 'Bearer ' + sessionToken;
                 }
-                const res = await fetch(url, Object.assign({}, options, { headers }));
+                const res = await fetch(url, Object.assign({ credentials: 'same-origin' }, options, { headers }));
                 const data = await res.json().catch(() => ({}));
-                if (res.status === 401 && sessionToken) {
+                if (res.status === 401 && !url.startsWith('/api/articles/auth')) {
                     sessionToken = '';
                     editorSection.classList.add('hidden');
                     logoutBtn.classList.add('hidden');
@@ -537,6 +554,10 @@
 
             async function loadLexicons() {
                 const { res, data } = await apiFetch('/api/admin/lexicon');
+                if (res.status === 404 || res.status === 405) {
+                    showEntryStatus('Editor kamus JSON lokal hanya aktif di server Express/preview lokal (bukan static-only Cloudflare Pages).', true);
+                    return;
+                }
                 if (!res.ok || !data.ok) return;
                 lexiconState = {
                     shortExact: data.shortExact || {},
@@ -568,15 +589,25 @@
 
             async function initAuth() {
                 authLoading.classList.remove('hidden');
+                authUnconfiguredBox.classList.add('hidden');
                 setupForm.classList.add('hidden');
                 loginForm.classList.add('hidden');
 
-                const { data } = await apiFetch('/api/admin/auth/status');
-                authLoading.classList.add('hidden');
-                if (data.needsSetup) {
-                    setupForm.classList.remove('hidden');
-                } else {
-                    loginForm.classList.remove('hidden');
+                try {
+                    const { data } = await apiFetch('/api/articles/auth');
+                    authLoading.classList.add('hidden');
+                    if (data.authenticated) {
+                        await enterEditor();
+                    } else if (data.needsSetup) {
+                        setupForm.classList.remove('hidden');
+                    } else if (!data.configured) {
+                        authUnconfiguredBox.classList.remove('hidden');
+                    } else {
+                        loginForm.classList.remove('hidden');
+                        document.getElementById('loginPassword').focus();
+                    }
+                } catch (err) {
+                    authLoading.textContent = err?.message || 'Gagal menghubungi server autentikasi.';
                 }
             }
 
@@ -586,21 +617,21 @@
                 const pw = document.getElementById('setupPassword').value;
                 const pw2 = document.getElementById('setupPasswordConfirm').value;
                 if (pw !== pw2) {
-                    setupError.textContent = 'Passwords do not match.';
+                    setupError.textContent = 'Konfirmasi password tidak cocok.';
                     setupError.classList.remove('hidden');
                     return;
                 }
-                const { res, data } = await apiFetch('/api/admin/auth/setup', {
+                const { res, data } = await apiFetch('/api/articles/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: pw })
+                    body: JSON.stringify({ action: 'setup', password: pw })
                 });
                 if (!res.ok || !data.ok) {
-                    setupError.textContent = data.error || 'Setup failed.';
+                    setupError.textContent = data.error || 'Inisialisasi password gagal.';
                     setupError.classList.remove('hidden');
                     return;
                 }
-                sessionToken = data.token;
+                sessionToken = data.sessionToken || '';
                 document.getElementById('setupPassword').value = '';
                 document.getElementById('setupPasswordConfirm').value = '';
                 await enterEditor();
@@ -610,23 +641,25 @@
                 e.preventDefault();
                 loginError.classList.add('hidden');
                 const pw = document.getElementById('loginPassword').value;
-                const { res, data } = await apiFetch('/api/admin/auth/login', {
+                const { res, data } = await apiFetch('/api/articles/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password: pw })
                 });
                 if (!res.ok || !data.ok) {
-                    loginError.textContent = data.error || 'Invalid password.';
+                    loginError.textContent = data.error || 'Password tidak sesuai.';
                     loginError.classList.remove('hidden');
                     return;
                 }
-                sessionToken = data.token;
+                sessionToken = data.sessionToken || '';
                 document.getElementById('loginPassword').value = '';
                 await enterEditor();
             });
 
             logoutBtn.addEventListener('click', async () => {
-                await apiFetch('/api/admin/auth/logout', { method: 'POST' });
+                try {
+                    await apiFetch('/api/articles/auth', { method: 'DELETE' });
+                } catch {}
                 sessionToken = '';
                 editorSection.classList.add('hidden');
                 logoutBtn.classList.add('hidden');

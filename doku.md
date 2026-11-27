@@ -578,12 +578,12 @@ Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, d
 
 ### H. Online Article Editor (`/admin-articles/`) & Auto-Commit GitHub
 
-Bagian ini mendokumentasikan arsitektur sistem editor artikel berbasis web bergaya WordPress yang dapat diakses online (Cloudflare Pages + Pages Functions) maupun lokal/preview (`server.js`), beserta mekanisme commit atomik ke GitHub untuk memicu auto-build statis.
+Bagian ini mendokumentasikan arsitektur sistem editor artikel berbasis blok di web yang dapat diakses online (Cloudflare Pages + Pages Functions) maupun lokal/preview (`server.js`), beserta mekanisme commit atomik ke GitHub untuk memicu auto-build statis.
 
 #### 1. Struktur File & Kompatibilitas Dual-Runtime
 | Komponen | Lokasi | Peran Teknis |
 | --- | --- | --- |
-| **UI Editor Web** | `admin-articles.html` -> `dist/admin-articles/index.html` | Antarmuka WordPress-like (login 1 kolom Password, daftar artikel lintas 8 bahasa, editor blok `sections[]`, tabel, callout, FAQ, lencana indikator sintaks Markdown `MD`, live SEO meter, pratinjau aman berbasis DOM API). Memakai `<meta name="robots" content="noindex, nofollow">` dan tidak masuk `sitemap.xml`. |
+| **UI Editor Web** | `admin-articles.html` -> `dist/admin-articles/index.html` | Antarmuka editor blok (login 1 kolom Password, daftar artikel lintas 8 bahasa, editor blok `sections[]`, tabel, callout, FAQ, lencana indikator sintaks Markdown `MD`, live SEO meter, pratinjau aman berbasis DOM API). Memakai `<meta name="robots" content="noindex, nofollow">` dan tidak masuk `sitemap.xml`. |
 | **Mesin Markdown Bersama** | `assets/article-markdown.js` | Parser & renderer Markdown UMD nol-dependensi (`globalThis.__ARTICLE_MARKDOWN__`) untuk **bold**, *italic*, `` `code` ``, `[link](url)`, daftar (`-`/`1.`), `> blockquote`, dan tabel pipe. Men-escape seluruh HTML mentah, membatasi protokol tautan ke `https:`/`http:`/`/`/`#`, serta menyediakan `stripMarkdownToPlainText` untuk penghitungan kata & JSON-LD `FAQPage`. |
 | **Panduan Penulis** | `public/doku.writer.html` -> `dist/public/doku.writer.html` | Buku pegangan penulis non-teknis (`noindex, nofollow`) yang dapat dibaca langsung di `/public/doku.writer.html`. |
 | **Validasi & Normalisasi** | `lib/article-schema.js` | Modul ESM murni (`validateAndNormalizeArticleSave`, `applyArticleSaveToManifest`, `countArticleWords` berbasis `stripMarkdownToPlainText`) yang menyamakan aturan validasi `scripts/site-builder.mjs` (`slug` `^[a-z0-9]+(?:-[a-z0-9]+)*$`, `section`, `articleType`, `dateModified >= datePublished`, `published: true` wajib punya `title`/`metaDesc`/`h1` dan min. 1 section, bebas tabrakan rute). |
@@ -609,4 +609,28 @@ Tambahkan variabel berikut di **Cloudflare Pages -> Settings -> Environment vari
 | `GITHUB_OWNER` | Text (Plaintext) | Username atau nama organisasi GitHub pemilik repositori. |
 | `GITHUB_REPO` | Text (Plaintext) | Nama repositori GitHub tempat kode dan `content/articles/` berada. |
 | `GITHUB_BRANCH` | Text (Opsional) | Nama branch target auto-deploy Cloudflare Pages (default: `main`). |
+
+---
+
+### I. Riwayat Perubahan Sistem Non-Penulisan Artikel
+
+Bagian ini mencatat pembaruan infrastruktur, monetisasi AdSense, autentikasi admin, interlink antar-studio, serta konfigurasi build dan keamanan di luar alur penulisan artikel:
+
+#### 1. Autentikasi Terpadu & Interlink Lintas 3 Studio (`/admin-articles/`, `/adsense-studio/`, `/admin-lexicon`)
+- **Satu Password & Satu Sesi Terpadu**: Halaman **Layout & AdSense Studio** (`/adsense-studio/`) dan **Admin Lexicon** (`/admin-lexicon`) kini menggunakan sistem autentikasi dan sesi yang sama dengan **Article Studio** (`/api/articles/auth` dengan cookie `HttpOnly` `dn_article_session`).
+- **Urutan Prioritas Kredensial Server**: Backend Express (`server.js`) maupun Cloudflare Pages Functions (`lib/worker-article-auth.js`) membaca `ARTICLE_ADMIN_PASSWORD`, lalu fallback ke `ADMIN_PASSWORD`, dan pada mode lokal/preview memakai berkas hash lokal `.admin-auth.json` (`lib/admin-auth.js`) yang juga mendukung reset lokal dengan menghapus berkas `.admin-auth.json`.
+- **Middleware Sesi Terpadu (`requireUnifiedAdminAuth`)**: Endpoint mutasi lexicon (`/api/lexicon/*`) di `server.js` menerima cookie sesi terpadu `dn_article_session` maupun `Authorization: Bearer`, disertai verifikasi `Origin`/`X-Requested-With` anti-CSRF.
+- **Navigasi Interlinked**: Sticky header pada `admin-articles.html`, `admin-adsense.html`, dan `admin-lexicon.html` kini saling terhubung langsung (**Article Studio**, **Layout & AdSense**, dan **Admin Lexicon**) sehingga berpindah antar-studio tidak memerlukan login ulang selama sesi masih aktif.
+
+#### 2. Studio Konfigurasi & Pratinjau Google AdSense 5 Slot (`/adsense-studio/`)
+- **Berkas Terkait**: `admin-adsense.html`, `assets/adsense-slots.js` (UMD dual-runtime Node/Browser), `assets/adsense-studio-sample.js`, dan `site.config.json` (dukungan konfigurasi `googleAdSense.slots`).
+- **Pengaturan 5 Slot Terstruktur**: Mendukung nama slot, jenis unit, preset ukuran terpisah **Desktop** vs **Mobile** (termasuk grid Multiplex `2x3` / `1x3` / vertikal dan Anchor Ad sticky yang dapat ditutup dengan tombol `×`), jarak margin atas-bawah min. `20–24px`, toggle aktif/nonaktif, serta pemilihan mode **Simulasi** vs **Live AdSense**.
+- **Parser Cuplikan AdSense Aman (`parseAdSenseSnippet`)**: Mengekstrak hanya atribut `<ins class="adsbygoogle">` yang masuk allowlist (`data-ad-client`, `data-ad-slot`, `data-ad-format`, `data-ad-layout`, `data-ad-layout-key`, `data-full-width-responsive`) tanpa pernah mengeksekusi atau menyisipkan tag `<script>`/`<iframe>` mentah ke DOM.
+- **Switcher Viewport & Ekspor**: Menyediakan switcher pratinjau **Desktop vs Mobile**, penyimpanan preferensi ke `localStorage` (`dn_adsense_studio_config_v1`), serta tombol **Salin JSON / Cuplikan Kode** untuk dipindahkan ke konfigurasi produksi.
+
+#### 3. Build Statis, Routing, & Pengamanan SEO Non-Publik
+- **Output Build Statis (`scripts/build-static.mjs`)**: Menyalin `admin-adsense.html` ke `dist/adsense-studio/index.html`, `admin-lexicon.html` ke `dist/admin-lexicon/index.html`, serta menyalin seluruh berkas `.md` dan `doku.writer.html` di `/public/` ke `dist/public/`.
+- **Proteksi Indeks & Header Keamanan (`server.js`, `scripts/site-builder.mjs`)**: Rute `/adsense-studio/`, `/admin-lexicon`, `/admin-articles/`, dan `/api/articles/*` ditandai `noindex, nofollow`, `Cache-Control: no-store`, serta tercantum pada `Disallow` di `robots.txt` dan aturan `_headers` Cloudflare Pages.
+- **Pembersihan Terminologi**: Menghapus seluruh penyebutan kata bertrademark pihak ketiga di antarmuka admin dan dokumentasi sistem.
+
 

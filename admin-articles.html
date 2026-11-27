@@ -45,14 +45,23 @@
                     Memeriksa...
                 </span>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <a href="/public/doku.writer.html" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto">
+                <a href="/admin-articles/" aria-current="page" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 whitespace-nowrap">
+                    Article Studio
+                </a>
+                <a href="/adsense-studio/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Layout &amp; AdSense
+                </a>
+                <a href="/admin-lexicon" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
+                    Admin Lexicon
+                </a>
+                <a href="/public/doku.writer.html" target="_blank" rel="noopener" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
                     Panduan Penulis
                 </a>
-                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <button id="themeToggleBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
                     Tema
                 </button>
-                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900/70 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors">
+                <button id="logoutBtn" type="button" class="hidden px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900/70 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors whitespace-nowrap">
                     Keluar
                 </button>
             </div>
@@ -171,7 +180,7 @@
             </div>
         </section>
 
-        <!-- WordPress-Style Editor Workspace -->
+        <!-- Editorial Block-Style Editor Workspace -->
         <section id="editorSection" class="hidden space-y-5">
             <!-- Editor Top Bar -->
             <div class="sticky top-14 z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
@@ -185,6 +194,15 @@
                     <span id="editorDirtyIndicator" class="hidden text-xs text-slate-500 dark:text-slate-400">Belum disimpan</span>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
+                    <button id="focusModeBtn" type="button" title="Tutup panel sekunder agar fokus menulis H1 & bagian H2" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-[#eaeef3] dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors whitespace-nowrap">
+                        Mode Fokus
+                    </button>
+                    <button id="cancelEditBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+                        Batal Edit
+                    </button>
+                    <button id="deleteArticleBtn" type="button" class="hidden px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors">
+                        Hapus Artikel
+                    </button>
                     <button id="previewBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                         Pratinjau
                     </button>
@@ -200,169 +218,239 @@
             <div id="saveResultBanner" class="hidden rounded-xl border p-4 text-xs sm:text-sm"></div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                <!-- Left Main Canvas (WordPress Block-Style Content) -->
-                <div class="lg:col-span-8 space-y-5">
-                    <!-- Title & Slug Card -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
-                        <div>
-                            <label for="fieldH1" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Judul Artikel (H1)</label>
-                            <input id="fieldH1" type="text" placeholder="Tulis judul artikel yang jelas dan spesifik..."
-                                class="w-full px-3.5 py-2.5 text-lg sm:text-xl font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
+                <!-- Left Main Canvas (Block-Style Nested Collapsible Content) -->
+                <div class="lg:col-span-8 space-y-4">
+                    <!-- Level 1: Title & Slug Card -->
+                    <details id="panelIdentity" class="group rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden" open>
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">01</span>
+                                    <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">Judul Utama (H1) &amp; Permalink URL</h2>
+                                </div>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Tajuk paling atas halaman &amp; alamat URL permanen artikel</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-4">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold text-slate-700 dark:text-slate-200">Panduan Panel Judul &amp; Slug:</span> Kolom <strong>H1</strong> menjadi judul utama pembaca di halaman artikel. <strong>Default Slug</strong> membentuk tautan permanen (permalink) serta tag kanonikal multi-bahasa.
+                            </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <label for="fieldH1" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Judul Artikel (H1)</label>
+                                <input id="fieldH1" type="text" placeholder="Tulis judul artikel yang jelas dan spesifik..."
+                                    class="w-full px-3.5 py-2.5 text-lg sm:text-xl font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="fieldId" class="text-xs font-semibold text-slate-700 dark:text-slate-300">ID / Default Slug</label>
+                                        <span id="idLockHint" class="text-[11px] text-slate-400">Otomatis dari judul</span>
+                                    </div>
+                                    <input id="fieldId" type="text" placeholder="mis. strategi-domain-umkm"
+                                        class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="fieldLangSlug" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Slug Khusus Bahasa Ini (Opsional)</label>
+                                    </div>
+                                    <input id="fieldLangSlug" type="text" placeholder="Kosongkan untuk pakai default slug"
+                                        class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-mono bg-[#eaeef3] dark:bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 break-all">
+                                URL Publik: <span id="permalinkPreview" class="text-blue-600 dark:text-blue-400 font-semibold">/guides/artikel-baru/</span>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Level 1: SEO & Summary Card -->
+                    <details id="panelSeo" class="group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">02</span>
+                                    <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">Ringkasan &amp; Metadata SEO</h2>
+                                    <span id="seoSummaryMeta" class="text-[11px] font-mono text-slate-500 dark:text-slate-400"></span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Tampilan di hasil pencarian Google (SERP), kartu indeks hub &amp; breadcrumb</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-4">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold text-slate-700 dark:text-slate-200">Panel Meta SEO:</span> <strong>SEO Title</strong> &amp; <strong>Meta Description</strong> muncul sebagai cuplikan hasil pencarian Google. <strong>Excerpt</strong> tampil sebagai paragraf pembuka di bawah judul H1 serta ringkasan kartu di halaman hub (<code class="font-mono">/guides/</code>, <code class="font-mono">/research/</code>).
+                            </div>
+
                             <div>
                                 <div class="flex items-center justify-between mb-1">
-                                    <label for="fieldId" class="text-xs font-semibold text-slate-700 dark:text-slate-300">ID / Default Slug</label>
-                                    <span id="idLockHint" class="text-[11px] text-slate-400">Otomatis dari judul</span>
+                                    <label for="fieldTitle" class="text-xs font-semibold text-slate-700 dark:text-slate-300">SEO Title (&lt;title&gt;)</label>
+                                    <span id="titleCharCount" class="text-[11px] font-mono text-slate-500">0 / 62</span>
                                 </div>
-                                <input id="fieldId" type="text" placeholder="mis. strategi-domain-umkm"
-                                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <input id="fieldTitle" type="text" placeholder="Judul ringkas di hasil pencarian Google (ideal 40–62 karakter)"
+                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
+
                             <div>
                                 <div class="flex items-center justify-between mb-1">
-                                    <label for="fieldLangSlug" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Slug Khusus Bahasa Ini (Opsional)</label>
+                                    <label for="fieldMetaDesc" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Meta Description</label>
+                                    <span id="metaDescCharCount" class="text-[11px] font-mono text-slate-500">0 / 155</span>
                                 </div>
-                                <input id="fieldLangSlug" type="text" placeholder="Kosongkan untuk pakai default slug"
-                                    class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <textarea id="fieldMetaDesc" rows="2" placeholder="Ringkasan 115–155 karakter yang menjelaskan nilai artikel bagi pembaca..."
+                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                             </div>
-                        </div>
 
-                        <div class="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-50 dark:bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 break-all">
-                            URL Publik: <span id="permalinkPreview" class="text-blue-600 dark:text-blue-400 font-semibold">/guides/artikel-baru/</span>
-                        </div>
-                    </div>
-
-                    <!-- SEO & Summary Card -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
-                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Ringkasan &amp; Metadata SEO</h2>
-
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label for="fieldTitle" class="text-xs font-semibold text-slate-700 dark:text-slate-300">SEO Title (&lt;title&gt;)</label>
-                                <span id="titleCharCount" class="text-[11px] font-mono text-slate-500">0 / 62</span>
-                            </div>
-                            <input id="fieldTitle" type="text" placeholder="Judul ringkas di hasil pencarian Google (ideal 40–62 karakter)"
-                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label for="fieldMetaDesc" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Meta Description</label>
-                                <span id="metaDescCharCount" class="text-[11px] font-mono text-slate-500">0 / 155</span>
-                            </div>
-                            <textarea id="fieldMetaDesc" rows="2" placeholder="Ringkasan 115–155 karakter yang menjelaskan nilai artikel bagi pembaca..."
-                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                        </div>
-
-                        <div>
-                            <label for="fieldExcerpt" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ringkasan Pembuka / Kartu Hub (Excerpt)</label>
-                            <textarea id="fieldExcerpt" rows="2" placeholder="1–2 kalimat subjudul di atas artikel dan deskripsi kartu pada halaman hub..."
-                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div class="sm:col-span-2">
-                                <label for="fieldKeywords" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kata Kunci (Keywords, pisahkan koma)</label>
-                                <input id="fieldKeywords" type="text" placeholder="strategi domain, riset nama brand, rfc 1035"
-                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
                             <div>
-                                <label for="fieldBreadcrumb" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Label Breadcrumb</label>
-                                <input id="fieldBreadcrumb" type="text" maxlength="60" placeholder="Singkat (<= 45 char)"
-                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label for="fieldExcerpt" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ringkasan Pembuka / Kartu Hub (Excerpt)</label>
+                                <textarea id="fieldExcerpt" rows="2" placeholder="1–2 kalimat subjudul di atas artikel dan deskripsi kartu pada halaman hub..."
+                                    class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="sm:col-span-2">
+                                    <label for="fieldKeywords" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kata Kunci (Keywords, pisahkan koma)</label>
+                                    <input id="fieldKeywords" type="text" placeholder="strategi domain, riset nama brand, rfc 1035"
+                                        class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="fieldBreadcrumb" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Label Breadcrumb</label>
+                                    <input id="fieldBreadcrumb" type="text" maxlength="60" placeholder="Singkat (<= 45 char)"
+                                        class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </details>
 
-                    <!-- Interactive Widget Notice (Tools) -->
-                    <div id="widgetNoticeCard" class="hidden rounded-xl border border-blue-200 dark:border-blue-900/70 bg-blue-50/50 dark:bg-blue-950/20 p-5 space-y-2 shadow-sm">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <label for="fieldWidgetNotice" class="block text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300">Kotak Info Alat Interaktif (Section Tools)</label>
-                            <span class="inline-flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
-                                <span class="px-1.5 py-0.5 rounded bg-blue-100/80 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-semibold">MD</span>
-                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">**bold**</code>
-                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">*italic*</code>
-                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">`code`</code>
-                                <code class="px-1 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">[link](url)</code>
-                            </span>
+                    <!-- Level 1: Interactive Widget Notice (Tools) -->
+                    <details id="widgetNoticeCard" class="hidden group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden" open>
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">Kotak Info Alat Interaktif (Khusus Section Tools)</h2>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Banner instruksi penggunaan alat interaktif di bawah tajuk</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <label for="fieldWidgetNotice" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Teks Kotak Info Alat</label>
+                                <span class="inline-flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD</span>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
+                                    <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](url)</code>
+                                </span>
+                            </div>
+                            <textarea id="fieldWidgetNotice" rows="2" placeholder="Penjelasan singkat cara kerja alat dan sumber data pembanding..."
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
-                        <textarea id="fieldWidgetNotice" rows="2" placeholder="Penjelasan singkat cara kerja alat dan sumber data pembanding..."
-                            class="w-full px-3 py-2 text-sm rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    </div>
+                    </details>
 
-                    <!-- Key Takeaways -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <div class="flex flex-wrap items-start justify-between gap-2">
-                            <div class="space-y-1">
-                                <h2 class="text-sm font-bold text-slate-900 dark:text-white">Poin Inti (Key Takeaways)</h2>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Tampilkan 3–5 ringkasan temuan utama di bagian atas artikel.</p>
-                                <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-0.5">
+                    <!-- Level 1: Key Takeaways -->
+                    <details id="panelTakeaways" class="group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">03</span>
+                                    <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">Poin Inti (Key Takeaways)</h2>
+                                    <span id="takeawaysCountMeta" class="text-[11px] font-mono text-slate-500 dark:text-slate-400"></span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Kotak ringkasan utama di puncak artikel sebelum Slot Iklan 1 &amp; Daftar Isi</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-3">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold text-slate-700 dark:text-slate-200">Panel Ringkasan Eksekutif:</span> Tampil tepat di bawah judul pembuka (sebelum Slot Iklan 1 &amp; Daftar Isi). Isi 3–5 poin padat agar pembaca langsung menangkap kesimpulan riset dalam 10 detik.
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
                                     <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD</span>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](https://...)</code>
                                 </div>
+                                <button id="addTakeawayBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                    + Tambah Poin
+                                </button>
                             </div>
-                            <button id="addTakeawayBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                                + Tambah Poin
-                            </button>
+                            <div id="takeawaysContainer" class="space-y-2"></div>
                         </div>
-                        <div id="takeawaysContainer" class="space-y-2"></div>
-                    </div>
+                    </details>
 
-                    <!-- Content Sections (WordPress Blocks) -->
-                    <div class="space-y-3">
-                        <div class="flex flex-wrap items-start justify-between gap-3">
-                            <div class="space-y-1.5">
-                                <h2 class="text-base font-bold text-slate-900 dark:text-white">Isi Artikel per Bagian (Sections &amp; Paragraf)</h2>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Mendukung format <strong>Markdown</strong> standar (tag HTML mentah seperti &lt;script&gt; otomatis di-escape). Pisahkan paragraf dengan satu baris kosong (Enter 2x).</p>
+                    <!-- Level 1: Content Sections (Nested Editorial Blocks) -->
+                    <details id="panelSections" class="group rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden" open>
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">04</span>
+                                    <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">Isi Artikel per Bagian (Sections H2 &amp; Paragraf)</h2>
+                                    <span id="sectionsCountMeta" class="text-[11px] font-mono text-slate-500 dark:text-slate-400"></span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Setiap Bagian H2 bisa dilipat masing-masing agar penulisan fokus &amp; bebas distraksi</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-4">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300 space-y-1">
+                                <p>
+                                    <span class="font-semibold text-slate-700 dark:text-slate-200">Struktur Block Editorial (3 Tingkat):</span> Setiap <strong>Bagian H2</strong> otomatis masuk ke Daftar Isi (TOC) &amp; jangkar tautan. Gunakan tombol <code class="font-mono">+Tabel Dalam Paragraf (MD)</code> atau <code class="font-mono">+ Tambah Gambar (URL)</code> untuk menyisipkan visual di tengah teks, lalu buka sub-panel bertingkat di bawahnya bila butuh Callout atau Tabel Penutup H2.
+                                </p>
+                            </div>
+
+                            <div class="flex flex-wrap items-center justify-between gap-2.5">
                                 <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-600 dark:text-slate-300">
                                     <span class="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-semibold">Markdown</span>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">**bold**</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">*italic*</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">`code`</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">[link](https://...)</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">- list</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">1. list</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">&gt; kutipan</code>
-                                    <code class="px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">| kol | kol |</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">**bold**</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">*italic*</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">`code`</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">[link](url)</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">- / 1. / &gt;</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">| kol |</code>
+                                    <code class="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700">![alt](url)</code>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                                    <button id="collapseAllSectionsBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+                                        Tutup Semua H2
+                                    </button>
+                                    <button id="expandAllSectionsBtn" type="button" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+                                        Buka Semua H2
+                                    </button>
+                                    <button id="addSectionBtn" type="button" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:opacity-90 transition-opacity">
+                                        + Tambah Bagian (H2)
+                                    </button>
                                 </div>
                             </div>
-                            <button id="addSectionBtn" type="button" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:opacity-90 transition-opacity shrink-0">
-                                + Tambah Bagian (H2)
-                            </button>
-                        </div>
-                        <div id="sectionsContainer" class="space-y-4"></div>
-                    </div>
 
-                    <!-- Methodology Note -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2 shadow-sm">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <label for="fieldMethodology" class="block text-sm font-bold text-slate-900 dark:text-white">Catatan Metodologi &amp; Transparansi (Opsional)</label>
-                            <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
-                                <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD</span>
-                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
-                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
-                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
-                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](url)</code>
-                                <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">- / 1. / &gt; / |</code>
+                            <div id="sectionsContainer" class="space-y-3"></div>
+                        </div>
+                    </details>
+
+                    <!-- Level 1: Methodology Note -->
+                    <details id="panelMethodology" class="group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">05</span>
+                                    <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">Catatan Metodologi &amp; Transparansi (Opsional)</h2>
+                                    <span id="methodologyStatusMeta" class="text-[11px] font-mono text-slate-500 dark:text-slate-400"></span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Kotak sumber data, periode riset &amp; disclaimer di bagian bawah artikel</p>
                             </div>
-                        </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Jelaskan sumber data, periode pengecekan, dan batasan klaim (mis. bukan nasihat hukum merek dagang).</p>
-                        <textarea id="fieldMethodology" rows="3" placeholder="Contoh: Data diambil dari agregasi **pengecekan RDAP/NS** pada `/api/log-available-domain`..."
-                            class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    </div>
-
-                    <!-- FAQs Builder -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <div class="flex flex-wrap items-start justify-between gap-2">
-                            <div class="space-y-1">
-                                <h2 class="text-sm font-bold text-slate-900 dark:text-white">FAQ Artikel</h2>
-                                <p id="faqSchemaStatus" class="text-xs text-slate-500 dark:text-slate-400">Minimal 2 tanya-jawab untuk mengaktifkan Schema.org FAQPage otomatis.</p>
-                                <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-0.5">
-                                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD Jawaban</span>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-3">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold text-slate-700 dark:text-slate-200">Panel Transparansi E-E-A-T:</span> Tampil sebelum blok FAQ (tepat setelah Slot Iklan 4). Jelaskan sumber data, periode pengecekan RDAP/DNS, serta batasan klaim (mis. bukan nasihat hukum merek dagang).
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <label for="fieldMethodology" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Isi Catatan Metodologi</label>
+                                <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD</span>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
@@ -370,133 +458,200 @@
                                     <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">- / 1. / &gt; / |</code>
                                 </div>
                             </div>
-                            <button id="addFaqBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                                + Tambah FAQ
-                            </button>
+                            <textarea id="fieldMethodology" rows="3" placeholder="Contoh: Data diambil dari agregasi **pengecekan RDAP/NS** pada `/api/log-available-domain`..."
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
-                        <div id="faqsContainer" class="space-y-3"></div>
-                    </div>
+                    </details>
+
+                    <!-- Level 1: FAQs Builder -->
+                    <details id="panelFaqs" class="group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-5 py-3.5 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">06</span>
+                                    <h2 class="text-sm font-bold text-slate-900 dark:text-white truncate">FAQ Artikel (Rich Result Schema)</h2>
+                                    <span id="faqsCountMeta" class="text-[11px] font-mono text-slate-500 dark:text-slate-400"></span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 truncate">Akordeon tanya-jawab di penutup artikel + Schema.org FAQPage otomatis</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-5 space-y-3">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold text-slate-700 dark:text-slate-200">Panel FAQ Terstruktur:</span> Minimal 2 item FAQ terisi otomatis menyisipkan markup terstruktur <code class="font-mono">Schema.org FAQPage</code> agar berpeluang tampil sebagai dropdown tanya-jawab di Google Search.
+                            </div>
+                            <div class="flex flex-wrap items-start justify-between gap-2">
+                                <div class="space-y-1">
+                                    <p id="faqSchemaStatus" class="text-xs text-slate-500 dark:text-slate-400">Minimal 2 tanya-jawab untuk mengaktifkan Schema.org FAQPage otomatis.</p>
+                                    <div class="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-0.5">
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold">MD Jawaban</span>
+                                        <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">**bold**</code>
+                                        <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">*italic*</code>
+                                        <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">`code`</code>
+                                        <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">[link](url)</code>
+                                        <code class="px-1 py-0.5 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">- / 1. / &gt; / |</code>
+                                    </div>
+                                </div>
+                                <button id="addFaqBtn" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                    + Tambah FAQ
+                                </button>
+                            </div>
+                            <div id="faqsContainer" class="space-y-2.5"></div>
+                        </div>
+                    </details>
                 </div>
 
-                <!-- Right Sidebar (WordPress Document Inspector) -->
-                <aside class="lg:col-span-4 space-y-5 lg:sticky lg:top-32">
-                    <!-- Language & Publication Settings -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
-                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Pengaturan Publikasi &amp; Bahasa</h2>
+                <!-- Right Sidebar (Document Inspector - Collapsible) -->
+                <aside class="lg:col-span-4 space-y-4 lg:sticky lg:top-32">
+                    <!-- Inspector 1: Language & Publication Settings -->
+                    <details id="panelInspectorPub" class="group rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden" open>
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-4 py-3 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Publikasi &amp; Bahasa</span>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-4 space-y-3.5">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                Atur bahasa aktif (8 locale), folder section URL, dan tanggal pembaruan untuk prioritas <code class="font-mono">sitemap.xml</code>.
+                            </div>
 
-                        <div>
-                            <label for="fieldLang" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Bahasa yang Sedang Diedit</label>
-                            <select id="fieldLang" class="w-full px-3 py-2 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="id">ID — Indonesia</option>
-                                <option value="en">EN — English</option>
-                                <option value="es">ES — Español</option>
-                                <option value="pt">PT — Português</option>
-                                <option value="fr">FR — Français</option>
-                                <option value="de">DE — Deutsch</option>
-                                <option value="ru">RU — Русский</option>
-                                <option value="ja">JA — 日本語</option>
-                            </select>
-                            <div id="localeStatusStrip" class="mt-2 flex flex-wrap gap-1.5"></div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="fieldSection" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Section</label>
-                                <select id="fieldSection" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="guides">guides (Articles)</option>
-                                    <option value="research">research (Riset)</option>
-                                    <option value="tools">tools (Alat)</option>
+                                <label for="fieldLang" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Bahasa yang Sedang Diedit</label>
+                                <select id="fieldLang" class="w-full px-3 py-2 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="id">ID — Indonesia</option>
+                                    <option value="en">EN — English</option>
+                                    <option value="es">ES — Español</option>
+                                    <option value="pt">PT — Português</option>
+                                    <option value="fr">FR — Français</option>
+                                    <option value="de">DE — Deutsch</option>
+                                    <option value="ru">RU — Русский</option>
+                                    <option value="ja">JA — 日本語</option>
                                 </select>
+                                <div id="localeStatusStrip" class="mt-2 flex flex-wrap gap-1.5"></div>
                             </div>
-                            <div>
-                                <label for="fieldArticleType" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipe Schema</label>
-                                <select id="fieldArticleType" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="TechArticle">TechArticle</option>
-                                    <option value="Article">Article</option>
-                                    <option value="WebApplication">WebApplication</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label for="fieldDatePublished" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tanggal Terbit</label>
-                                <input id="fieldDatePublished" type="date" class="w-full px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="fieldDateModified" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Diperbarui (Sitemap)</label>
-                                    <button id="setTodayDateBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Hari ini</button>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="fieldSection" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Section</label>
+                                    <select id="fieldSection" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="guides">guides (Articles)</option>
+                                        <option value="research">research (Riset)</option>
+                                        <option value="tools">tools (Alat)</option>
+                                    </select>
                                 </div>
-                                <input id="fieldDateModified" type="date" class="w-full px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3 items-end">
-                            <div>
-                                <label for="fieldChangefreq" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Changefreq Sitemap</label>
-                                <select id="fieldChangefreq" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
-                                    <option value="monthly">monthly</option>
-                                    <option value="weekly">weekly</option>
-                                    <option value="daily">daily</option>
-                                    <option value="yearly">yearly</option>
-                                </select>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="fieldReadingTime" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Waktu Baca (mnt)</label>
-                                    <button id="autoReadTimeBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Hitung</button>
+                                <div>
+                                    <label for="fieldArticleType" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipe Schema</label>
+                                    <select id="fieldArticleType" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="TechArticle">TechArticle</option>
+                                        <option value="Article">Article</option>
+                                        <option value="WebApplication">WebApplication</option>
+                                    </select>
                                 </div>
-                                <input id="fieldReadingTime" type="number" min="1" max="120" value="5" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
                             </div>
-                        </div>
 
-                        <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 cursor-pointer select-none pt-1">
-                            <input id="fieldIsPillar" type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            <span>Tandai sebagai Pillar Article (prioritas sitemap 0.8)</span>
-                        </label>
-                    </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="fieldDatePublished" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tanggal Terbit</label>
+                                    <input id="fieldDatePublished" type="date" class="w-full px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="fieldDateModified" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Diperbarui (Sitemap)</label>
+                                        <button id="setTodayDateBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Hari ini</button>
+                                    </div>
+                                    <input id="fieldDateModified" type="date" class="w-full px-2.5 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                </div>
+                            </div>
 
-                    <!-- Author & E-E-A-T Snapshot -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Penulis &amp; Snapshot Data E-E-A-T</h2>
-                        <div>
-                            <label for="fieldAuthorName" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Penulis / Tim</label>
-                            <input id="fieldAuthorName" type="text" value="Domain Name Editorial" class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            <div class="grid grid-cols-2 gap-3 items-end">
+                                <div>
+                                    <label for="fieldChangefreq" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Changefreq Sitemap</label>
+                                    <select id="fieldChangefreq" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                        <option value="monthly">monthly</option>
+                                        <option value="weekly">weekly</option>
+                                        <option value="daily">daily</option>
+                                        <option value="yearly">yearly</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label for="fieldReadingTime" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Waktu Baca (mnt)</label>
+                                        <button id="autoReadTimeBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Hitung</button>
+                                    </div>
+                                    <input id="fieldReadingTime" type="number" min="1" max="120" value="5" class="w-full px-2.5 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                </div>
+                            </div>
+
+                            <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 cursor-pointer select-none pt-1">
+                                <input id="fieldIsPillar" type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                                <span>Tandai sebagai Pillar Article (prioritas sitemap 0.8)</span>
+                            </label>
                         </div>
-                        <div class="grid grid-cols-2 gap-2.5">
+                    </details>
+
+                    <!-- Inspector 2: Author & E-E-A-T Snapshot -->
+                    <details id="panelInspectorAuthor" class="group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-4 py-3 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Penulis &amp; Snapshot Data E-E-A-T</span>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-4 space-y-3">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                Menampilkan byline penulis di bawah judul &amp; badge jumlah sampel dataset (<code class="font-mono">N=...</code>) untuk kredibilitas riset.
+                            </div>
                             <div>
-                                <label for="fieldAuthorRole" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Peran / Kredensial</label>
-                                <input id="fieldAuthorRole" type="text" value="Domain Research &amp; DNS Strategy" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                <label for="fieldAuthorName" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Penulis / Tim</label>
+                                <input id="fieldAuthorName" type="text" value="Domain Name Editorial" class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
                             </div>
-                            <div>
-                                <label for="fieldAuthorUrl" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">URL Profil</label>
-                                <input id="fieldAuthorUrl" type="text" value="/about.html" class="w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="fieldAuthorRole" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Peran / Kredensial</label>
+                                    <input id="fieldAuthorRole" type="text" value="Domain Research &amp; DNS Strategy" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                </div>
+                                <div>
+                                    <label for="fieldAuthorUrl" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">URL Profil</label>
+                                    <input id="fieldAuthorUrl" type="text" value="/about.html" class="w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
+                                <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Snapshot Dataset D1 (Opsional)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input id="fieldSnapSample" type="number" min="0" placeholder="Jumlah sampel (N)" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                    <input id="fieldSnapRange" type="text" placeholder="Rentang tgl (2026-10..)" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                </div>
                             </div>
                         </div>
-                        <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
-                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Snapshot Dataset D1 (Opsional)</p>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input id="fieldSnapSample" type="number" min="0" placeholder="Jumlah sampel (N)" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
-                                <input id="fieldSnapRange" type="text" placeholder="Rentang tgl (2026-10..)" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
-                            </div>
-                        </div>
-                    </div>
+                    </details>
 
-                    <!-- Related Articles -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2.5 shadow-sm">
-                        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Artikel Terkait (Related IDs)</h2>
-                        <div id="relatedIdsContainer" class="max-h-40 overflow-y-auto space-y-1.5 pr-1 text-xs"></div>
-                    </div>
-
-                    <!-- Pre-Publish Quality Checklist -->
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-sm font-bold text-slate-900 dark:text-white">Checklist Kualitas</h2>
-                            <span id="liveWordCountBadge" class="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">0 kata</span>
+                    <!-- Inspector 3: Related Articles -->
+                    <details id="panelInspectorRelated" class="group editorial-secondary rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-4 py-3 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Artikel Terkait (Related IDs)</span>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-4 space-y-2.5">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                Tampil sebagai kartu rekomendasi bacaan lanjutan di bawah FAQ untuk memperkuat tautan internal (internal linking).
+                            </div>
+                            <div id="relatedIdsContainer" class="max-h-40 overflow-y-auto space-y-1.5 pr-1 text-xs"></div>
                         </div>
-                        <ul id="checklistItems" class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300"></ul>
-                    </div>
+                    </details>
+
+                    <!-- Inspector 4: Pre-Publish Quality Checklist -->
+                    <details id="panelInspectorChecklist" class="group rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden" open>
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none px-4 py-3 bg-[#eaeef3] dark:bg-slate-800/75 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Checklist Kualitas</span>
+                                <span id="liveWordCountBadge" class="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">0 kata</span>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="p-4 space-y-2.5">
+                            <div class="rounded-lg border border-slate-200/90 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-800/50 px-3 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                Pemeriksaan otomatis pra-terbit agar struktur SEO, kedalaman tulisan, dan FAQ memenuhi standar editorial.
+                            </div>
+                            <ul id="checklistItems" class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300"></ul>
+                        </div>
+                    </details>
                 </aside>
             </div>
         </section>
@@ -515,6 +670,144 @@
         </div>
     </div>
 
+    <!-- Markdown Table Composer Modal -->
+    <div id="markdownTableModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm p-3 sm:p-6 overflow-y-auto">
+        <div class="max-w-2xl mx-auto my-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white">Tambah Tabel (Markdown)</h3>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Tempel atau tulis tabel Markdown standar (<code class="font-mono">| Kolom | Kolom |</code>).</p>
+                </div>
+                <button id="closeTableModalBtn" type="button" class="px-3 py-1 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    Tutup
+                </button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div>
+                    <label for="tableModalCaption" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Judul / Caption Tabel (Opsional, dipakai jika diterapkan ke Tabel Penutup H2)</label>
+                    <input id="tableModalCaption" type="text" placeholder="mis. Perbandingan Skor Keterbacaan per TLD"
+                        class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <label for="tableModalMarkdown" class="text-xs font-semibold text-slate-700 dark:text-slate-300">Kode Tabel Markdown</label>
+                        <button id="tableModalTemplateBtn" type="button" class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+                            Isi Contoh Tabel
+                        </button>
+                    </div>
+                    <textarea id="tableModalMarkdown" rows="7" placeholder="| Ekstensi | Panjang Ideal | Catatan |&#10;| :--- | :---: | :--- |&#10;| .com | 5-10 huruf | Paling umum |&#10;| .id | 4-8 huruf | Fokus Indonesia |"
+                        class="w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <p id="tableModalError" class="hidden mt-1.5 text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+                </div>
+                <div class="space-y-1.5">
+                    <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pratinjau Tabel</span>
+                    <div id="tableModalPreview" class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 min-h-[64px] text-xs text-slate-500"></div>
+                </div>
+                <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <button id="cancelTableModalBtn" type="button" class="px-3 py-2 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button id="applyStructuredTableBtn" type="button" class="px-3 py-2 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50">
+                        Terapkan ke Tabel Penutup H2
+                    </button>
+                    <button id="insertMarkdownTableBtn" type="button" class="px-4 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                        Sisipkan ke Dalam Paragraf (MD)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image URL Composer Modal -->
+    <div id="imageUrlModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm p-3 sm:p-6 overflow-y-auto">
+        <div class="max-w-xl mx-auto my-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-950">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white">Tambah Gambar dari URL</h3>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Masukkan URL gambar <code class="font-mono">https://...</code> atau path lokal <code class="font-mono">/public/...</code>.</p>
+                </div>
+                <button id="closeImageModalBtn" type="button" class="px-3 py-1 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    Tutup
+                </button>
+            </div>
+            <form id="imageUrlForm" class="p-5 space-y-4">
+                <div>
+                    <label for="imageModalUrl" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">URL Gambar</label>
+                    <input id="imageModalUrl" type="text" required placeholder="https://contoh.com/gambar-ilustrasi.png atau /public/assets/..."
+                        class="w-full px-3 py-2 text-xs sm:text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="imageModalAlt" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Teks Alt (Deskripsi Gambar)</label>
+                        <input id="imageModalAlt" type="text" placeholder="mis. Diagram alur validasi RFC 1035"
+                            class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="imageModalCaption" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Caption Gambar (Opsional)</label>
+                        <input id="imageModalCaption" type="text" placeholder="mis. Sumber: Dokumentasi DNS internal"
+                            class="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <p id="imageModalError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+                <div class="space-y-1.5">
+                    <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pratinjau Gambar</span>
+                    <div id="imageModalPreviewWrap" class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 min-h-[96px] flex items-center justify-center text-xs text-slate-500 text-center">
+                        Masukkan URL gambar yang valid untuk melihat pratinjau.
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <button id="cancelImageModalBtn" type="button" class="px-3 py-2 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                        Sisipkan Gambar (Markdown)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cancel Edit Confirmation Modal -->
+    <div id="confirmCancelModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm p-4 flex items-center justify-center">
+        <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+            <div class="p-5 space-y-3">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white">Batalkan Edit Artikel?</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Ada perubahan yang belum disimpan. Jika dibatalkan sekarang, perubahan pada editor akan dibuang dan Anda kembali ke daftar artikel.
+                </p>
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                    <button id="keepEditingBtn" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Lanjut Edit
+                    </button>
+                    <button id="confirmCancelEditBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-amber-600 hover:bg-amber-700 text-white shadow-sm">
+                        Ya, Batalkan Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Article Confirmation Modal -->
+    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm p-4 flex items-center justify-center">
+        <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+            <div class="p-5 space-y-3">
+                <h3 class="text-base font-bold text-rose-700 dark:text-rose-400">Hapus Artikel Secara Permanen?</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Artikel <strong id="deleteTargetTitle" class="text-slate-900 dark:text-white"></strong> (<code id="deleteTargetId" class="font-mono text-xs"></code>) beserta seluruh versi bahasanya akan dihapus dari manifest dan penyimpanan.
+                </p>
+                <p id="deleteModalError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                    <button id="cancelDeleteModalBtn" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Batal
+                    </button>
+                    <button id="confirmDeleteArticleBtn" type="button" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-sm">
+                        Ya, Hapus Artikel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/assets/article-markdown.js"></script>
     <script>
         (function() {
@@ -523,6 +816,7 @@
 
             const state = {
                 authenticated: false,
+                sessionToken: null,
                 needsSetup: false,
                 configured: true,
                 storageMode: 'local',
@@ -532,7 +826,9 @@
                 isNewArticle: true,
                 slugManuallyEdited: false,
                 dirty: false,
-                draft: null
+                draft: null,
+                activeComposer: null,
+                pendingDeleteTarget: null
             };
 
             const els = {
@@ -558,12 +854,32 @@
                 newArticleBtn: document.getElementById('newArticleBtn'),
                 editorSection: document.getElementById('editorSection'),
                 backToListBtn: document.getElementById('backToListBtn'),
+                focusModeBtn: document.getElementById('focusModeBtn'),
+                cancelEditBtn: document.getElementById('cancelEditBtn'),
+                deleteArticleBtn: document.getElementById('deleteArticleBtn'),
                 editorStatusPill: document.getElementById('editorStatusPill'),
                 editorDirtyIndicator: document.getElementById('editorDirtyIndicator'),
                 saveResultBanner: document.getElementById('saveResultBanner'),
                 previewBtn: document.getElementById('previewBtn'),
                 saveDraftBtn: document.getElementById('saveDraftBtn'),
                 publishBtn: document.getElementById('publishBtn'),
+                panelIdentity: document.getElementById('panelIdentity'),
+                panelSeo: document.getElementById('panelSeo'),
+                seoSummaryMeta: document.getElementById('seoSummaryMeta'),
+                panelTakeaways: document.getElementById('panelTakeaways'),
+                takeawaysCountMeta: document.getElementById('takeawaysCountMeta'),
+                panelSections: document.getElementById('panelSections'),
+                sectionsCountMeta: document.getElementById('sectionsCountMeta'),
+                collapseAllSectionsBtn: document.getElementById('collapseAllSectionsBtn'),
+                expandAllSectionsBtn: document.getElementById('expandAllSectionsBtn'),
+                panelMethodology: document.getElementById('panelMethodology'),
+                methodologyStatusMeta: document.getElementById('methodologyStatusMeta'),
+                panelFaqs: document.getElementById('panelFaqs'),
+                faqsCountMeta: document.getElementById('faqsCountMeta'),
+                panelInspectorPub: document.getElementById('panelInspectorPub'),
+                panelInspectorAuthor: document.getElementById('panelInspectorAuthor'),
+                panelInspectorRelated: document.getElementById('panelInspectorRelated'),
+                panelInspectorChecklist: document.getElementById('panelInspectorChecklist'),
                 fieldH1: document.getElementById('fieldH1'),
                 fieldId: document.getElementById('fieldId'),
                 idLockHint: document.getElementById('idLockHint'),
@@ -607,7 +923,35 @@
                 checklistItems: document.getElementById('checklistItems'),
                 previewModal: document.getElementById('previewModal'),
                 previewBody: document.getElementById('previewBody'),
-                closePreviewBtn: document.getElementById('closePreviewBtn')
+                closePreviewBtn: document.getElementById('closePreviewBtn'),
+                markdownTableModal: document.getElementById('markdownTableModal'),
+                closeTableModalBtn: document.getElementById('closeTableModalBtn'),
+                cancelTableModalBtn: document.getElementById('cancelTableModalBtn'),
+                tableModalCaption: document.getElementById('tableModalCaption'),
+                tableModalMarkdown: document.getElementById('tableModalMarkdown'),
+                tableModalTemplateBtn: document.getElementById('tableModalTemplateBtn'),
+                tableModalError: document.getElementById('tableModalError'),
+                tableModalPreview: document.getElementById('tableModalPreview'),
+                applyStructuredTableBtn: document.getElementById('applyStructuredTableBtn'),
+                insertMarkdownTableBtn: document.getElementById('insertMarkdownTableBtn'),
+                imageUrlModal: document.getElementById('imageUrlModal'),
+                closeImageModalBtn: document.getElementById('closeImageModalBtn'),
+                cancelImageModalBtn: document.getElementById('cancelImageModalBtn'),
+                imageUrlForm: document.getElementById('imageUrlForm'),
+                imageModalUrl: document.getElementById('imageModalUrl'),
+                imageModalAlt: document.getElementById('imageModalAlt'),
+                imageModalCaption: document.getElementById('imageModalCaption'),
+                imageModalError: document.getElementById('imageModalError'),
+                imageModalPreviewWrap: document.getElementById('imageModalPreviewWrap'),
+                confirmCancelModal: document.getElementById('confirmCancelModal'),
+                keepEditingBtn: document.getElementById('keepEditingBtn'),
+                confirmCancelEditBtn: document.getElementById('confirmCancelEditBtn'),
+                confirmDeleteModal: document.getElementById('confirmDeleteModal'),
+                deleteTargetTitle: document.getElementById('deleteTargetTitle'),
+                deleteTargetId: document.getElementById('deleteTargetId'),
+                deleteModalError: document.getElementById('deleteModalError'),
+                cancelDeleteModalBtn: document.getElementById('cancelDeleteModalBtn'),
+                confirmDeleteArticleBtn: document.getElementById('confirmDeleteArticleBtn')
             };
 
             function todayIso() {
@@ -633,7 +977,7 @@
                 tag.textContent = 'MD';
                 wrap.appendChild(tag);
                 const symbols = mode === 'full'
-                    ? ['**B**', '*I*', '`code`', '[link](url)', '- list', '1. list', '> quote', '| tbl |']
+                    ? ['**B**', '*I*', '`code`', '[link](url)', '- list', '1. list', '> quote', '| tbl |', '![alt](url)']
                     : ['**B**', '*I*', '`code`', '[link](url)'];
                 for (const sym of symbols) {
                     const code = document.createElement('code');
@@ -650,6 +994,7 @@
                     ...options,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
+                        ...(state.sessionToken ? { 'Authorization': `Bearer ${state.sessionToken}` } : {}),
                         ...(options.body ? { 'Content-Type': 'application/json' } : {}),
                         ...(options.headers || {})
                     }
@@ -725,13 +1070,14 @@
                                 tableRowsText: '',
                                 codeCaption: '',
                                 codeText: '',
-                                subsections: []
+                                subsections: [],
+                                _open: true
                             }
                         ],
                         methodologyNote: '',
                         faqs: [
-                            { q: '', a: '' },
-                            { q: '', a: '' }
+                            { q: '', a: '', _open: true },
+                            { q: '', a: '', _open: false }
                         ]
                     }
                 };
@@ -833,6 +1179,7 @@
                 } catch (err) {
                     if (err.status === 401) {
                         state.authenticated = false;
+                        state.sessionToken = null;
                         els.listSection.classList.add('hidden');
                         els.authSection.classList.remove('hidden');
                         els.loginForm.classList.remove('hidden');
@@ -940,6 +1287,17 @@
                         tdAct.appendChild(viewLink);
                     }
 
+                    const deleteRowBtn = document.createElement('button');
+                    deleteRowBtn.type = 'button';
+                    deleteRowBtn.className = 'px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors';
+                    deleteRowBtn.textContent = 'Hapus';
+                    deleteRowBtn.addEventListener('click', () => openDeleteConfirmModal({
+                        id: art.id,
+                        title: primaryLocale.h1 || primaryLocale.title || art.id,
+                        fromEditor: false
+                    }));
+                    tdAct.appendChild(deleteRowBtn);
+
                     tr.appendChild(tdTitle);
                     tr.appendChild(tdSec);
                     tr.appendChild(tdLangs);
@@ -1006,7 +1364,7 @@
                                 ? [...rawContent.keyTakeaways]
                                 : [''],
                             sections: Array.isArray(rawContent.sections) && rawContent.sections.length > 0
-                                ? rawContent.sections.map((s) => ({
+                                ? rawContent.sections.map((s, sIdx) => ({
                                     anchor: s.anchor || '',
                                     heading: s.heading || '',
                                     paragraphsText: Array.isArray(s.paragraphs) ? s.paragraphs.join('\n\n') : '',
@@ -1026,13 +1384,14 @@
                                             heading: sub.heading || '',
                                             paragraphsText: Array.isArray(sub.paragraphs) ? sub.paragraphs.join('\n\n') : ''
                                         }))
-                                        : []
+                                        : [],
+                                    _open: sIdx === 0
                                 }))
                                 : createBlankDraft(data.lang).content.sections,
                             methodologyNote: rawContent.methodologyNote || '',
                             faqs: Array.isArray(rawContent.faqs) && rawContent.faqs.length > 0
-                                ? rawContent.faqs.map((f) => ({ q: f.q || '', a: f.a || '' }))
-                                : [{ q: '', a: '' }]
+                                ? rawContent.faqs.map((f, fIdx) => ({ q: f.q || '', a: f.a || '', _open: fIdx === 0 }))
+                                : [{ q: '', a: '', _open: true }]
                         }
                     };
                     showEditorView();
@@ -1081,6 +1440,19 @@
                 els.fieldSnapRange.value = d.dataSnapshot.dateRange;
 
                 els.widgetNoticeCard.classList.toggle('hidden', d.section !== 'tools');
+                // Smart initial open state per article for clean distraction-free workflow
+                if (els.panelIdentity) els.panelIdentity.open = true;
+                if (els.panelSections) els.panelSections.open = true;
+                if (els.panelSeo) els.panelSeo.open = Boolean(state.isNewArticle || !d.localeMeta.title || !d.localeMeta.metaDesc);
+                if (els.panelTakeaways) els.panelTakeaways.open = Boolean(state.isNewArticle);
+                if (els.panelMethodology) els.panelMethodology.open = false;
+                if (els.panelFaqs) els.panelFaqs.open = Boolean(state.isNewArticle);
+                if (els.panelInspectorPub) els.panelInspectorPub.open = true;
+                if (els.panelInspectorChecklist) els.panelInspectorChecklist.open = true;
+                if (els.panelInspectorAuthor) els.panelInspectorAuthor.open = false;
+                if (els.panelInspectorRelated) els.panelInspectorRelated.open = false;
+                if (els.focusModeBtn) els.focusModeBtn.textContent = 'Mode Fokus';
+
                 updateStatusPill();
                 renderLocaleStatusStrip();
                 renderTakeawaysList();
@@ -1097,6 +1469,7 @@
                     ? 'px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300'
                     : 'px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300';
                 els.publishBtn.textContent = pub ? 'Update Published' : 'Publish';
+                els.deleteArticleBtn.classList.toggle('hidden', state.isNewArticle || !state.draft?.previousId);
             }
 
             function renderLocaleStatusStrip() {
@@ -1174,26 +1547,72 @@
                 });
             }
 
+            function createChevronSvg(groupOpenClass) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 20 20');
+                svg.setAttribute('fill', 'currentColor');
+                svg.setAttribute('aria-hidden', 'true');
+                svg.setAttribute('class', `w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 ${groupOpenClass}`);
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('fill-rule', 'evenodd');
+                path.setAttribute('d', 'M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z');
+                path.setAttribute('clip-rule', 'evenodd');
+                svg.appendChild(path);
+                return svg;
+            }
+
             function renderSectionsList() {
                 els.sectionsContainer.textContent = '';
                 state.draft.content.sections.forEach((sec, idx) => {
-                    const card = document.createElement('div');
-                    card.className = 'rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm';
+                    // Level 2 Collapsible: Individual H2 Section
+                    const card = document.createElement('details');
+                    card.className = 'group/sec rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden';
+                    card.open = sec._open !== false;
+                    card.addEventListener('toggle', () => {
+                        sec._open = card.open;
+                    });
 
-                    const headBar = document.createElement('div');
-                    headBar.className = 'flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800';
+                    const headSummary = document.createElement('summary');
+                    headSummary.className = 'list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-[#eaeef3] dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800';
+
+                    const titleLeft = document.createElement('div');
+                    titleLeft.className = 'flex items-center gap-2 min-w-0 flex-1';
+                    titleLeft.appendChild(createChevronSvg('group-open/sec:rotate-180'));
+
                     const label = document.createElement('span');
-                    label.className = 'text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400';
+                    label.className = 'text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 shrink-0';
                     label.textContent = `Bagian #${idx + 1}`;
+
+                    const headingPreview = document.createElement('span');
+                    headingPreview.className = 'text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 truncate';
+                    headingPreview.textContent = sec.heading?.trim() ? `— ${sec.heading.trim()}` : '— (Sub-judul H2 belum diisi)';
+
+                    const metaBits = [];
+                    const blockCount = sec.paragraphsText ? sec.paragraphsText.split(/\n{2,}/).filter((p) => p.trim()).length : 0;
+                    if (blockCount > 0) metaBits.push(`${blockCount} blok`);
+                    if (sec.bulletsText?.trim()) metaBits.push('Poin');
+                    if (sec.calloutBody?.trim()) metaBits.push('Callout');
+                    if (sec.tableHeadersText?.trim() || sec.tableRowsText?.trim()) metaBits.push('Tabel H2');
+
+                    const metaSpan = document.createElement('span');
+                    metaSpan.className = 'hidden sm:inline text-[11px] font-mono text-slate-500 dark:text-slate-400 shrink-0';
+                    metaSpan.textContent = metaBits.length > 0 ? `(${metaBits.join(' · ')})` : '';
+
+                    titleLeft.appendChild(label);
+                    titleLeft.appendChild(headingPreview);
+                    titleLeft.appendChild(metaSpan);
+
                     const controls = document.createElement('div');
-                    controls.className = 'flex items-center gap-1.5';
+                    controls.className = 'flex items-center gap-1.5 shrink-0';
 
                     if (idx > 0) {
                         const upBtn = document.createElement('button');
                         upBtn.type = 'button';
-                        upBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
+                        upBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800';
                         upBtn.textContent = 'Naik';
-                        upBtn.addEventListener('click', () => {
+                        upBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             const arr = state.draft.content.sections;
                             [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
                             renderSectionsList();
@@ -1204,9 +1623,11 @@
                     if (idx < state.draft.content.sections.length - 1) {
                         const downBtn = document.createElement('button');
                         downBtn.type = 'button';
-                        downBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
+                        downBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800';
                         downBtn.textContent = 'Turun';
-                        downBtn.addEventListener('click', () => {
+                        downBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             const arr = state.draft.content.sections;
                             [arr[idx + 1], arr[idx]] = [arr[idx], arr[idx + 1]];
                             renderSectionsList();
@@ -1216,9 +1637,11 @@
                     }
                     const removeBtn = document.createElement('button');
                     removeBtn.type = 'button';
-                    removeBtn.className = 'px-2.5 py-1 text-xs font-medium rounded border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50';
+                    removeBtn.className = 'px-2.5 py-1 text-xs font-medium rounded border border-rose-200 dark:border-rose-900 bg-white dark:bg-slate-900 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50';
                     removeBtn.textContent = 'Hapus Bagian';
-                    removeBtn.addEventListener('click', () => {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         if (state.draft.content.sections.length <= 1) return;
                         state.draft.content.sections.splice(idx, 1);
                         renderSectionsList();
@@ -1227,9 +1650,12 @@
                     });
                     controls.appendChild(removeBtn);
 
-                    headBar.appendChild(label);
-                    headBar.appendChild(controls);
-                    card.appendChild(headBar);
+                    headSummary.appendChild(titleLeft);
+                    headSummary.appendChild(controls);
+                    card.appendChild(headSummary);
+
+                    const cardBody = document.createElement('div');
+                    cardBody.className = 'p-5 space-y-4';
 
                     // Heading & Anchor
                     const headGrid = document.createElement('div');
@@ -1261,6 +1687,7 @@
 
                     hInp.addEventListener('input', (e) => {
                         sec.heading = e.target.value;
+                        headingPreview.textContent = sec.heading?.trim() ? `— ${sec.heading.trim()}` : '— (Sub-judul H2 belum diisi)';
                         if (!sec._anchorManual) {
                             sec.anchor = slugify(e.target.value) || `section-${idx + 1}`;
                             aInp.value = sec.anchor;
@@ -1276,44 +1703,73 @@
 
                     headGrid.appendChild(hWrap);
                     headGrid.appendChild(aWrap);
-                    card.appendChild(headGrid);
+                    cardBody.appendChild(headGrid);
 
-                    // Paragraphs
+                    // Paragraphs + Visible Action Toolbar (Add Markdown Table / Add Image URL)
                     const pWrap = document.createElement('div');
                     const pHeader = document.createElement('div');
-                    pHeader.className = 'flex flex-wrap items-center justify-between gap-2 mb-1';
+                    pHeader.className = 'flex flex-wrap items-center justify-between gap-2 mb-1.5';
                     const pLab = document.createElement('label');
                     pLab.className = 'block text-xs font-semibold';
                     pLab.textContent = 'Paragraf Isi (pisahkan tiap blok/paragraf dengan baris kosong)';
                     pHeader.appendChild(pLab);
                     pHeader.appendChild(createMarkdownBadgeStrip('full'));
+
                     const pTxt = document.createElement('textarea');
                     pTxt.rows = 5;
                     pTxt.value = sec.paragraphsText;
-                    pTxt.placeholder = 'Tulis paragraf **tebal**, *miring*, `kode`, [tautan](https://...), daftar (- / 1.), > kutipan, atau | tabel |...';
+                    pTxt.placeholder = 'Tulis paragraf **tebal**, *miring*, `kode`, [tautan](https://...), ![alt gambar](https://...), daftar (- / 1.), > kutipan, atau | tabel |...';
                     pTxt.className = 'w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     pTxt.addEventListener('input', (e) => {
                         sec.paragraphsText = e.target.value;
                         markDirty();
                         updateLiveCounters();
                     });
-                    pWrap.appendChild(pHeader);
-                    pWrap.appendChild(pTxt);
-                    card.appendChild(pWrap);
 
-                    // Optional advanced blocks (Bullets, Callout, Table, Code)
+                    const toolBar = document.createElement('div');
+                    toolBar.className = 'flex flex-wrap items-center gap-2 mb-2';
+                    const addTblBtn = document.createElement('button');
+                    addTblBtn.type = 'button';
+                    addTblBtn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors';
+                    addTblBtn.textContent = '+Tabel Dalam Paragraf (MD)';
+                    const addImgBtn = document.createElement('button');
+                    addImgBtn.type = 'button';
+                    addImgBtn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors';
+                    addImgBtn.textContent = '+ Tambah Gambar (URL)';
+                    toolBar.appendChild(addTblBtn);
+                    toolBar.appendChild(addImgBtn);
+
+                    pWrap.appendChild(pHeader);
+                    pWrap.appendChild(toolBar);
+                    pWrap.appendChild(pTxt);
+                    cardBody.appendChild(pWrap);
+
+                    // Level 3 Collapsible: Optional advanced blocks (Bullets, Callout, Code)
                     const details = document.createElement('details');
-                    details.className = 'rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 p-3';
-                    if (sec.bulletsText || sec.calloutBody || sec.tableHeadersText || sec.codeText) {
+                    details.className = 'group/opt rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/50 overflow-hidden';
+                    if (typeof sec._optOpen === 'boolean') {
+                        details.open = sec._optOpen;
+                    } else if (sec.bulletsText || sec.calloutBody || sec.codeText) {
                         details.open = true;
+                        sec._optOpen = true;
                     }
+                    details.addEventListener('toggle', () => { sec._optOpen = details.open; });
+
                     const summary = document.createElement('summary');
-                    summary.className = 'text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none';
-                    summary.textContent = 'Blok Opsional (Daftar Poin, Callout, Tabel Data, Kode)';
+                    summary.className = 'list-none [&::-webkit-details-marker]:hidden px-3.5 py-2.5 bg-[#eaeef3] dark:bg-slate-800/60 text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none flex items-center justify-between gap-2';
+                    const optTitle = document.createElement('span');
+                    optTitle.textContent = 'Blok Opsional (Daftar Poin, Callout, Blok Kode)';
+                    summary.appendChild(optTitle);
+                    summary.appendChild(createChevronSvg('group-open/opt:rotate-180'));
                     details.appendChild(summary);
 
                     const optBody = document.createElement('div');
-                    optBody.className = 'mt-3 space-y-3';
+                    optBody.className = 'p-3.5 space-y-3';
+
+                    const optWpNote = document.createElement('p');
+                    optWpNote.className = 'rounded border border-slate-200 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-900/70 px-2.5 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300';
+                    optWpNote.textContent = 'Info Block Tambahan: Poin Bullets, Callout (sorotan biru/kuning), dan Blok Kode ditampilkan setelah paragraf isi pada bagian H2 ini.';
+                    optBody.appendChild(optWpNote);
 
                     // Bullets
                     const bHeader = document.createElement('div');
@@ -1372,15 +1828,64 @@
                     optBody.appendChild(callGrid);
                     optBody.appendChild(cBody);
 
-                    // Table
+                    // Code Block
+                    const codeCap = document.createElement('input');
+                    codeCap.type = 'text';
+                    codeCap.value = sec.codeCaption;
+                    codeCap.placeholder = 'Keterangan Blok Kode / Query SQL (opsional)';
+                    codeCap.className = 'w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    codeCap.addEventListener('input', (e) => { sec.codeCaption = e.target.value; markDirty(); });
+                    const codeTxt = document.createElement('textarea');
+                    codeTxt.rows = 2;
+                    codeTxt.value = sec.codeText;
+                    codeTxt.placeholder = 'Potongan kode atau query SQL (ditampilkan apa adanya)...';
+                    codeTxt.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
+                    codeTxt.addEventListener('input', (e) => { sec.codeText = e.target.value; markDirty(); });
+                    optBody.appendChild(codeCap);
+                    optBody.appendChild(codeTxt);
+
+                    details.appendChild(optBody);
+                    cardBody.appendChild(details);
+
+                    // Level 3 Collapsible: Closing H2 Table (Tabel Penutup H2 (Opsional))
+                    const tableDetails = document.createElement('details');
+                    tableDetails.className = 'group/tbl rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/50 overflow-hidden';
+                    if (typeof sec._tblOpen === 'boolean') {
+                        tableDetails.open = sec._tblOpen;
+                    } else if (sec.tableCaption || sec.tableHeadersText || sec.tableRowsText) {
+                        tableDetails.open = true;
+                        sec._tblOpen = true;
+                    }
+                    tableDetails.addEventListener('toggle', () => { sec._tblOpen = tableDetails.open; });
+
+                    const tableSummary = document.createElement('summary');
+                    tableSummary.className = 'list-none [&::-webkit-details-marker]:hidden px-3.5 py-2.5 bg-[#eaeef3] dark:bg-slate-800/60 text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none flex items-center justify-between gap-2';
+                    const tableSummaryTitle = document.createElement('span');
+                    tableSummaryTitle.textContent = 'Tabel Penutup H2 (Opsional)';
+                    tableSummary.appendChild(tableSummaryTitle);
+                    tableSummary.appendChild(createChevronSvg('group-open/tbl:rotate-180'));
+                    tableDetails.appendChild(tableSummary);
+
+                    const tableBody = document.createElement('div');
+                    tableBody.className = 'p-3.5 space-y-2.5';
+
+                    const tblWpNote = document.createElement('p');
+                    tblWpNote.className = 'rounded border border-slate-200 dark:border-slate-700/80 bg-[#eaeef3] dark:bg-slate-900/70 px-2.5 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300';
+                    tblWpNote.textContent = 'Tabel Penutup H2 selalu dirender di bagian akhir sub-bagian H2 ini dengan tag <caption> resmi (berbeda dari +Tabel Dalam Paragraf MD).';
+                    tableBody.appendChild(tblWpNote);
+
                     const tblHeader = document.createElement('div');
-                    tblHeader.className = 'flex flex-wrap items-center justify-between gap-2 pt-1';
-                    const tblLabel = document.createElement('span');
-                    tblLabel.className = 'text-xs font-semibold';
-                    tblLabel.textContent = 'Tabel Data Terstruktur (Opsional)';
-                    tblHeader.appendChild(tblLabel);
+                    tblHeader.className = 'flex flex-wrap items-center justify-between gap-2';
+                    const tblLeft = document.createElement('div');
+                    tblLeft.className = 'flex flex-wrap items-center gap-2';
+                    const importMdTblBtn = document.createElement('button');
+                    importMdTblBtn.type = 'button';
+                    importMdTblBtn.className = 'px-2 py-0.5 text-[11px] font-semibold rounded border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50';
+                    importMdTblBtn.textContent = 'Impor Tabel Markdown';
+                    tblLeft.appendChild(importMdTblBtn);
+                    tblHeader.appendChild(tblLeft);
                     tblHeader.appendChild(createMarkdownBadgeStrip('inline'));
-                    optBody.appendChild(tblHeader);
+                    tableBody.appendChild(tblHeader);
 
                     const tCap = document.createElement('input');
                     tCap.type = 'text';
@@ -1400,28 +1905,18 @@
                     tRows.placeholder = 'Baris Tabel (1 baris per line, pisahkan kolom dengan | mis: .com | 1.240 | 84.5)';
                     tRows.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     tRows.addEventListener('input', (e) => { sec.tableRowsText = e.target.value; markDirty(); updateLiveCounters(); });
-                    optBody.appendChild(tCap);
-                    optBody.appendChild(tHead);
-                    optBody.appendChild(tRows);
+                    tableBody.appendChild(tCap);
+                    tableBody.appendChild(tHead);
+                    tableBody.appendChild(tRows);
+                    tableDetails.appendChild(tableBody);
+                    cardBody.appendChild(tableDetails);
 
-                    // Code Block
-                    const codeCap = document.createElement('input');
-                    codeCap.type = 'text';
-                    codeCap.value = sec.codeCaption;
-                    codeCap.placeholder = 'Keterangan Blok Kode / Query SQL (opsional)';
-                    codeCap.className = 'w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
-                    codeCap.addEventListener('input', (e) => { sec.codeCaption = e.target.value; markDirty(); });
-                    const codeTxt = document.createElement('textarea');
-                    codeTxt.rows = 2;
-                    codeTxt.value = sec.codeText;
-                    codeTxt.placeholder = 'Potongan kode atau query SQL (ditampilkan apa adanya)...';
-                    codeTxt.className = 'w-full px-3 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
-                    codeTxt.addEventListener('input', (e) => { sec.codeText = e.target.value; markDirty(); });
-                    optBody.appendChild(codeCap);
-                    optBody.appendChild(codeTxt);
+                    card.appendChild(cardBody);
 
-                    details.appendChild(optBody);
-                    card.appendChild(details);
+                    const bindTarget = () => ({ sec, pTxt, details, tableDetails, tCap, tHead, tRows });
+                    addTblBtn.addEventListener('click', () => openMarkdownTableModal(bindTarget()));
+                    importMdTblBtn.addEventListener('click', () => openMarkdownTableModal(bindTarget()));
+                    addImgBtn.addEventListener('click', () => openImageUrlModal(bindTarget()));
                     els.sectionsContainer.appendChild(card);
                 });
             }
@@ -1429,36 +1924,62 @@
             function renderFaqsList() {
                 els.faqsContainer.textContent = '';
                 state.draft.content.faqs.forEach((faq, idx) => {
-                    const box = document.createElement('div');
-                    box.className = 'p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-2';
-                    const topRow = document.createElement('div');
-                    topRow.className = 'flex flex-wrap items-center justify-between gap-2';
+                    // Level 2 Collapsible: Individual FAQ Item
+                    const box = document.createElement('details');
+                    box.className = 'group/faq rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden';
+                    box.open = faq._open !== false;
+                    box.addEventListener('toggle', () => {
+                        faq._open = box.open;
+                    });
+
+                    const topSummary = document.createElement('summary');
+                    topSummary.className = 'list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-between gap-2 px-3.5 py-2.5 bg-[#eaeef3] dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800';
+
                     const labWrap = document.createElement('div');
-                    labWrap.className = 'flex flex-wrap items-center gap-2';
+                    labWrap.className = 'flex items-center gap-2 min-w-0 flex-1';
+                    labWrap.appendChild(createChevronSvg('group-open/faq:rotate-180'));
                     const lab = document.createElement('span');
-                    lab.className = 'text-xs font-semibold text-slate-500';
+                    lab.className = 'text-xs font-bold text-slate-600 dark:text-slate-300 shrink-0';
                     lab.textContent = `FAQ #${idx + 1}`;
+                    const qPreview = document.createElement('span');
+                    qPreview.className = 'text-xs font-medium text-slate-600 dark:text-slate-300 truncate';
+                    qPreview.textContent = faq.q?.trim() ? `— ${faq.q.trim()}` : '— (Pertanyaan belum diisi)';
                     labWrap.appendChild(lab);
-                    labWrap.appendChild(createMarkdownBadgeStrip('full'));
+                    labWrap.appendChild(qPreview);
+
                     const delBtn = document.createElement('button');
                     delBtn.type = 'button';
-                    delBtn.className = 'text-xs text-rose-600 dark:text-rose-400 hover:underline';
+                    delBtn.className = 'text-xs text-rose-600 dark:text-rose-400 hover:underline shrink-0';
                     delBtn.textContent = 'Hapus';
-                    delBtn.addEventListener('click', () => {
+                    delBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         state.draft.content.faqs.splice(idx, 1);
                         renderFaqsList();
                         markDirty();
                         updateLiveCounters();
                     });
-                    topRow.appendChild(labWrap);
-                    topRow.appendChild(delBtn);
+                    topSummary.appendChild(labWrap);
+                    topSummary.appendChild(delBtn);
+
+                    const faqBody = document.createElement('div');
+                    faqBody.className = 'p-3.5 space-y-2';
+
+                    const badgeRow = document.createElement('div');
+                    badgeRow.className = 'flex justify-end';
+                    badgeRow.appendChild(createMarkdownBadgeStrip('full'));
 
                     const qInp = document.createElement('input');
                     qInp.type = 'text';
                     qInp.value = faq.q;
                     qInp.placeholder = 'Pertanyaan...';
                     qInp.className = 'w-full px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
-                    qInp.addEventListener('input', (e) => { faq.q = e.target.value; markDirty(); updateLiveCounters(); });
+                    qInp.addEventListener('input', (e) => {
+                        faq.q = e.target.value;
+                        qPreview.textContent = faq.q?.trim() ? `— ${faq.q.trim()}` : '— (Pertanyaan belum diisi)';
+                        markDirty();
+                        updateLiveCounters();
+                    });
 
                     const aTxt = document.createElement('textarea');
                     aTxt.rows = 2;
@@ -1467,9 +1988,12 @@
                     aTxt.className = 'w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950';
                     aTxt.addEventListener('input', (e) => { faq.a = e.target.value; markDirty(); updateLiveCounters(); });
 
-                    box.appendChild(topRow);
-                    box.appendChild(qInp);
-                    box.appendChild(aTxt);
+                    faqBody.appendChild(badgeRow);
+                    faqBody.appendChild(qInp);
+                    faqBody.appendChild(aTxt);
+
+                    box.appendChild(topSummary);
+                    box.appendChild(faqBody);
                     els.faqsContainer.appendChild(box);
                 });
             }
@@ -1666,6 +2190,23 @@
                     ? `Schema.org FAQPage aktif (${validFaqs} pertanyaan siap).`
                     : `Saat ini ${validFaqs} FAQ terisi (tambahkan minimal 2 untuk Schema.org FAQPage).`;
 
+                if (els.seoSummaryMeta) {
+                    els.seoSummaryMeta.textContent = `(${titleLen}/62 · ${descLen}/155)`;
+                }
+                if (els.takeawaysCountMeta) {
+                    const tkCount = state.draft.content.keyTakeaways.filter((t) => String(t || '').trim()).length;
+                    els.takeawaysCountMeta.textContent = `(${tkCount} poin)`;
+                }
+                if (els.sectionsCountMeta) {
+                    els.sectionsCountMeta.textContent = `(${state.draft.content.sections.length} bagian)`;
+                }
+                if (els.methodologyStatusMeta) {
+                    els.methodologyStatusMeta.textContent = els.fieldMethodology.value.trim() ? '(Terisi)' : '(Kosong)';
+                }
+                if (els.faqsCountMeta) {
+                    els.faqsCountMeta.textContent = `(${state.draft.content.faqs.length} item)`;
+                }
+
                 const words = countDraftWords();
                 els.liveWordCountBadge.textContent = `${words} kata`;
 
@@ -1772,6 +2313,16 @@
                         a.className = 'text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-700 dark:hover:text-blue-300 break-words';
                         appendInlineTokensDom(a, tok.children || []);
                         parentEl.appendChild(a);
+                    } else if (tok.type === 'image') {
+                        const img = document.createElement('img');
+                        img.src = tok.src;
+                        img.alt = tok.alt || '';
+                        if (tok.title) img.title = tok.title;
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        img.referrerPolicy = 'no-referrer';
+                        img.className = 'inline-block max-w-full h-auto rounded-lg border border-slate-200 dark:border-slate-800 my-1.5';
+                        parentEl.appendChild(img);
                     }
                 }
             }
@@ -1803,6 +2354,24 @@
                         const p = document.createElement('p');
                         appendInlineMarkdownDom(p, blk.text);
                         parentEl.appendChild(p);
+                    } else if (blk.type === 'image') {
+                        const fig = document.createElement('figure');
+                        fig.className = 'my-4 space-y-2';
+                        const img = document.createElement('img');
+                        img.src = blk.src;
+                        img.alt = blk.alt || '';
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        img.referrerPolicy = 'no-referrer';
+                        img.className = 'w-full max-h-[540px] object-contain rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950';
+                        fig.appendChild(img);
+                        if (blk.title) {
+                            const cap = document.createElement('figcaption');
+                            cap.className = 'text-xs text-center text-slate-500 dark:text-slate-400';
+                            cap.textContent = blk.title;
+                            fig.appendChild(cap);
+                        }
+                        parentEl.appendChild(fig);
                     } else if (blk.type === 'ul') {
                         const ul = document.createElement('ul');
                         ul.className = 'list-disc pl-5 space-y-1.5';
@@ -2072,6 +2641,107 @@
                 els.previewModal.classList.remove('hidden');
             }
 
+            function insertBlockIntoSectionTextarea(target, markdownBlock) {
+                if (!target || !target.sec || !target.pTxt) return;
+                const ta = target.pTxt;
+                const current = String(ta.value || '');
+                const start = typeof ta.selectionStart === 'number' ? ta.selectionStart : current.length;
+                const end = typeof ta.selectionEnd === 'number' ? ta.selectionEnd : current.length;
+                const before = current.slice(0, start);
+                const after = current.slice(end);
+                const prefix = before.trim().length > 0 ? (before.endsWith('\n\n') ? '' : (before.endsWith('\n') ? '\n' : '\n\n')) : '';
+                const suffix = after.trim().length > 0 ? (after.startsWith('\n\n') ? '' : (after.startsWith('\n') ? '\n' : '\n\n')) : '';
+                const nextValue = before + prefix + markdownBlock.trim() + suffix + after;
+                ta.value = nextValue;
+                target.sec.paragraphsText = nextValue;
+                markDirty();
+                updateLiveCounters();
+                const caretPos = (before + prefix + markdownBlock.trim()).length;
+                ta.focus();
+                try { ta.setSelectionRange(caretPos, caretPos); } catch {}
+            }
+
+            function parseMarkdownTableInput(rawMd) {
+                const md = window.__ARTICLE_MARKDOWN__;
+                if (!md || typeof md.parseMarkdownBlocks !== 'function') return null;
+                const blocks = md.parseMarkdownBlocks(String(rawMd || '').trim());
+                return blocks.find((b) => b.type === 'table') || null;
+            }
+
+            function renderTableModalPreview() {
+                els.tableModalError.classList.add('hidden');
+                els.tableModalPreview.textContent = '';
+                const raw = els.tableModalMarkdown.value.trim();
+                if (!raw) {
+                    els.tableModalPreview.textContent = 'Tempel atau tulis tabel Markdown untuk melihat pratinjau.';
+                    return null;
+                }
+                const tableBlock = parseMarkdownTableInput(raw);
+                if (!tableBlock) {
+                    els.tableModalPreview.textContent = 'Format belum terbaca sebagai tabel Markdown. Pastikan ada baris header dan baris pemisah seperti | --- | --- |.';
+                    return null;
+                }
+                renderParsedBlocksDom(els.tableModalPreview, [tableBlock]);
+                return tableBlock;
+            }
+
+            function openMarkdownTableModal(target) {
+                state.activeComposer = target;
+                els.tableModalError.classList.add('hidden');
+                els.tableModalCaption.value = target?.sec?.tableCaption || '';
+                els.tableModalMarkdown.value = '| Kolom 1 | Kolom 2 | Kolom 3 |\n| :--- | :---: | ---: |\n| Baris 1 | Data A | 100 |\n| Baris 2 | Data B | 200 |';
+                renderTableModalPreview();
+                els.markdownTableModal.classList.remove('hidden');
+                els.tableModalMarkdown.focus();
+            }
+
+            function closeMarkdownTableModal() {
+                els.markdownTableModal.classList.add('hidden');
+            }
+
+            function renderImageModalPreview() {
+                els.imageModalError.classList.add('hidden');
+                els.imageModalPreviewWrap.textContent = '';
+                const rawUrl = els.imageModalUrl.value.trim();
+                if (!rawUrl) {
+                    els.imageModalPreviewWrap.textContent = 'Masukkan URL gambar yang valid untuk melihat pratinjau.';
+                    return null;
+                }
+                const md = window.__ARTICLE_MARKDOWN__;
+                const safeImg = md && typeof md.sanitizeMarkdownImageUrl === 'function'
+                    ? md.sanitizeMarkdownImageUrl(rawUrl)
+                    : null;
+                if (!safeImg) {
+                    els.imageModalPreviewWrap.textContent = 'URL harus diawali https://, http://, atau /path.';
+                    return null;
+                }
+                const img = document.createElement('img');
+                img.src = safeImg.src;
+                img.alt = els.imageModalAlt.value.trim() || 'Pratinjau gambar';
+                img.referrerPolicy = 'no-referrer';
+                img.className = 'max-h-56 max-w-full rounded-lg object-contain border border-slate-200 dark:border-slate-800';
+                img.addEventListener('error', () => {
+                    els.imageModalPreviewWrap.textContent = 'URL valid, namun gambar gagal dimuat di pratinjau (periksa URL atau izin CORS/hotlink).';
+                });
+                els.imageModalPreviewWrap.appendChild(img);
+                return safeImg;
+            }
+
+            function openImageUrlModal(target) {
+                state.activeComposer = target;
+                els.imageModalError.classList.add('hidden');
+                els.imageModalUrl.value = '';
+                els.imageModalAlt.value = '';
+                els.imageModalCaption.value = '';
+                renderImageModalPreview();
+                els.imageUrlModal.classList.remove('hidden');
+                els.imageModalUrl.focus();
+            }
+
+            function closeImageUrlModal() {
+                els.imageUrlModal.classList.add('hidden');
+            }
+
             // Event Bindings
             document.getElementById('themeToggleBtn').addEventListener('click', () => {
                 const isDark = document.documentElement.classList.toggle('dark');
@@ -2092,6 +2762,7 @@
                         body: JSON.stringify({ action: 'setup', password: els.setupPassword.value })
                     });
                     state.authenticated = true;
+                    state.sessionToken = info.sessionToken || null;
                     state.storageMode = info.storageMode || state.storageMode;
                     state.branch = info.branch || state.branch;
                     setStorageModeBadge(state.storageMode, state.branch);
@@ -2114,6 +2785,7 @@
                         body: JSON.stringify({ password: els.loginPassword.value })
                     });
                     state.authenticated = true;
+                    state.sessionToken = info.sessionToken || null;
                     state.storageMode = info.storageMode || state.storageMode;
                     state.branch = info.branch || state.branch;
                     setStorageModeBadge(state.storageMode, state.branch);
@@ -2132,6 +2804,7 @@
                     await apiFetch('/api/articles/auth', { method: 'DELETE' });
                 } catch {}
                 state.authenticated = false;
+                state.sessionToken = null;
                 state.draft = null;
                 els.editorSection.classList.add('hidden');
                 els.listSection.classList.add('hidden');
@@ -2141,16 +2814,94 @@
                 els.loginPassword.focus();
             });
 
+            async function executeDiscardEdit() {
+                els.confirmCancelModal.classList.add('hidden');
+                state.dirty = false;
+                state.draft = null;
+                els.editorSection.classList.add('hidden');
+                els.listSection.classList.remove('hidden');
+                await loadArticlesList();
+            }
+
+            function requestCancelEdit() {
+                if (state.dirty) {
+                    els.confirmCancelModal.classList.remove('hidden');
+                    return;
+                }
+                executeDiscardEdit();
+            }
+
+            function openDeleteConfirmModal(target) {
+                if (!target?.id) return;
+                state.pendingDeleteTarget = target;
+                els.deleteTargetTitle.textContent = target.title || target.id;
+                els.deleteTargetId.textContent = target.id;
+                els.deleteModalError.classList.add('hidden');
+                els.confirmDeleteArticleBtn.disabled = false;
+                els.confirmDeleteModal.classList.remove('hidden');
+            }
+
+            function closeDeleteConfirmModal() {
+                els.confirmDeleteModal.classList.add('hidden');
+                state.pendingDeleteTarget = null;
+            }
+
+            async function executeDeleteArticle() {
+                const target = state.pendingDeleteTarget;
+                if (!target?.id) return;
+                els.deleteModalError.classList.add('hidden');
+                els.confirmDeleteArticleBtn.disabled = true;
+                try {
+                    const res = await apiFetch('/api/articles/delete', {
+                        method: 'POST',
+                        body: JSON.stringify({ id: target.id })
+                    });
+                    state.manifest.articles = (state.manifest.articles || []).filter((a) => a.id !== res.deletedId);
+                    closeDeleteConfirmModal();
+                    if (target.fromEditor || state.draft?.previousId === res.deletedId) {
+                        state.dirty = false;
+                        state.draft = null;
+                        els.editorSection.classList.add('hidden');
+                        els.listSection.classList.remove('hidden');
+                    }
+                    renderArticlesTable();
+                    const msg = res.commit?.commitUrl
+                        ? `Artikel "${res.deletedId}" berhasil dihapus dan di-commit ke GitHub (${res.commit.commitSha.slice(0, 7)}).`
+                        : `Artikel "${res.deletedId}" berhasil dihapus dari penyimpanan lokal.`;
+                    showBanner(els.articlesListBanner, 'success', msg, res.commit?.commitUrl || '', res.commit?.commitUrl ? 'Lihat Commit GitHub' : '');
+                } catch (err) {
+                    els.deleteModalError.textContent = err.message || 'Gagal menghapus artikel.';
+                    els.deleteModalError.classList.remove('hidden');
+                } finally {
+                    els.confirmDeleteArticleBtn.disabled = false;
+                }
+            }
+
             els.searchArticlesInput.addEventListener('input', renderArticlesTable);
             els.filterSectionSelect.addEventListener('change', renderArticlesTable);
             els.refreshListBtn.addEventListener('click', loadArticlesList);
             els.newArticleBtn.addEventListener('click', () => openArticleEditor('', 'id'));
-            els.backToListBtn.addEventListener('click', async () => {
-                if (state.dirty && !window.confirm('Perubahan belum disimpan. Kembali ke daftar artikel?')) return;
-                els.editorSection.classList.add('hidden');
-                els.listSection.classList.remove('hidden');
-                await loadArticlesList();
+            els.backToListBtn.addEventListener('click', requestCancelEdit);
+            els.cancelEditBtn.addEventListener('click', requestCancelEdit);
+            els.keepEditingBtn.addEventListener('click', () => els.confirmCancelModal.classList.add('hidden'));
+            els.confirmCancelModal.addEventListener('click', (e) => {
+                if (e.target === els.confirmCancelModal) els.confirmCancelModal.classList.add('hidden');
             });
+            els.confirmCancelEditBtn.addEventListener('click', executeDiscardEdit);
+
+            els.deleteArticleBtn.addEventListener('click', () => {
+                if (state.isNewArticle || !state.draft?.previousId) return;
+                openDeleteConfirmModal({
+                    id: state.draft.previousId,
+                    title: els.fieldH1.value.trim() || state.draft.localeMeta?.h1 || state.draft.previousId,
+                    fromEditor: true
+                });
+            });
+            els.cancelDeleteModalBtn.addEventListener('click', closeDeleteConfirmModal);
+            els.confirmDeleteModal.addEventListener('click', (e) => {
+                if (e.target === els.confirmDeleteModal) closeDeleteConfirmModal();
+            });
+            els.confirmDeleteArticleBtn.addEventListener('click', executeDeleteArticle);
 
             els.fieldH1.addEventListener('input', () => {
                 state.draft.localeMeta.h1 = els.fieldH1.value;
@@ -2215,14 +2966,50 @@
                 markDirty();
             });
 
+            if (els.focusModeBtn) {
+                let focusOn = false;
+                els.focusModeBtn.addEventListener('click', () => {
+                    focusOn = !focusOn;
+                    const secondaryPanels = [
+                        els.panelSeo,
+                        els.panelTakeaways,
+                        els.panelMethodology,
+                        els.panelFaqs,
+                        els.panelInspectorAuthor,
+                        els.panelInspectorRelated
+                    ];
+                    secondaryPanels.forEach((p) => { if (p) p.open = !focusOn; });
+                    if (els.panelIdentity) els.panelIdentity.open = true;
+                    if (els.panelSections) els.panelSections.open = true;
+                    els.focusModeBtn.textContent = focusOn ? 'Buka Semua Panel' : 'Mode Fokus';
+                });
+            }
+
+            if (els.collapseAllSectionsBtn) {
+                els.collapseAllSectionsBtn.addEventListener('click', () => {
+                    state.draft.content.sections.forEach((s) => { s._open = false; });
+                    renderSectionsList();
+                });
+            }
+
+            if (els.expandAllSectionsBtn) {
+                els.expandAllSectionsBtn.addEventListener('click', () => {
+                    state.draft.content.sections.forEach((s) => { s._open = true; });
+                    renderSectionsList();
+                });
+            }
+
             els.addTakeawayBtn.addEventListener('click', () => {
                 state.draft.content.keyTakeaways.push('');
+                if (els.panelTakeaways) els.panelTakeaways.open = true;
                 renderTakeawaysList();
                 markDirty();
+                updateLiveCounters();
             });
 
             els.addSectionBtn.addEventListener('click', () => {
                 const n = state.draft.content.sections.length + 1;
+                if (els.panelSections) els.panelSections.open = true;
                 state.draft.content.sections.push({
                     anchor: `bagian-${n}`,
                     heading: `${n}. Sub-Judul Bagian`,
@@ -2236,7 +3023,8 @@
                     tableRowsText: '',
                     codeCaption: '',
                     codeText: '',
-                    subsections: []
+                    subsections: [],
+                    _open: true
                 });
                 renderSectionsList();
                 markDirty();
@@ -2244,7 +3032,8 @@
             });
 
             els.addFaqBtn.addEventListener('click', () => {
-                state.draft.content.faqs.push({ q: '', a: '' });
+                if (els.panelFaqs) els.panelFaqs.open = true;
+                state.draft.content.faqs.push({ q: '', a: '', _open: true });
                 renderFaqsList();
                 markDirty();
                 updateLiveCounters();
@@ -2256,6 +3045,80 @@
             els.closePreviewBtn.addEventListener('click', () => els.previewModal.classList.add('hidden'));
             els.previewModal.addEventListener('click', (e) => {
                 if (e.target === els.previewModal) els.previewModal.classList.add('hidden');
+            });
+
+            els.tableModalMarkdown.addEventListener('input', renderTableModalPreview);
+            els.tableModalTemplateBtn.addEventListener('click', () => {
+                els.tableModalMarkdown.value = '| Kriteria | Nilai | Keterangan |\n| :--- | :---: | :--- |\n| Panjang .com | < 13 char | Cek otomatis aktif |\n| Panjang .net | < 8 char | Cek otomatis aktif |';
+                renderTableModalPreview();
+            });
+            els.closeTableModalBtn.addEventListener('click', closeMarkdownTableModal);
+            els.cancelTableModalBtn.addEventListener('click', closeMarkdownTableModal);
+            els.markdownTableModal.addEventListener('click', (e) => {
+                if (e.target === els.markdownTableModal) closeMarkdownTableModal();
+            });
+            els.insertMarkdownTableBtn.addEventListener('click', () => {
+                const tableBlock = renderTableModalPreview();
+                if (!tableBlock) {
+                    els.tableModalError.textContent = 'Tempel tabel Markdown yang valid (wajib memiliki baris header dan separator | --- | --- |).';
+                    els.tableModalError.classList.remove('hidden');
+                    return;
+                }
+                const target = state.activeComposer;
+                const rawTable = els.tableModalMarkdown.value.trim();
+                const caption = els.tableModalCaption.value.trim();
+                const snippet = caption ? `**${caption}**\n\n${rawTable}` : rawTable;
+                insertBlockIntoSectionTextarea(target, snippet);
+                closeMarkdownTableModal();
+            });
+            els.applyStructuredTableBtn.addEventListener('click', () => {
+                const tableBlock = renderTableModalPreview();
+                if (!tableBlock || tableBlock.headers.length === 0 || tableBlock.rows.length === 0) {
+                    els.tableModalError.textContent = 'Tabel Markdown harus memiliki minimal 1 header dan 1 baris data untuk Tabel Penutup H2.';
+                    els.tableModalError.classList.remove('hidden');
+                    return;
+                }
+                const target = state.activeComposer;
+                if (target?.sec) {
+                    const caption = els.tableModalCaption.value.trim();
+                    const headersStr = tableBlock.headers.join(' | ');
+                    const rowsStr = tableBlock.rows.map((r) => r.join(' | ')).join('\n');
+                    target.sec.tableCaption = caption;
+                    target.sec.tableHeadersText = headersStr;
+                    target.sec.tableRowsText = rowsStr;
+                    if (target.tCap) target.tCap.value = caption;
+                    if (target.tHead) target.tHead.value = headersStr;
+                    if (target.tRows) target.tRows.value = rowsStr;
+                    if (target.tableDetails) target.tableDetails.open = true;
+                    markDirty();
+                    updateLiveCounters();
+                }
+                closeMarkdownTableModal();
+            });
+
+            els.imageModalUrl.addEventListener('input', renderImageModalPreview);
+            els.imageModalAlt.addEventListener('input', renderImageModalPreview);
+            els.closeImageModalBtn.addEventListener('click', closeImageUrlModal);
+            els.cancelImageModalBtn.addEventListener('click', closeImageUrlModal);
+            els.imageUrlModal.addEventListener('click', (e) => {
+                if (e.target === els.imageUrlModal) closeImageUrlModal();
+            });
+            els.imageUrlForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                els.imageModalError.classList.add('hidden');
+                const safeImg = renderImageModalPreview();
+                if (!safeImg) {
+                    els.imageModalError.textContent = 'URL gambar tidak valid. Gunakan URL https://..., http://..., atau path lokal /...';
+                    els.imageModalError.classList.remove('hidden');
+                    return;
+                }
+                const cleanAlt = els.imageModalAlt.value.trim().replace(/[\[\]\r\n]/g, '');
+                const cleanCap = els.imageModalCaption.value.trim().replace(/["\r\n]/g, '');
+                const mdImage = cleanCap
+                    ? `![${cleanAlt}](${safeImg.src} "${cleanCap}")`
+                    : `![${cleanAlt}](${safeImg.src})`;
+                insertBlockIntoSectionTextarea(state.activeComposer, mdImage);
+                closeImageUrlModal();
             });
 
             checkAuth();

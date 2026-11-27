@@ -52,7 +52,7 @@
                 <p class="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">Buku Pegangan Penulis (Non-Teknis)</p>
                 <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Cara Menulis, Menyimpan Draft &amp; Menerbitkan Artikel</h1>
                 <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Panduan langkah demi langkah bagi penulis yang terbiasa menggunakan WordPress untuk menerbitkan artikel langsung dari browser tanpa menyentuh kode atau terminal.
+                    Panduan langkah demi langkah bagi penulis untuk menyusun, menyunting blok konten, dan menerbitkan artikel langsung dari browser tanpa menyentuh kode atau terminal.
                 </p>
             </header>
 
@@ -61,10 +61,11 @@
                 <ol class="list-decimal pl-5 space-y-1 text-sm text-blue-600 dark:text-blue-400">
                     <li><a href="#login" class="hover:underline">Cara Masuk ke Halaman Editor (/admin-articles/)</a></li>
                     <li><a href="#pilih-section" class="hover:underline">Memilih Kategori (Section) Artikel yang Tepat</a></li>
-                    <li><a href="#kolom-editor" class="hover:underline">Penjelasan Kolom Editor (Ala WordPress)</a></li>
+                    <li><a href="#kolom-editor" class="hover:underline">Penjelasan Kolom Editor Blok Studio</a></li>
                     <li><a href="#draft-vs-publish" class="hover:underline">Perbedaan Save Draft, Pratinjau, dan Publish</a></li>
                     <li><a href="#bahasa" class="hover:underline">Menulis atau Menerjemahkan ke Bahasa Lain</a></li>
                     <li><a href="#checklist" class="hover:underline">Aturan Kualitas Sebelum Klik Publish</a></li>
+                    <li><a href="#riwayat-perubahan" class="hover:underline">Riwayat Perubahan Mekanisme Penulisan Artikel</a></li>
                 </ol>
             </nav>
 
@@ -114,7 +115,7 @@
             </section>
 
             <section id="kolom-editor" class="space-y-4 scroll-mt-20">
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">3. Penjelasan Kolom Editor (Ala WordPress)</h2>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">3. Penjelasan Kolom Editor Blok Studio</h2>
                 <ul class="list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700 dark:text-slate-300">
                     <li><strong>Judul Artikel (H1) &amp; Slug URL</strong>: Ketik judul utama artikel, maka <em>ID / Default Slug</em> otomatis terbentuk rapi dengan huruf kecil dan tanda hubung (mis. <code class="font-mono text-xs">strategi-domain-umkm</code>). Anda tetap dapat mengedit slug secara manual sebelum atau sesudah terbit, serta dapat membuat slug berbeda per bahasa pada kolom <em>Slug Khusus Bahasa Ini</em>.</li>
                     <li><strong>SEO Title &amp; Meta Description</strong>: Gunakan indikator penghitung karakter di sebelah kanan label. Usahakan <strong>SEO Title 40–62 karakter</strong> dan <strong>Meta Description 115–155 karakter</strong> agar tampil utuh di hasil pencarian Google.</li>
@@ -173,6 +174,39 @@
                     <li>Hindari mengklaim bahwa suatu nama domain "dijamin ranking #1 di Google" atau "pasti tersedia selamanya" tanpa mengingatkan pembaca untuk memeriksa merek dagang dan cek RDAP/registrar terbaru.</li>
                     <li>Centang 2–4 <strong>Artikel Terkait (Related IDs)</strong> di sidebar kanan agar pembaca diarahkan ke panduan relevan lainnya.</li>
                 </ul>
+            </section>
+
+            <section id="riwayat-perubahan" class="space-y-4 scroll-mt-20 pt-2 border-t border-slate-200 dark:border-slate-800">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">7. Riwayat Perubahan Mekanisme Penulisan Artikel</h2>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Berikut catatan pembaruan alur kerja dan alat bantu penulis di <strong>Article Studio</strong> (<code class="font-mono text-xs">/admin-articles/</code>):
+                </p>
+                <div class="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-1.5">
+                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 1 — Sisip Tabel Dalam Paragraf &amp; Gambar URL</p>
+                        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
+                            <li>Penambahan tombol <strong>+Tabel Dalam Paragraf (MD)</strong> dengan modal impor tabel Markdown pipe langsung ke posisi kursor di tengah paragraf isi, maupun untuk diisikan ke tabel terstruktur.</li>
+                            <li>Penambahan tombol <strong>+ Tambah Gambar (URL)</strong> dengan modal penyisipan sintaks <code class="font-mono text-xs">![alt](url)</code> beserta pratinjau URL gambar aman (<code class="font-mono text-xs">https://</code>, <code class="font-mono text-xs">http://</code>, atau path <code class="font-mono text-xs">/</code>).</li>
+                            <li>Pemisahan penamaan agar penulis mudah membedakan <strong>+Tabel Dalam Paragraf (MD)</strong> (tampil di tengah paragraf) dengan panel lipat <strong>Tabel Penutup H2 (Opsional)</strong> (selalu tampil di akhir sub-bagian H2 dengan <code class="font-mono text-xs">&lt;caption&gt;</code> resmi).</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-1.5">
+                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 2 — Kontrol Batal Edit &amp; Hapus Artikel</p>
+                        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
+                            <li>Penambahan tombol <strong>Batal Edit</strong> pada bilah atas editor (disertai konfirmasi jika ada perubahan naskah yang belum disimpan).</li>
+                            <li>Penambahan tombol <strong>Hapus Artikel</strong> untuk menghapus entri artikel beserta berkas bahasa terkait dari daftar terbit/draft secara atomik melalui <code class="font-mono text-xs">/api/articles/delete</code>.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-1.5">
+                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 3 — Panel Collapsible 3 Tingkat, Mode Fokus &amp; Panduan Inline</p>
+                        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
+                            <li>Struktur editor disusun menjadi <strong>3 tingkat panel lipat (collapsible)</strong>: Tingkat 1 (panel utama seperti Identitas/Slug, SEO, Poin Inti, Isi Artikel H2, Metodologi, FAQ, dan 4 panel sidebar kanan), Tingkat 2 (kartu tiap <em>Bagian #N</em> dan <em>FAQ #N</em>), serta Tingkat 3 (<em>Blok Opsional</em> dan <em>Tabel Penutup H2</em>).</li>
+                            <li>Penambahan tombol <strong>Mode Fokus</strong> (menutup panel sekunder agar penulis berkonsentrasi penuh pada judul H1 dan isi bagian H2) serta tombol <strong>Tutup Semua H2</strong> / <strong>Buka Semua H2</strong>.</li>
+                            <li>Penambahan strip panduan fungsi pada tiap panel menggunakan aksen abu-abu editorial <code class="font-mono text-xs">#eaeef3</code> agar penulis cepat memahami kegunaan setiap blok.</li>
+                            <li>Penambahan tautan langsung antar-studio di header atas (<strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, dan <strong>Admin Lexicon</strong>) dengan satu login sesi editorial terpadu.</li>
+                        </ul>
+                    </div>
+                </div>
             </section>
         </article>
     </main>

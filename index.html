@@ -5145,7 +5145,13 @@
             }
         }
 
-        const AUTO_CHECK_LIMIT = 24;
+        const AUTO_CHECK_EXTENSION_MAX_LENGTH_EXCLUSIVE = {
+            '.com': 13,
+            '.net': 8,
+            '.org': 18,
+            '.io': 7,
+            '.id': 7
+        };
         const AUTO_CHECK_CONCURRENCY = 2;
         const AUTO_CHECK_BATCH_SIZE = 4;
         const AUTO_CHECK_STAGGER_MS = 120;
@@ -7215,6 +7221,68 @@
             return false;
         }
 
+        function hasHardToPronounceSyllables(sld, uiLang, targetKeywords) {
+            const cleanSld = String(sld || '').trim().toLowerCase();
+            const alphaOnly = cleanSld.replace(/[^a-z]/g, '');
+            if (!alphaOnly) return true;
+            if (!/[aeiouy]/.test(alphaOnly)) return true;
+            if (/(.)\1{2,}/.test(cleanSld)) return true;
+            if (/[aeiou]{3,}/.test(alphaOnly)) return true;
+
+            const normalizedKeywords = Array.isArray(targetKeywords) ? targetKeywords : [];
+            const isKnownWordOrKw =
+                normalizedKeywords.includes(alphaOnly) ||
+                EN_DOMAIN_NICHE_STEMS.includes(alphaOnly) ||
+                ENGLISH_COMMON_PENALTY_EXCEPTIONS.has(alphaOnly) ||
+                ID_DOMAIN_NICHE_STEMS.includes(alphaOnly) ||
+                INDONESIAN_COMMON_PENALTY_EXCEPTIONS.has(alphaOnly);
+
+            if (!isKnownWordOrKw && /(?:iy|uy|yy)/.test(alphaOnly)) return true;
+            if (!isKnownWordOrKw && /(?:aa|ii|uu)/.test(alphaOnly)) return true;
+            if (!normalizedKeywords.some((kw) => HEAVY_UNNATURAL_CLUSTERS_RE.test(kw)) && HEAVY_UNNATURAL_CLUSTERS_RE.test(alphaOnly)) return true;
+            if (!normalizedKeywords.some((kw) => INDONESIAN_STIFF_CONSONANT_COMBOS_RE.test(kw)) && (INDONESIAN_STIFF_CONSONANT_COMBOS_RE.test(alphaOnly) || /(?:cj|dj)$/.test(alphaOnly))) return true;
+            if (!isKnownWordOrKw && /[bcdfghjklmnpqrstvwxz]{4,}/.test(alphaOnly)) return true;
+
+            if (alphaOnly.length <= 3) {
+                if (/[bcdfghjklmnpqrstvwxz]{3}/.test(alphaOnly) && !/[aeiou]/.test(alphaOnly)) return true;
+                if (/(?:^jq|^qj|^qx|^xq|^qz|^zq|^xz|^zx|^vx|^xv|^cj|^dj)/.test(alphaOnly)) return true;
+                if (alphaOnly.length === 3 && !isKnownWordOrKw) {
+                    const scores = computeDomainScores(`${cleanSld}.com`, '.com', uiLang, normalizedKeywords);
+                    const nat = calculateSpellingNaturalness(cleanSld, uiLang);
+                    if (scores.pronunciation_comfort_score < 60 && nat < 75) return true;
+                }
+                return false;
+            }
+
+            const scores = computeDomainScores(`${cleanSld}.com`, '.com', uiLang, normalizedKeywords);
+            const nat = calculateSpellingNaturalness(cleanSld, uiLang);
+            if (scores.pronunciation_comfort_score < 66 || nat < 66) return true;
+
+            const enPen = computeEnglishPronunciationPenalty(cleanSld, normalizedKeywords);
+            const idPen = computeIndonesianPronunciationPenalty(cleanSld, normalizedKeywords);
+            if (enPen.penalty > 0 && idPen.penalty > 0) return true;
+
+            return false;
+        }
+
+        function isDomainEligibleForAutoCheck(domain, uiLang, targetKeywords) {
+            const normDomain = normalizeDomainCacheKey(domain);
+            if (!normDomain || normDomain.length > MAX_CHECK_DOMAIN_LENGTH) return false;
+            const { sld, ext } = splitDomainSldAndExt(normDomain);
+            if (!sld || !ext) return false;
+            if (!Object.prototype.hasOwnProperty.call(AUTO_CHECK_EXTENSION_MAX_LENGTH_EXCLUSIVE, ext)) {
+                return false;
+            }
+            const maxLenExclusive = AUTO_CHECK_EXTENSION_MAX_LENGTH_EXCLUSIVE[ext];
+            if (normDomain.length >= maxLenExclusive) {
+                return false;
+            }
+            if (ext === '.com') {
+                return !hasHardToPronounceSyllables(sld, uiLang, targetKeywords);
+            }
+            return true;
+        }
+
         function scheduleAutoAvailabilityChecks(domains, immediate) {
             if (autoCheckDebounceTimer) {
                 clearTimeout(autoCheckDebounceTimer);
@@ -7222,9 +7290,10 @@
             }
             const genId = ++autoCheckGenerationId;
             autoCheckPendingDomains.clear();
+            const uiLang = getSelectedHeaderLanguageCode();
+            const targetKeywords = getScoringTargetKeywords();
             const targets = (Array.isArray(domains) ? domains : [])
-                .slice(0, AUTO_CHECK_LIMIT)
-                .filter((d) => d && d.length <= MAX_CHECK_DOMAIN_LENGTH);
+                .filter((d) => isDomainEligibleForAutoCheck(d, uiLang, targetKeywords));
             if (targets.length === 0) return;
 
             const nowMs = Date.now();

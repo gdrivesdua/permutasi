@@ -136,6 +136,22 @@ if (fs.existsSync(adminArticlesSrc)) {
   console.log('Generated dist/admin-articles/index.html');
 }
 
+const adminAdsenseSrc = path.join(rootDir, 'admin-adsense.html');
+if (fs.existsSync(adminAdsenseSrc)) {
+  const adminAdsenseOut = path.join(distDir, 'adsense-studio', 'index.html');
+  fs.mkdirSync(path.dirname(adminAdsenseOut), { recursive: true });
+  fs.copyFileSync(adminAdsenseSrc, adminAdsenseOut);
+  console.log('Generated dist/adsense-studio/index.html');
+}
+
+const adminLexiconSrc = path.join(rootDir, 'admin-lexicon.html');
+if (fs.existsSync(adminLexiconSrc)) {
+  const adminLexiconOut = path.join(distDir, 'admin-lexicon', 'index.html');
+  fs.mkdirSync(path.dirname(adminLexiconOut), { recursive: true });
+  fs.copyFileSync(adminLexiconSrc, adminLexiconOut);
+  console.log('Generated dist/admin-lexicon/index.html');
+}
+
 const publicSrcDir = path.join(rootDir, 'public');
 if (fs.existsSync(publicSrcDir)) {
   const publicDocFiles = fs.readdirSync(publicSrcDir).filter((name) => name.endsWith('.md') || name === 'doku.writer.html');
