@@ -1042,6 +1042,7 @@
                 els.editNicheScore.value = row.niche_clarity_score ?? '';
                 els.editEmdScore.value = row.emd_pmd_score ?? '';
 
+                syncAllAdminDataClearButtons();
                 els.editModal.classList.remove('hidden');
                 els.editSld.focus();
             }
@@ -1287,6 +1288,7 @@
                 els.filterLang.value = '';
                 els.sortBySelect.value = 'checked_at';
                 els.sortDirSelect.value = 'desc';
+                syncAllAdminDataClearButtons();
                 state.page = 1;
                 hideBanner();
                 loadDomains();
@@ -1431,6 +1433,120 @@
                 }
             });
 
+            function attachClearButtonToField(el, labelText) {
+                if (!el || el.dataset.clearAttached === '1') return;
+                el.dataset.clearAttached = '1';
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'relative w-full min-w-0';
+
+                const transferClasses = ['flex-1', 'sm:col-span-2', 'md:col-span-2', 'mt-1'];
+                transferClasses.forEach((cls) => {
+                    if (el.classList.contains(cls)) {
+                        el.classList.remove(cls);
+                        wrapper.classList.add(cls);
+                    }
+                });
+
+                const parent = el.parentNode;
+                if (!parent) return;
+                parent.insertBefore(wrapper, el);
+                wrapper.appendChild(el);
+
+                el.classList.add('block', 'w-full');
+                el.classList.remove('px-3', 'px-2.5', 'px-3.5', 'pr-2', 'pr-2.5', 'pr-3', 'pr-3.5');
+                const isCompact = el.classList.contains('text-xs');
+                el.classList.add(isCompact ? 'pl-2.5' : 'pl-3', 'pr-9');
+
+                if (el.type === 'search') {
+                    el.classList.add('[&::-webkit-search-cancel-button]:hidden', '[&::-webkit-search-cancel-button]:appearance-none');
+                } else if (el.type === 'number') {
+                    el.classList.add('[appearance:textfield]', '[&::-webkit-outer-spin-button]:appearance-none', '[&::-webkit-inner-spin-button]:appearance-none');
+                }
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                const cleanLabel = String(labelText || el.getAttribute('aria-label') || el.placeholder || 'kolom').trim();
+                btn.setAttribute('aria-label', `Hapus ${cleanLabel}`);
+                btn.setAttribute('title', `Hapus ${cleanLabel}`);
+                btn.className = 'hidden absolute right-1.5 top-1/2 -translate-y-1/2 z-10 w-6 h-6 items-center justify-center rounded-md text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/60 active:bg-red-100 dark:active:bg-red-900/60 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400/70';
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 20 20');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2.3');
+                svg.setAttribute('stroke-linecap', 'round');
+                svg.setAttribute('aria-hidden', 'true');
+                svg.setAttribute('class', 'w-3.5 h-3.5 pointer-events-none');
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', 'M6 6l8 8M14 6l-8 8');
+                svg.appendChild(path);
+                btn.appendChild(svg);
+                wrapper.appendChild(btn);
+
+                const sync = () => {
+                    const hasValue = String(el.value || '').length > 0 && !el.disabled && !el.readOnly;
+                    btn.classList.toggle('hidden', !hasValue);
+                    btn.classList.toggle('flex', hasValue);
+                };
+
+                el._syncClearButton = sync;
+                el.addEventListener('input', sync);
+                el.addEventListener('change', sync);
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    el.value = '';
+                    sync();
+                    try {
+                        el.focus({ preventScroll: true });
+                    } catch {
+                        el.focus();
+                    }
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                    sync();
+                });
+
+                sync();
+            }
+
+            function syncAllAdminDataClearButtons() {
+                document.querySelectorAll('[data-clear-attached="1"]').forEach((el) => {
+                    if (typeof el._syncClearButton === 'function') {
+                        el._syncClearButton();
+                    }
+                });
+            }
+
+            function initAdminDataClearButtons() {
+                const targets = [
+                    [els.filterQuery, 'Pencarian Umum'],
+                    [els.filterSld, 'SLD'],
+                    [els.filterKeyword, 'Keyword'],
+                    [els.filterCharMin, 'Char Length Minimum'],
+                    [els.filterCharMax, 'Char Length Maksimum'],
+                    [els.filterTags, 'Tags'],
+                    [els.filterExtension, 'Extension'],
+                    [els.editSld, 'SLD'],
+                    [els.editExtension, 'Extension'],
+                    [els.editCharLength, 'Char Length'],
+                    [els.editLang, 'Lang'],
+                    [els.editTags, 'Tags'],
+                    [els.editOverallScore, 'Skor Overall'],
+                    [els.editPronScore, 'Skor Pronunciation'],
+                    [els.editBrandScore, 'Skor Brandability'],
+                    [els.editStructScore, 'Skor Structure Length'],
+                    [els.editExtFitScore, 'Skor Ext/Lang Fit'],
+                    [els.editCleanScore, 'Skor Cleanliness'],
+                    [els.editNicheScore, 'Skor Niche Clarity'],
+                    [els.editEmdScore, 'Skor EMD/PMD']
+                ];
+                targets.forEach(([el, label]) => attachClearButtonToField(el, label));
+            }
+
+            initAdminDataClearButtons();
             renderExportColumnsSelector();
             checkAuthSession();
         })();
