@@ -1226,20 +1226,17 @@ function localizeIndexHtml(rawHtml, lang, config) {
     }
   }
 
-  const hubChromeByLang = {
-    en: { heroSlogan: 'Find the name that brings your idea to life.', resources: 'Resources', guides: 'Articles', research: 'Research', tools: 'Tools' },
-    id: { heroSlogan: 'Temukan nama terbaik untuk memulai langkah besarmu.', resources: 'Sumber Daya', guides: 'Artikel', research: 'Riset', tools: 'Alat' },
-    es: { heroSlogan: 'Encuentra el nombre que dará vida a tu próximo proyecto.', resources: 'Recursos', guides: 'Artículos', research: 'Estudios', tools: 'Herramientas' },
-    pt: { heroSlogan: 'Encontre o nome ideal para tirar sua ideia do papel.', resources: 'Recursos', guides: 'Artigos', research: 'Pesquisas', tools: 'Ferramentas' },
-    fr: { heroSlogan: 'Trouvez le nom qui donnera vie à votre projet.', resources: 'Ressources', guides: 'Articles', research: 'Études', tools: 'Outils' },
-    de: { heroSlogan: 'Finde den Domainnamen, der deine Idee zum Leben erweckt.', resources: 'Ressourcen', guides: 'Artikel', research: 'Studien', tools: 'Tools' },
-    ru: { heroSlogan: 'Найдите имя, с которого начнётся ваш проект.', resources: 'Ресурсы', guides: 'Статьи', research: 'Исследования', tools: 'Инструменты' },
-    ja: { heroSlogan: 'アイデアを形にする、最初の名前を見つけよう。', resources: 'リソース', guides: '記事', research: 'リサーチ', tools: 'ツール' }
-  };
+  const hubChromeByLang = MOBILE_NAV_CHROME_BY_LANG;
   const hubLabels = hubChromeByLang[lang];
   if (hubLabels) {
     html = setElementInnerTextById(html, 'uiHeroSlogan', hubLabels.heroSlogan);
     html = setElementInnerTextById(html, 'uiFooterResourcesTitle', hubLabels.resources);
+    html = setElementInnerTextById(html, 'uiMobileWorkspaceLabel', hubLabels.mobileWorkspaceLabel);
+    html = setElementInnerTextById(html, 'uiMobileExploreLabel', hubLabels.mobileExploreLabel);
+    html = setElementInnerTextById(html, 'uiMobileInfoLabel', hubLabels.mobileInfoLabel);
+    html = setElementInnerTextById(html, 'uiMobileHubGuidesDesc', hubLabels.hubGuidesDesc);
+    html = setElementInnerTextById(html, 'uiMobileHubResearchDesc', hubLabels.hubResearchDesc);
+    html = setElementInnerTextById(html, 'uiMobileHubToolsDesc', hubLabels.hubToolsDesc);
     for (const id of ['uiNavHubGuides', 'uiMobileHubGuides', 'uiFooterHubGuides']) {
       html = setElementInnerTextById(html, id, hubLabels.guides);
     }
@@ -1829,13 +1826,206 @@ function buildEditorialHeaderNav(lang, activeSection, hubsData) {
   }).join('\n                ');
 }
 
+const MOBILE_NAV_CHROME_BY_LANG = {
+  en: {
+    heroSlogan: 'Find the name that brings your idea to life.',
+    resources: 'Resources',
+    guides: 'Articles',
+    research: 'Research',
+    tools: 'Tools',
+    mobileWorkspaceLabel: 'Workspace',
+    mobileExploreLabel: 'Articles & Tools',
+    mobileInfoLabel: 'Information',
+    hubGuidesDesc: 'RFC 1035 proofs, naming & SEO guides',
+    hubResearchDesc: 'Data studies & curated brandable lists',
+    hubToolsDesc: 'Score benchmarks & phonetic calculators'
+  },
+  id: {
+    heroSlogan: 'Temukan nama terbaik untuk memulai langkah besarmu.',
+    resources: 'Sumber Daya',
+    guides: 'Artikel',
+    research: 'Riset',
+    tools: 'Alat',
+    mobileWorkspaceLabel: 'Ruang Kerja',
+    mobileExploreLabel: 'Artikel, Riset & Alat',
+    mobileInfoLabel: 'Informasi',
+    hubGuidesDesc: 'Bukti teknis RFC 1035 & panduan domain',
+    hubResearchDesc: 'Studi data domain & kurasi brandable',
+    hubToolsDesc: 'Kalkulator skor & uji pelafalan domain'
+  },
+  es: {
+    heroSlogan: 'Encuentra el nombre que dará vida a tu próximo proyecto.',
+    resources: 'Recursos',
+    guides: 'Artículos',
+    research: 'Estudios',
+    tools: 'Herramientas',
+    mobileWorkspaceLabel: 'Espacio de Trabajo',
+    mobileExploreLabel: 'Artículos y Herramientas',
+    mobileInfoLabel: 'Información',
+    hubGuidesDesc: 'Guías técnicas RFC 1035 y naming',
+    hubResearchDesc: 'Estudios de datos y listas curadas',
+    hubToolsDesc: 'Calculadoras de puntuación y fonética'
+  },
+  pt: {
+    heroSlogan: 'Encontre o nome ideal para tirar sua ideia do papel.',
+    resources: 'Recursos',
+    guides: 'Artigos',
+    research: 'Pesquisas',
+    tools: 'Ferramentas',
+    mobileWorkspaceLabel: 'Área de Trabalho',
+    mobileExploreLabel: 'Artigos e Ferramentas',
+    mobileInfoLabel: 'Informações',
+    hubGuidesDesc: 'Guias técnicos RFC 1035 e naming',
+    hubResearchDesc: 'Estudos de dados e listas curadas',
+    hubToolsDesc: 'Calculadoras de pontuação e fonética'
+  },
+  fr: {
+    heroSlogan: 'Trouvez le nom qui donnera vie à votre projet.',
+    resources: 'Ressources',
+    guides: 'Articles',
+    research: 'Études',
+    tools: 'Outils',
+    mobileWorkspaceLabel: 'Espace de Travail',
+    mobileExploreLabel: 'Articles & Outils',
+    mobileInfoLabel: 'Informations',
+    hubGuidesDesc: 'Preuves RFC 1035 & guides de nommage',
+    hubResearchDesc: 'Études de données & sélections',
+    hubToolsDesc: 'Calculateurs de score et prononciation'
+  },
+  de: {
+    heroSlogan: 'Finde den Domainnamen, der deine Idee zum Leben erweckt.',
+    resources: 'Ressourcen',
+    guides: 'Artikel',
+    research: 'Studien',
+    tools: 'Tools',
+    mobileWorkspaceLabel: 'Arbeitsbereich',
+    mobileExploreLabel: 'Artikel & Tools',
+    mobileInfoLabel: 'Informationen',
+    hubGuidesDesc: 'RFC-1035-Nachweise & Naming-Guides',
+    hubResearchDesc: 'Datenstudien & kuratierte Listen',
+    hubToolsDesc: 'Score-Rechner & Aussprache-Tests'
+  },
+  ru: {
+    heroSlogan: 'Найдите имя, с которого начнётся ваш проект.',
+    resources: 'Ресурсы',
+    guides: 'Статьи',
+    research: 'Исследования',
+    tools: 'Инструменты',
+    mobileWorkspaceLabel: 'Рабочая область',
+    mobileExploreLabel: 'Статьи и инструменты',
+    mobileInfoLabel: 'Информация',
+    hubGuidesDesc: 'Статьи о RFC 1035 и стратегии доменов',
+    hubResearchDesc: 'Исследования данных и подборки',
+    hubToolsDesc: 'Калькуляторы оценки и звучания'
+  },
+  ja: {
+    heroSlogan: 'アイデアを形にする、最初の名前を見つけよう。',
+    resources: 'リソース',
+    guides: '記事',
+    research: 'リサーチ',
+    tools: 'ツール',
+    mobileWorkspaceLabel: 'ワークスペース',
+    mobileExploreLabel: '記事・ツール',
+    mobileInfoLabel: 'サイト情報',
+    hubGuidesDesc: 'RFC 1035検証・命名戦略ガイド',
+    hubResearchDesc: 'データ調査・厳選ブランドリスト',
+    hubToolsDesc: 'スコア計測・発音チェックツール'
+  }
+};
+
 function buildEditorialMobileNav(lang, activeSection, hubsData) {
-  return getEditorialNavItems(lang, activeSection, hubsData).map((item) => {
-    if (item.active) {
-      return `<a href="${escapeHtmlAttr(item.href)}" aria-current="page" class="min-h-[44px] flex items-center px-3 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-semibold">${escapeHtmlText(item.label)}</a>`;
+  const chrome = trustI18n.CHROME[lang] || trustI18n.CHROME.en;
+  const eduPack = EDU_FAQ_BY_LANG[lang] || EDU_FAQ_BY_LANG.en;
+  const mobileChrome = MOBILE_NAV_CHROME_BY_LANG[lang] || MOBILE_NAV_CHROME_BY_LANG.en;
+  const homeHref = lang === 'en' ? '/' : `/${lang}/`;
+  const guideHref = trustI18n.localizeInternalHref('guide.html', lang);
+  const faqHref = trustI18n.localizeInternalHref('faq.html', lang);
+
+  const coreTileCls = (isActive) => isActive
+    ? 'min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-xl border border-blue-300 dark:border-blue-700 bg-blue-50/90 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 transition-colors'
+    : 'min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/80 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors';
+
+  const hubCardsConfig = [
+    {
+      sec: 'guides',
+      desc: mobileChrome.hubGuidesDesc,
+      badgeCls: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400',
+      iconSvg: '<svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
+    },
+    {
+      sec: 'research',
+      desc: mobileChrome.hubResearchDesc,
+      badgeCls: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400',
+      iconSvg: '<svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'
+    },
+    {
+      sec: 'tools',
+      desc: mobileChrome.hubToolsDesc,
+      badgeCls: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400',
+      iconSvg: '<svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg>'
     }
-    return `<a href="${escapeHtmlAttr(item.href)}" class="min-h-[44px] flex items-center px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900">${escapeHtmlText(item.label)}</a>`;
-  }).join('\n                ');
+  ];
+
+  const hubCardsHtml = hubCardsConfig.map((item) => {
+    const href = getHubPath(item.sec, lang);
+    const label = getSectionLabel(hubsData, item.sec, lang);
+    const isActive = item.sec === activeSection;
+    const cardCls = isActive
+      ? 'min-h-[56px] flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-blue-400 dark:border-blue-600 bg-blue-50/70 dark:bg-blue-950/50 transition-colors'
+      : 'min-h-[56px] flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/40 dark:hover:bg-blue-950/30 transition-colors';
+    const currentAttr = isActive ? ' aria-current="page"' : '';
+    return `<a href="${escapeHtmlAttr(href)}" onclick="closePageMobileMenu()"${currentAttr} class="${cardCls}">
+                        <span class="flex items-center gap-3 min-w-0">
+                            <span class="w-9 h-9 rounded-lg ${item.badgeCls} flex items-center justify-center shrink-0">${item.iconSvg}</span>
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold ${isActive ? 'text-blue-700 dark:text-blue-300' : 'text-slate-900 dark:text-white'} leading-tight">${escapeHtmlText(label)}</span>
+                                <span class="block text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">${escapeHtmlText(item.desc)}</span>
+                            </span>
+                        </span>
+                        <svg aria-hidden="true" class="w-4 h-4 ${isActive ? 'text-blue-500 dark:text-blue-400' : 'text-slate-400'} shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </a>`;
+  }).join('\n                    ');
+
+  const infoLinks = [
+    { file: 'about.html', label: chrome.footerAbout },
+    { file: 'privacy-policy.html', label: chrome.footerPrivacy },
+    { file: 'terms.html', label: chrome.footerTerms },
+    { file: 'disclaimer.html', label: chrome.footerDisclaimer },
+    { file: 'contact.html', label: chrome.footerContact }
+  ].map((item) => {
+    const href = trustI18n.localizeInternalHref(item.file, lang);
+    return `<a href="${escapeHtmlAttr(href)}" onclick="closePageMobileMenu()" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4">${escapeHtmlText(item.label)}</a>`;
+  }).join('\n                    ');
+
+  return `<div class="space-y-2">
+                <p class="px-1 text-xs font-semibold text-slate-500 dark:text-slate-400">${escapeHtmlText(mobileChrome.mobileWorkspaceLabel)}</p>
+                <div class="grid grid-cols-2 gap-2 text-sm font-semibold">
+                    <a href="${escapeHtmlAttr(homeHref)}" onclick="closePageMobileMenu()" class="col-span-2 ${coreTileCls(false)}">
+                        <svg aria-hidden="true" class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m6.36-.36-2.12 2.12M21 12h-3M18.36 18.36l-2.12-2.12M12 21v-3M7.76 16.24l-2.12 2.12M3 12h3M5.64 5.64l2.12 2.12"/></svg>
+                        <span class="truncate">${escapeHtmlText(chrome.navGenerator)}</span>
+                    </a>
+                    <a href="${escapeHtmlAttr(guideHref)}" onclick="closePageMobileMenu()"${activeSection === 'guide' ? ' aria-current="page"' : ''} class="${coreTileCls(activeSection === 'guide')}">
+                        <svg aria-hidden="true" class="w-4 h-4 ${activeSection === 'guide' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'} shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        <span class="truncate">${escapeHtmlText(eduPack.navGuide || 'Guide')}</span>
+                    </a>
+                    <a href="${escapeHtmlAttr(faqHref)}" onclick="closePageMobileMenu()"${activeSection === 'faq' ? ' aria-current="page"' : ''} class="${coreTileCls(activeSection === 'faq')}">
+                        <svg aria-hidden="true" class="w-4 h-4 ${activeSection === 'faq' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'} shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span class="truncate">${escapeHtmlText(eduPack.navFaq || 'FAQ')}</span>
+                    </a>
+                </div>
+            </div>
+            <div class="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <p class="px-1 text-xs font-semibold text-slate-500 dark:text-slate-400">${escapeHtmlText(mobileChrome.mobileExploreLabel)}</p>
+                <div class="flex flex-col gap-2">
+                    ${hubCardsHtml}
+                </div>
+            </div>
+            <div class="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <p class="px-1 text-xs font-semibold text-slate-500 dark:text-slate-400">${escapeHtmlText(mobileChrome.mobileInfoLabel)}</p>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 px-1">
+                    ${infoLinks}
+                </div>
+            </div>`;
 }
 
 function buildEditorialFooterLinks(lang) {
@@ -2275,6 +2465,7 @@ export function renderArticlePage(rootDir, article, lang = 'en', config = loadSi
     SECTION_HREF: escapeHtmlAttr(sectionHref),
     BREADCRUMB_CURRENT: escapeHtmlText(content.breadcrumbLabel || localeMeta.h1 || localeMeta.title),
     HEADER_NAV_LINKS: buildEditorialHeaderNav(targetLang, article.section, hubsData),
+    MOBILE_NAV_LINKS: buildEditorialMobileNav(targetLang, article.section, hubsData),
     LANG_SELECT_OPTIONS: selectOptions,
     ARTICLE_H1: escapeHtmlText(localeMeta.h1 || localeMeta.title),
     ARTICLE_EXCERPT: escapeHtmlText(localeMeta.excerpt || localeMeta.metaDesc),
@@ -2419,6 +2610,7 @@ export function renderArticleHubPage(rootDir, section, lang = 'en', config = loa
     HOME_LABEL: escapeHtmlText(chrome.home),
     SECTION_LABEL: escapeHtmlText(hubCopy.navLabel || section),
     HEADER_NAV_LINKS: buildEditorialHeaderNav(targetLang, section, hubsData),
+    MOBILE_NAV_LINKS: buildEditorialMobileNav(targetLang, section, hubsData),
     LANG_SELECT_OPTIONS: selectOptions,
     HUB_SUBTITLE: escapeHtmlText(hubCopy.subtitle || ''),
     SECTION_TABS_HTML: sectionTabsHtml,

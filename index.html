@@ -388,24 +388,92 @@
             </div>
         </div>
 
-        <!-- Mobile Slide-Down Drawer -->
-        <div id="mobileNavDrawer" class="hidden lg:hidden absolute inset-x-0 top-full bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-md">
-            <nav aria-label="Mobile Navigation" class="flex flex-col gap-1.5 text-sm font-medium">
-                <a href="#generatorSection" onclick="closeMobileMenu()" id="uiMobileNavGen" class="min-h-[44px] flex items-center px-3 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">Generator</a>
-                <a href="#domainAnalysisPanel" onclick="closeMobileMenu()" id="uiMobileNavResults" class="min-h-[44px] flex items-center px-3 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">Results</a>
-                <a href="/guide.html" onclick="closeMobileMenu()" id="uiMobileNavGuide" class="min-h-[44px] flex items-center px-3 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">Guide</a>
-                <a href="/faq.html" onclick="closeMobileMenu()" id="uiMobileNavFaq" class="min-h-[44px] flex items-center px-3 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">FAQ</a>
-                <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-x-4 gap-y-1 px-3">
-                    <a href="/guides/" onclick="closeMobileMenu()" id="uiMobileHubGuides" data-hub-section="guides" class="min-h-[40px] inline-flex items-center text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">Articles</a>
-                    <a href="/research/" onclick="closeMobileMenu()" id="uiMobileHubResearch" data-hub-section="research" class="min-h-[40px] inline-flex items-center text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">Research</a>
-                    <a href="/tools/" onclick="closeMobileMenu()" id="uiMobileHubTools" data-hub-section="tools" class="min-h-[40px] inline-flex items-center text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">Tools</a>
+        <!-- Mobile Slide-Down Drawer & Backdrop -->
+        <div id="mobileNavBackdrop" onclick="closeMobileMenu()" aria-hidden="true" class="hidden lg:hidden fixed inset-x-0 top-14 bottom-0 z-30 bg-slate-950/35 dark:bg-black/60 backdrop-blur-[1px]"></div>
+        <div id="mobileNavDrawer" class="hidden lg:hidden absolute inset-x-0 top-full z-40 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 py-4 shadow-xl max-h-[calc(100dvh-3.5rem)] overflow-y-auto">
+            <nav aria-label="Mobile Navigation" class="flex flex-col gap-4">
+                <!-- Group 1: Quick Workspace & Core Docs -->
+                <div class="space-y-2">
+                    <p id="uiMobileWorkspaceLabel" class="px-1 text-xs font-semibold text-slate-500 dark:text-slate-400">Workspace</p>
+                    <div class="grid grid-cols-2 gap-2 text-sm font-semibold">
+                        <a href="#generatorSection" onclick="closeMobileMenu()" class="min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/80 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <svg aria-hidden="true" class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m6.36-.36-2.12 2.12M21 12h-3M18.36 18.36l-2.12-2.12M12 21v-3M7.76 16.24l-2.12 2.12M3 12h3M5.64 5.64l2.12 2.12"/></svg>
+                            <span id="uiMobileNavGen" class="truncate">Generator</span>
+                        </a>
+                        <a href="#domainAnalysisPanel" onclick="closeMobileMenu()" class="min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/80 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <svg aria-hidden="true" class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                            <span id="uiMobileNavResults" class="truncate">Results</span>
+                        </a>
+                        <a href="/guide.html" onclick="closeMobileMenu()" id="uiMobileNavGuideLink" class="min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/80 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <svg aria-hidden="true" class="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                            <span id="uiMobileNavGuide" class="truncate">Guide</span>
+                        </a>
+                        <a href="/faq.html" onclick="closeMobileMenu()" id="uiMobileNavFaqLink" class="min-h-[44px] flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/80 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <svg aria-hidden="true" class="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <span id="uiMobileNavFaq" class="truncate">FAQ</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-x-4 gap-y-2 px-3">
-                    <a href="/about.html" onclick="closeMobileMenu()" id="uiMobileAboutBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">About</a>
-                    <a href="/privacy-policy.html" onclick="closeMobileMenu()" id="uiMobilePrivacyBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Privacy</a>
-                    <a href="/terms.html" onclick="closeMobileMenu()" id="uiMobileTermsBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Terms</a>
-                    <a href="/disclaimer.html" onclick="closeMobileMenu()" id="uiMobileDisclaimerBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Disclaimer</a>
-                    <a href="/contact.html" onclick="closeMobileMenu()" id="uiMobileContactBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Contact</a>
+
+                <!-- Group 2: Highlighted Editorial & Interactive Tools -->
+                <div class="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                    <p id="uiMobileExploreLabel" class="px-1 text-xs font-semibold text-slate-500 dark:text-slate-400">Articles &amp; Tools</p>
+                    <div class="flex flex-col gap-2">
+                        <a href="/guides/" onclick="closeMobileMenu()" data-hub-section="guides" class="min-h-[56px] flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/40 dark:hover:bg-blue-950/30 transition-colors">
+                            <span class="flex items-center gap-3 min-w-0">
+                                <span class="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                </span>
+                                <span class="min-w-0">
+                                    <span id="uiMobileHubGuides" class="block text-sm font-semibold text-slate-900 dark:text-white leading-tight">Articles</span>
+                                    <span id="uiMobileHubGuidesDesc" class="block text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">RFC 1035 proofs, naming &amp; SEO guides</span>
+                                </span>
+                            </span>
+                            <svg aria-hidden="true" class="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+
+                        <a href="/research/" onclick="closeMobileMenu()" data-hub-section="research" class="min-h-[56px] flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/40 dark:hover:bg-blue-950/30 transition-colors">
+                            <span class="flex items-center gap-3 min-w-0">
+                                <span class="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                </span>
+                                <span class="min-w-0">
+                                    <span id="uiMobileHubResearch" class="block text-sm font-semibold text-slate-900 dark:text-white leading-tight">Research</span>
+                                    <span id="uiMobileHubResearchDesc" class="block text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">Data studies &amp; curated brandable lists</span>
+                                </span>
+                            </span>
+                            <svg aria-hidden="true" class="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+
+                        <a href="/tools/" onclick="closeMobileMenu()" data-hub-section="tools" class="min-h-[56px] flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/40 dark:hover:bg-blue-950/30 transition-colors">
+                            <span class="flex items-center gap-3 min-w-0">
+                                <span class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg>
+                                </span>
+                                <span class="min-w-0">
+                                    <span id="uiMobileHubTools" class="block text-sm font-semibold text-slate-900 dark:text-white leading-tight">Tools</span>
+                                    <span id="uiMobileHubToolsDesc" class="block text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">Score benchmarks &amp; phonetic calculators</span>
+                                </span>
+                            </span>
+                            <svg aria-hidden="true" class="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Group 3: Site Information & Mobile Reset -->
+                <div class="space-y-2.5 pt-3 border-t border-slate-200 dark:border-slate-800">
+                    <p id="uiMobileInfoLabel" class="px-1 text-xs font-semibold text-slate-500 dark:text-slate-400">Information</p>
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 px-1">
+                        <a href="/about.html" onclick="closeMobileMenu()" id="uiMobileAboutBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4">About</a>
+                        <a href="/privacy-policy.html" onclick="closeMobileMenu()" id="uiMobilePrivacyBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4">Privacy</a>
+                        <a href="/terms.html" onclick="closeMobileMenu()" id="uiMobileTermsBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4">Terms</a>
+                        <a href="/disclaimer.html" onclick="closeMobileMenu()" id="uiMobileDisclaimerBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4">Disclaimer</a>
+                        <a href="/contact.html" onclick="closeMobileMenu()" id="uiMobileContactBtn" class="min-h-[40px] inline-flex items-center text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4">Contact</a>
+                    </div>
+                    <button type="button" onclick="resetToHome(event)" class="ui-reset-all-btn sm:hidden w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:border-rose-300 dark:hover:border-rose-700 text-slate-700 dark:text-slate-200 hover:text-rose-700 dark:hover:text-rose-300 text-xs font-semibold transition-colors">
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                        <span class="ui-reset-all-label">Start Over</span>
+                    </button>
                 </div>
             </nav>
         </div>
@@ -2776,6 +2844,8 @@
                 ],
                 heroSlogan: 'Find the name that brings your idea to life.',
                 footerResourcesTitle: 'Resources', navHubGuides: 'Articles', navHubResearch: 'Research', navHubTools: 'Tools',
+                mobileWorkspaceLabel: 'Workspace', mobileExploreLabel: 'Articles & Tools', mobileInfoLabel: 'Information',
+                hubGuidesDesc: 'RFC 1035 proofs, naming & SEO guides', hubResearchDesc: 'Data studies & curated brandable lists', hubToolsDesc: 'Score benchmarks & phonetic calculators',
                 footerInfoTitle: 'Information', footerAbout: 'About', footerTerms: 'Terms of Service', footerPrivacy: 'Privacy Policy', footerDisclaimer: 'Disclaimer', footerContact: 'Contact Us',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). All rights reserved.', modalClose: 'Close',
                 aboutTitle: 'About Domain Name', aboutBody: 'Domain Name (domainname.web.id) is a fast, multilingual domain permutation generator and research utility built with strict RFC 1035 validation, shortest-first prioritization, and SEO-safe inspection links.',
@@ -2848,6 +2918,8 @@
                 ],
                 heroSlogan: 'Temukan nama terbaik untuk memulai langkah besarmu.',
                 footerResourcesTitle: 'Sumber Daya', navHubGuides: 'Artikel', navHubResearch: 'Riset', navHubTools: 'Alat',
+                mobileWorkspaceLabel: 'Ruang Kerja', mobileExploreLabel: 'Artikel, Riset & Alat', mobileInfoLabel: 'Informasi',
+                hubGuidesDesc: 'Bukti teknis RFC 1035 & panduan domain', hubResearchDesc: 'Studi data domain & kurasi brandable', hubToolsDesc: 'Kalkulator skor & uji pelafalan domain',
                 footerInfoTitle: 'Informasi', footerAbout: 'Tentang Kami', footerTerms: 'Ketentuan Layanan', footerPrivacy: 'Kebijakan Privasi', footerDisclaimer: 'Sanggahan (Disclaimer)', footerContact: 'Hubungi Kami',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). Hak cipta dilindungi.', modalClose: 'Tutup',
                 aboutTitle: 'Tentang Domain Name', aboutBody: 'Domain Name (domainname.web.id) adalah generator ide dan permutasi nama domain multibahasa dengan validasi RFC 1035, pengurutan domain terpendek, serta pintasan inspeksi yang aman bagi SEO.',
@@ -2920,6 +2992,8 @@
                 ],
                 heroSlogan: 'Encuentra el nombre que dará vida a tu próximo proyecto.',
                 footerResourcesTitle: 'Recursos', navHubGuides: 'Artículos', navHubResearch: 'Estudios', navHubTools: 'Herramientas',
+                mobileWorkspaceLabel: 'Espacio de Trabajo', mobileExploreLabel: 'Artículos y Herramientas', mobileInfoLabel: 'Información',
+                hubGuidesDesc: 'Guías técnicas RFC 1035 y naming', hubResearchDesc: 'Estudios de datos y listas curadas', hubToolsDesc: 'Calculadoras de puntuación y fonética',
                 footerInfoTitle: 'Información', footerAbout: 'Acerca de', footerTerms: 'Términos de Servicio', footerPrivacy: 'Política de Privacidad', footerDisclaimer: 'Aviso Legal', footerContact: 'Contacto',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). Todos los derechos reservados.', modalClose: 'Cerrar',
                 aboutTitle: 'Acerca de Domain Name', aboutBody: 'Domain Name (domainname.web.id) es una herramienta multilingüe de permutación de dominios con validación RFC 1035 y accesos directos seguros para SEO.',
@@ -2992,6 +3066,8 @@
                 ],
                 heroSlogan: 'Encontre o nome ideal para tirar sua ideia do papel.',
                 footerResourcesTitle: 'Recursos', navHubGuides: 'Artigos', navHubResearch: 'Pesquisas', navHubTools: 'Ferramentas',
+                mobileWorkspaceLabel: 'Área de Trabalho', mobileExploreLabel: 'Artigos e Ferramentas', mobileInfoLabel: 'Informações',
+                hubGuidesDesc: 'Guias técnicos RFC 1035 e naming', hubResearchDesc: 'Estudos de dados e listas curadas', hubToolsDesc: 'Calculadoras de pontuação e fonética',
                 footerInfoTitle: 'Informações', footerAbout: 'Sobre Nós', footerTerms: 'Termos de Uso', footerPrivacy: 'Política de Privacidade', footerDisclaimer: 'Aviso Legal', footerContact: 'Contato',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). Todos os direitos reservados.', modalClose: 'Fechar',
                 aboutTitle: 'Sobre Domain Name', aboutBody: 'Domain Name (domainname.web.id) é um gerador multilíngue de ideias de domínio com validação RFC 1035 e inspeção segura para SEO.',
@@ -3064,6 +3140,8 @@
                 ],
                 heroSlogan: 'Trouvez le nom qui donnera vie à votre projet.',
                 footerResourcesTitle: 'Ressources', navHubGuides: 'Articles', navHubResearch: 'Études', navHubTools: 'Outils',
+                mobileWorkspaceLabel: 'Espace de Travail', mobileExploreLabel: 'Articles & Outils', mobileInfoLabel: 'Informations',
+                hubGuidesDesc: 'Preuves RFC 1035 & guides de nommage', hubResearchDesc: 'Études de données & sélections', hubToolsDesc: 'Calculateurs de score et prononciation',
                 footerInfoTitle: 'Informations', footerAbout: 'À propos', footerTerms: 'Conditions d’utilisation', footerPrivacy: 'Confidentialité', footerDisclaimer: 'Mentions légales', footerContact: 'Contact',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). Tous droits réservés.', modalClose: 'Fermer',
                 aboutTitle: 'À propos de Domain Name', aboutBody: 'Domain Name (domainname.web.id) est un générateur multilingue d’idées de domaines conforme à la norme RFC 1035.',
@@ -3136,6 +3214,8 @@
                 ],
                 heroSlogan: 'Finde den Domainnamen, der deine Idee zum Leben erweckt.',
                 footerResourcesTitle: 'Ressourcen', navHubGuides: 'Artikel', navHubResearch: 'Studien', navHubTools: 'Tools',
+                mobileWorkspaceLabel: 'Arbeitsbereich', mobileExploreLabel: 'Artikel & Tools', mobileInfoLabel: 'Informationen',
+                hubGuidesDesc: 'RFC-1035-Nachweise & Naming-Guides', hubResearchDesc: 'Datenstudien & kuratierte Listen', hubToolsDesc: 'Score-Rechner & Aussprache-Tests',
                 footerInfoTitle: 'Informationen', footerAbout: 'Über uns', footerTerms: 'Nutzungsbedingungen', footerPrivacy: 'Datenschutz', footerDisclaimer: 'Haftungsausschluss', footerContact: 'Kontakt',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). Alle Rechte vorbehalten.', modalClose: 'Schließen',
                 aboutTitle: 'Über Domain Name', aboutBody: 'Domain Name (domainname.web.id) ist ein mehrsprachiger Domain-Permutationsgenerator mit RFC-1035-Prüfung.',
@@ -3208,6 +3288,8 @@
                 ],
                 heroSlogan: 'Найдите имя, с которого начнётся ваш проект.',
                 footerResourcesTitle: 'Ресурсы', navHubGuides: 'Статьи', navHubResearch: 'Исследования', navHubTools: 'Инструменты',
+                mobileWorkspaceLabel: 'Рабочая область', mobileExploreLabel: 'Статьи и инструменты', mobileInfoLabel: 'Информация',
+                hubGuidesDesc: 'Статьи о RFC 1035 и стратегии доменов', hubResearchDesc: 'Исследования данных и подборки', hubToolsDesc: 'Калькуляторы оценки и звучания',
                 footerInfoTitle: 'Информация', footerAbout: 'О сервисе', footerTerms: 'Условия', footerPrivacy: 'Конфиденциальность', footerDisclaimer: 'Отказ от ответственности', footerContact: 'Контакты',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). Все права защищены.', modalClose: 'Закрыть',
                 aboutTitle: 'О сервисе Domain Name', aboutBody: 'Domain Name (domainname.web.id) — мультиязычный генератор доменных имен со стандартом RFC 1035 и безопасной аналитикой.',
@@ -3280,6 +3362,8 @@
                 ],
                 heroSlogan: 'アイデアを形にする、最初の名前を見つけよう。',
                 footerResourcesTitle: 'リソース', navHubGuides: '記事', navHubResearch: 'リサーチ', navHubTools: 'ツール',
+                mobileWorkspaceLabel: 'ワークスペース', mobileExploreLabel: '記事・ツール', mobileInfoLabel: 'サイト情報',
+                hubGuidesDesc: 'RFC 1035検証・命名戦略ガイド', hubResearchDesc: 'データ調査・厳選ブランドリスト', hubToolsDesc: 'スコア計測・発音チェックツール',
                 footerInfoTitle: 'インフォメーション', footerAbout: '概要', footerTerms: '利用規約', footerPrivacy: 'プライバシーポリシー', footerDisclaimer: '免責事項', footerContact: 'お問い合わせ',
                 footerCopyright: '© 2026 Domain Name (domainname.web.id). All rights reserved.', modalClose: '閉じる',
                 aboutTitle: 'Domain Name について', aboutBody: 'Domain Name (domainname.web.id) は、RFC 1035準拠・最短ドメイン優先表示を備えた多言語ドメイン置換ジェネレータです。',
@@ -5350,9 +5434,15 @@
             setElText('uiNavHubGuides', t.navHubGuides);
             setElText('uiNavHubResearch', t.navHubResearch);
             setElText('uiNavHubTools', t.navHubTools);
+            setElText('uiMobileWorkspaceLabel', t.mobileWorkspaceLabel);
+            setElText('uiMobileExploreLabel', t.mobileExploreLabel);
+            setElText('uiMobileInfoLabel', t.mobileInfoLabel);
             setElText('uiMobileHubGuides', t.navHubGuides);
             setElText('uiMobileHubResearch', t.navHubResearch);
             setElText('uiMobileHubTools', t.navHubTools);
+            setElText('uiMobileHubGuidesDesc', t.hubGuidesDesc);
+            setElText('uiMobileHubResearchDesc', t.hubResearchDesc);
+            setElText('uiMobileHubToolsDesc', t.hubToolsDesc);
             setElText('uiFooterHubGuides', t.navHubGuides);
             setElText('uiFooterHubResearch', t.navHubResearch);
             setElText('uiFooterHubTools', t.navHubTools);
@@ -5394,8 +5484,8 @@
             const trustLinkTargets = [
                 ['uiNavGuide', 'guide.html'],
                 ['uiNavFaq', 'faq.html'],
-                ['uiMobileNavGuide', 'guide.html'],
-                ['uiMobileNavFaq', 'faq.html'],
+                ['uiMobileNavGuideLink', 'guide.html'],
+                ['uiMobileNavFaqLink', 'faq.html'],
                 ['uiCtaBestPractices', 'guide.html'],
                 ['uiCtaViewFaq', 'faq.html'],
                 ['uiMobileAboutBtn', 'about.html'],
@@ -9499,25 +9589,33 @@
 
         function toggleMobileMenu() {
             const drawer = document.getElementById('mobileNavDrawer');
+            const backdrop = document.getElementById('mobileNavBackdrop');
             const btn = document.getElementById('mobileMenuBtn');
             const openIcon = document.getElementById('menuIconOpen');
             const closeIcon = document.getElementById('menuIconClose');
             if (!drawer || !btn) return;
             const isHidden = drawer.classList.toggle('hidden');
+            if (backdrop) backdrop.classList.toggle('hidden', isHidden);
             btn.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
             if (openIcon) openIcon.classList.toggle('hidden', !isHidden);
             if (closeIcon) closeIcon.classList.toggle('hidden', isHidden);
         }
 
-        function closeMobileMenu() {
+        function closeMobileMenu(restoreFocus) {
             const drawer = document.getElementById('mobileNavDrawer');
+            const backdrop = document.getElementById('mobileNavBackdrop');
             const btn = document.getElementById('mobileMenuBtn');
             const openIcon = document.getElementById('menuIconOpen');
             const closeIcon = document.getElementById('menuIconClose');
+            const wasOpen = drawer && !drawer.classList.contains('hidden');
             if (drawer) drawer.classList.add('hidden');
+            if (backdrop) backdrop.classList.add('hidden');
             if (btn) btn.setAttribute('aria-expanded', 'false');
             if (openIcon) openIcon.classList.remove('hidden');
             if (closeIcon) closeIcon.classList.add('hidden');
+            if (restoreFocus && wasOpen && btn) {
+                try { btn.focus(); } catch (e) {}
+            }
         }
 
         function resetToHome(event) {
@@ -10063,7 +10161,7 @@
                 if (e.key === 'Escape') {
                     closeInfoModal();
                     closeStylesBottomSheet();
-                    closeMobileMenu();
+                    closeMobileMenu(true);
                 }
             });
         });
