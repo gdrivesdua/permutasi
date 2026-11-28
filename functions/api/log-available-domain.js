@@ -53,7 +53,7 @@ const REGIONAL_CCTLD_EXTENSIONS = new Set([
   '.us', '.uk', '.co.uk', '.org.uk', '.me.uk', '.ac.uk', '.gov.uk', '.ca', '.au', '.com.au', '.net.au', '.org.au', '.edu.au', '.nz', '.co.nz',
   '.es', '.com.es', '.org.es', '.edu.es', '.mx', '.com.mx', '.org.mx', '.ar', '.com.ar', '.com.co',
   '.pt', '.br', '.com.br', '.org.br', '.net.br', '.edu.br',
-  '.fr', '.be', '.ch', '.de', '.at', '.ru', '.su',
+  '.fr', '.be', '.ch', '.de', '.at', '.eu', '.ru', '.su', '.by', '.xn--p1ai',
   '.jp', '.co.jp', '.ac.jp', '.go.jp', '.ne.jp', '.or.jp',
   '.sg', '.com.sg', '.my', '.com.my'
 ]);
@@ -88,11 +88,11 @@ const LANG_TLD_FIT_TIERS = {
     '.net': 85, '.edu': 84, '.org': 83, '.co': 81, '.online': 79, '.io': 78, '.ai': 76, '.app': 76, '.dev': 76, '.biz': 73, '.me': 72
   },
   de: {
-    '.de': 98, '.com': 95, '.at': 91, '.ch': 90,
+    '.de': 98, '.com': 95, '.at': 91, '.ch': 90, '.eu': 89,
     '.net': 86, '.edu': 85, '.org': 84, '.co': 81, '.online': 79, '.io': 78, '.ai': 76, '.app': 76, '.dev': 76, '.biz': 73, '.me': 72
   },
   ru: {
-    '.ru': 97, '.com': 94, '.su': 89,
+    '.ru': 97, '.xn--p1ai': 95, '.com': 94, '.su': 89, '.by': 86,
     '.net': 86, '.edu': 84, '.org': 83, '.co': 80, '.online': 78, '.io': 77, '.ai': 75, '.app': 75, '.dev': 75, '.biz': 73, '.me': 72
   },
   ja: {
