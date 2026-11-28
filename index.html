@@ -446,12 +446,17 @@
                 </div>
 
                 <!-- Quick Examples Bar (Top of Main Form for Immediate Reach) -->
-                <div id="quickExamplesBar" class="flex flex-wrap items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/90 dark:border-slate-700/80">
-                    <span id="uiQuickExLabel" class="text-[12px] font-semibold text-slate-600 dark:text-slate-300 mr-1">Quick examples:</span>
-                    <button type="button" id="uiQuickExBtn1" data-kw1="ai" data-kw2="tools" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">ai tools</button>
-                    <button type="button" id="uiQuickExBtn2" data-kw1="coffee" data-kw2="shop" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">coffee shop</button>
-                    <button type="button" id="uiQuickExBtn3" data-kw1="fitness" data-kw2="app" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">fitness app</button>
-                    <button type="button" id="uiQuickExBtn4" data-kw1="micro" data-kw2="saas" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">micro saas</button>
+                <div id="quickExamplesBar" class="flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/90 dark:border-slate-700/80">
+                    <div class="inline-flex items-center gap-1.5 mr-0.5 shrink-0">
+                        <span id="uiQuickExLabel" class="text-[12px] font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">Quick examples:</span>
+                        <button type="button" id="uiQuickExRotateBtn" onclick="rotateQuickExamples()" title="Rotate quick examples" aria-label="Rotate quick examples" class="inline-flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-slate-600 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-300 shadow-sm transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                            <svg id="uiQuickExRotateIcon" aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+                        </button>
+                    </div>
+                    <button type="button" id="uiQuickExBtn1" data-example="ai tools" data-kw1="ai tools" data-kw2="" onclick="applyQuickExample(this.dataset.example || this.dataset.kw1, this.dataset.kw2)" class="min-h-[34px] sm:min-h-[32px] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[12.5px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">ai tools</button>
+                    <button type="button" id="uiQuickExBtn2" data-example="coffee shop" data-kw1="coffee shop" data-kw2="" onclick="applyQuickExample(this.dataset.example || this.dataset.kw1, this.dataset.kw2)" class="min-h-[34px] sm:min-h-[32px] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[12.5px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">coffee shop</button>
+                    <button type="button" id="uiQuickExBtn3" data-example="fitness app" data-kw1="fitness app" data-kw2="" onclick="applyQuickExample(this.dataset.example || this.dataset.kw1, this.dataset.kw2)" class="min-h-[34px] sm:min-h-[32px] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[12.5px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">fitness app</button>
+                    <button type="button" id="uiQuickExBtn4" data-example="micro saas" data-kw1="micro saas" data-kw2="" onclick="applyQuickExample(this.dataset.example || this.dataset.kw1, this.dataset.kw2)" class="min-h-[34px] sm:min-h-[32px] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[12.5px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">micro saas</button>
                 </div>
 
                 <!-- Box 1: Primary Keyword & Extensions (Mature Crimson #B02E24 / dark #8E241C, White Text) -->
@@ -2693,7 +2698,14 @@
                 advOptionsLabel: 'Advanced Options',
                 advOptionsHint: '(Secondary, Tertiary, Shuffle, Pattern, Name Styles)',
                 quickExLabel: 'Quick examples:',
-                quickExamples: [['ai', 'tools'], ['coffee', 'shop'], ['fitness', 'app'], ['micro', 'saas']],
+                quickExRotateTitle: 'Rotate quick examples',
+                quickExamples: [
+                    'ai tools', 'coffee shop', 'fitness app', 'micro saas',
+                    'voice agent', 'brand studio', 'pet care', 'travel planner',
+                    'meal prep', 'design kit', 'newsletter hub', 'smart home',
+                    'book club', 'indie game', 'audio gear', 'career coach',
+                    'plant shop', 'photo studio', 'budget app', 'local agency'
+                ],
                 analysisTitle: 'Domain Results',
                 analysisSub: 'Check availability, brand score, backlink history, or archives instantly.',
                 analysisShowingTpl: 'Generated {generated} ideas · Showing {shown} of {total}',
@@ -2758,7 +2770,14 @@
                 advOptionsLabel: 'Opsi Lanjutan',
                 advOptionsHint: '(Kata Sekunder, Tersier, Acak Kata, Pola, Gaya Nama)',
                 quickExLabel: 'Contoh cepat:',
-                quickExamples: [['toko', 'kopi'], ['jasa', 'web'], ['baju', 'anak'], ['skincare', 'lokal']],
+                quickExRotateTitle: 'Putar contoh cepat',
+                quickExamples: [
+                    'toko kopi', 'jasa web', 'baju anak', 'skincare lokal',
+                    'kuliner sehat', 'studio desain', 'kursus online', 'bengkel motor',
+                    'katering rumahan', 'toko bunga', 'klinik hewan', 'sewa kamera',
+                    'laundry kiloan', 'agen properti', 'produk herbal', 'kopi susu',
+                    'thrift store', 'jasa foto', 'bimbel privat', 'aplikasi kasir'
+                ],
                 analysisTitle: 'Hasil Domain',
                 analysisSub: 'Cek ketersediaan, skor merek, riwayat backlink, atau arsip secara instan.',
                 analysisShowingTpl: 'Menghasilkan {generated} ide · Menampilkan {shown} dari {total}',
@@ -2823,7 +2842,14 @@
                 advOptionsLabel: 'Opciones Avanzadas',
                 advOptionsHint: '(Secundaria, Terciaria, Mezclar, Patrón, Estilos de Nombre)',
                 quickExLabel: 'Ejemplos rápidos:',
-                quickExamples: [['tienda', 'online'], ['ia', 'tools'], ['viajes', 'baratos'], ['curso', 'online']],
+                quickExRotateTitle: 'Rotar ejemplos rápidos',
+                quickExamples: [
+                    'tienda cafe', 'app fitness', 'agencia web', 'moda infantil',
+                    'salud natural', 'curso online', 'estudio diseno', 'comida sana',
+                    'catering casero', 'floreria', 'clinica mascotas', 'alquiler camaras',
+                    'lavanderia', 'inmobiliaria', 'productos naturales', 'cafe especialidad',
+                    'ropa segunda mano', 'estudio foto', 'clases privadas', 'app finanzas'
+                ],
                 analysisTitle: 'Resultados de Dominios',
                 analysisSub: 'Revisa disponibilidad, puntuación de marca, backlinks y archivo al instante.',
                 analysisShowingTpl: 'Generadas {generated} ideas · Mostrando {shown} de {total}',
@@ -2888,7 +2914,14 @@
                 advOptionsLabel: 'Opções Avançadas',
                 advOptionsHint: '(Secundária, Terciária, Misturar, Padrão, Estilos de Nome)',
                 quickExLabel: 'Exemplos rápidos:',
-                quickExamples: [['loja', 'online'], ['ia', 'app'], ['renda', 'extra'], ['saude', 'digital']],
+                quickExRotateTitle: 'Alternar exemplos rápidos',
+                quickExamples: [
+                    'cafeteria', 'app fitness', 'agencia web', 'moda infantil',
+                    'estetica', 'curso online', 'estudio design', 'loja pet',
+                    'marmita fit', 'floricultura', 'clinica animal', 'locacao camera',
+                    'lavanderia', 'imobiliaria', 'produtos naturais', 'cafe especial',
+                    'brecho', 'estudio foto', 'aulas particulares', 'controle financeiro'
+                ],
                 analysisTitle: 'Resultados de Domínios',
                 analysisSub: 'Confira disponibilidade, pontuação de marca, backlinks e histórico na hora.',
                 analysisShowingTpl: '{generated} ideias geradas · Exibindo {shown} de {total}',
@@ -2953,7 +2986,14 @@
                 advOptionsLabel: 'Options Avancées',
                 advOptionsHint: '(Secondaire, Tertiaire, Mélange, Modèle, Styles de Nom)',
                 quickExLabel: 'Exemples rapides :',
-                quickExamples: [['ia', 'outil'], ['mode', 'femme'], ['immo', 'paris'], ['boutique', 'bio']],
+                quickExRotateTitle: 'Faire défiler les exemples rapides',
+                quickExamples: [
+                    'atelier cafe', 'app fitness', 'agence web', 'mode enfant',
+                    'soins naturels', 'formation en ligne', 'studio design', 'maison deco',
+                    'repas sains', 'fleuriste', 'clinique animaux', 'location photo',
+                    'pressing', 'immobilier', 'produits bio', 'torrefacteur',
+                    'friperie', 'studio photo', 'cours particuliers', 'gestion budget'
+                ],
                 analysisTitle: 'Résultats de Domaines',
                 analysisSub: 'Vérifiez disponibilité, score de marque, backlinks et archives en un clic.',
                 analysisShowingTpl: '{generated} idées générées · {shown} sur {total} affichées',
@@ -3018,7 +3058,14 @@
                 advOptionsLabel: 'Erweiterte Optionen',
                 advOptionsHint: '(Sekundär, Tertiär, Mischen, Muster, Namensstile)',
                 quickExLabel: 'Schnellbeispiele:',
-                quickExamples: [['ki', 'tools'], ['online', 'shop'], ['solar', 'energie'], ['fitness', 'studio']],
+                quickExRotateTitle: 'Schnellbeispiele wechseln',
+                quickExamples: [
+                    'kaffee rosterei', 'fitness app', 'webagentur', 'kindermode',
+                    'naturkosmetik', 'online kurs', 'design studio', 'gesunde kueche',
+                    'meal prep', 'blumenshop', 'tierarztpraxis', 'kamera verleih',
+                    'waescherei', 'immobilien', 'bioprodukte', 'spezialitaetenkaffee',
+                    'secondhand', 'fotostudio', 'nachhilfe', 'haushaltsbuch'
+                ],
                 analysisTitle: 'Domain-Ergebnisse',
                 analysisSub: 'Prüfen Sie Verfügbarkeit, Marken-Score, Backlinks und Archivdaten.',
                 analysisShowingTpl: '{generated} Ideen generiert · {shown} von {total} angezeigt',
@@ -3083,7 +3130,14 @@
                 advOptionsLabel: 'Расширенные настройки',
                 advOptionsHint: '(Доп. слова, Перемешивание, Шаблон, Стили имен)',
                 quickExLabel: 'Быстрые примеры:',
-                quickExamples: [['ai', 'bot'], ['stroy', 'dom'], ['auto', 'servis'], ['tur', 'agentstvo']],
+                quickExRotateTitle: 'Обновить быстрые примеры',
+                quickExamples: [
+                    'кофейня', 'фитнес приложение', 'веб студия', 'детская одежда',
+                    'онлайн курс', 'дизайн студия', 'зоотовары', 'здоровое питание',
+                    'домашний кейтеринг', 'цветочный магазин', 'ветклиника', 'прокат камер',
+                    'химчистка', 'агентство недвижимости', 'эко товары', 'спешелти кофе',
+                    'секонд хенд', 'фотостудия', 'репетиторство', 'учет финансов'
+                ],
                 analysisTitle: 'Результаты доменов',
                 analysisSub: 'Проверяйте доступность, оценку бренда, ссылки и архив истории.',
                 analysisShowingTpl: 'Создано {generated} идей · Показано {shown} из {total}',
@@ -3148,7 +3202,14 @@
                 advOptionsLabel: '詳細オプション',
                 advOptionsHint: '(第2/第3キーワード・シャッフル・独自パターン・スタイル)',
                 quickExLabel: 'クイック例:',
-                quickExamples: [['ai', 'tool'], ['cafe', 'shop'], ['game', 'app'], ['beauty', 'salon']],
+                quickExRotateTitle: 'クイック例を切り替え',
+                quickExamples: [
+                    'コーヒーショップ', 'フィットネスアプリ', 'ウェブ制作', '子供服',
+                    'スキンケア', 'オンライン講座', 'デザインスタジオ', 'ペットケア',
+                    'ヘルシー弁当', 'フラワーショップ', '動物病院', 'カメラレンタル',
+                    'クリーニング', '不動産', '自然派コスメ', 'スペシャルティ珈琲',
+                    '古着屋', 'フォトスタジオ', '家庭教師', '家計管理'
+                ],
                 analysisTitle: 'ドメイン候補',
                 analysisSub: '空き状況・発音スコア・被リンク・過去履歴をすぐに確認できます。',
                 analysisShowingTpl: '{generated} 件生成 · {total} 件中 {shown} 件を表示',
@@ -3980,12 +4041,166 @@
         let shareFeedbackTimer = null;
         let toastTimer = null;
 
+        const QUICK_EXAMPLES_STORAGE_KEY = 'dnQuickExamplesStateV1';
+        const QUICK_EXAMPLES_BATCH_SIZE = 4;
+        let quickExamplesMemState = { batches: {}, resetPendingLang: null };
+        let quickExamplesRotateAngle = 0;
+
+        function getQuickExamplesCatalog(lang) {
+            const normLang = String(lang || currentLang || 'en').trim().toLowerCase();
+            const t = dict[normLang] || dict.en || {};
+            const list = Array.isArray(t.quickExamples) ? t.quickExamples : [];
+            return list.map((item) => {
+                if (Array.isArray(item)) {
+                    return item.map((part) => String(part || '').trim()).filter(Boolean).join(' ');
+                }
+                return String(item || '').trim();
+            }).filter(Boolean);
+        }
+
+        function getQuickExamplesBatchCount(lang) {
+            const total = getQuickExamplesCatalog(lang).length;
+            return Math.max(1, Math.ceil(total / QUICK_EXAMPLES_BATCH_SIZE));
+        }
+
+        function readQuickExamplesState() {
+            const sanitize = (raw) => {
+                const parsed = raw && typeof raw === 'object' ? raw : {};
+                const batches = parsed.batches && typeof parsed.batches === 'object' ? { ...parsed.batches } : {};
+                const resetPendingLang = typeof parsed.resetPendingLang === 'string' && parsed.resetPendingLang.trim()
+                    ? parsed.resetPendingLang.trim().toLowerCase()
+                    : null;
+                return { batches, resetPendingLang };
+            };
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    const raw = localStorage.getItem(QUICK_EXAMPLES_STORAGE_KEY);
+                    if (raw) {
+                        quickExamplesMemState = sanitize(JSON.parse(raw));
+                        return quickExamplesMemState;
+                    }
+                }
+            } catch (e) {}
+            try {
+                if (typeof sessionStorage !== 'undefined') {
+                    const raw = sessionStorage.getItem(QUICK_EXAMPLES_STORAGE_KEY);
+                    if (raw) {
+                        quickExamplesMemState = sanitize(JSON.parse(raw));
+                        return quickExamplesMemState;
+                    }
+                }
+            } catch (e) {}
+            return sanitize(quickExamplesMemState);
+        }
+
+        function writeQuickExamplesState(nextState) {
+            const payload = {
+                batches: (nextState && nextState.batches && typeof nextState.batches === 'object') ? { ...nextState.batches } : {},
+                resetPendingLang: (nextState && typeof nextState.resetPendingLang === 'string' && nextState.resetPendingLang.trim())
+                    ? nextState.resetPendingLang.trim().toLowerCase()
+                    : null
+            };
+            quickExamplesMemState = payload;
+            const serialized = JSON.stringify(payload);
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem(QUICK_EXAMPLES_STORAGE_KEY, serialized);
+                }
+            } catch (e) {}
+            try {
+                if (typeof sessionStorage !== 'undefined') {
+                    sessionStorage.setItem(QUICK_EXAMPLES_STORAGE_KEY, serialized);
+                }
+            } catch (e) {}
+        }
+
+        function getCurrentQuickExamplesBatch(lang) {
+            const normLang = String(lang || currentLang || 'en').trim().toLowerCase() || 'en';
+            const batchCount = getQuickExamplesBatchCount(normLang);
+            const state = readQuickExamplesState();
+            const rawIdx = Number(state.batches[normLang]);
+            if (!Number.isInteger(rawIdx) || rawIdx < 0) return 0;
+            return rawIdx % batchCount;
+        }
+
+        function resetQuickExamplesBatch(lang, options) {
+            const normLang = String(lang || currentLang || 'en').trim().toLowerCase() || 'en';
+            const state = readQuickExamplesState();
+            state.batches[normLang] = 0;
+            state.resetPendingLang = (options && options.pendingRouteReset) ? normLang : null;
+            writeQuickExamplesState(state);
+        }
+
+        function advanceOrResolveQuickExamplesOnLoad(lang) {
+            const normLang = String(lang || currentLang || 'en').trim().toLowerCase() || 'en';
+            const batchCount = getQuickExamplesBatchCount(normLang);
+            const state = readQuickExamplesState();
+            if (state.resetPendingLang === normLang) {
+                state.resetPendingLang = null;
+                state.batches[normLang] = 0;
+                writeQuickExamplesState(state);
+                return 0;
+            }
+            state.resetPendingLang = null;
+            const prevIdx = Number(state.batches[normLang]);
+            const nextIdx = (Number.isInteger(prevIdx) && prevIdx >= 0) ? ((prevIdx + 1) % batchCount) : 0;
+            state.batches[normLang] = nextIdx;
+            writeQuickExamplesState(state);
+            return nextIdx;
+        }
+
+        function renderQuickExamplesBar(lang) {
+            const normLang = String(lang || currentLang || 'en').trim().toLowerCase() || 'en';
+            const t = dict[normLang] || dict.en || {};
+            const quickExLabelEl = document.getElementById('uiQuickExLabel');
+            if (quickExLabelEl && t.quickExLabel) quickExLabelEl.innerText = t.quickExLabel;
+            const rotateBtnEl = document.getElementById('uiQuickExRotateBtn');
+            if (rotateBtnEl && t.quickExRotateTitle) {
+                rotateBtnEl.setAttribute('title', t.quickExRotateTitle);
+                rotateBtnEl.setAttribute('aria-label', t.quickExRotateTitle);
+            }
+            const catalog = getQuickExamplesCatalog(normLang);
+            if (catalog.length === 0) return;
+            const batchCount = getQuickExamplesBatchCount(normLang);
+            const batchIdx = getCurrentQuickExamplesBatch(normLang) % batchCount;
+            const startIdx = (batchIdx * QUICK_EXAMPLES_BATCH_SIZE) % catalog.length;
+            for (let i = 0; i < QUICK_EXAMPLES_BATCH_SIZE; i++) {
+                const btn = document.getElementById(`uiQuickExBtn${i + 1}`);
+                if (!btn) continue;
+                const itemText = catalog[(startIdx + i) % catalog.length] || '';
+                btn.dataset.example = itemText;
+                btn.dataset.kw1 = itemText;
+                btn.dataset.kw2 = '';
+                btn.innerText = itemText;
+            }
+        }
+
+        function rotateQuickExamples() {
+            const normLang = String(currentLang || 'en').trim().toLowerCase() || 'en';
+            const batchCount = getQuickExamplesBatchCount(normLang);
+            const state = readQuickExamplesState();
+            const curIdx = Number(state.batches[normLang]);
+            const nextIdx = (Number.isInteger(curIdx) && curIdx >= 0) ? ((curIdx + 1) % batchCount) : (1 % batchCount);
+            state.batches[normLang] = nextIdx;
+            state.resetPendingLang = null;
+            writeQuickExamplesState(state);
+            renderQuickExamplesBar(normLang);
+            const iconEl = document.getElementById('uiQuickExRotateIcon');
+            if (iconEl) {
+                quickExamplesRotateAngle = (quickExamplesRotateAngle + 180) % 3600;
+                iconEl.style.transform = `rotate(${quickExamplesRotateAngle}deg)`;
+            }
+        }
+
         function applyQuickExample(kw1, kw2) {
+            const exampleText = (kw2 !== undefined && kw2 !== null && String(kw2).trim())
+                ? `${String(kw1 || '').trim()} ${String(kw2).trim()}`.trim()
+                : String(kw1 || '').trim();
             const kw1El = document.getElementById('keywordInput');
             const kw2El = document.getElementById('keyword2Input');
             const kw3El = document.getElementById('keyword3Input');
-            if (kw1El) kw1El.value = kw1 || '';
-            if (kw2El) kw2El.value = kw2 || '';
+            if (kw1El) kw1El.value = exampleText;
+            if (kw2El) kw2El.value = '';
             if (kw3El) kw3El.value = '';
             setActiveGenerateSlot('basic');
             updateDynamicSEO();
@@ -4652,6 +4867,7 @@
                     localStorage.removeItem('preferredLangExplicit');
                 } catch (e) {}
                 if (isDedicatedRouteMode() && detectPathLanguage()) {
+                    resetQuickExamplesBatch('en', { pendingRouteReset: true });
                     const { kw, kw2, kw3 } = getActiveKeywords();
                     const params = new URLSearchParams();
                     if (kw && kw !== 'business') params.set('kw', kw);
@@ -4662,6 +4878,7 @@
                     return;
                 }
                 explicitLang = null;
+                resetQuickExamplesBatch('en');
                 changeLanguage('en', { explicit: false });
                 return;
             }
@@ -4678,12 +4895,14 @@
                     const { kw, kw2, kw3 } = getActiveKeywords();
                     const targetUrl = getLocalizedHomeUrl(cleanLang, kw, kw2, kw3);
                     if (window.location.href !== targetUrl) {
+                        resetQuickExamplesBatch(cleanLang, { pendingRouteReset: true });
                         window.location.assign(targetUrl);
                         return;
                     }
                 }
             }
             explicitLang = cleanLang;
+            resetQuickExamplesBatch(cleanLang);
             changeLanguage(cleanLang, { explicit: true });
         }
 
@@ -4702,6 +4921,7 @@
                 const pathLang = detectPathLanguage();
                 const alreadyOnTargetRoute = (cleanLang === 'en' && !pathLang) || (pathLang === cleanLang);
                 if (!alreadyOnTargetRoute) {
+                    resetQuickExamplesBatch(cleanLang, { pendingRouteReset: true });
                     return;
                 }
             }
@@ -4709,6 +4929,7 @@
             explicitLang = cleanLang;
             const selectEl = document.getElementById('langSelect');
             if (selectEl) selectEl.value = cleanLang;
+            resetQuickExamplesBatch(cleanLang);
             changeLanguage(cleanLang, { explicit: true });
         }
 
@@ -4871,19 +5092,10 @@
             if (advOptionsLabelEl && t.advOptionsLabel) advOptionsLabelEl.innerText = t.advOptionsLabel;
             const advOptionsHintEl = document.getElementById('uiAdvOptionsHint');
             if (advOptionsHintEl && t.advOptionsHint) advOptionsHintEl.innerText = t.advOptionsHint;
-            const quickExLabelEl = document.getElementById('uiQuickExLabel');
-            if (quickExLabelEl && t.quickExLabel) quickExLabelEl.innerText = t.quickExLabel;
-            if (Array.isArray(t.quickExamples)) {
-                t.quickExamples.forEach((pair, idx) => {
-                    const btn = document.getElementById(`uiQuickExBtn${idx + 1}`);
-                    if (!btn || !Array.isArray(pair)) return;
-                    const k1 = String(pair[0] || '');
-                    const k2 = String(pair[1] || '');
-                    btn.dataset.kw1 = k1;
-                    btn.dataset.kw2 = k2;
-                    btn.innerText = [k1, k2].filter(Boolean).join(' ');
-                });
+            if (options && options.resetQuickExamples) {
+                resetQuickExamplesBatch(lang);
             }
+            renderQuickExamplesBar(lang);
             const editShortcutLabelEl = document.getElementById('uiEditOptionsShortcutLabel');
             if (editShortcutLabelEl && t.editOptionsShortcut) editShortcutLabelEl.innerText = t.editOptionsShortcut;
             document.querySelectorAll('.ui-reset-all-label').forEach((el) => {
@@ -5209,13 +5421,43 @@
             }
         }
 
+        const KEYWORD_TOKEN_STRIP_RE = (() => {
+            try {
+                return new RegExp('[^\\p{L}\\p{N}\\p{M}-]+', 'gu');
+            } catch (e) {
+                return /[^a-z0-9-]/g;
+            }
+        })();
+
         function sanitizeKeywordToken(str) {
-            return String(str || '')
+            let clean = String(str || '')
+                .normalize('NFC')
                 .toLowerCase()
                 .trim()
-                .replace(/\s+/g, '-')
-                .replace(/[^a-z0-9-]/g, '')
+                .replace(/[\s_]+/g, '-')
+                .replace(KEYWORD_TOKEN_STRIP_RE, '')
+                .replace(/-{2,}/g, '-')
                 .replace(/^-+|-+$/g, '');
+            if (!clean) return '';
+            if (/^[\x00-\x7F]+$/.test(clean)) {
+                clean = clean
+                    .replace(/[^a-z0-9-]/g, '')
+                    .replace(/-{2,}/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                if (!clean) return '';
+                return clean.slice(0, 63).replace(/-+$/g, '');
+            }
+            if (typeof toAsciiLabel === 'function') {
+                if (toAsciiLabel(clean)) return clean;
+                const cps = Array.from(clean);
+                while (cps.length > 0) {
+                    const candidate = cps.join('').replace(/^-+|-+$/g, '');
+                    if (candidate && toAsciiLabel(candidate)) return candidate;
+                    cps.pop();
+                }
+                return '';
+            }
+            return clean;
         }
 
         function permuteWords(words) {
@@ -5496,6 +5738,13 @@
             }
 
             const single = words[0];
+            if (single.includes('-')) {
+                const dashParts = single.split('-').filter(Boolean);
+                if (dashParts.length >= 2) {
+                    add(dashParts.join('-'));
+                    return out;
+                }
+            }
             const syllables = splitWordIntoSyllables(single);
             if (syllables.length >= 2) {
                 add(syllables.join('-'));
@@ -5504,11 +5753,14 @@
                         add(syllables.slice(0, i).join('') + '-' + syllables.slice(i).join(''));
                     }
                 }
-            } else if (single.length >= 2) {
-                const mid = Math.ceil(single.length / 2);
-                add(single.slice(0, mid) + '-' + single.slice(mid));
             } else {
-                add(single);
+                const singleCps = Array.from(single);
+                if (singleCps.length >= 2) {
+                    const mid = Math.ceil(singleCps.length / 2);
+                    add(singleCps.slice(0, mid).join('') + '-' + singleCps.slice(mid).join(''));
+                } else {
+                    add(single);
+                }
             }
             return out;
         }
@@ -9622,6 +9874,7 @@
             if (langSelectEl) {
                 langSelectEl.value = explicitLang || '';
             }
+            advanceOrResolveQuickExamplesOnLoad(currentLang);
             changeLanguage(currentLang, { explicit: Boolean(explicitLang) });
 
             const infoModal = document.getElementById('infoModal');

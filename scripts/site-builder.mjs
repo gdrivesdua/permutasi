@@ -865,7 +865,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: 'Opsi Lanjutan',
         advHint: '(Kata Sekunder, Tersier, Acak Kata, Pola, Gaya Nama)',
         quickExLabel: 'Contoh cepat:',
-        quickExamples: [['toko', 'kopi'], ['jasa', 'web'], ['baju', 'anak'], ['skincare', 'lokal']],
+        quickExRotateTitle: 'Putar contoh cepat',
+        quickExamples: ['toko kopi', 'jasa web', 'baju anak', 'skincare lokal'],
         analysisTitle: 'Hasil Domain',
         moreToolsBtn: 'Alat Lainnya / Bulk',
         availOnlyBtn: 'Hanya Available',
@@ -901,7 +902,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: 'Opciones Avanzadas',
         advHint: '(Secundaria, Terciaria, Mezclar, Patrón, Estilos de Nombre)',
         quickExLabel: 'Ejemplos rápidos:',
-        quickExamples: [['tienda', 'online'], ['ia', 'tools'], ['viajes', 'baratos'], ['curso', 'online']],
+        quickExRotateTitle: 'Rotar ejemplos rápidos',
+        quickExamples: ['tienda cafe', 'app fitness', 'agencia web', 'moda infantil'],
         analysisTitle: 'Resultados de Dominios',
         moreToolsBtn: 'Más Herramientas / Bulk',
         availOnlyBtn: 'Solo disponibles',
@@ -937,7 +939,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: 'Opções Avançadas',
         advHint: '(Secundária, Terciária, Misturar, Padrão, Estilos de Nome)',
         quickExLabel: 'Exemplos rápidos:',
-        quickExamples: [['loja', 'online'], ['ia', 'app'], ['renda', 'extra'], ['saude', 'digital']],
+        quickExRotateTitle: 'Alternar exemplos rápidos',
+        quickExamples: ['cafeteria', 'app fitness', 'agencia web', 'moda infantil'],
         analysisTitle: 'Resultados de Domínios',
         moreToolsBtn: 'Mais Ferramentas / Bulk',
         availOnlyBtn: 'Apenas disponíveis',
@@ -973,7 +976,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: 'Options Avancées',
         advHint: '(Secondaire, Tertiaire, Mélange, Modèle, Styles de Nom)',
         quickExLabel: 'Exemples rapides :',
-        quickExamples: [['ia', 'outil'], ['mode', 'femme'], ['immo', 'paris'], ['boutique', 'bio']],
+        quickExRotateTitle: 'Faire défiler les exemples rapides',
+        quickExamples: ['atelier cafe', 'app fitness', 'agence web', 'mode enfant'],
         analysisTitle: 'Résultats de Domaines',
         moreToolsBtn: 'Plus d’Outils / Bulk',
         availOnlyBtn: 'Disponibles uniquement',
@@ -1009,7 +1013,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: 'Erweiterte Optionen',
         advHint: '(Sekundär, Tertiär, Mischen, Muster, Namensstile)',
         quickExLabel: 'Schnellbeispiele:',
-        quickExamples: [['ki', 'tools'], ['online', 'shop'], ['solar', 'energie'], ['fitness', 'studio']],
+        quickExRotateTitle: 'Schnellbeispiele wechseln',
+        quickExamples: ['kaffee rosterei', 'fitness app', 'webagentur', 'kindermode'],
         analysisTitle: 'Domain-Ergebnisse',
         moreToolsBtn: 'Mehr Tools / Bulk',
         availOnlyBtn: 'Nur freie',
@@ -1045,7 +1050,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: 'Расширенные настройки',
         advHint: '(Доп. слова, Перемешивание, Шаблон, Стили имен)',
         quickExLabel: 'Быстрые примеры:',
-        quickExamples: [['ai', 'bot'], ['stroy', 'dom'], ['auto', 'servis'], ['tur', 'agentstvo']],
+        quickExRotateTitle: 'Обновить быстрые примеры',
+        quickExamples: ['кофейня', 'фитнес приложение', 'веб студия', 'детская одежда'],
         analysisTitle: 'Результаты доменов',
         moreToolsBtn: 'Ещё / Bulk',
         availOnlyBtn: 'Только свободные',
@@ -1081,7 +1087,8 @@ function localizeIndexHtml(rawHtml, lang, config) {
         advLabel: '詳細オプション',
         advHint: '(第2/第3キーワード・シャッフル・独自パターン・スタイル)',
         quickExLabel: 'クイック例:',
-        quickExamples: [['ai', 'tool'], ['cafe', 'shop'], ['game', 'app'], ['beauty', 'salon']],
+        quickExRotateTitle: 'クイック例を切り替え',
+        quickExamples: ['コーヒーショップ', 'フィットネスアプリ', 'ウェブ制作', '子供服'],
         analysisTitle: 'ドメイン候補',
         moreToolsBtn: '詳細ツール / Bulk',
         availOnlyBtn: '取得可能のみ',
@@ -1202,15 +1209,20 @@ function localizeIndexHtml(rawHtml, lang, config) {
       }
     }
 
+    if (atf.quickExRotateTitle) {
+      const rotateBtnRe = /(<button\b[^>]*id="uiQuickExRotateBtn"[^>]*\stitle=")[^"]*("[^>]*\saria-label=")[^"]*(")/i;
+      html = html.replace(rotateBtnRe, `$1${escapeHtmlAttr(atf.quickExRotateTitle)}$2${escapeHtmlAttr(atf.quickExRotateTitle)}$3`);
+    }
+
     if (Array.isArray(atf.quickExamples)) {
-      atf.quickExamples.forEach((pair, idx) => {
-        if (!Array.isArray(pair)) return;
+      atf.quickExamples.forEach((item, idx) => {
         const btnId = `uiQuickExBtn${idx + 1}`;
-        const k1 = String(pair[0] || '');
-        const k2 = String(pair[1] || '');
-        const label = [k1, k2].filter(Boolean).join(' ');
-        const btnRegex = new RegExp(`(<button\\b[^>]*id="${btnId}"[^>]*data-kw1=")[^"]*("[^>]*data-kw2=")[^"]*("[^>]*>)([\\s\\S]*?)(<\\/button>)`, 'i');
-        html = html.replace(btnRegex, `$1${escapeHtmlAttr(k1)}$2${escapeHtmlAttr(k2)}$3${escapeHtmlText(label)}$5`);
+        const label = Array.isArray(item)
+          ? item.map((p) => String(p || '').trim()).filter(Boolean).join(' ')
+          : String(item || '').trim();
+        if (!label) return;
+        const btnRegex = new RegExp(`(<button\\b[^>]*id="${btnId}"[^>]*data-example=")[^"]*("[^>]*data-kw1=")[^"]*("[^>]*data-kw2=")[^"]*("[^>]*>)([\\s\\S]*?)(<\\/button>)`, 'i');
+        html = html.replace(btnRegex, `$1${escapeHtmlAttr(label)}$2${escapeHtmlAttr(label)}$3$4${escapeHtmlText(label)}$6`);
       });
     }
   }
