@@ -81,13 +81,15 @@
                     <svg aria-hidden="true" class="hidden dark:block w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2m-7.07-15.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2m-15.07 7.07 1.41-1.41m11.32-11.32 1.41-1.41"></path></svg>
                     <svg aria-hidden="true" class="block dark:hidden w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
                 </button>
-                <button type="button" id="mobileMenuBtn" onclick="togglePageMobileMenu()" aria-expanded="false" aria-controls="mobilePageDrawer" aria-label="Toggle navigation menu" class="md:hidden inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0">
-                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+                <button type="button" id="mobileMenuBtn" onclick="togglePageMobileMenu()" aria-expanded="false" aria-controls="mobilePageDrawer" aria-label="Toggle navigation menu" class="md:hidden inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 shrink-0">
+                    <svg id="menuIconOpen" aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+                    <svg id="menuIconClose" aria-hidden="true" class="hidden w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
         </div>
-        <div id="mobilePageDrawer" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3">
-            <nav aria-label="Mobile Navigation" class="flex flex-col gap-1.5 text-sm font-medium text-slate-700 dark:text-slate-200">
+        <div id="mobilePageBackdrop" onclick="closePageMobileMenu()" aria-hidden="true" class="hidden md:hidden fixed inset-x-0 top-14 bottom-0 z-30 bg-slate-950/35 dark:bg-black/60 backdrop-blur-[1px]"></div>
+        <div id="mobilePageDrawer" class="hidden md:hidden absolute inset-x-0 top-full z-40 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 py-4 shadow-xl max-h-[calc(100dvh-3.5rem)] overflow-y-auto">
+            <nav aria-label="Mobile Navigation" class="flex flex-col gap-4">
                 {{MOBILE_NAV_LINKS}}
             </nav>
         </div>
@@ -229,11 +231,41 @@
         }
         function togglePageMobileMenu() {
             var drawer = document.getElementById('mobilePageDrawer');
+            var backdrop = document.getElementById('mobilePageBackdrop');
             var btn = document.getElementById('mobileMenuBtn');
+            var iconOpen = document.getElementById('menuIconOpen');
+            var iconClose = document.getElementById('menuIconClose');
             if (!drawer || !btn) return;
             var hidden = drawer.classList.toggle('hidden');
+            if (backdrop) backdrop.classList.toggle('hidden', hidden);
+            if (iconOpen) iconOpen.classList.toggle('hidden', !hidden);
+            if (iconClose) iconClose.classList.toggle('hidden', hidden);
             btn.setAttribute('aria-expanded', hidden ? 'false' : 'true');
         }
+        function closePageMobileMenu(restoreFocus) {
+            var drawer = document.getElementById('mobilePageDrawer');
+            var backdrop = document.getElementById('mobilePageBackdrop');
+            var btn = document.getElementById('mobileMenuBtn');
+            var iconOpen = document.getElementById('menuIconOpen');
+            var iconClose = document.getElementById('menuIconClose');
+            if (drawer && !drawer.classList.contains('hidden')) {
+                drawer.classList.add('hidden');
+            }
+            if (backdrop && !backdrop.classList.contains('hidden')) {
+                backdrop.classList.add('hidden');
+            }
+            if (iconOpen) iconOpen.classList.remove('hidden');
+            if (iconClose) iconClose.classList.add('hidden');
+            if (btn) {
+                btn.setAttribute('aria-expanded', 'false');
+                if (restoreFocus) btn.focus();
+            }
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePageMobileMenu(true);
+            }
+        });
         function switchEditorialLanguage(selectEl) {
             if (!selectEl || selectEl.selectedIndex < 0) return;
             var opt = selectEl.options[selectEl.selectedIndex];
