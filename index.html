@@ -455,11 +455,21 @@
                     <div id="basicKeywordExtBlock" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                         <div class="flex flex-col gap-2 min-w-0">
                             <label for="keywordInput" id="uiKeyword1Label" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Primary Keyword:</label>
-                            <input type="text" id="keywordInput" value="business" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[15px] leading-[1.5] bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#B02E24] dark:focus:ring-offset-[#8E241C]" placeholder="e.g. business, coffee, ai">
+                            <div class="relative w-full min-w-0">
+                                <input type="text" id="keywordInput" value="business" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] pl-3.5 pr-10 py-2 text-[15px] leading-[1.5] bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#B02E24] dark:focus:ring-offset-[#8E241C]" placeholder="e.g. business, coffee, ai">
+                                <button type="button" id="clearKeywordInputBtn" data-clear-for="keywordInput" onclick="clearInputFieldById('keywordInput')" aria-label="Clear Primary Keyword" title="Clear Primary Keyword" class="inline-flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 active:bg-red-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="flex flex-col gap-2.5 min-w-0">
                             <label for="extInput" id="uiExtLabel" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Extensions (e.g. .com, .net):</label>
-                            <input type="text" id="extInput" value=".com, .net" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); onExtInputChanged()" onblur="normalizeExtInputField({ regenerate: true })" onkeydown="if(event.key==='Enter'){event.preventDefault(); normalizeExtInputField({ regenerate: false }); generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#B02E24] dark:focus:ring-offset-[#8E241C]" placeholder=".com, .net">
+                            <div class="relative w-full min-w-0">
+                                <input type="text" id="extInput" value=".com, .net" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); onExtInputChanged()" onblur="normalizeExtInputField({ regenerate: true })" onkeydown="if(event.key==='Enter'){event.preventDefault(); normalizeExtInputField({ regenerate: false }); generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] pl-3.5 pr-10 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#B02E24] dark:focus:ring-offset-[#8E241C]" placeholder=".com, .net">
+                                <button type="button" id="clearExtInputBtn" data-clear-for="extInput" onclick="clearInputFieldById('extInput')" aria-label="Clear Extensions" title="Clear Extensions" class="inline-flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 active:bg-red-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                </button>
+                            </div>
                             <div id="extQuickPickWrap" class="mt-0.5 p-3 sm:p-3.5 rounded-xl bg-black/15 dark:bg-black/25 border border-white/15 flex flex-col gap-2.5" role="group" aria-label="Quick-pick domain extensions"></div>
                         </div>
                     </div>
@@ -502,11 +512,21 @@
                         <div onfocusin="setActiveGenerateSlot('basic')" class="rounded-xl p-4 sm:p-5 bg-[#578686] text-[#FFFFFF] border border-[#446b6b] shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-2 min-w-0">
                                 <label for="keyword2Input" id="uiKeyword2Label" class="block text-[13px] md:text-[14px] font-semibold text-[#FFFFFF] leading-[1.45]">Secondary Keyword:</label>
-                                <input type="text" id="keyword2Input" value="" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[44px] px-3.5 py-2 text-[15px] leading-[1.5] bg-[#FFFFFF] text-[#292929] placeholder:text-[#3F3042]/70 border border-white/90 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#578686]" placeholder="Example: pro, online">
+                                <div class="relative w-full min-w-0">
+                                    <input type="text" id="keyword2Input" value="" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[44px] pl-3.5 pr-10 py-2 text-[15px] leading-[1.5] bg-[#FFFFFF] text-[#292929] placeholder:text-[#3F3042]/70 border border-white/90 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#578686]" placeholder="Example: pro, online">
+                                    <button type="button" id="clearKeyword2InputBtn" data-clear-for="keyword2Input" onclick="clearInputFieldById('keyword2Input')" aria-label="Clear Secondary Keyword" title="Clear Secondary Keyword" class="hidden items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 active:bg-red-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                        <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                    </button>
+                                </div>
                             </div>
                             <div class="flex flex-col gap-2 min-w-0">
                                 <label for="keyword3Input" id="uiKeyword3Label" class="block text-[13px] md:text-[14px] font-semibold text-[#FFFFFF] leading-[1.45]">Tertiary Keyword:</label>
-                                <input type="text" id="keyword3Input" value="" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[44px] px-3.5 py-2 text-[15px] leading-[1.5] bg-[#FFFFFF] text-[#292929] placeholder:text-[#3F3042]/70 border border-white/90 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#578686]" placeholder="Example: app, hub">
+                                <div class="relative w-full min-w-0">
+                                    <input type="text" id="keyword3Input" value="" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[44px] pl-3.5 pr-10 py-2 text-[15px] leading-[1.5] bg-[#FFFFFF] text-[#292929] placeholder:text-[#3F3042]/70 border border-white/90 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#578686]" placeholder="Example: app, hub">
+                                    <button type="button" id="clearKeyword3InputBtn" data-clear-for="keyword3Input" onclick="clearInputFieldById('keyword3Input')" aria-label="Clear Tertiary Keyword" title="Clear Tertiary Keyword" class="hidden items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 active:bg-red-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                        <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -566,7 +586,12 @@
                                     Clear Pattern
                                 </button>
                             </div>
-                            <textarea id="formulaInput" rows="2" onfocus="setActiveGenerateSlot('pattern')" onclick="recordFormulaSelection(this)" onkeyup="recordFormulaSelection(this)" onselect="recordFormulaSelection(this)" oninput="setActiveGenerateSlot('pattern'); recordFormulaSelection(this); syncActivePresetUi(); generateDomains()" class="w-full min-w-0 max-w-full px-3 sm:px-4 py-2.5 bg-[#FFFFFF] text-[#1E293B] placeholder:text-slate-400 border border-[#C7D7D7] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2165b3] focus:border-[#2165b3] font-mono text-[14px] leading-[1.5] resize-y break-words" placeholder="e.g. [primary] + [number]">[any] + [vowel] + [consonant]</textarea>
+                            <div class="relative w-full min-w-0">
+                                <textarea id="formulaInput" rows="2" onfocus="setActiveGenerateSlot('pattern')" onclick="recordFormulaSelection(this)" onkeyup="recordFormulaSelection(this)" onselect="recordFormulaSelection(this)" oninput="setActiveGenerateSlot('pattern'); recordFormulaSelection(this); syncActivePresetUi(); generateDomains()" class="block w-full min-w-0 max-w-full pl-3 sm:pl-4 pr-10 py-2.5 bg-[#FFFFFF] text-[#1E293B] placeholder:text-slate-400 border border-[#C7D7D7] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2165b3] focus:border-[#2165b3] font-mono text-[14px] leading-[1.5] resize-y break-words" placeholder="e.g. [primary] + [number]">[any] + [vowel] + [consonant]</textarea>
+                                <button type="button" id="clearFormulaInputBtn" data-clear-for="formulaInput" onclick="clearInputFieldById('formulaInput')" aria-label="Clear Pattern" title="Clear Pattern" class="inline-flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 active:bg-red-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                    <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                </button>
+                            </div>
 
                             <div class="flex flex-wrap gap-2 items-center">
                                 <span id="uiClickToAdd" class="text-[11px] uppercase tracking-wider text-slate-600 font-semibold mr-1 leading-[1.4]">Click to insert:</span>
@@ -772,7 +797,12 @@
                         </button>
                         <div class="flex-1 min-w-[140px] sm:flex-initial sm:w-44 md:w-48">
                             <label id="uiAnalysisFilterLabel" for="analysisFilterInput" class="sr-only">Filter generated domains</label>
-                            <input type="text" id="analysisFilterInput" oninput="onAnalysisFilterInput(this.value)" class="w-full min-h-[38px] sm:min-h-[36px] px-2.5 py-1 text-[12px] sm:text-[12.5px] bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 placeholder:text-[#64748B] dark:placeholder:text-slate-400 border border-[#C9D8D8] dark:border-slate-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] dark:focus:ring-blue-500" placeholder="Filter domains (e.g. .com, -0)...">
+                            <div class="relative w-full min-w-0">
+                                <input type="text" id="analysisFilterInput" oninput="onAnalysisFilterInput(this.value)" class="w-full min-h-[38px] sm:min-h-[36px] pl-2.5 pr-8 py-1 text-[12px] sm:text-[12.5px] bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 placeholder:text-[#64748B] dark:placeholder:text-slate-400 border border-[#C9D8D8] dark:border-slate-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] dark:focus:ring-blue-500" placeholder="Filter domains (e.g. .com, -0)...">
+                                <button type="button" id="clearAnalysisFilterInputBtn" data-clear-for="analysisFilterInput" onclick="clearInputFieldById('analysisFilterInput')" aria-label="Clear domain filter" title="Clear domain filter" class="hidden items-center justify-center absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/60 active:bg-red-100 dark:active:bg-red-900/60 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                                    <svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                </button>
+                            </div>
                         </div>
                         <button type="button" id="uiBatchCopyBtn" onclick="copyBatchDomains('text')" class="min-h-[38px] sm:min-h-[36px] inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-semibold rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
                             Copy
@@ -3892,7 +3922,143 @@
             setActiveGenerateSlot('basic');
             syncActiveExtensionFilterWithActiveList(current);
             renderExtensionQuickPicks();
+            syncInputClearButton('extInput');
             generateDomains();
+        }
+
+        const CLEARABLE_INPUT_IDS = [
+            'keywordInput',
+            'extInput',
+            'keyword2Input',
+            'keyword3Input',
+            'formulaInput',
+            'analysisFilterInput'
+        ];
+
+        const CLEAR_INPUT_LABELS_I18N = {
+            en: {
+                keywordInput: 'Clear Primary Keyword',
+                extInput: 'Clear Extensions',
+                keyword2Input: 'Clear Secondary Keyword',
+                keyword3Input: 'Clear Tertiary Keyword',
+                formulaInput: 'Clear Pattern',
+                analysisFilterInput: 'Clear domain filter'
+            },
+            id: {
+                keywordInput: 'Hapus Kata Kunci Utama',
+                extInput: 'Hapus Ekstensi Domain',
+                keyword2Input: 'Hapus Kata Kunci Sekunder',
+                keyword3Input: 'Hapus Kata Kunci Tersier',
+                formulaInput: 'Hapus Pola Kustom',
+                analysisFilterInput: 'Hapus filter domain'
+            },
+            es: {
+                keywordInput: 'Borrar palabra clave principal',
+                extInput: 'Borrar extensiones',
+                keyword2Input: 'Borrar palabra clave secundaria',
+                keyword3Input: 'Borrar palabra clave terciaria',
+                formulaInput: 'Borrar patrón',
+                analysisFilterInput: 'Borrar filtro de dominios'
+            },
+            pt: {
+                keywordInput: 'Limpar palavra-chave principal',
+                extInput: 'Limpar extensões',
+                keyword2Input: 'Limpar palavra-chave secundária',
+                keyword3Input: 'Limpar palavra-chave terciária',
+                formulaInput: 'Limpar padrão',
+                analysisFilterInput: 'Limpar filtro de domínios'
+            },
+            fr: {
+                keywordInput: 'Effacer le mot-clé principal',
+                extInput: 'Effacer les extensions',
+                keyword2Input: 'Effacer le mot-clé secondaire',
+                keyword3Input: 'Effacer le mot-clé tertiaire',
+                formulaInput: 'Effacer le modèle',
+                analysisFilterInput: 'Effacer le filtre de domaines'
+            },
+            de: {
+                keywordInput: 'Haupt-Keyword löschen',
+                extInput: 'Endungen löschen',
+                keyword2Input: 'Sekundär-Keyword löschen',
+                keyword3Input: 'Tertiär-Keyword löschen',
+                formulaInput: 'Muster löschen',
+                analysisFilterInput: 'Domain-Filter löschen'
+            },
+            ru: {
+                keywordInput: 'Очистить основное ключевое слово',
+                extInput: 'Очистить расширения',
+                keyword2Input: 'Очистить второе ключевое слово',
+                keyword3Input: 'Очистить третье ключевое слово',
+                formulaInput: 'Очистить шаблон',
+                analysisFilterInput: 'Очистить фильтр доменов'
+            },
+            ja: {
+                keywordInput: 'メインキーワードを消去',
+                extInput: '拡張子を消去',
+                keyword2Input: '第2キーワードを消去',
+                keyword3Input: '第3キーワードを消去',
+                formulaInput: 'パターンを消去',
+                analysisFilterInput: 'ドメインフィルターを消去'
+            }
+        };
+
+        function syncInputClearButton(inputId) {
+            const inputEl = document.getElementById(inputId);
+            const btnEl = document.querySelector(`[data-clear-for="${inputId}"]`);
+            if (!inputEl || !btnEl) return;
+            const hasValue = String(inputEl.value || '').length > 0;
+            btnEl.classList.toggle('hidden', !hasValue);
+            btnEl.classList.toggle('inline-flex', hasValue);
+        }
+
+        function syncAllInputClearButtons() {
+            CLEARABLE_INPUT_IDS.forEach(syncInputClearButton);
+        }
+
+        function syncClearInputButtonLabels(lang) {
+            const labels = CLEAR_INPUT_LABELS_I18N[lang] || CLEAR_INPUT_LABELS_I18N.en;
+            CLEARABLE_INPUT_IDS.forEach((inputId) => {
+                const btnEl = document.querySelector(`[data-clear-for="${inputId}"]`);
+                if (!btnEl || !labels[inputId]) return;
+                btnEl.setAttribute('aria-label', labels[inputId]);
+                btnEl.setAttribute('title', labels[inputId]);
+            });
+        }
+
+        function clearInputFieldById(inputId) {
+            const inputEl = document.getElementById(inputId);
+            if (!inputEl) return;
+            inputEl.value = '';
+            if (inputId === 'formulaInput') {
+                resetFormulaCursorTracking();
+            }
+            syncInputClearButton(inputId);
+            if (typeof inputEl.focus === 'function') {
+                try {
+                    inputEl.focus({ preventScroll: true });
+                } catch (e) {
+                    inputEl.focus();
+                }
+            }
+            try {
+                inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+            } catch (e) {}
+            try {
+                inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+            } catch (e) {}
+            syncInputClearButton(inputId);
+        }
+
+        function initClearableInputs() {
+            CLEARABLE_INPUT_IDS.forEach((inputId) => {
+                const inputEl = document.getElementById(inputId);
+                if (!inputEl || inputEl.dataset.clearSyncBound === '1') return;
+                inputEl.dataset.clearSyncBound = '1';
+                const onSync = () => syncInputClearButton(inputId);
+                inputEl.addEventListener('input', onSync);
+                inputEl.addEventListener('change', onSync);
+            });
+            syncAllInputClearButtons();
         }
 
         function syncActiveExtensionFilterWithActiveList(activeExts) {
@@ -3903,6 +4069,7 @@
                 const filterInputEl = document.getElementById('analysisFilterInput');
                 if (filterInputEl && (toAsciiExtension(filterInputEl.value.trim()) || filterInputEl.value.trim().toLowerCase()) === targetAscii) {
                     filterInputEl.value = '';
+                    syncInputClearButton('analysisFilterInput');
                 }
                 activeExtensionFilter = '';
             }
@@ -3918,6 +4085,7 @@
             }
             syncActiveExtensionFilterWithActiveList(parsed);
             renderExtensionQuickPicks();
+            syncInputClearButton('extInput');
             if (!options || options.regenerate !== false) {
                 generateDomains();
             }
@@ -3928,6 +4096,7 @@
             const parsed = parseExtensionsInput(extInputEl ? extInputEl.value : '');
             syncActiveExtensionFilterWithActiveList(parsed);
             renderExtensionQuickPicks();
+            syncInputClearButton('extInput');
             generateDomains();
         }
 
@@ -3997,6 +4166,7 @@
                     if (filterEl) filterEl.value = normExt;
                 }
             }
+            syncInputClearButton('analysisFilterInput');
             renderDomainAnalysisList(true);
         }
 
@@ -4194,6 +4364,7 @@
             if (kw2El) kw2El.value = '';
             if (kw3El) kw3El.value = '';
             setActiveGenerateSlot('basic');
+            syncAllInputClearButtons();
             updateDynamicSEO();
             generateDomains({ scrollToResults: true, resetStatusFilter: true, showSkeleton: true });
         }
@@ -5124,6 +5295,8 @@
             if (analysisFilterLabelEl && t.analysisFilterLabel) analysisFilterLabelEl.innerText = t.analysisFilterLabel;
             const analysisFilterInputEl = document.getElementById('analysisFilterInput');
             if (analysisFilterInputEl && t.analysisFilterPlaceholder) analysisFilterInputEl.setAttribute('placeholder', t.analysisFilterPlaceholder);
+            syncClearInputButtonLabels(lang);
+            syncAllInputClearButtons();
             const analysisLoadMoreBtnEl = document.getElementById('uiAnalysisLoadMoreBtn');
             if (analysisLoadMoreBtnEl && t.analysisLoadMoreBtn) analysisLoadMoreBtnEl.innerText = t.analysisLoadMoreBtn;
             const setElText = (id, val) => {
@@ -6025,6 +6198,7 @@
         }
 
         function generateDomains(options) {
+            syncAllInputClearButtons();
             if (analysisSkeletonTimer) {
                 clearTimeout(analysisSkeletonTimer);
                 analysisSkeletonTimer = null;
@@ -9079,6 +9253,7 @@
             syncAvailableOnlyButton();
             syncAnalysisSortHeaders();
             renderDomainExtShortcuts();
+            syncInputClearButton('analysisFilterInput');
             const listEl = document.getElementById('domainAnalysisList');
             const moreWrapEl = document.getElementById('domainAnalysisMoreWrap');
             const filterEl = document.getElementById('analysisFilterInput');
@@ -9437,6 +9612,7 @@
             if (shareFbEl) shareFbEl.classList.add('hidden');
 
             renderExtensionQuickPicks();
+            syncAllInputClearButtons();
             updateDynamicSEO();
             generateDomains();
 
@@ -9499,6 +9675,7 @@
             }
 
             renderExtensionQuickPicks();
+            syncAllInputClearButtons();
             updateDynamicSEO();
             generateDomains();
 
@@ -9724,6 +9901,7 @@
             formulaSelectionStart = formula.length;
             formulaSelectionEnd = formula.length;
             syncActivePresetUi(presetId);
+            syncInputClearButton('formulaInput');
 
             if (options && options.closeSheet) {
                 closeStylesBottomSheet();
@@ -9755,6 +9933,7 @@
             formulaHasCursorPlacement = true;
             formulaSelectionStart = input.value.length;
             formulaSelectionEnd = input.value.length;
+            syncInputClearButton('formulaInput');
             syncActivePresetUi();
             generateDomains();
         }
@@ -9819,6 +9998,7 @@
             setActiveGenerateSlot('pattern');
             document.getElementById('formulaInput').value = '';
             resetFormulaCursorTracking();
+            syncInputClearButton('formulaInput');
             syncActivePresetUi();
             generateDomains();
         }
@@ -9865,6 +10045,7 @@
             }
             advanceOrResolveQuickExamplesOnLoad(currentLang);
             changeLanguage(currentLang, { explicit: Boolean(explicitLang) });
+            initClearableInputs();
 
             const infoModal = document.getElementById('infoModal');
             if (infoModal) {

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Lexicon Tagger Admin — Local Repo Editor</title>
+    <title>Admin Lexicon — Editor Kamus Tagger</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -37,9 +37,9 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 min-w-0">
                 <a href="/" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">&larr; Situs Utama</a>
-                <span class="text-slate-300 dark:text-slate-700">/</span>
+                <span class="text-slate-300 dark:text-slate-700" aria-hidden="true">/</span>
                 <h1 class="text-sm sm:text-base font-bold truncate">Admin Lexicon</h1>
-                <span class="hidden md:inline-block px-2 py-0.5 text-[11px] font-mono rounded bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">Local Git Workflow</span>
+                <span class="hidden md:inline-block px-2 py-0.5 text-[11px] font-mono rounded bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">Alur Kerja Git Lokal</span>
             </div>
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto">
                 <a href="/admin-articles/" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
@@ -65,7 +65,7 @@
     </header>
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <!-- Auth Card (Unified with Article Studio & Layout/AdSense Studio) -->
+        <!-- Auth Card (Terpadu dengan Article Studio, Layout/AdSense Studio, dan Database D1) -->
         <section id="authSection" class="max-w-md mx-auto mt-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-4">
             <div id="authLoading" class="text-sm text-slate-500 dark:text-slate-400">Memeriksa sesi admin terpadu...</div>
 
@@ -80,7 +80,7 @@
                 <div>
                     <h2 class="text-lg font-bold">Inisialisasi Password Admin Terpadu</h2>
                     <p class="mt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Password ini berlaku bersama untuk <strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, dan <strong>Admin Lexicon</strong> (minimal 8 karakter).
+                        Password ini berlaku bersama untuk <strong>Article Studio</strong>, <strong>Layout &amp; AdSense</strong>, <strong>Admin Lexicon</strong>, dan <strong>Database D1</strong> (minimal 8 karakter).
                     </p>
                 </div>
                 <div>
@@ -113,108 +113,154 @@
                 </div>
                 <p id="loginError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
                 <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
-                    Masuk ke Lexicon Editor
+                    Masuk ke Editor Kamus
                 </button>
             </form>
         </section>
 
         <!-- Editor Dashboard -->
-        <section id="editorSection" class="hidden space-y-6">
+        <section id="editorSection" class="hidden space-y-5">
+            <!-- Static / Non-local Banner -->
+            <div id="localModeBanner" class="hidden rounded-xl border border-amber-300 dark:border-amber-800/80 bg-amber-50 dark:bg-amber-950/40 p-4 text-xs sm:text-sm text-amber-900 dark:text-amber-200 space-y-1">
+                <div class="font-bold">Mode Read-Only / Statis Terdeteksi</div>
+                <p id="localModeBannerText" class="text-xs leading-relaxed">
+                    Endpoint <code class="font-mono">/api/admin/lexicon*</code> hanya aktif pada server Node/Express lokal (<code class="font-mono">npm run dev</code>). Untuk menambah, mengedit, atau menguji kamus <code class="font-mono">lib/lexicon/*.json</code>, jalankan aplikasi secara lokal lalu commit &amp; push ke GitHub.
+                </p>
+            </div>
+
+            <!-- GitHub Workflow Banner -->
             <div class="rounded-xl border border-blue-200 dark:border-blue-900/70 bg-blue-50/70 dark:bg-blue-950/30 p-4 text-xs sm:text-sm text-slate-700 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <span class="font-semibold text-blue-900 dark:text-blue-200">GitHub Sync Workflow:</span>
-                    Every save updates <code id="activeFileBadge" class="font-mono px-1.5 py-0.5 rounded bg-white/80 dark:bg-slate-900 border border-blue-200 dark:border-blue-800">lib/lexicon/en.json</code> and rebuilds <code class="font-mono px-1.5 py-0.5 rounded bg-white/80 dark:bg-slate-900 border border-blue-200 dark:border-blue-800">lib/lexicon/bundle.js</code>. Commit &amp; push to GitHub when ready to deploy to Cloudflare Pages.
+                    <span class="font-semibold text-blue-900 dark:text-blue-200">Alur Sinkronisasi GitHub:</span>
+                    Setiap penyimpanan memperbarui <code id="activeFileBadge" class="font-mono px-1.5 py-0.5 rounded bg-white/80 dark:bg-slate-900 border border-blue-200 dark:border-blue-800">lib/lexicon/en.json</code> dan membangun ulang <code class="font-mono px-1.5 py-0.5 rounded bg-white/80 dark:bg-slate-900 border border-blue-200 dark:border-blue-800">lib/lexicon/bundle.js</code>. Commit &amp; push ke GitHub saat siap deploy ke Cloudflare Pages.
                 </div>
                 <div id="totalEntriesBadge" class="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0">
-                    0 entries
+                    0 total entri
                 </div>
             </div>
 
-            <!-- Language Tabs -->
-            <div id="langTabs" class="flex flex-wrap gap-2"></div>
+            <!-- Language Tabs (Selalu tampil agar user dapat memilih kamus bahasa kapan saja) -->
+            <div class="space-y-1.5">
+                <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pilih Kamus Bahasa yang Dikelola</div>
+                <div id="langTabs" class="flex flex-wrap gap-2" role="tablist" aria-label="Pilih bahasa kamus lexicon"></div>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 <!-- Left Column: Add / Edit Form + Live Sandbox -->
                 <div class="lg:col-span-5 space-y-6">
                     <form id="entryForm" class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 shadow-sm">
                         <div class="flex items-center justify-between gap-2">
-                            <h2 id="formHeading" class="text-base font-bold">Add / Update Word</h2>
-                            <button id="resetFormBtn" type="button" class="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white underline">Clear</button>
+                            <div class="flex items-center gap-2 min-w-0">
+                                <h2 id="formHeading" class="text-base font-bold truncate">Tambah / Perbarui Kata</h2>
+                                <span id="activeLangBadge" class="shrink-0 px-2 py-0.5 text-[11px] font-mono font-semibold rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">EN</span>
+                            </div>
+                            <button id="resetFormBtn" type="button" class="text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white underline shrink-0">Bersihkan</button>
+                        </div>
+
+                        <div>
+                            <label for="entryLangSelect" class="block text-xs font-semibold mb-1">Bahasa / Kamus Target</label>
+                            <select id="entryLangSelect"
+                                class="w-full px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="en">EN (English) — lib/lexicon/en.json</option>
+                                <option value="id">ID (Indonesia) — lib/lexicon/id.json</option>
+                                <option value="es">ES (Español) — lib/lexicon/es.json</option>
+                                <option value="pt">PT (Português) — lib/lexicon/pt.json</option>
+                                <option value="fr">FR (Français) — lib/lexicon/fr.json</option>
+                                <option value="de">DE (Deutsch) — lib/lexicon/de.json</option>
+                                <option value="ru">RU (Romaji) — lib/lexicon/ru.json</option>
+                                <option value="ja">JA (Romaji) — lib/lexicon/ja.json</option>
+                                <option value="short-exact">2-Char Exact — lib/lexicon/short-exact.json</option>
+                            </select>
+                            <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Menentukan file kamus bahasa yang sedang diedit. Saat tagging berjalan, sistem menggabungkan seluruh 8 kamus bahasa secara otomatis.
+                            </p>
                         </div>
 
                         <div class="grid grid-cols-3 gap-3">
                             <div class="col-span-2">
-                                <label for="wordInput" class="block text-xs font-semibold mb-1">Word (ASCII a-z)</label>
-                                <input id="wordInput" type="text" required placeholder="e.g. fintech"
+                                <label for="wordInput" class="block text-xs font-semibold mb-1">Kata (ASCII a-z)</label>
+                                <input id="wordInput" type="text" required placeholder="mis. fintech"
                                     class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label for="weightInput" class="block text-xs font-semibold mb-1">Weight (0.1–20)</label>
+                                <label for="weightInput" class="block text-xs font-semibold mb-1">Bobot (0.1–20)</label>
                                 <input id="weightInput" type="number" step="0.1" min="0.1" max="20" value="6.0" required
                                     class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
 
                         <div>
-                            <label for="tagsInput" class="block text-xs font-semibold mb-1">Tags (comma-separated, 1–5)</label>
-                            <input id="tagsInput" type="text" required placeholder="e.g. business, tools"
+                            <label for="tagsInput" class="block text-xs font-semibold mb-1">Tag (dipisah koma, 1–5)</label>
+                            <input id="tagsInput" type="text" required placeholder="mis. business, tools"
                                 class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <div id="quickTags" class="mt-2 flex flex-wrap gap-1.5"></div>
                         </div>
 
-                        <div id="suffixOptionWrap" class="flex items-center gap-2">
-                            <input id="suffixOnlyInput" type="checkbox" class="rounded border-slate-300 dark:border-slate-700">
-                            <label for="suffixOnlyInput" class="text-xs text-slate-700 dark:text-slate-300">
-                                Suffix-only token (matches only at end of word, e.g. <code class="font-mono">ku</code>, <code class="font-mono">mu</code>)
+                        <div id="suffixOptionWrap" class="flex items-start gap-2">
+                            <input id="suffixOnlyInput" type="checkbox" class="mt-0.5 rounded border-slate-300 dark:border-slate-700">
+                            <label for="suffixOnlyInput" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                                Token khusus akhiran / <code class="font-mono">suffix-only</code> (hanya cocok di akhir kata, mis. <code class="font-mono">ku</code>, <code class="font-mono">mu</code>)
                             </label>
                         </div>
 
                         <div id="shortLangsWrap" class="hidden space-y-1.5">
-                            <span class="block text-xs font-semibold">Languages for 2-char token</span>
+                            <span class="block text-xs font-semibold">Bahasa pemilik untuk token 2 huruf</span>
                             <div id="shortLangsCheckboxes" class="flex flex-wrap gap-2"></div>
                         </div>
 
-                        <p id="entryStatus" class="hidden text-xs font-medium"></p>
+                        <p id="entryStatus" class="hidden text-xs font-medium leading-relaxed"></p>
 
-                        <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
-                            Save Entry to JSON &amp; Rebuild Bundle
+                        <button id="saveEntryBtn" type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors">
+                            Simpan ke JSON &amp; Rebuild Bundle
                         </button>
                     </form>
 
                     <!-- Live Tagger Tester -->
                     <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 shadow-sm">
-                        <h3 class="text-sm font-bold">Live Tagger Test Sandbox</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Test segmentation &amp; tags against the latest saved <code class="font-mono">lib/lexicon/*.json</code>.</p>
-                        <form id="testForm" class="flex gap-2">
-                            <input id="testDomainInput" type="text" placeholder="e.g. tokobayiku.id" required
-                                class="flex-1 min-w-0 px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <select id="testLangSelect" class="px-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
-                                <option value="en">en</option>
-                                <option value="id">id</option>
-                                <option value="es">es</option>
-                                <option value="pt">pt</option>
-                                <option value="fr">fr</option>
-                                <option value="de">de</option>
-                                <option value="ru">ru</option>
-                                <option value="ja">ja</option>
-                            </select>
-                            <button type="submit" class="px-3.5 py-2 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold hover:opacity-90">
-                                Test
-                            </button>
+                        <h3 class="text-sm font-bold">Sandbox Uji Tagger Langsung</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Uji pemotongan kata &amp; tag berdasarkan <code class="font-mono">lib/lexicon/*.json</code> terbaru. Pilihan bahasa di bawah hanya menjadi <em>tie-breaker</em> (preferensi UI) jika skor dua kandidat imbang.
+                        </p>
+                        <form id="testForm" class="space-y-2.5">
+                            <div>
+                                <label for="testDomainInput" class="sr-only">Nama domain untuk diuji</label>
+                                <input id="testDomainInput" type="text" placeholder="mis. tokobayiku.id" required
+                                    class="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="testLangSelect" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">Preferensi UI:</label>
+                                <select id="testLangSelect" aria-label="Preferensi Bahasa UI (tie-breaker)" class="flex-1 min-w-0 px-2.5 py-2 text-xs font-mono rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="en">en — English (tie-breaker)</option>
+                                    <option value="id">id — Indonesia (tie-breaker)</option>
+                                    <option value="es">es — Español (tie-breaker)</option>
+                                    <option value="pt">pt — Português (tie-breaker)</option>
+                                    <option value="fr">fr — Français (tie-breaker)</option>
+                                    <option value="de">de — Deutsch (tie-breaker)</option>
+                                    <option value="ru">ru — Romaji (tie-breaker)</option>
+                                    <option value="ja">ja — Romaji (tie-breaker)</option>
+                                </select>
+                                <button id="testSubmitBtn" type="submit" class="px-4 py-2 rounded-lg bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 transition-opacity">
+                                    Uji
+                                </button>
+                            </div>
                         </form>
+                        <p id="testError" class="hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
                         <div id="testResultBox" class="hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-3 text-xs space-y-2">
                             <div class="flex items-center justify-between gap-2">
-                                <span class="text-slate-500">Tokens:</span>
-                                <span id="testTokensOut" class="font-mono font-semibold text-slate-800 dark:text-slate-200"></span>
+                                <span class="text-slate-500">Token:</span>
+                                <span id="testTokensOut" class="font-mono font-semibold text-slate-800 dark:text-slate-200 text-right"></span>
                             </div>
                             <div class="flex items-center justify-between gap-2">
-                                <span class="text-slate-500">Coverage:</span>
+                                <span class="text-slate-500">Cakupan:</span>
                                 <span id="testCoverageOut" class="font-mono font-semibold"></span>
                             </div>
                             <div class="flex items-start justify-between gap-2">
-                                <span class="text-slate-500 pt-0.5">Tags:</span>
+                                <span class="text-slate-500 pt-0.5">Tag:</span>
                                 <div id="testTagsOut" class="flex flex-wrap justify-end gap-1"></div>
                             </div>
+                            <p id="testFallbackNote" class="hidden text-[11px] text-amber-700 dark:text-amber-300 pt-1 border-t border-slate-200 dark:border-slate-800">
+                                Tidak ada token kamus yang cocok (cakupan 0%). Sistem memakai tag fallback <code class="font-mono">brandable</code>.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -223,21 +269,21 @@
                 <div class="lg:col-span-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
                     <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <h2 id="tableHeading" class="text-base font-bold">Dictionary Entries</h2>
-                            <p id="tableCount" class="text-xs text-slate-500 dark:text-slate-400">0 words</p>
+                            <h2 id="tableHeading" class="text-base font-bold">Entri Kamus</h2>
+                            <p id="tableCount" class="text-xs text-slate-500 dark:text-slate-400">0 entri</p>
                         </div>
-                        <input id="searchInput" type="search" placeholder="Filter word or tag..."
+                        <input id="searchInput" type="search" placeholder="Filter kata atau tag..."
                             class="w-full sm:w-56 px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <div class="overflow-x-auto max-h-[640px] overflow-y-auto">
                         <table class="w-full text-left text-xs sm:text-sm">
-                            <thead class="sticky top-0 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase tracking-wider text-slate-500">
+                            <thead class="sticky top-0 z-10 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase tracking-wider text-slate-500">
                                 <tr>
-                                    <th class="px-4 py-2.5">Word</th>
-                                    <th class="px-3 py-2.5">Weight</th>
-                                    <th class="px-3 py-2.5">Tags / Meta</th>
-                                    <th class="px-4 py-2.5 text-right">Actions</th>
+                                    <th class="px-4 py-2.5">Kata</th>
+                                    <th class="px-3 py-2.5">Bobot</th>
+                                    <th class="px-3 py-2.5">Tag / Meta</th>
+                                    <th class="px-4 py-2.5 text-right">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="entriesTbody" class="divide-y divide-slate-100 dark:divide-slate-800/80"></tbody>
@@ -262,6 +308,7 @@
                 'short-exact': '2-Char Exact'
             };
             const ALL_LANGS = ['en', 'id', 'es', 'pt', 'fr', 'de', 'ru', 'ja'];
+            const ALL_KEYS = [...ALL_LANGS, 'short-exact'];
             const SUGGESTED_TAGS = [
                 'business', 'tools', 'ecommerce', 'domain-naming', 'naming',
                 'ai-tech', 'cloud-tech', 'calculator', 'free-offer', 'ideas',
@@ -273,6 +320,8 @@
             let activeKey = 'en';
             let lexiconState = { shortExact: {}, byLang: {} };
             let pendingDeleteWord = '';
+            let editingContext = null; // { key, word }
+            let isLocalApiAvailable = true;
 
             const authSection = document.getElementById('authSection');
             const authLoading = document.getElementById('authLoading');
@@ -283,7 +332,14 @@
             const loginError = document.getElementById('loginError');
             const editorSection = document.getElementById('editorSection');
             const logoutBtn = document.getElementById('logoutBtn');
+            const localModeBanner = document.getElementById('localModeBanner');
+            const localModeBannerText = document.getElementById('localModeBannerText');
             const langTabs = document.getElementById('langTabs');
+            const entryForm = document.getElementById('entryForm');
+            const formHeading = document.getElementById('formHeading');
+            const activeLangBadge = document.getElementById('activeLangBadge');
+            const resetFormBtn = document.getElementById('resetFormBtn');
+            const entryLangSelect = document.getElementById('entryLangSelect');
             const entriesTbody = document.getElementById('entriesTbody');
             const searchInput = document.getElementById('searchInput');
             const wordInput = document.getElementById('wordInput');
@@ -294,6 +350,14 @@
             const shortLangsWrap = document.getElementById('shortLangsWrap');
             const shortLangsCheckboxes = document.getElementById('shortLangsCheckboxes');
             const entryStatus = document.getElementById('entryStatus');
+            const saveEntryBtn = document.getElementById('saveEntryBtn');
+            const testForm = document.getElementById('testForm');
+            const testDomainInput = document.getElementById('testDomainInput');
+            const testLangSelect = document.getElementById('testLangSelect');
+            const testSubmitBtn = document.getElementById('testSubmitBtn');
+            const testError = document.getElementById('testError');
+            const testResultBox = document.getElementById('testResultBox');
+            const testFallbackNote = document.getElementById('testFallbackNote');
             const activeFileBadge = document.getElementById('activeFileBadge');
             const totalEntriesBadge = document.getElementById('totalEntriesBadge');
             const tableHeading = document.getElementById('tableHeading');
@@ -304,23 +368,57 @@
                 try { localStorage.setItem('preferredTheme', isDark ? 'dark' : 'light'); } catch (e) {}
             });
 
+            function parseCurrentTags() {
+                return tagsInput.value
+                    .split(',')
+                    .map((s) => s.trim().toLowerCase())
+                    .filter(Boolean);
+            }
+
+            function syncQuickTagButtonsState() {
+                const activeTags = new Set(parseCurrentTags());
+                document.querySelectorAll('#quickTags button[data-tag]').forEach((btn) => {
+                    const tag = btn.getAttribute('data-tag');
+                    const isSelected = activeTags.has(tag);
+                    btn.textContent = (isSelected ? '✓ ' : '+ ') + tag;
+                    btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+                    btn.className = isSelected
+                        ? 'px-2 py-0.5 text-[11px] font-mono font-semibold rounded border border-blue-500 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 transition-colors'
+                        : 'px-2 py-0.5 text-[11px] font-mono rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/50 text-slate-600 dark:text-slate-300 transition-colors';
+                });
+            }
+
             function buildQuickTagButtons() {
                 const wrap = document.getElementById('quickTags');
                 wrap.textContent = '';
                 SUGGESTED_TAGS.forEach((tag) => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.textContent = '+' + tag;
-                    btn.className = 'px-2 py-0.5 text-[11px] font-mono rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/50 text-slate-600 dark:text-slate-300';
+                    btn.setAttribute('data-tag', tag);
                     btn.addEventListener('click', () => {
-                        const existing = tagsInput.value.split(',').map((s) => s.trim()).filter(Boolean);
-                        if (!existing.includes(tag) && existing.length < 5) {
+                        const existing = parseCurrentTags();
+                        const idx = existing.indexOf(tag);
+                        if (idx >= 0) {
+                            existing.splice(idx, 1);
+                            tagsInput.value = existing.join(', ');
+                            if (entryStatus.textContent.includes('Maksimal 5 tag')) {
+                                entryStatus.classList.add('hidden');
+                            }
+                        } else if (existing.length >= 5) {
+                            showEntryStatus('Maksimal 5 tag per kata. Hapus salah satu tag terlebih dahulu.', true);
+                        } else {
                             existing.push(tag);
                             tagsInput.value = existing.join(', ');
+                            if (entryStatus.textContent.includes('Maksimal 5 tag')) {
+                                entryStatus.classList.add('hidden');
+                            }
                         }
+                        syncQuickTagButtonsState();
+                        syncAllLexiconClearButtons();
                     });
                     wrap.appendChild(btn);
                 });
+                syncQuickTagButtonsState();
             }
 
             function buildShortLangCheckboxes() {
@@ -338,6 +436,102 @@
                     label.appendChild(txt);
                     shortLangsCheckboxes.appendChild(label);
                 });
+            }
+
+            function attachClearButtonToField(el, labelText) {
+                if (!el || el.dataset.clearAttached === '1') return;
+                el.dataset.clearAttached = '1';
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'relative w-full min-w-0';
+
+                const transferClasses = ['flex-1', 'sm:w-56', 'mt-1'];
+                transferClasses.forEach((cls) => {
+                    if (el.classList.contains(cls)) {
+                        el.classList.remove(cls);
+                        wrapper.classList.add(cls);
+                    }
+                });
+
+                const parent = el.parentNode;
+                if (!parent) return;
+                parent.insertBefore(wrapper, el);
+                wrapper.appendChild(el);
+
+                el.classList.add('block', 'w-full');
+                el.classList.remove('px-3', 'px-2.5', 'pr-2', 'pr-3');
+                el.classList.add('pl-3', 'pr-9');
+
+                if (el.type === 'search') {
+                    el.classList.add('[&::-webkit-search-cancel-button]:hidden', '[&::-webkit-search-cancel-button]:appearance-none');
+                } else if (el.type === 'number') {
+                    el.classList.add('[appearance:textfield]', '[&::-webkit-outer-spin-button]:appearance-none', '[&::-webkit-inner-spin-button]:appearance-none');
+                }
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                const cleanLabel = String(labelText || el.getAttribute('aria-label') || el.placeholder || 'kolom').trim();
+                btn.setAttribute('aria-label', 'Hapus ' + cleanLabel);
+                btn.setAttribute('title', 'Hapus ' + cleanLabel);
+                btn.className = 'hidden absolute right-1.5 top-1/2 -translate-y-1/2 z-10 w-6 h-6 items-center justify-center rounded-md text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/60 active:bg-red-100 dark:active:bg-red-900/60 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400/70';
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 20 20');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2.3');
+                svg.setAttribute('stroke-linecap', 'round');
+                svg.setAttribute('aria-hidden', 'true');
+                svg.setAttribute('class', 'w-3.5 h-3.5 pointer-events-none');
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', 'M6 6l8 8M14 6l-8 8');
+                svg.appendChild(path);
+                btn.appendChild(svg);
+                wrapper.appendChild(btn);
+
+                const sync = () => {
+                    const hasValue = String(el.value || '').length > 0 && !el.disabled && !el.readOnly;
+                    btn.classList.toggle('hidden', !hasValue);
+                    btn.classList.toggle('flex', hasValue);
+                };
+
+                el._syncClearButton = sync;
+                el.addEventListener('input', sync);
+                el.addEventListener('change', sync);
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    el.value = '';
+                    sync();
+                    try {
+                        el.focus({ preventScroll: true });
+                    } catch {
+                        el.focus();
+                    }
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                    sync();
+                });
+
+                sync();
+            }
+
+            function syncAllLexiconClearButtons() {
+                document.querySelectorAll('[data-clear-attached="1"]').forEach((el) => {
+                    if (typeof el._syncClearButton === 'function') {
+                        el._syncClearButton();
+                    }
+                });
+            }
+
+            function initClearButtons() {
+                [
+                    [wordInput, 'Kata'],
+                    [weightInput, 'Bobot'],
+                    [tagsInput, 'Tag'],
+                    [testDomainInput, 'Domain Uji'],
+                    [searchInput, 'Pencarian Kamus']
+                ].forEach(([el, label]) => attachClearButtonToField(el, label));
             }
 
             async function apiFetch(url, options = {}) {
@@ -360,9 +554,19 @@
             function showEntryStatus(msg, isError) {
                 entryStatus.textContent = msg;
                 entryStatus.className = isError
-                    ? 'text-xs font-medium text-rose-600 dark:text-rose-400'
-                    : 'text-xs font-medium text-emerald-600 dark:text-emerald-400';
+                    ? 'text-xs font-medium leading-relaxed text-rose-600 dark:text-rose-400'
+                    : 'text-xs font-medium leading-relaxed text-emerald-600 dark:text-emerald-400';
                 entryStatus.classList.remove('hidden');
+            }
+
+            function setLocalModeAvailability(available, customBannerMsg) {
+                isLocalApiAvailable = Boolean(available);
+                localModeBanner.classList.toggle('hidden', isLocalApiAvailable);
+                if (!isLocalApiAvailable && customBannerMsg) {
+                    localModeBannerText.textContent = customBannerMsg;
+                }
+                saveEntryBtn.disabled = !isLocalApiAvailable;
+                testSubmitBtn.disabled = !isLocalApiAvailable;
             }
 
             function getEntriesForKey(key) {
@@ -370,51 +574,87 @@
                 return (lexiconState.byLang && lexiconState.byLang[key]) || {};
             }
 
+            function syncEditingUiState() {
+                const isEditing = Boolean(editingContext && editingContext.key === activeKey);
+                formHeading.textContent = isEditing
+                    ? 'Edit Kata: "' + editingContext.word + '"'
+                    : 'Tambah / Perbarui Kata';
+                resetFormBtn.textContent = isEditing ? 'Batal Edit' : 'Bersihkan';
+                saveEntryBtn.textContent = isEditing
+                    ? 'Simpan Perubahan & Rebuild Bundle'
+                    : 'Simpan ke JSON & Rebuild Bundle';
+            }
+
+            function switchActiveKey(nextKey) {
+                if (!ALL_KEYS.includes(nextKey)) return;
+                activeKey = nextKey;
+                pendingDeleteWord = '';
+                editingContext = null;
+                resetEntryForm();
+                renderAll();
+            }
+
             function renderTabs() {
                 langTabs.textContent = '';
-                const keys = [...ALL_LANGS, 'short-exact'];
                 let totalCount = 0;
-                keys.forEach((k) => {
+                ALL_KEYS.forEach((k) => {
                     totalCount += Object.keys(getEntriesForKey(k)).length;
                 });
-                totalEntriesBadge.textContent = totalCount + ' total entries';
+                totalEntriesBadge.textContent = isLocalApiAvailable
+                    ? totalCount + ' total entri'
+                    : 'Mode Statis';
 
-                keys.forEach((key) => {
+                ALL_KEYS.forEach((key) => {
                     const count = Object.keys(getEntriesForKey(key)).length;
+                    const countLabel = isLocalApiAvailable ? String(count) : '—';
                     const btn = document.createElement('button');
                     btn.type = 'button';
+                    btn.setAttribute('role', 'tab');
                     const isActive = key === activeKey;
+                    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
                     btn.className = isActive
                         ? 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm'
                         : 'px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800';
-                    btn.textContent = (LANG_LABELS[key] || key) + ' (' + count + ')';
+                    btn.textContent = (LANG_LABELS[key] || key) + ' (' + countLabel + ')';
                     btn.addEventListener('click', () => {
-                        activeKey = key;
-                        pendingDeleteWord = '';
-                        resetEntryForm();
-                        renderAll();
+                        switchActiveKey(key);
                     });
                     langTabs.appendChild(btn);
                 });
+
+                if (entryLangSelect.value !== activeKey) {
+                    entryLangSelect.value = activeKey;
+                }
+                activeLangBadge.textContent = LANG_LABELS[activeKey] || activeKey;
             }
 
-            function resetEntryForm() {
+            function resetEntryForm(options = {}) {
+                const preserveStatus = Boolean(options.preserveStatus);
+                editingContext = null;
                 wordInput.value = '';
                 weightInput.value = '6.0';
                 tagsInput.value = '';
                 suffixOnlyInput.checked = false;
-                entryStatus.classList.add('hidden');
+                if (!preserveStatus) {
+                    entryStatus.classList.add('hidden');
+                }
                 const isShort = activeKey === 'short-exact';
                 suffixOptionWrap.classList.toggle('hidden', isShort);
                 shortLangsWrap.classList.toggle('hidden', !isShort);
-                wordInput.placeholder = isShort ? 'e.g. ai (2 chars)' : 'e.g. fintech';
+                wordInput.placeholder = isShort ? 'mis. ai (tepat 2 huruf)' : 'mis. fintech';
                 document.querySelectorAll('.short-lang-cb').forEach((cb) => {
                     cb.checked = cb.value === 'en';
                 });
-                if (!isShort) {
-                    const testSelect = document.getElementById('testLangSelect');
-                    if (testSelect) testSelect.value = activeKey;
+                if (entryLangSelect.value !== activeKey) {
+                    entryLangSelect.value = activeKey;
                 }
+                activeLangBadge.textContent = LANG_LABELS[activeKey] || activeKey;
+                if (!isShort) {
+                    testLangSelect.value = activeKey;
+                }
+                syncEditingUiState();
+                syncQuickTagButtonsState();
+                syncAllLexiconClearButtons();
             }
 
             function renderTable() {
@@ -423,7 +663,7 @@
                 const isShort = activeKey === 'short-exact';
 
                 activeFileBadge.textContent = 'lib/lexicon/' + activeKey + '.json';
-                tableHeading.textContent = (LANG_LABELS[activeKey] || activeKey) + ' Lexicon';
+                tableHeading.textContent = 'Kamus ' + (LANG_LABELS[activeKey] || activeKey);
 
                 const rows = Object.entries(entries)
                     .filter(([word, meta]) => {
@@ -434,15 +674,19 @@
                     })
                     .sort((a, b) => a[0].localeCompare(b[0]));
 
-                tableCount.textContent = rows.length + ' of ' + Object.keys(entries).length + ' entries';
+                tableCount.textContent = isLocalApiAvailable
+                    ? rows.length + ' dari ' + Object.keys(entries).length + ' entri'
+                    : 'Mode statis — data kamus lokal tidak dimuat';
                 entriesTbody.textContent = '';
 
                 if (rows.length === 0) {
                     const tr = document.createElement('tr');
                     const td = document.createElement('td');
                     td.colSpan = 4;
-                    td.className = 'px-4 py-8 text-center text-xs text-slate-500';
-                    td.textContent = 'No matching entries found.';
+                    td.className = 'px-4 py-8 text-center text-xs text-slate-500 dark:text-slate-400';
+                    td.textContent = isLocalApiAvailable
+                        ? 'Tidak ada entri kamus yang cocok.'
+                        : 'Data kamus tidak tersedia di mode statis. Jalankan npm run dev secara lokal untuk melihat & mengedit entri JSON.';
                     tr.appendChild(td);
                     entriesTbody.appendChild(tr);
                     return;
@@ -452,9 +696,12 @@
                     const weight = meta[0];
                     const tags = Array.isArray(meta[1]) ? meta[1] : [];
                     const third = meta[2];
+                    const isRowEditing = Boolean(editingContext && editingContext.key === activeKey && editingContext.word === word);
 
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-slate-50/80 dark:hover:bg-slate-800/40';
+                    tr.className = isRowEditing
+                        ? 'bg-blue-50/70 dark:bg-blue-950/30'
+                        : 'hover:bg-slate-50/80 dark:hover:bg-slate-800/40';
 
                     const tdWord = document.createElement('td');
                     tdWord.className = 'px-4 py-2.5 font-mono font-semibold text-slate-900 dark:text-slate-100';
@@ -497,6 +744,7 @@
                     editBtn.textContent = 'Edit';
                     editBtn.className = 'px-2 py-1 text-xs font-medium rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
                     editBtn.addEventListener('click', () => {
+                        editingContext = { key: activeKey, word };
                         wordInput.value = word;
                         weightInput.value = String(weight);
                         tagsInput.value = tags.join(', ');
@@ -508,6 +756,14 @@
                         } else {
                             suffixOnlyInput.checked = Boolean(third && third.suffixOnly);
                         }
+                        entryStatus.classList.add('hidden');
+                        syncEditingUiState();
+                        syncQuickTagButtonsState();
+                        syncAllLexiconClearButtons();
+                        renderTable();
+                        try {
+                            entryForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        } catch {}
                         wordInput.focus();
                     });
                     tdAct.appendChild(editBtn);
@@ -515,15 +771,15 @@
                     if (pendingDeleteWord === word) {
                         const confirmBtn = document.createElement('button');
                         confirmBtn.type = 'button';
-                        confirmBtn.textContent = 'Confirm';
+                        confirmBtn.textContent = 'Konfirmasi';
                         confirmBtn.className = 'px-2 py-1 text-xs font-semibold rounded bg-rose-600 text-white hover:bg-rose-700';
                         confirmBtn.addEventListener('click', async () => {
                             await deleteWord(word);
                         });
                         const cancelBtn = document.createElement('button');
                         cancelBtn.type = 'button';
-                        cancelBtn.textContent = 'Cancel';
-                        cancelBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700';
+                        cancelBtn.textContent = 'Batal';
+                        cancelBtn.className = 'px-2 py-1 text-xs rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800';
                         cancelBtn.addEventListener('click', () => {
                             pendingDeleteWord = '';
                             renderTable();
@@ -533,7 +789,7 @@
                     } else {
                         const delBtn = document.createElement('button');
                         delBtn.type = 'button';
-                        delBtn.textContent = 'Delete';
+                        delBtn.textContent = 'Hapus';
                         delBtn.className = 'px-2 py-1 text-xs font-medium rounded border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40';
                         delBtn.addEventListener('click', () => {
                             pendingDeleteWord = word;
@@ -555,19 +811,33 @@
                 renderTable();
             }
 
-            async function loadLexicons() {
-                const { res, data } = await apiFetch('/api/admin/lexicon');
-                if (res.status === 404 || res.status === 405) {
-                    showEntryStatus('Editor kamus JSON lokal hanya aktif di server Express/preview lokal (bukan static-only Cloudflare Pages).', true);
-                    return;
+            async function loadLexicons(options = {}) {
+                const preserveStatus = Boolean(options.preserveStatus);
+                try {
+                    const { res, data } = await apiFetch('/api/admin/lexicon');
+                    if (res.status === 404 || res.status === 405) {
+                        setLocalModeAvailability(false);
+                        resetEntryForm({ preserveStatus });
+                        renderAll();
+                        return;
+                    }
+                    if (!res.ok || !data.ok) {
+                        showEntryStatus(data.error || 'Gagal memuat data kamus lexicon dari server.', true);
+                        renderAll();
+                        return;
+                    }
+                    setLocalModeAvailability(true);
+                    lexiconState = {
+                        shortExact: data.shortExact || {},
+                        byLang: data.byLang || {}
+                    };
+                    resetEntryForm({ preserveStatus });
+                    renderAll();
+                } catch (err) {
+                    setLocalModeAvailability(false, 'Tidak dapat menghubungi endpoint /api/admin/lexicon. Pastikan server lokal sedang berjalan (npm run dev).');
+                    resetEntryForm({ preserveStatus });
+                    renderAll();
                 }
-                if (!res.ok || !data.ok) return;
-                lexiconState = {
-                    shortExact: data.shortExact || {},
-                    byLang: data.byLang || {}
-                };
-                resetEntryForm();
-                renderAll();
             }
 
             async function deleteWord(word) {
@@ -576,17 +846,23 @@
                 });
                 pendingDeleteWord = '';
                 if (!res.ok || !data.ok) {
-                    showEntryStatus(data.error || 'Failed to delete entry.', true);
+                    showEntryStatus(data.error || 'Gagal menghapus entri kamus.', true);
+                    renderTable();
                     return;
                 }
-                showEntryStatus('Deleted "' + word + '" from ' + activeKey + '.json and rebuilt bundle.js.', false);
-                await loadLexicons();
+                if (editingContext && editingContext.key === activeKey && editingContext.word === word) {
+                    editingContext = null;
+                }
+                showEntryStatus('Menghapus "' + word + '" dari lib/lexicon/' + activeKey + '.json & membangun ulang bundle.js.', false);
+                await loadLexicons({ preserveStatus: true });
             }
 
             async function enterEditor() {
                 authSection.classList.add('hidden');
                 editorSection.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
+                resetEntryForm();
+                renderAll();
                 await loadLexicons();
             }
 
@@ -664,22 +940,39 @@
                     await apiFetch('/api/articles/auth', { method: 'DELETE' });
                 } catch {}
                 sessionToken = '';
+                editingContext = null;
+                pendingDeleteWord = '';
                 editorSection.classList.add('hidden');
                 logoutBtn.classList.add('hidden');
                 authSection.classList.remove('hidden');
                 await initAuth();
             });
 
-            document.getElementById('resetFormBtn').addEventListener('click', resetEntryForm);
-            searchInput.addEventListener('input', renderTable);
+            entryLangSelect.addEventListener('change', () => {
+                switchActiveKey(entryLangSelect.value);
+            });
 
-            document.getElementById('entryForm').addEventListener('submit', async (e) => {
+            resetFormBtn.addEventListener('click', () => {
+                const wasEditing = Boolean(editingContext);
+                resetEntryForm();
+                if (wasEditing) renderTable();
+            });
+
+            tagsInput.addEventListener('input', syncQuickTagButtonsState);
+            tagsInput.addEventListener('change', syncQuickTagButtonsState);
+            searchInput.addEventListener('input', renderTable);
+            searchInput.addEventListener('change', renderTable);
+
+            entryForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const isShort = activeKey === 'short-exact';
+                if (!isLocalApiAvailable) return;
+
+                const targetKey = activeKey;
+                const isShort = targetKey === 'short-exact';
                 const payload = {
                     word: wordInput.value.trim().toLowerCase(),
                     weight: Number(weightInput.value),
-                    tags: tagsInput.value.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean)
+                    tags: parseCurrentTags()
                 };
                 if (isShort) {
                     payload.langs = Array.from(document.querySelectorAll('.short-lang-cb:checked')).map((cb) => cb.value);
@@ -687,46 +980,95 @@
                     payload.suffixOnly = suffixOnlyInput.checked;
                 }
 
-                const { res, data } = await apiFetch('/api/admin/lexicon/' + encodeURIComponent(activeKey), {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!res.ok || !data.ok) {
-                    showEntryStatus(data.error || 'Failed to save entry.', true);
-                    return;
+                const prevEdit = editingContext && editingContext.key === targetKey ? { ...editingContext } : null;
+                saveEntryBtn.disabled = true;
+                saveEntryBtn.textContent = 'Menyimpan...';
+
+                try {
+                    const { res, data } = await apiFetch('/api/admin/lexicon/' + encodeURIComponent(targetKey), {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok || !data.ok) {
+                        showEntryStatus(data.error || 'Gagal menyimpan entri kamus.', true);
+                        return;
+                    }
+
+                    let statusMsg = (data.existed ? 'Memperbarui' : 'Menambahkan') + ' "' + data.word + '" di lib/lexicon/' + targetKey + '.json & membangun ulang bundle.js.';
+                    if (prevEdit && prevEdit.word !== data.word) {
+                        const delRes = await apiFetch('/api/admin/lexicon/' + encodeURIComponent(targetKey) + '/' + encodeURIComponent(prevEdit.word), {
+                            method: 'DELETE'
+                        });
+                        if (delRes.res.ok && delRes.data.ok) {
+                            statusMsg = 'Mengubah "' + prevEdit.word + '" menjadi "' + data.word + '" di lib/lexicon/' + targetKey + '.json & membangun ulang bundle.js.';
+                        } else {
+                            statusMsg = 'Menyimpan "' + data.word + '", namun gagal menghapus entri lama "' + prevEdit.word + '" (' + (delRes.data.error || 'error') + ').';
+                        }
+                    }
+
+                    editingContext = null;
+                    showEntryStatus(statusMsg, false);
+                    await loadLexicons({ preserveStatus: true });
+                } catch (err) {
+                    showEntryStatus(err?.message || 'Terjadi kesalahan jaringan saat menyimpan entri.', true);
+                } finally {
+                    saveEntryBtn.disabled = !isLocalApiAvailable;
+                    syncEditingUiState();
                 }
-                const actionWord = data.existed ? 'Updated' : 'Added';
-                showEntryStatus(actionWord + ' "' + data.word + '" in lib/lexicon/' + activeKey + '.json & rebuilt bundle.js.', false);
-                await loadLexicons();
             });
 
-            document.getElementById('testForm').addEventListener('submit', async (e) => {
+            testForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const domain = document.getElementById('testDomainInput').value.trim();
-                const uiLang = document.getElementById('testLangSelect').value;
-                const { res, data } = await apiFetch('/api/admin/lexicon/test', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ domain, uiLang })
-                });
-                if (!res.ok || !data.ok) return;
-                const r = data.result;
-                document.getElementById('testResultBox').classList.remove('hidden');
-                document.getElementById('testTokensOut').textContent = (r.tokens || []).join(' + ');
-                document.getElementById('testCoverageOut').textContent = Math.round((r.coverage || 0) * 100) + '%';
-                const tagsOut = document.getElementById('testTagsOut');
-                tagsOut.textContent = '';
-                (r.tags || []).forEach((tg) => {
-                    const span = document.createElement('span');
-                    span.className = 'px-1.5 py-0.5 text-[11px] font-mono rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800';
-                    span.textContent = tg;
-                    tagsOut.appendChild(span);
-                });
+                if (!isLocalApiAvailable) return;
+                const domain = testDomainInput.value.trim();
+                const uiLang = testLangSelect.value;
+                testError.classList.add('hidden');
+                testSubmitBtn.disabled = true;
+                testSubmitBtn.textContent = 'Menguji...';
+
+                try {
+                    const { res, data } = await apiFetch('/api/admin/lexicon/test', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ domain, uiLang })
+                    });
+                    if (!res.ok || !data.ok) {
+                        testError.textContent = data.error || 'Gagal menguji domain pada tagger.';
+                        testError.classList.remove('hidden');
+                        return;
+                    }
+                    const r = data.result || {};
+                    testResultBox.classList.remove('hidden');
+                    const tokens = Array.isArray(r.tokens) ? r.tokens : [];
+                    document.getElementById('testTokensOut').textContent = tokens.length ? tokens.join(' + ') : '(tidak ada token cocok)';
+                    const covPct = Math.round((r.coverage || 0) * 100);
+                    document.getElementById('testCoverageOut').textContent = covPct + '%';
+
+                    const tagsOut = document.getElementById('testTagsOut');
+                    tagsOut.textContent = '';
+                    const tags = Array.isArray(r.tags) ? r.tags : [];
+                    tags.forEach((tg) => {
+                        const span = document.createElement('span');
+                        span.className = 'px-1.5 py-0.5 text-[11px] font-mono rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800';
+                        span.textContent = tg;
+                        tagsOut.appendChild(span);
+                    });
+
+                    const isBrandableFallback = covPct === 0 && tags.includes('brandable');
+                    testFallbackNote.classList.toggle('hidden', !isBrandableFallback);
+                } catch (err) {
+                    testError.textContent = err?.message || 'Gagal menghubungi endpoint sandbox /api/admin/lexicon/test.';
+                    testError.classList.remove('hidden');
+                } finally {
+                    testSubmitBtn.disabled = !isLocalApiAvailable;
+                    testSubmitBtn.textContent = 'Uji';
+                }
             });
 
             buildQuickTagButtons();
             buildShortLangCheckboxes();
+            initClearButtons();
             initAuth();
         })();
     </script>

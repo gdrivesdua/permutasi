@@ -143,6 +143,7 @@
                         </ul>
                     </li>
                     <li><strong>FAQ Artikel</strong>: Tambahkan tanya-jawab relevan di bagian bawah (jawaban mendukung Markdown, dan teks untuk Google Schema otomatis dibersihkan ke teks rapi). Jika terisi <strong>minimal 2 FAQ</strong>, sistem otomatis menghasilkan markup <em>Schema.org FAQPage</em> untuk Google.</li>
+                    <li><strong>Tombol Hapus Cepat (<code class="font-mono text-xs">×</code>) Merah</strong>: Seluruh kolom input dan textarea di Panel Edit Artikel (mulai dari H1, Slug, SEO, Poin Inti, Bagian H2, Catatan Metodologi, FAQ, Sidebar Penulis/Tanggal/Snapshot, hingga modal Tabel Markdown dan Gambar URL) menampilkan ikon <code class="font-mono text-xs">×</code> merah saat kolom terisi agar penulis bisa mengosongkan isian dengan satu klik tanpa memicu submit form.</li>
                 </ul>
             </section>
 
@@ -219,6 +220,13 @@
                         <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
                             <li>Halaman <strong>Database D1</strong> (<code class="font-mono text-xs">/admin-data/</code>) memisahkan kolom <strong>SLD</strong> (hanya SLD murni tanpa domain penuh), <strong>Ext TLD</strong>, dan <strong>Len</strong> pada tampilan tabel kurasi, sekaligus menjadikan tiap <strong>SLD</strong> sebagai tautan eksternal ke halaman depan (<code class="font-mono text-xs">/?kw=...&amp;kw2=...&amp;kw3=...</code>) untuk mengecek ketersediaan keyword terkait.</li>
                             <li>Tersedia menu <strong>Kolom Export</strong> (20 kolom dengan preset <em>Semua</em>, <em>Sesuai Tabel</em>, dan <em>Ringkas</em>) serta 4 tombol ringkas (<strong>To CSV</strong>, <strong>To XLS</strong>, <strong>To JSON</strong>, <strong>To MD Table</strong>)—di mana <strong>To MD Table</strong> menghasilkan tabel pipe GFM dengan heading dan perataan kolom menyesuaikan pilihan Anda untuk ditempel ke <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-1.5">
+                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 5 — Tombol Hapus Cepat (<code class="font-mono text-xs">×</code>) Merah di Panel Edit Artikel &amp; Database D1</p>
+                        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
+                            <li>Seluruh input dan textarea pada <strong>Panel Edit Artikel</strong> (<code class="font-mono text-xs">/admin-articles/</code>, termasuk panel statis, blok dinamis <em>Key Takeaways</em>/<em>Bagian H2</em>/<em>FAQ</em>, tanggal/penulis/snapshot di sidebar, serta modal <em>Tambah Tabel</em> &amp; <em>Tambah Gambar</em>) kini memiliki tombol <code class="font-mono text-xs">×</code> merah di sisi kanan dalam kolom saat terisi.</li>
+                            <li>Perilaku yang sama diterapkan pada seluruh input pencarian/filter (7 filter + pencarian umum) serta modal <em>Edit Baris</em> di halaman <strong>Database D1</strong> (<code class="font-mono text-xs">/admin-data/</code>): sekali klik akan mengosongkan kolom, mengembalikan fokus, dan langsung memperbarui filter, pratinjau, maupun hitungan karakter/kata.</li>
                         </ul>
                     </div>
                 </div>
