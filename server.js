@@ -911,6 +911,7 @@ app.get('/api/admin-data', async (req, res) => {
     return res.status(401).json({ ok: false, error: 'Unauthorized. Silakan login terlebih dahulu melalui /admin-articles/.' });
   }
   try {
+    const config = loadSiteConfig(__dirname);
     const db = getLocalD1Database(__dirname);
     const includeFacets = String(req.query?.includeFacets || '') === '1';
     const result = await queryAdminDomains(db, req.query);
@@ -918,6 +919,7 @@ app.get('/api/admin-data', async (req, res) => {
     return res.json({
       ok: true,
       storageMode: 'local-sqlite-d1',
+      siteUrl: config.siteUrl,
       ...result,
       ...(facets ? { facets } : {})
     });

@@ -26,9 +26,12 @@ export async function onRequestGet(context) {
     const result = await queryAdminDomains(env.DB, url.searchParams);
     const facets = includeFacets ? await getAdminDomainFacets(env.DB) : undefined;
 
+    const siteUrl = String(env?.SITE_URL || 'https://domainname.web.id').trim().replace(/\/+$/, '') || 'https://domainname.web.id';
+
     return jsonResponse({
       ok: true,
       storageMode: 'd1',
+      siteUrl,
       ...result,
       ...(facets ? { facets } : {})
     });

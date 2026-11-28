@@ -647,17 +647,18 @@ Bagian ini mencatat pembaruan infrastruktur, monetisasi AdSense multi-halaman, a
 - **7 Filter + Pencarian Umum + Facets Autocomplete**:
   - Pencarian umum (`q`), **SLD** (`sld`), **Keyword** (`keyword`), **Char Length Min–Max** (`charLenMin`/`charLenMax`), **Tags** (`tags` + `<datalist>` tag teratas dari D1), **Extension** (`extension` multi-nilai + `<datalist>` ekstensi), **Check Source** (`auto` / `manual`), dan **Lang** (`en`–`ja`).
   - Mendukung pengurutan (`sortBy`) pada 12 kolom (`checked_at`, `overall_heuristic_score`, `brandability_score`, `pronunciation_comfort_score`, `emd_pmd_score`, `domain`, `sld`, `char_length`, `extension`, `lang`, `check_source`, `check_method`), arah `DESC`/`ASC`, dan paginasi `25 / 50 / 100 / 200` baris per halaman.
-- **Tampilan Kolom Tabel Terpisah (`SLD`, `Ext TLD`, `Len`)**:
-  - Kolom `SLD` hanya menampilkan teks SLD murni (tanpa domain penuh; domain lengkap tampil di atribut `title` tooltip), dipisahkan dari kolom **`Ext TLD`** (`extension`) dan kolom **`Len`** (`char_length`) di sebelahnya, diikuti `Lang`, `Source / Method`, `Tags`, `Skor Heuristik`, `Checked At`, dan `Aksi`.
+- **Tampilan Kolom Tabel Terpisah (`SLD`, `Ext TLD`, `Len`) & Tautan Cek Keyword Eksternal**:
+  - Kolom `SLD` hanya menampilkan teks SLD murni (tanpa domain penuh), dipisahkan dari kolom **`Ext TLD`** (`extension`) dan kolom **`Len`** (`char_length`) di sebelahnya, diikuti `Lang`, `Source / Method`, `Tags`, `Skor Heuristik`, `Checked At`, dan `Aksi`.
+  - Setiap nilai `SLD` terhubung langsung ke tautan eksternal halaman depan (`<siteUrl>/?kw=...&kw2=...&kw3=...`, terbuka di tab baru `target="_blank" rel="noopener noreferrer"`) berdasarkan token kata kunci hasil segmentasi leksikon 8 bahasa (`extractSldKeywords` di `lib/d1-admin-domains.js` + `lib/domain-tagger.js`) agar admin dapat langsung menguji variasi dan ketersediaan keyword tersebut di generator utama.
 - **Edit & Hapus Baris Aman**:
   - Modal **Edit** memperbarui `sld`, `extension`, `char_length`, `lang`, `check_method`, `check_source`, `emd_pmd_match_type`, `tags`, dan 8 kolom skor.
   - Modal **Hapus** mendukung hapus tunggal per baris maupun hapus massal hingga **200 domain** dalam satu batch.
-- **Pemilih Kolom Export (`EXPORT_COLUMN_META`, 20 Kolom) & 4 Format Unduhan**:
+- **Pemilih Kolom Export (`EXPORT_COLUMN_META`, 20 Kolom) & 4 Tombol Unduhan Sederhana**:
   - Tombol **Kolom Export (`20/20`)** membuka panel ceklis **20 kolom** (`domain`, `sld`, `extension`, `char_length`, `lang`, `check_method`, `check_source`, `checked_at`, `checked_at_iso`, `overall_heuristic_score`, `pronunciation_comfort_score`, `brandability_score`, `structure_length_score`, `extension_lang_fit_score`, `character_cleanliness_score`, `niche_clarity_score`, `emd_pmd_score`, `emd_pmd_match_type`, `scored_at`, `tags`) lengkap dengan 3 tombol preset: **`Semua`**, **`Sesuai Tabel`**, dan **`Ringkas (SLD + Ext + Len + Skor)`**.
-  - Hasil terfilter (maks. 10.000 baris per export) dapat langsung diunduh ke 4 format sesuai filter & kolom yang dipilih:
-    - **`CSV`** (UTF-8 BOM dengan netralisasi sel formula spreadsheet),
-    - **`XLS`** (SpreadsheetML XML),
-    - **`JSON`** (menyertakan `columns` terpilih & `rows` terproyeksi), dan
-    - **Tabel Markdown (`format=md` / `markdown`)** yang menghasilkan tabel GFM (`d1-available-domains-YYYY-MM-DD.md`) dengan **heading kolom (`EXPORT_COLUMN_META.label`) dan perataan (`:---`, `:---:`, `---:`) otomatis menyesuaikan kolom yang di-export**.
+  - Hasil terfilter (maks. 10.000 baris per export) dapat langsung diunduh lewat 4 tombol ringkas (**`To CSV`**, **`To XLS`**, **`To JSON`**, dan **`To MD Table`**) sesuai filter & kolom yang dipilih:
+    - **`To CSV`** (UTF-8 BOM dengan netralisasi sel formula spreadsheet),
+    - **`To XLS`** (SpreadsheetML XML),
+    - **`To JSON`** (menyertakan `columns` terpilih & `rows` terproyeksi), dan
+    - **`To MD Table`** (`format=md` / `markdown`) yang menghasilkan tabel GFM (`d1-available-domains-YYYY-MM-DD.md`) dengan **heading kolom (`EXPORT_COLUMN_META.label`) dan perataan (`:---`, `:---:`, `---:`) otomatis menyesuaikan kolom yang di-export**.
 
 
