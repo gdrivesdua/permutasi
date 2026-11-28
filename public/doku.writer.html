@@ -132,7 +132,7 @@
                         <ul class="list-circle pl-5 mt-1.5 space-y-1 text-sm">
                             <li><strong>Inline &amp; Gambar</strong>: <code class="font-mono text-xs">**tebal**</code>, <code class="font-mono text-xs">*miring*</code>, <code class="font-mono text-xs">`kode inline`</code>, <code class="font-mono text-xs">[teks tautan](https://contoh.com)</code>, serta <code class="font-mono text-xs">![alt gambar](https://.../gambar.png "judul")</code>.</li>
                             <li><strong>Daftar &amp; Kutipan</strong>: awali baris dengan <code class="font-mono text-xs">- item</code> (daftar poin), <code class="font-mono text-xs">1. langkah</code> (daftar bernomor), atau <code class="font-mono text-xs">&gt; kutipan</code> (blockquote).</li>
-                            <li><strong>Tabel Pipe Markdown</strong>: <code class="font-mono text-xs">| Kolom A | Kolom B |</code> diikuti baris pemisah <code class="font-mono text-xs">| --- | --- |</code> dan baris data. Penulis dapat mengunduh tabel siap pakai langsung dari tombol <strong>Export Markdown</strong> di halaman <a href="/admin-data/" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Database D1</a> lalu menempelkannya ke tombol <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
+                            <li><strong>Tabel Pipe Markdown</strong>: <code class="font-mono text-xs">| Kolom A | Kolom B |</code> diikuti baris pemisah <code class="font-mono text-xs">| --- | --- |</code> dan baris data. Penulis dapat mengunduh tabel siap pakai langsung dari tombol <strong>To MD Table</strong> di halaman <a href="/admin-data/" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Database D1</a> lalu menempelkannya ke tombol <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
                         </ul>
                     </li>
                     <li><strong>Blok Opsional di Dalam Bagian</strong>: Setiap bagian H2 memiliki panel lipat <em>Blok Opsional</em> untuk menambahkan:
@@ -215,10 +215,10 @@
                         </ul>
                     </div>
                     <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 space-y-1.5">
-                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 4 — Integrasi Data Kurasi dari Database D1 (<code class="font-mono text-xs">/admin-data/</code>) &amp; Export Tabel Markdown</p>
+                        <p class="font-bold text-slate-900 dark:text-white">Pembaruan 4 — Integrasi Data Kurasi dari Database D1 (<code class="font-mono text-xs">/admin-data/</code>), Link Keyword &amp; Export Tabel Markdown</p>
                         <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
-                            <li>Halaman <strong>Database D1</strong> (<code class="font-mono text-xs">/admin-data/</code>) kini memisahkan kolom <strong>SLD</strong> (hanya SLD murni tanpa domain penuh), <strong>Ext TLD</strong>, dan <strong>Len</strong> pada tampilan tabel kurasi agar penulis mudah memeriksa pola penamaan.</li>
-                            <li>Tersedia menu <strong>Kolom Export</strong> (20 kolom dengan preset <em>Semua</em>, <em>Sesuai Tabel</em>, dan <em>Ringkas</em>) serta tombol <strong>Export Markdown</strong> yang otomatis menghasilkan tabel pipe GFM dengan heading dan perataan kolom menyesuaikan kolom yang dipilih—siap ditempel langsung ke <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
+                            <li>Halaman <strong>Database D1</strong> (<code class="font-mono text-xs">/admin-data/</code>) memisahkan kolom <strong>SLD</strong> (hanya SLD murni tanpa domain penuh), <strong>Ext TLD</strong>, dan <strong>Len</strong> pada tampilan tabel kurasi, sekaligus menjadikan tiap <strong>SLD</strong> sebagai tautan eksternal ke halaman depan (<code class="font-mono text-xs">/?kw=...&amp;kw2=...&amp;kw3=...</code>) untuk mengecek ketersediaan keyword terkait.</li>
+                            <li>Tersedia menu <strong>Kolom Export</strong> (20 kolom dengan preset <em>Semua</em>, <em>Sesuai Tabel</em>, dan <em>Ringkas</em>) serta 4 tombol ringkas (<strong>To CSV</strong>, <strong>To XLS</strong>, <strong>To JSON</strong>, <strong>To MD Table</strong>)—di mana <strong>To MD Table</strong> menghasilkan tabel pipe GFM dengan heading dan perataan kolom menyesuaikan pilihan Anda untuk ditempel ke <strong>+Tabel Dalam Paragraf (MD)</strong>.</li>
                         </ul>
                     </div>
                 </div>
