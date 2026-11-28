@@ -205,7 +205,7 @@ Bagian ini merangkum arsitektur antarmuka, optimasi mobile, serta mekanisme cach
    - Blok `#resultsSection` (*Generated Domain Permutations*) disembunyikan secara aman (`hidden`) tanpa menghapus state maupun logika copy/export/bulk-check.
    - Kotak header **Domain Availability, Backlink, Archive & Index Data** memakai Soft Teal `#ECF2F2` dengan teks gelap `#292929`.
    - Tabel domain bernuansa oranye: header `#f05422` teks putih dan baris selang-seling `#FFFFFF` dan `#f9e1d9` (hover `#f4cec2`).
-   - Pada layar mobile/tablet (`< lg`), kolom `#` disembunyikan dan urutan kolom menjadi `DOMAIN NAME` → `AVAILABILITY` → `CHARS` → `INSPECT` (`BL`, `WM`, `GG`).
+   - Tabel hasil domain (`#domainAnalysisPanel`) menampilkan kolom berurutan `AVAILABILITY` · `[checkbox]` · `DOMAIN NAME` · `SCORE` · `CHARS` · `EXT` (sortable, berisi ekstensi TLD/ccTLD seperti `.com`, `.net`, `.co`, `.id`, `.my.id`, `.co.jp`, dll.) · `INSPECT` (`BL`, `WM`, `GG`) · `#`.
    - Tombol batch (`Remove Selected`, `Copy`, `Copy MD`, `Export .txt`, `Bulk Check`) tetap aktif penuh dengan tombol `Bulk Check` bergaya netral sepadan `Copy MD`.
 3. **Share & Export Link (`#shareExportSection`)**:
    - Responsif penuh: bertumpuk full-width (`grid-cols-1`) di smartphone, sejajar di tablet/desktop (`sm:flex` / `sm:grid-cols-3` / `md:flex`), dengan tombol berwarna-warni selaras palet halaman (`#0C723F`, `#131354`, `#578686`, `#2165b3`, `#f05422`, `#B87900`, `#de3723`).
@@ -531,7 +531,7 @@ Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, d
 
 #### 1. Ekstensi Default per Bahasa (`defaultExts` & `extPlaceholder`)
 - **Bahasa Indonesia (`id`)**: `.my.id, .web.id, .biz.id, .id, .com`
-- **Bahasa Inggris (`en`)**: `.com, .net, .co`
+- **Bahasa Inggris (`en`)**: `.com, .net, .org, .io, .ai`
 
 #### 2. Urutan Eksekusi Wajib & Pemeringkatan Berbasis Kealamian Ejaan
 - **Alur Eksekusi (`generateDomains`)**:

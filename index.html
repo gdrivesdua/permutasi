@@ -300,6 +300,9 @@
             #domainAnalysisList td.ui-td-chars {
                 font-size: 12.5px;
             }
+            #domainAnalysisList td.ui-td-ext {
+                font-size: 11px;
+            }
             #domainAnalysisList td.ui-td-num {
                 font-size: 12px;
             }
@@ -450,7 +453,7 @@
                         </div>
                         <div class="flex flex-col gap-2 min-w-0">
                             <label for="extInput" id="uiExtLabel" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Extensions (e.g. .com, .io):</label>
-                            <input type="text" id="extInput" value=".com, .net, .co" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); generateDomains()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#de3723]" placeholder=".com, .net, .co">
+                            <input type="text" id="extInput" value=".com, .net, .org, .io, .ai" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); generateDomains()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#de3723]" placeholder=".com, .net, .org, .io, .ai">
                         </div>
                     </div>
 
@@ -844,6 +847,14 @@
                                 <button type="button" onclick="toggleAnalysisSort('chars')" class="group inline-flex items-center gap-1 uppercase tracking-[0.04em] font-semibold text-inherit hover:text-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
                                     <span id="uiThCharsLabel">Chars</span>
                                     <span data-sort-icon="chars" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-75 group-hover:opacity-100 transition-opacity">
+                                        <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>
+                                    </span>
+                                </button>
+                            </th>
+                            <th scope="col" id="uiThExt" aria-sort="none" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left ui-th-ext transition-colors">
+                                <button type="button" onclick="toggleAnalysisSort('ext')" class="group inline-flex items-center gap-1 uppercase tracking-[0.04em] font-semibold text-inherit hover:text-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 rounded px-1 -mx-1 py-0.5 cursor-pointer select-none">
+                                    <span id="uiThExtLabel">EXT</span>
+                                    <span data-sort-icon="ext" aria-hidden="true" class="inline-flex items-center shrink-0 opacity-75 group-hover:opacity-100 transition-opacity">
                                         <svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>
                                     </span>
                                 </button>
@@ -1358,8 +1369,8 @@
                 kw1Placeholder: 'Example: calc, shop',
                 kw2Placeholder: 'Example: pro, online',
                 kw3Placeholder: 'Example: app, hub',
-                extPlaceholder: '.com, .net, .co',
-                defaultExts: '.com, .net, .co',
+                extPlaceholder: '.com, .net, .org, .io, .ai',
+                defaultExts: '.com, .net, .org, .io, .ai',
                 formulaPlaceholder: 'e.g. [primary] + [number]',
                 outputLabel: 'Generated Domain Permutation List',
                 eduAriaLabel: 'Domain SEO Guide, Strategy & Validation',
@@ -2660,7 +2671,7 @@
         const uiExtraDict = {
             en: {
                 navGen: 'Generator', navResults: 'Results', navGuide: 'Guide', navFaq: 'FAQ',
-                kw1Placeholder: 'e.g. business, coffee, ai', extPlaceholder: '.com, .net, .co',
+                kw1Placeholder: 'e.g. business, coffee, ai', extPlaceholder: '.com, .net, .org, .io, .ai',
                 genMicrocopy: '✓ RFC 1035 compliant · ✓ No tracking · ✓ Runs offline in browser',
                 microRfc: '✓ RFC 1035 compliant', microNoTrack: '✓ No tracking', microOffline: '✓ Runs offline in browser',
                 advOptionsLabel: 'Advanced Options',
@@ -2684,7 +2695,7 @@
                 ctaViewFaq: 'View FAQ →',
                 shareSummaryTitle: 'Share & Export Link',
                 editOptionsShortcut: 'Edit Keywords & Pattern',
-                thNum: '#', thDomain: 'Domain Name', thChars: 'Chars', thAvail: 'Availability', thInspect: 'Inspect',
+                thNum: '#', thDomain: 'Domain Name', thChars: 'Chars', thExt: 'EXT', thAvail: 'Availability', thInspect: 'Inspect',
                 availCheckBtn: 'Check', availChecking: 'Checking...', availAvailable: 'Available', availTaken: 'Taken', availNoNs: 'No NS', availRetry: 'Retry',
                 availOverLimit: '>30 chars', availOverLimitTitle: 'Availability check is limited to domains up to 30 characters',
                 statusFilterLabel: 'Filter by availability status', statusOptAll: 'Select Status: All', statusOptAvailCheck: 'Available & Check', statusOptAvailable: 'Available', statusOptTaken: 'Taken', statusOptCheck: 'Check',
@@ -2743,7 +2754,7 @@
                 ctaViewFaq: 'Lihat FAQ →',
                 shareSummaryTitle: 'Bagikan & Ekspor Tautan',
                 editOptionsShortcut: 'Ubah Kata Kunci & Pola',
-                thNum: '#', thDomain: 'Nama Domain', thChars: 'Karakter', thAvail: 'Status', thInspect: 'Cek',
+                thNum: '#', thDomain: 'Nama Domain', thChars: 'Karakter', thExt: 'EXT', thAvail: 'Status', thInspect: 'Cek',
                 availCheckBtn: 'Check', availChecking: 'Mengecek...', availAvailable: 'Available', availTaken: 'Taken', availNoNs: 'No NS', availRetry: 'Ulangi',
                 availOverLimit: '>30 kar.', availOverLimitTitle: 'Cek ketersediaan dibatasi untuk domain maksimal 30 karakter',
                 statusFilterLabel: 'Filter berdasarkan status ketersediaan', statusOptAll: 'Pilih Status: Semua', statusOptAvailCheck: 'Available & Check', statusOptAvailable: 'Available', statusOptTaken: 'Taken', statusOptCheck: 'Check',
@@ -2802,7 +2813,7 @@
                 ctaViewFaq: 'Ver FAQ →',
                 shareSummaryTitle: 'Compartir y Exportar Enlace',
                 editOptionsShortcut: 'Editar Palabras y Patrón',
-                thNum: '#', thDomain: 'Dominio', thChars: 'Long.', thAvail: 'Estado', thInspect: 'Inspección',
+                thNum: '#', thDomain: 'Dominio', thChars: 'Long.', thExt: 'EXT', thAvail: 'Estado', thInspect: 'Inspección',
                 availCheckBtn: 'Check', availChecking: 'Verificando...', availAvailable: 'Disponible', availTaken: 'Ocupado', availNoNs: 'Sin NS', availRetry: 'Reintentar',
                 availOverLimit: '>30 car.', availOverLimitTitle: 'La verificación se limita a dominios de hasta 30 caracteres',
                 statusFilterLabel: 'Filtrar por disponibilidad', statusOptAll: 'Elegir Estado: Todos', statusOptAvailCheck: 'Disponible y Check', statusOptAvailable: 'Disponible', statusOptTaken: 'Ocupado', statusOptCheck: 'Check',
@@ -2861,7 +2872,7 @@
                 ctaViewFaq: 'Ver FAQ →',
                 shareSummaryTitle: 'Compartilhar e Exportar Link',
                 editOptionsShortcut: 'Editar Palavras e Padrão',
-                thNum: '#', thDomain: 'Domínio', thChars: 'Tam.', thAvail: 'Status', thInspect: 'Analisar',
+                thNum: '#', thDomain: 'Domínio', thChars: 'Tam.', thExt: 'EXT', thAvail: 'Status', thInspect: 'Analisar',
                 availCheckBtn: 'Check', availChecking: 'Verificando...', availAvailable: 'Disponível', availTaken: 'Registrado', availNoNs: 'Sem NS', availRetry: 'Tentar',
                 availOverLimit: '>30 car.', availOverLimitTitle: 'A verificação é limitada a domínios com até 30 caracteres',
                 statusFilterLabel: 'Filtrar por disponibilidade', statusOptAll: 'Selecionar Status: Todos', statusOptAvailCheck: 'Disponível e Check', statusOptAvailable: 'Disponível', statusOptTaken: 'Registrado', statusOptCheck: 'Check',
@@ -2920,7 +2931,7 @@
                 ctaViewFaq: 'Voir la FAQ →',
                 shareSummaryTitle: 'Partager & Exporter le Lien',
                 editOptionsShortcut: 'Modifier Mots & Modèles',
-                thNum: '#', thDomain: 'Nom de domaine', thChars: 'Car.', thAvail: 'Statut', thInspect: 'Analyser',
+                thNum: '#', thDomain: 'Nom de domaine', thChars: 'Car.', thExt: 'EXT', thAvail: 'Statut', thInspect: 'Analyser',
                 availCheckBtn: 'Check', availChecking: 'Vérification...', availAvailable: 'Disponible', availTaken: 'Pris', availNoNs: 'Sans NS', availRetry: 'Réessayer',
                 availOverLimit: '>30 car.', availOverLimitTitle: 'La vérification est limitée aux domaines de 30 caractères maximum',
                 statusFilterLabel: 'Filtrer par disponibilité', statusOptAll: 'Choisir Statut : Tous', statusOptAvailCheck: 'Disponible & Check', statusOptAvailable: 'Disponible', statusOptTaken: 'Pris', statusOptCheck: 'Check',
@@ -2979,7 +2990,7 @@
                 ctaViewFaq: 'FAQ ansehen →',
                 shareSummaryTitle: 'Link teilen & exportieren',
                 editOptionsShortcut: 'Keywords & Muster ändern',
-                thNum: '#', thDomain: 'Domainname', thChars: 'Zeichen', thAvail: 'Status', thInspect: 'Prüfen',
+                thNum: '#', thDomain: 'Domainname', thChars: 'Zeichen', thExt: 'EXT', thAvail: 'Status', thInspect: 'Prüfen',
                 availCheckBtn: 'Check', availChecking: 'Prüfe...', availAvailable: 'Frei', availTaken: 'Belegt', availNoNs: 'Kein NS', availRetry: 'Erneut',
                 availOverLimit: '>30 Z.', availOverLimitTitle: 'Verfügbarkeitsprüfung ist auf Domains bis 30 Zeichen begrenzt',
                 statusFilterLabel: 'Nach Verfügbarkeit filtern', statusOptAll: 'Status wählen: Alle', statusOptAvailCheck: 'Frei & Check', statusOptAvailable: 'Frei', statusOptTaken: 'Belegt', statusOptCheck: 'Check',
@@ -3038,7 +3049,7 @@
                 ctaViewFaq: 'Открыть FAQ →',
                 shareSummaryTitle: 'Поделиться и экспорт ссылки',
                 editOptionsShortcut: 'Изменить слова и шаблон',
-                thNum: '#', thDomain: 'Домен', thChars: 'Длина', thAvail: 'Статус', thInspect: 'Проверка',
+                thNum: '#', thDomain: 'Домен', thChars: 'Длина', thExt: 'EXT', thAvail: 'Статус', thInspect: 'Проверка',
                 availCheckBtn: 'Check', availChecking: 'Проверка...', availAvailable: 'Свободен', availTaken: 'Занят', availNoNs: 'Нет NS', availRetry: 'Повтор',
                 availOverLimit: '>30 симв.', availOverLimitTitle: 'Проверка доступности ограничена доменами до 30 символов',
                 statusFilterLabel: 'Фильтр по статусу доступности', statusOptAll: 'Выбор статуса: Все', statusOptAvailCheck: 'Свободен и Check', statusOptAvailable: 'Свободен', statusOptTaken: 'Занят', statusOptCheck: 'Check',
@@ -3097,7 +3108,7 @@
                 ctaViewFaq: 'FAQを見る →',
                 shareSummaryTitle: 'リンクを共有・エクスポート',
                 editOptionsShortcut: 'キーワード・パターンを変更',
-                thNum: '#', thDomain: 'ドメイン名', thChars: '文字数', thAvail: '空き状況', thInspect: '調査',
+                thNum: '#', thDomain: 'ドメイン名', thChars: '文字数', thExt: 'EXT', thAvail: '空き状況', thInspect: '調査',
                 availCheckBtn: 'Check', availChecking: '確認中...', availAvailable: '取得可能', availTaken: '登録済', availNoNs: 'NSなし', availRetry: '再試行',
                 availOverLimit: '30文字超', availOverLimitTitle: '空き状況チェックは30文字以下のドメインのみ対応しています',
                 statusFilterLabel: '空き状況で絞り込み', statusOptAll: 'ステータス選択: すべて', statusOptAvailCheck: '取得可能 & Check', statusOptAvailable: '取得可能', statusOptTaken: '登録済', statusOptCheck: 'Check',
@@ -4360,6 +4371,7 @@
             setElText('uiThDomainLabel', t.thDomain);
             setElText('uiThScoreLabel', t.thScore);
             setElText('uiThCharsLabel', t.thChars ? stripUiEmoji(t.thChars) : 'Chars');
+            setElText('uiThExtLabel', t.thExt || 'EXT');
             setElText('uiThAvailLabel', t.thAvail);
             setElText('uiThInspect', t.thInspect);
             syncAnalysisSortHeaders();
@@ -8057,6 +8069,19 @@
                 });
             }
 
+            if (analysisSortKey === 'ext') {
+                const extMemo = new Map();
+                const getExt = (d) => {
+                    if (!extMemo.has(d)) extMemo.set(d, extractDomainExtension(d).toLowerCase());
+                    return extMemo.get(d);
+                };
+                return domains.slice().sort((a, b) => {
+                    const extCmp = getExt(a).localeCompare(getExt(b));
+                    if (extCmp !== 0) return extCmp * dirMult;
+                    return (origIndex.get(a) || 0) - (origIndex.get(b) || 0);
+                });
+            }
+
             if (analysisSortKey === 'availability') {
                 const tierMemo = new Map();
                 const getTier = (d) => {
@@ -8096,7 +8121,8 @@
                 { key: 'availability', thId: 'uiThAvail' },
                 { key: 'domain', thId: 'uiThDomain' },
                 { key: 'score', thId: 'uiThScore' },
-                { key: 'chars', thId: 'uiThChars' }
+                { key: 'chars', thId: 'uiThChars' },
+                { key: 'ext', thId: 'uiThExt' }
             ];
             const neutralSvg = '<svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6.5L8 4l2.5 2.5"/><path d="M5.5 9.5L8 12l2.5-2.5"/></svg>';
             const ascSvg = '<svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5V3.5"/><path d="M4.5 7L8 3.5L11.5 7"/></svg>';
@@ -8120,7 +8146,7 @@
         }
 
         function toggleAnalysisSort(columnKey) {
-            const validKeys = ['availability', 'domain', 'score', 'chars'];
+            const validKeys = ['availability', 'domain', 'score', 'chars', 'ext'];
             if (!validKeys.includes(columnKey)) return;
             if (analysisSortKey === columnKey) {
                 analysisSortDir = analysisSortDir === 'asc' ? 'desc' : 'asc';
@@ -8144,6 +8170,7 @@
                         <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-36 sm:w-48 rounded bg-slate-200"></div></td>
                         <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-10 rounded bg-slate-200"></div></td>
                         <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-8 rounded bg-slate-200"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-5 w-12 rounded bg-slate-200"></div></td>
                         <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-6 w-24 rounded bg-slate-200"></div></td>
                         <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-5 rounded bg-slate-200"></div></td>
                     </tr>
@@ -8179,7 +8206,7 @@
 
             if (lastGeneratedDomains.length === 0) {
                 lastVisibleAnalysisDomains = [];
-                listEl.innerHTML = `<tr><td colspan="7" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisEmpty || 'No domains generated yet.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
+                listEl.innerHTML = `<tr><td colspan="8" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisEmpty || 'No domains generated yet.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
                 if (metaEl) metaEl.textContent = '';
                 if (moreWrapEl) moreWrapEl.classList.add('hidden');
                 syncBatchSelectionUi();
@@ -8188,7 +8215,7 @@
 
             if (filtered.length === 0) {
                 lastVisibleAnalysisDomains = [];
-                listEl.innerHTML = `<tr><td colspan="7" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisNoMatch || 'No domains match your filter.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
+                listEl.innerHTML = `<tr><td colspan="8" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisNoMatch || 'No domains match your filter.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
                 if (metaEl) {
                     metaEl.textContent = (t.analysisShowingTpl || 'Generated {generated} ideas · Showing {shown} of {total}')
                         .replace(/\{generated\}/g, String(lastGeneratedDomains.length))
@@ -8221,6 +8248,8 @@
                 const globalIdx = domainToGlobalIndex.has(domain) ? domainToGlobalIndex.get(domain) : idx;
                 const availCellHtml = renderAvailabilityCellHtml(domain, globalIdx, t);
                 const scoreCellHtml = renderDomainScoreCellHtml(domain, t);
+                const extValue = extractDomainExtension(domain) || '-';
+                const safeExtText = escapeHtmlText(extValue);
                 const isSelected = selectedDomains.has(domain);
                 const rowBgClass = idx % 2 === 1 ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]';
 
@@ -8240,6 +8269,9 @@
                         </td>
                         <td data-score-domain="${safeDomainAttr}" class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12px] sm:text-[13px] md:text-[14px] tabular-nums whitespace-nowrap">${scoreCellHtml}</td>
                         <td class="ui-td-chars py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12.5px] sm:text-[13px] md:text-[14px] font-medium tabular-nums text-[#334155] whitespace-nowrap leading-[1.45]">${domain.length}</td>
+                        <td class="ui-td-ext py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left whitespace-nowrap">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md border border-slate-200 bg-slate-100 text-slate-700 text-[11px] sm:text-[12px] font-mono font-semibold">${safeExtText}</span>
+                        </td>
                         <td class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 text-left whitespace-nowrap">
                             <div class="inline-flex items-center justify-start gap-1 sm:gap-1.5">
                                 <a href="${escapeHtmlAttr(ahrefsHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${blTitle}" aria-label="${blTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors">BL</a>
@@ -8447,7 +8479,7 @@
             if (kw1) kw1.value = 'business';
             if (kw2) kw2.value = '';
             if (kw3) kw3.value = '';
-            if (extEl) extEl.value = t.defaultExts || '.com, .net, .co';
+            if (extEl) extEl.value = t.defaultExts || '.com, .net, .org, .io, .ai';
             if (formulaEl) formulaEl.value = t.defaultFormula || '[any] + [vowel] + [consonant]';
 
             const fullWordPermEl = document.getElementById('fullWordPermCheckbox');
