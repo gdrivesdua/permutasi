@@ -1118,7 +1118,6 @@ function localizeIndexHtml(rawHtml, lang, config) {
     const eduMap = {
       uiHeaderTitle: atf.title,
       uiHeaderSub: atf.sub,
-      uiSectionGenTitle: atf.genTitle,
       uiExtLabel: atf.extLabel,
       uiGenBtn: atf.genBtn,
       uiAdvGenBtn: atf.genBtn,
