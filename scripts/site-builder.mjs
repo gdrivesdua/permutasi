@@ -1220,8 +1220,11 @@ function localizeIndexHtml(rawHtml, lang, config) {
           ? item.map((p) => String(p || '').trim()).filter(Boolean).join(' ')
           : String(item || '').trim();
         if (!label) return;
+        const parts = label.split(/\s+/).filter(Boolean);
+        const kw1 = parts[0] || '';
+        const kw2 = parts.length > 1 ? parts.slice(1).join(' ') : '';
         const btnRegex = new RegExp(`(<button\\b[^>]*id="${btnId}"[^>]*data-example=")[^"]*("[^>]*data-kw1=")[^"]*("[^>]*data-kw2=")[^"]*("[^>]*>)([\\s\\S]*?)(<\\/button>)`, 'i');
-        html = html.replace(btnRegex, `$1${escapeHtmlAttr(label)}$2${escapeHtmlAttr(label)}$3$4${escapeHtmlText(label)}$6`);
+        html = html.replace(btnRegex, `$1${escapeHtmlAttr(label)}$2${escapeHtmlAttr(kw1)}$3${escapeHtmlAttr(kw2)}$4${escapeHtmlText(label)}$6`);
       });
     }
   }
