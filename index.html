@@ -757,7 +757,7 @@
         <!-- Full-Width Interactive Domain Results & Availability Panel -->
         <section id="domainAnalysisPanel" aria-labelledby="uiAnalysisTitle" class="scroll-mt-16 md:scroll-mt-20 w-full bg-[#FFFFFF] dark:bg-slate-900 text-[#0F172A] dark:text-slate-100 rounded-xl shadow-sm border border-[#E2E8F0] dark:border-slate-800 overflow-hidden flex flex-col min-w-0">
             <!-- Unified Compact Results Header & Toolbar (Flush with Table) -->
-            <div id="domainBatchActionBar" class="px-3 py-2.5 sm:px-4 sm:py-3 bg-[#F8FAFC] dark:bg-slate-900/95 border-b border-[#E2E8F0] dark:border-slate-800 flex flex-col gap-2">
+            <div id="domainBatchActionBar" class="px-3 py-2 sm:px-4 sm:py-2.5 bg-[#F8FAFC] dark:bg-slate-900/95 border-b border-[#E2E8F0] dark:border-slate-800 flex flex-col gap-2">
                 <!-- Primary Compact Bar: Title + Dynamic Selection Badge + Basic User Controls -->
                 <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-2.5 min-w-0">
                     <div class="flex items-center gap-2 min-w-0">
@@ -788,37 +788,40 @@
                     </div>
                 </div>
 
-                <!-- Active Extension Filter Shortcuts -->
-                <div id="domainExtShortcutBar" class="hidden flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200/80 dark:border-slate-800" role="group" aria-label="Filter results by extension"></div>
+                <!-- Combined Secondary Row: Extension Filter Shortcuts + Inline Advanced / Bulk Tools -->
+                <div id="domainSecondaryToolbarRow" class="pt-2 border-t border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 min-w-0">
+                    <!-- Active Extension Filter Shortcuts -->
+                    <div id="domainExtShortcutBar" class="hidden flex-wrap items-center gap-1 min-w-0" role="group" aria-label="Filter results by extension"></div>
 
-                <!-- Advanced / Power-User Controls (Hidden by default, present in static HTML DOM for SEO/Googlebot) -->
-                <div id="domainAdvancedToolsPanel" class="hidden pt-2 border-t border-slate-200/80 dark:border-slate-800 flex-wrap items-center gap-2">
-                    <div class="w-full sm:w-44 shrink-0">
-                        <label id="uiAnalysisStatusFilterLabel" for="analysisStatusFilter" class="sr-only">Filter by availability status</label>
-                        <select id="analysisStatusFilter" onchange="userChangedStatusFilter = true; renderDomainAnalysisList(true)" class="w-full min-h-[38px] sm:min-h-[36px] px-2.5 py-1 text-[12px] sm:text-[12.5px] font-semibold bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 border border-[#C9D8D8] dark:border-slate-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] dark:focus:ring-blue-500 cursor-pointer">
-                            <option id="uiStatusOptAll" value="all">Select Status: All</option>
-                            <option id="uiStatusOptAvailCheck" value="available_or_check" selected>Available &amp; Check</option>
-                            <option id="uiStatusOptAvailable" value="available">Available</option>
-                            <option id="uiStatusOptTaken" value="taken">Taken</option>
-                            <option id="uiStatusOptCheck" value="check">Check</option>
-                        </select>
+                    <!-- Advanced / Power-User Controls (Hidden by default, present in static HTML DOM for SEO/Googlebot) -->
+                    <div id="domainAdvancedToolsPanel" class="hidden flex-wrap items-center gap-1 sm:gap-1.5 min-w-0">
+                        <button type="button" id="uiResetAnalysisBtn" onclick="resetToHome(event)" title="Reset all form inputs, filters, and results to default and return to top" class="ui-reset-all-btn min-h-[32px] sm:min-h-[30px] inline-flex items-center justify-center gap-1 px-2.5 py-0.5 rounded-md border border-slate-300 dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-700 text-slate-700 dark:text-slate-200 hover:text-rose-700 dark:hover:text-rose-300 text-[11.5px] sm:text-[12px] font-semibold transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500">
+                            <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                            <span id="uiResetAnalysisLabel" class="ui-reset-all-label">Start Over</span>
+                        </button>
+                        <div class="flex-1 sm:flex-initial min-w-[130px] sm:min-w-0 shrink-0">
+                            <label id="uiAnalysisStatusFilterLabel" for="analysisStatusFilter" class="sr-only">Filter by availability status</label>
+                            <select id="analysisStatusFilter" onchange="userChangedStatusFilter = true; renderDomainAnalysisList(true)" class="w-full sm:w-auto sm:max-w-[185px] min-h-[32px] sm:min-h-[30px] px-2 py-0.5 text-[11.5px] sm:text-[12px] font-semibold bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 border border-[#C9D8D8] dark:border-slate-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] dark:focus:ring-blue-500 cursor-pointer">
+                                <option id="uiStatusOptAll" value="all">Select Status: All</option>
+                                <option id="uiStatusOptAvailCheck" value="available_or_check" selected>Available &amp; Check</option>
+                                <option id="uiStatusOptAvailable" value="available">Available</option>
+                                <option id="uiStatusOptTaken" value="taken">Taken</option>
+                                <option id="uiStatusOptCheck" value="check">Check</option>
+                            </select>
+                        </div>
+                        <button type="button" id="uiBatchRemoveBtn" onclick="removeSelectedDomains()" disabled class="min-h-[32px] sm:min-h-[30px] flex-1 sm:flex-initial inline-flex items-center justify-center px-2.5 py-0.5 text-[11.5px] sm:text-[12px] font-semibold rounded-md border border-rose-300 dark:border-rose-800/80 bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 hover:bg-rose-100 dark:hover:bg-rose-900/60 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                            Remove Selected
+                        </button>
+                        <button type="button" id="uiBatchCopyMdBtn" onclick="copyBatchDomains('markdown')" class="min-h-[32px] sm:min-h-[30px] flex-1 sm:flex-initial inline-flex items-center justify-center px-2.5 py-0.5 text-[11.5px] sm:text-[12px] font-medium rounded-md border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                            Copy MD
+                        </button>
+                        <button type="button" id="uiBatchDownloadBtn" onclick="downloadBatchDomainsTxt()" class="min-h-[32px] sm:min-h-[30px] flex-1 sm:flex-initial inline-flex items-center justify-center px-2.5 py-0.5 text-[11.5px] sm:text-[12px] font-medium rounded-md border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                            Export .txt
+                        </button>
+                        <a id="batchDnsBtn" href="https://dnsrobot.net/domain-age-checker" target="_blank" rel="nofollow noopener noreferrer" onclick="return prepareBatchDnsLink(event)" class="min-h-[32px] sm:min-h-[30px] flex-1 sm:flex-initial inline-flex items-center justify-center px-2.5 py-0.5 text-[11.5px] sm:text-[12px] font-medium rounded-md border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
+                            Bulk Check
+                        </a>
                     </div>
-                    <button type="button" id="uiBatchRemoveBtn" onclick="removeSelectedDomains()" disabled class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-semibold rounded-lg border border-rose-300 dark:border-rose-800/80 bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 hover:bg-rose-100 dark:hover:bg-rose-900/60 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
-                        Remove Selected
-                    </button>
-                    <button type="button" id="uiBatchCopyMdBtn" onclick="copyBatchDomains('markdown')" class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-medium rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
-                        Copy MD
-                    </button>
-                    <button type="button" id="uiBatchDownloadBtn" onclick="downloadBatchDomainsTxt()" class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-medium rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
-                        Export .txt
-                    </button>
-                    <a id="batchDnsBtn" href="https://dnsrobot.net/domain-age-checker" target="_blank" rel="nofollow noopener noreferrer" onclick="return prepareBatchDnsLink(event)" class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-medium rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
-                        Bulk Check
-                    </a>
-                    <button type="button" id="uiResetAnalysisBtn" onclick="resetToHome(event)" title="Reset all form inputs, filters, and results to default and return to top" class="ui-reset-all-btn min-h-[38px] sm:min-h-[36px] sm:ml-auto inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-700 text-slate-700 dark:text-slate-200 hover:text-rose-700 dark:hover:text-rose-300 text-[12px] sm:text-[12.5px] font-semibold transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500">
-                        <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-                        <span id="uiResetAnalysisLabel" class="ui-reset-all-label">Start Over</span>
-                    </button>
                 </div>
             </div>
 
@@ -3876,6 +3879,18 @@
             generateDomains();
         }
 
+        function syncSecondaryToolbarRowVisibility() {
+            const rowEl = document.getElementById('domainSecondaryToolbarRow');
+            const extBarEl = document.getElementById('domainExtShortcutBar');
+            const advPanelEl = document.getElementById('domainAdvancedToolsPanel');
+            if (!rowEl) return;
+            const extVisible = Boolean(extBarEl && !extBarEl.classList.contains('hidden'));
+            const advVisible = Boolean(advPanelEl && !advPanelEl.classList.contains('hidden'));
+            const showRow = extVisible || advVisible;
+            rowEl.classList.toggle('hidden', !showRow);
+            rowEl.classList.toggle('flex', showRow);
+        }
+
         function renderDomainExtShortcuts() {
             const barEl = document.getElementById('domainExtShortcutBar');
             if (!barEl) return;
@@ -3886,6 +3901,7 @@
                 barEl.innerHTML = '';
                 barEl.classList.add('hidden');
                 barEl.classList.remove('flex');
+                syncSecondaryToolbarRowVisibility();
                 return;
             }
             barEl.classList.remove('hidden');
@@ -3905,10 +3921,11 @@
                 const cls = isSelected
                     ? 'bg-[#EA580C] text-white border-[#EA580C] shadow-sm font-bold'
                     : 'bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-200 border-[#C9D8D8] dark:border-slate-700 hover:bg-[#FFF7ED] dark:hover:bg-slate-700 hover:border-[#EA580C] font-medium';
-                return `<button type="button" data-ext-filter="${escapeHtmlAttr(ext)}" onclick="toggleExtensionShortcutFilter(this.getAttribute('data-ext-filter'))" aria-pressed="${isSelected ? 'true' : 'false'}" class="inline-flex items-center min-h-[32px] sm:min-h-[28px] px-2.5 py-0.5 rounded-md border text-[12px] font-mono transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C] ${cls}">${escapeHtmlText(ext)}</button>`;
+                return `<button type="button" data-ext-filter="${escapeHtmlAttr(ext)}" onclick="toggleExtensionShortcutFilter(this.getAttribute('data-ext-filter'))" aria-pressed="${isSelected ? 'true' : 'false'}" class="inline-flex items-center min-h-[32px] sm:min-h-[30px] px-2 py-0.5 rounded-md border text-[11.5px] sm:text-[12px] font-mono transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C] ${cls}">${escapeHtmlText(ext)}</button>`;
             }).join('');
 
-            barEl.innerHTML = `<span class="text-[11px] uppercase tracking-wider font-semibold text-[#3F3042] dark:text-slate-400 mr-0.5 shrink-0">${barLabel}</span><button type="button" onclick="toggleExtensionShortcutFilter('')" title="${clearTitle}" aria-pressed="${allActive ? 'true' : 'false'}" class="inline-flex items-center min-h-[32px] sm:min-h-[28px] px-2.5 py-0.5 rounded-md border text-[12px] transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#578686] ${allBtnCls}">${allLabel}</button>${extBtns}`;
+            barEl.innerHTML = `<span class="text-[11px] uppercase tracking-wider font-semibold text-[#3F3042] dark:text-slate-400 mr-0.5 shrink-0">${barLabel}</span><button type="button" onclick="toggleExtensionShortcutFilter('')" title="${clearTitle}" aria-pressed="${allActive ? 'true' : 'false'}" class="inline-flex items-center min-h-[32px] sm:min-h-[30px] px-2 py-0.5 rounded-md border text-[11.5px] sm:text-[12px] transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#578686] ${allBtnCls}">${allLabel}</button>${extBtns}`;
+            syncSecondaryToolbarRowVisibility();
         }
 
         function toggleExtensionShortcutFilter(rawExt) {
@@ -8602,6 +8619,7 @@
             const nextOpen = typeof forceOpen === 'boolean' ? forceOpen : !isCurrentlyOpen;
             panel.classList.toggle('hidden', !nextOpen);
             panel.classList.toggle('flex', nextOpen);
+            syncSecondaryToolbarRowVisibility();
             btn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
             btn.classList.toggle('bg-[#131354]', nextOpen);
             btn.classList.toggle('dark:bg-blue-600', nextOpen);
