@@ -351,8 +351,9 @@
                 </button>
                 <nav id="uiLangNav" aria-label="Language Selector" class="flex items-center shrink-0">
                     <label id="uiLangLabel" for="langSelect" class="sr-only">Language</label>
-                    <select id="langSelect" aria-label="Select Language" title="Select Language" onchange="onUserLanguageSelect(this.value)" class="min-h-[44px] sm:min-h-[40px] w-auto min-w-[3.25rem] bg-white dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 px-2 sm:px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer shrink-0">
-                        <option value="en" title="English (EN)" selected>EN</option>
+                    <select id="langSelect" aria-label="Select Language" title="Select Language" onchange="onUserLanguageSelect(this.value)" class="min-h-[44px] sm:min-h-[40px] w-auto min-w-[3.75rem] bg-white dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 px-2 sm:px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer shrink-0">
+                        <option value="" title="Default / Neutral (.com, .net)" selected>Auto</option>
+                        <option value="en" title="English (EN)">EN</option>
                         <option value="id" title="Indonesia (ID)">ID</option>
                         <option value="es" title="Español (ES)">ES</option>
                         <option value="pt" title="Português (PT)">PT</option>
@@ -411,7 +412,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-10 sm:pt-2.5 sm:pb-8 md:pt-3 md:pb-10 flex flex-col gap-6 md:gap-7">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-10 sm:pt-2.5 sm:pb-8 md:pt-3 md:pb-10 flex flex-col gap-4 sm:gap-5">
 
         <!-- Hero Section -->
         <section class="max-w-4xl flex flex-col">
@@ -428,7 +429,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 items-start">
 
             <!-- Column 1: Generator Form Card -->
-            <section id="generatorSection" aria-labelledby="uiSectionGenTitle" class="lg:col-span-12 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 py-5 px-4 sm:p-6 md:p-7 flex flex-col gap-5 md:gap-6 min-w-0">
+            <section id="generatorSection" aria-labelledby="uiSectionGenTitle" class="lg:col-span-12 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 py-5 px-4 sm:p-6 md:p-7 flex flex-col gap-4 sm:gap-5 min-w-0">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <div class="flex items-start gap-3 min-w-0">
                         <span aria-hidden="true" class="mt-0.5 w-7 h-7 rounded-lg bg-orange-50 dark:bg-orange-950/60 border border-orange-200/80 dark:border-orange-800/60 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
@@ -438,29 +439,39 @@
                             Your Business Name
                         </h2>
                     </div>
-                    <button type="button" id="uiResetFormBtn" onclick="resetToHome(event)" title="Reset all form inputs, filters, and results to default and return to top" class="ui-reset-all-btn hidden sm:inline-flex items-center justify-center gap-1.5 min-h-[40px] px-3.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-700 text-slate-700 dark:text-slate-200 hover:text-rose-700 dark:hover:text-rose-300 text-[13px] font-semibold shadow-sm transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500">
-                        <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-                        <span id="uiResetFormLabel" class="ui-reset-all-label">Start Over</span>
+                    <button type="button" id="uiResetFormBtn" onclick="resetFormInputs(event)" title="Clear keyword inputs and reset form fields" class="inline-flex items-center justify-center gap-1.5 min-h-[38px] px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 text-[12.5px] sm:text-[13px] font-semibold shadow-sm transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+                        <span id="uiResetFormLabel">Reset Form</span>
                     </button>
                 </div>
 
-                <!-- Box 1: Primary Keyword & Extensions (Orange Base #de3723, White Text) -->
-                <div id="primaryKeywordBox" onfocusin="setActiveGenerateSlot('basic')" class="bg-[#de3723] text-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm flex flex-col gap-4">
-                    <div id="basicKeywordExtBlock" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Quick Examples Bar (Top of Main Form for Immediate Reach) -->
+                <div id="quickExamplesBar" class="flex flex-wrap items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/90 dark:border-slate-700/80">
+                    <span id="uiQuickExLabel" class="text-[12px] font-semibold text-slate-600 dark:text-slate-300 mr-1">Quick examples:</span>
+                    <button type="button" id="uiQuickExBtn1" data-kw1="ai" data-kw2="tools" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">ai tools</button>
+                    <button type="button" id="uiQuickExBtn2" data-kw1="coffee" data-kw2="shop" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">coffee shop</button>
+                    <button type="button" id="uiQuickExBtn3" data-kw1="fitness" data-kw2="app" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">fitness app</button>
+                    <button type="button" id="uiQuickExBtn4" data-kw1="micro" data-kw2="saas" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[38px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 dark:hover:border-blue-600 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-colors cursor-pointer whitespace-nowrap">micro saas</button>
+                </div>
+
+                <!-- Box 1: Primary Keyword & Extensions (Mature Crimson #B02E24 / dark #8E241C, White Text) -->
+                <div id="primaryKeywordBox" onfocusin="setActiveGenerateSlot('basic')" class="bg-[#B02E24] dark:bg-[#8E241C] border border-[#96251C] dark:border-[#701B15] text-white rounded-xl p-5 sm:p-6 md:p-7 shadow-sm flex flex-col gap-5">
+                    <div id="basicKeywordExtBlock" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                         <div class="flex flex-col gap-2 min-w-0">
                             <label for="keywordInput" id="uiKeyword1Label" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Primary Keyword:</label>
-                            <input type="text" id="keywordInput" value="business" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[15px] leading-[1.5] bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#de3723]" placeholder="e.g. business, coffee, ai">
+                            <input type="text" id="keywordInput" value="business" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); updateDynamicSEO(); generateDomains();" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[15px] leading-[1.5] bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#B02E24] dark:focus:ring-offset-[#8E241C]" placeholder="e.g. business, coffee, ai">
                         </div>
-                        <div class="flex flex-col gap-2 min-w-0">
-                            <label for="extInput" id="uiExtLabel" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Extensions (e.g. .com, .io):</label>
-                            <input type="text" id="extInput" value=".com, .net, .org, .io, .ai" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); generateDomains()" onkeydown="if(event.key==='Enter'){event.preventDefault();generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#de3723]" placeholder=".com, .net, .org, .io, .ai">
+                        <div class="flex flex-col gap-2.5 min-w-0">
+                            <label for="extInput" id="uiExtLabel" class="block text-[13px] md:text-[14px] font-semibold text-white leading-[1.4]">Extensions (e.g. .com, .net):</label>
+                            <input type="text" id="extInput" value=".com, .net" onfocus="setActiveGenerateSlot('basic')" oninput="setActiveGenerateSlot('basic'); onExtInputChanged()" onblur="normalizeExtInputField({ regenerate: true })" onkeydown="if(event.key==='Enter'){event.preventDefault(); normalizeExtInputField({ regenerate: false }); generateDomains({scrollToResults:true,resetStatusFilter:true,showSkeleton:true});}" class="w-full min-h-[48px] px-3.5 py-2 text-[14px] leading-[1.5] font-mono bg-white text-[#111827] placeholder:text-slate-500 border border-white/90 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#B02E24] dark:focus:ring-offset-[#8E241C]" placeholder=".com, .net">
+                            <div id="extQuickPickWrap" class="mt-0.5 p-3 sm:p-3.5 rounded-xl bg-black/15 dark:bg-black/25 border border-white/15 flex flex-col gap-2.5" role="group" aria-label="Quick-pick domain extensions"></div>
                         </div>
                     </div>
 
                     <!-- Primary Touch-Friendly Action Button & Trust Microcopy -->
-                    <div id="genBtnBasicWrap" class="pt-1 flex flex-col items-center gap-2.5">
+                    <div id="genBtnBasicWrap" class="pt-4 sm:pt-5 border-t border-white/15 flex flex-col items-center justify-center gap-3">
                         <div class="flex justify-center w-full">
-                            <button type="button" onclick="generateDomains({ scrollToResults: true, resetStatusFilter: true, showSkeleton: true })" id="uiGenBtn" class="inline-flex items-center justify-center w-full sm:w-auto min-h-[48px] px-7 py-2.5 bg-[#131354] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#131354] text-[15px] font-bold rounded-lg shadow-md border-2 border-white/95 hover:border-[#131354] transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#de3723]">
+                            <button type="button" onclick="generateDomains({ scrollToResults: true, resetStatusFilter: true, showSkeleton: true })" id="uiGenBtn" class="inline-flex items-center justify-center w-full sm:w-auto sm:min-w-[248px] min-h-[48px] px-8 py-2.5 bg-[#131354] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#131354] text-[15px] font-bold rounded-lg shadow-md border-2 border-white/95 hover:border-[#131354] transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#B02E24] dark:focus-visible:ring-offset-[#8E241C]">
                                 Generate Domain Names
                             </button>
                         </div>
@@ -689,15 +700,6 @@
                         </div>
                     </div>
                 </details>
-
-                <!-- Quick Examples Bar -->
-                <div id="quickExamplesBar" class="flex flex-wrap items-center gap-2 pt-0.5">
-                    <span id="uiQuickExLabel" class="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mr-1">Quick examples:</span>
-                    <button type="button" id="uiQuickExBtn1" data-kw1="ai" data-kw2="tools" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:border-blue-300 dark:hover:border-blue-700 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer">ai tools</button>
-                    <button type="button" id="uiQuickExBtn2" data-kw1="coffee" data-kw2="shop" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:border-blue-300 dark:hover:border-blue-700 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer">coffee shop</button>
-                    <button type="button" id="uiQuickExBtn3" data-kw1="fitness" data-kw2="app" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:border-blue-300 dark:hover:border-blue-700 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer">fitness app</button>
-                    <button type="button" id="uiQuickExBtn4" data-kw1="micro" data-kw2="saas" onclick="applyQuickExample(this.dataset.kw1, this.dataset.kw2)" class="min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:border-blue-300 dark:hover:border-blue-700 text-[12px] sm:text-[13px] font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer">micro saas</button>
-                </div>
             </section>
 
             <!-- Column 2: Results Output & Analysis Table Card (Hidden visually/layout-wise; state & helpers preserved) -->
@@ -753,32 +755,47 @@
         </div>
 
         <!-- Full-Width Interactive Domain Results & Availability Panel -->
-        <section id="domainAnalysisPanel" aria-labelledby="uiAnalysisTitle" class="scroll-mt-16 md:scroll-mt-20 w-full bg-[#FFFFFF] text-[#0F172A] rounded-xl shadow-sm border border-[#E2E8F0] px-2.5 py-4 sm:p-6 md:p-7 flex flex-col gap-4 md:gap-5 min-w-0">
-            <div class="bg-[#ECF2F2] text-[#292929] border border-[#C9D8D8] rounded-xl p-4 sm:p-5 flex flex-col gap-1.5 shadow-sm">
-                <h2 id="uiAnalysisTitle" class="text-[17px] sm:text-[18px] md:text-[20px] font-bold tracking-tight text-[#292929] leading-[1.4]">Domain Results</h2>
-                <p id="uiAnalysisSub" class="text-[13px] md:text-[14px] text-[#292929]/90 leading-[1.5]">Check availability, brand score, backlink history, or archives instantly.</p>
-            </div>
+        <section id="domainAnalysisPanel" aria-labelledby="uiAnalysisTitle" class="scroll-mt-16 md:scroll-mt-20 w-full bg-[#FFFFFF] dark:bg-slate-900 text-[#0F172A] dark:text-slate-100 rounded-xl shadow-sm border border-[#E2E8F0] dark:border-slate-800 overflow-hidden flex flex-col min-w-0">
+            <!-- Unified Compact Results Header & Toolbar (Flush with Table) -->
+            <div id="domainBatchActionBar" class="px-3 py-2.5 sm:px-4 sm:py-3 bg-[#F8FAFC] dark:bg-slate-900/95 border-b border-[#E2E8F0] dark:border-slate-800 flex flex-col gap-2">
+                <!-- Primary Compact Bar: Title + Dynamic Selection Badge + Basic User Controls -->
+                <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-2.5 min-w-0">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <h2 id="uiAnalysisTitle" class="text-[15px] sm:text-[17px] font-bold tracking-tight text-[#0F172A] dark:text-white leading-tight whitespace-nowrap">Domain Results</h2>
+                        <div id="domainSelectionBadgeWrap" class="hidden items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-100/90 dark:bg-orange-950/70 border border-orange-200 dark:border-orange-800/70">
+                            <span id="domainSelectionStatus" class="text-[11.5px] sm:text-[12px] font-semibold text-orange-900 dark:text-orange-200 tabular-nums whitespace-nowrap"></span>
+                            <button type="button" id="uiBatchClearSelBtn" onclick="clearDomainSelection()" class="hidden px-1.5 py-0.5 text-[11px] font-semibold rounded border border-orange-300 dark:border-orange-700 bg-white dark:bg-slate-900 text-orange-900 dark:text-orange-200 hover:bg-orange-50 dark:hover:bg-slate-800 transition-colors leading-none">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
 
-            <div class="flex flex-wrap items-center justify-between gap-2.5">
-                <div id="domainAnalysisMeta" class="text-[11px] md:text-[12px] uppercase tracking-wider font-semibold text-[#3F3042] tabular-nums leading-[1.4]"></div>
-                <button type="button" id="uiResetAnalysisBtn" onclick="resetToHome(event)" title="Reset all form inputs, filters, and results to default and return to top" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[48px] sm:min-h-[40px] px-3.5 py-1.5 rounded-lg border border-[#C9D8D8] bg-[#ECF2F2] hover:bg-rose-50 hover:border-rose-300 text-[#292929] hover:text-rose-700 text-[12px] md:text-[13px] font-semibold transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500">
-                    <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-                    <span id="uiResetAnalysisLabel" class="ui-reset-all-label">Start Over</span>
-                </button>
-            </div>
-
-            <!-- Batch Selection Action Bar -->
-            <div id="domainBatchActionBar" class="flex flex-col gap-3 p-3 sm:p-4 rounded-xl bg-[#ECF2F2] border border-[#C9D8D8]">
-                <div class="flex flex-wrap items-center gap-2.5 min-w-0">
-                    <span id="domainSelectionStatus" class="text-[12px] md:text-[13px] font-semibold text-[#292929] tabular-nums">0 selected</span>
-                    <button type="button" id="uiBatchClearSelBtn" onclick="clearDomainSelection()" class="hidden min-h-[36px] px-2.5 py-1 text-[11px] md:text-[12px] font-medium rounded-md border border-[#C9D8D8] bg-[#FFFFFF] text-[#292929] hover:bg-[#EDEDED] transition-colors">
-                        Clear
-                    </button>
+                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial justify-start sm:justify-end min-w-0">
+                        <button type="button" id="uiAvailOnlyBtn" onclick="toggleAvailableOnlyFilter()" aria-pressed="false" class="min-h-[38px] sm:min-h-[36px] inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-semibold rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#ECF2F2] dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
+                            Available only
+                        </button>
+                        <div class="flex-1 min-w-[140px] sm:flex-initial sm:w-44 md:w-48">
+                            <label id="uiAnalysisFilterLabel" for="analysisFilterInput" class="sr-only">Filter generated domains</label>
+                            <input type="text" id="analysisFilterInput" oninput="onAnalysisFilterInput(this.value)" class="w-full min-h-[38px] sm:min-h-[36px] px-2.5 py-1 text-[12px] sm:text-[12.5px] bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 placeholder:text-[#64748B] dark:placeholder:text-slate-400 border border-[#C9D8D8] dark:border-slate-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] dark:focus:ring-blue-500" placeholder="Filter domains (e.g. .com, -0)...">
+                        </div>
+                        <button type="button" id="uiBatchCopyBtn" onclick="copyBatchDomains('text')" class="min-h-[38px] sm:min-h-[36px] inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-semibold rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                            Copy
+                        </button>
+                        <button type="button" id="uiMoreToolsToggleBtn" onclick="toggleResultsAdvancedTools()" aria-expanded="false" aria-controls="domainAdvancedToolsPanel" title="Show or hide advanced bulk tools and status filter" class="min-h-[38px] sm:min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-1 text-[12px] sm:text-[12.5px] font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                            <span id="uiMoreToolsBtnLabel">More Tools / Bulk</span>
+                            <svg id="uiMoreToolsChevron" aria-hidden="true" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                    </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full">
+
+                <!-- Active Extension Filter Shortcuts -->
+                <div id="domainExtShortcutBar" class="hidden flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200/80 dark:border-slate-800" role="group" aria-label="Filter results by extension"></div>
+
+                <!-- Advanced / Power-User Controls (Hidden by default, present in static HTML DOM for SEO/Googlebot) -->
+                <div id="domainAdvancedToolsPanel" class="hidden pt-2 border-t border-slate-200/80 dark:border-slate-800 flex-wrap items-center gap-2">
                     <div class="w-full sm:w-44 shrink-0">
                         <label id="uiAnalysisStatusFilterLabel" for="analysisStatusFilter" class="sr-only">Filter by availability status</label>
-                        <select id="analysisStatusFilter" onchange="userChangedStatusFilter = true; renderDomainAnalysisList(true)" class="w-full min-h-[48px] sm:min-h-[40px] px-3 py-1.5 text-[12px] md:text-[13px] font-semibold bg-[#FFFFFF] text-[#292929] border border-[#C9D8D8] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] cursor-pointer">
+                        <select id="analysisStatusFilter" onchange="userChangedStatusFilter = true; renderDomainAnalysisList(true)" class="w-full min-h-[38px] sm:min-h-[36px] px-2.5 py-1 text-[12px] sm:text-[12.5px] font-semibold bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 border border-[#C9D8D8] dark:border-slate-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686] dark:focus:ring-blue-500 cursor-pointer">
                             <option id="uiStatusOptAll" value="all">Select Status: All</option>
                             <option id="uiStatusOptAvailCheck" value="available_or_check" selected>Available &amp; Check</option>
                             <option id="uiStatusOptAvailable" value="available">Available</option>
@@ -786,33 +803,27 @@
                             <option id="uiStatusOptCheck" value="check">Check</option>
                         </select>
                     </div>
-                    <button type="button" id="uiAvailOnlyBtn" onclick="toggleAvailableOnlyFilter()" aria-pressed="false" class="min-h-[48px] sm:min-h-[40px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3.5 py-1.5 text-[12px] md:text-[13px] font-semibold rounded-lg border border-[#C9D8D8] bg-[#FFFFFF] text-[#292929] hover:bg-[#ECF2F2] transition-colors whitespace-nowrap">
-                        Available only
-                    </button>
-                    <div class="w-full sm:w-52 md:w-56 shrink-0">
-                        <label id="uiAnalysisFilterLabel" for="analysisFilterInput" class="sr-only">Filter generated domains</label>
-                        <input type="text" id="analysisFilterInput" oninput="renderDomainAnalysisList(true)" class="w-full min-h-[48px] sm:min-h-[40px] px-3 py-1.5 text-[12px] md:text-[13px] bg-[#FFFFFF] text-[#292929] placeholder:text-[#3F3042]/70 border border-[#C9D8D8] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#578686]" placeholder="Filter domains (e.g. .com, -0)...">
-                    </div>
-                    <button type="button" id="uiBatchRemoveBtn" onclick="removeSelectedDomains()" disabled class="min-h-[48px] sm:min-h-[40px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1.5 text-[12px] md:text-[13px] font-semibold rounded-lg border border-rose-300 bg-rose-50 text-rose-800 hover:bg-rose-100 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                    <button type="button" id="uiBatchRemoveBtn" onclick="removeSelectedDomains()" disabled class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-semibold rounded-lg border border-rose-300 dark:border-rose-800/80 bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 hover:bg-rose-100 dark:hover:bg-rose-900/60 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
                         Remove Selected
                     </button>
-                    <button type="button" id="uiBatchCopyBtn" onclick="copyBatchDomains('text')" class="min-h-[48px] sm:min-h-[40px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1.5 text-[12px] md:text-[13px] font-medium rounded-lg border border-[#C9D8D8] bg-[#FFFFFF] text-[#292929] hover:bg-[#EDEDED] disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
-                        Copy
-                    </button>
-                    <button type="button" id="uiBatchCopyMdBtn" onclick="copyBatchDomains('markdown')" class="min-h-[48px] sm:min-h-[40px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1.5 text-[12px] md:text-[13px] font-medium rounded-lg border border-[#C9D8D8] bg-[#FFFFFF] text-[#292929] hover:bg-[#EDEDED] disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                    <button type="button" id="uiBatchCopyMdBtn" onclick="copyBatchDomains('markdown')" class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-medium rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
                         Copy MD
                     </button>
-                    <button type="button" id="uiBatchDownloadBtn" onclick="downloadBatchDomainsTxt()" class="min-h-[48px] sm:min-h-[40px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1.5 text-[12px] md:text-[13px] font-medium rounded-lg border border-[#C9D8D8] bg-[#FFFFFF] text-[#292929] hover:bg-[#EDEDED] disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                    <button type="button" id="uiBatchDownloadBtn" onclick="downloadBatchDomainsTxt()" class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-medium rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
                         Export .txt
                     </button>
-                    <a id="batchDnsBtn" href="https://dnsrobot.net/domain-age-checker" target="_blank" rel="nofollow noopener noreferrer" onclick="return prepareBatchDnsLink(event)" class="min-h-[48px] sm:min-h-[40px] w-full sm:w-auto inline-flex items-center justify-center px-3.5 py-1.5 text-[12px] md:text-[13px] font-medium rounded-lg border border-[#C9D8D8] bg-[#FFFFFF] text-[#292929] hover:bg-[#EDEDED] transition-colors whitespace-nowrap">
+                    <a id="batchDnsBtn" href="https://dnsrobot.net/domain-age-checker" target="_blank" rel="nofollow noopener noreferrer" onclick="return prepareBatchDnsLink(event)" class="min-h-[38px] sm:min-h-[36px] flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-1 text-[12px] sm:text-[12.5px] font-medium rounded-lg border border-[#C9D8D8] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-100 hover:bg-[#EDEDED] dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
                         Bulk Check
                     </a>
+                    <button type="button" id="uiResetAnalysisBtn" onclick="resetToHome(event)" title="Reset all form inputs, filters, and results to default and return to top" class="ui-reset-all-btn min-h-[38px] sm:min-h-[36px] sm:ml-auto inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:border-rose-300 dark:hover:border-rose-700 text-slate-700 dark:text-slate-200 hover:text-rose-700 dark:hover:text-rose-300 text-[12px] sm:text-[12.5px] font-semibold transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500">
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                        <span id="uiResetAnalysisLabel" class="ui-reset-all-label">Start Over</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Responsive Horizontal-Scroll Table -->
-            <div class="overflow-x-auto border border-[#E2E8F0] rounded-xl max-h-[28rem] overflow-y-auto bg-[#FFFFFF] shadow-sm">
+            <!-- Responsive Horizontal-Scroll Table (Flush With Toolbar Above) -->
+            <div class="overflow-x-auto max-h-[30rem] overflow-y-auto bg-[#FFFFFF] dark:bg-slate-900">
                 <table class="w-full text-left border-collapse">
                     <thead class="sticky top-0 z-10 bg-[#EA580C] border-b border-[#C2410C] text-[10.5px] sm:text-[12px] md:text-[13px] uppercase tracking-[0.04em] font-semibold text-[#FFFFFF]">
                         <tr>
@@ -863,12 +874,12 @@
                             <th scope="col" id="uiThNum" class="py-3 px-2 sm:px-3 md:px-3.5 w-px whitespace-nowrap text-left font-semibold tabular-nums">#</th>
                         </tr>
                     </thead>
-                    <tbody id="domainAnalysisList" class="divide-y divide-[#E2E8F0] bg-[#FFFFFF] text-[13px] md:text-[14px] text-[#0F172A] leading-[1.5]"></tbody>
+                    <tbody id="domainAnalysisList" class="divide-y divide-[#E2E8F0] dark:divide-slate-800 bg-[#FFFFFF] dark:bg-slate-900 text-[13px] md:text-[14px] text-[#0F172A] dark:text-slate-100 leading-[1.5]"></tbody>
                 </table>
             </div>
 
-            <div id="domainAnalysisMoreWrap" class="text-center hidden pt-1">
-                <button type="button" id="uiAnalysisLoadMoreBtn" onclick="loadMoreAnalysisRows()" class="min-h-[48px] w-full sm:w-auto px-5 py-2 text-[13px] font-semibold bg-[#F8FAFC] hover:bg-[#FFF7ED] text-[#1E293B] hover:text-[#C2410C] border border-[#E2E8F0] hover:border-[#EA580C]/40 rounded-lg transition-colors">
+            <div id="domainAnalysisMoreWrap" class="text-center hidden px-3 py-2.5 sm:px-4 border-t border-[#E2E8F0] dark:border-slate-800 bg-[#F8FAFC] dark:bg-slate-900/95">
+                <button type="button" id="uiAnalysisLoadMoreBtn" onclick="loadMoreAnalysisRows()" class="min-h-[40px] w-full sm:w-auto px-5 py-1.5 text-[12.5px] sm:text-[13px] font-semibold bg-[#FFFFFF] dark:bg-slate-800 hover:bg-[#FFF7ED] dark:hover:bg-slate-700 text-[#1E293B] dark:text-slate-100 hover:text-[#C2410C] dark:hover:text-orange-300 border border-[#E2E8F0] dark:border-slate-700 hover:border-[#EA580C]/40 rounded-lg transition-colors">
                     Show More (+24)
                 </button>
             </div>
@@ -1178,8 +1189,8 @@
                 kw1Placeholder: 'Contoh: calc, shop',
                 kw2Placeholder: 'Contoh: pro, online',
                 kw3Placeholder: 'Contoh: app, hub',
-                extPlaceholder: '.my.id, .web.id, .biz.id, .id, .com',
-                defaultExts: '.my.id, .web.id, .biz.id, .id, .com',
+                extPlaceholder: '.com, .net, .org, .ai',
+                defaultExts: '.com, .net, .org, .ai',
                 formulaPlaceholder: 'Misal: [primary] + [angka]',
                 outputLabel: 'Daftar Permutasi Domain',
                 eduAriaLabel: 'Panduan, Strategi SEO, dan Validasi Domain',
@@ -1369,8 +1380,8 @@
                 kw1Placeholder: 'Example: calc, shop',
                 kw2Placeholder: 'Example: pro, online',
                 kw3Placeholder: 'Example: app, hub',
-                extPlaceholder: '.com, .net, .org, .io, .ai',
-                defaultExts: '.com, .net, .org, .io, .ai',
+                extPlaceholder: '.com, .net, .io, .ai, .co',
+                defaultExts: '.com, .net, .io, .ai, .co',
                 formulaPlaceholder: 'e.g. [primary] + [number]',
                 outputLabel: 'Generated Domain Permutation List',
                 eduAriaLabel: 'Domain SEO Guide, Strategy & Validation',
@@ -1560,8 +1571,8 @@
                 kw1Placeholder: 'Ejemplo: calc, tienda',
                 kw2Placeholder: 'Ejemplo: pro, online',
                 kw3Placeholder: 'Ejemplo: app, hub',
-                extPlaceholder: '.com, .es, .com.mx',
-                defaultExts: '.com, .net, .es, .com.mx, .com.ar',
+                extPlaceholder: '.com, .net, .org, .io',
+                defaultExts: '.com, .net, .org, .io',
                 formulaPlaceholder: 'Ej: [primary] + [número]',
                 outputLabel: 'Lista de Permutaciones de Dominios',
                 eduAriaLabel: 'Guía, Estrategia SEO y Validación de Dominios',
@@ -1751,8 +1762,8 @@
                 kw1Placeholder: 'Exemplo: calc, loja',
                 kw2Placeholder: 'Exemplo: pro, online',
                 kw3Placeholder: 'Exemplo: app, hub',
-                extPlaceholder: '.com, .pt, .com.br',
-                defaultExts: '.com, .net, .pt, .com.br',
+                extPlaceholder: '.com, .net, .org, .io',
+                defaultExts: '.com, .net, .org, .io',
                 formulaPlaceholder: 'Ex: [primary] + [número]',
                 outputLabel: 'Lista de Permutações de Domínio',
                 eduAriaLabel: 'Guia, Estratégia de SEO e Validação de Domínios',
@@ -1942,8 +1953,8 @@
                 kw1Placeholder: 'Exemple : calc, boutique',
                 kw2Placeholder: 'Exemple : pro, enligne',
                 kw3Placeholder: 'Exemple : app, hub',
-                extPlaceholder: '.com, .fr, .be',
-                defaultExts: '.com, .net, .fr, .be, .ch',
+                extPlaceholder: '.com, .net, .org, .io',
+                defaultExts: '.com, .net, .org, .io',
                 formulaPlaceholder: 'Ex : [primary] + [nombre]',
                 outputLabel: 'Liste des Permutations de Domaines',
                 eduAriaLabel: 'Guide, Stratégie SEO et Validation de Domaines',
@@ -2133,8 +2144,8 @@
                 kw1Placeholder: 'Beispiel: calc, shop',
                 kw2Placeholder: 'Beispiel: pro, online',
                 kw3Placeholder: 'Beispiel: app, hub',
-                extPlaceholder: '.com, .de, .at',
-                defaultExts: '.com, .net, .de, .at, .ch',
+                extPlaceholder: '.com, .net, .eu, .io',
+                defaultExts: '.com, .net, .eu, .io',
                 formulaPlaceholder: 'z. B. [primary] + [nummer]',
                 outputLabel: 'Liste der Domain-Permutationen',
                 eduAriaLabel: 'Domain-SEO-Leitfaden, Strategie & Validierung',
@@ -2324,8 +2335,8 @@
                 kw1Placeholder: 'Пример: calc, shop',
                 kw2Placeholder: 'Пример: pro, online',
                 kw3Placeholder: 'Пример: app, hub',
-                extPlaceholder: '.net, .com, .ru, .su',
-                defaultExts: '.com, .net, .ru, .su',
+                extPlaceholder: '.com, .net, .org, .io',
+                defaultExts: '.com, .net, .org, .io',
                 formulaPlaceholder: 'Напр.: [primary] + [цифра]',
                 outputLabel: 'Список сгенерированных доменов',
                 eduAriaLabel: 'Руководство, стратегия SEO и валидация доменов',
@@ -2515,8 +2526,8 @@
                 kw1Placeholder: '例: calc, shop',
                 kw2Placeholder: '例: pro, online',
                 kw3Placeholder: '例: app, hub',
-                extPlaceholder: '.com, .jp, .co.jp',
-                defaultExts: '.com, .net, .jp, .co.jp',
+                extPlaceholder: '.com, .net, .io, .ai',
+                defaultExts: '.com, .net, .io, .ai',
                 formulaPlaceholder: '例: [primary] + [数字]',
                 outputLabel: '生成されたドメイン一覧',
                 eduAriaLabel: 'ドメインSEOガイド・戦略・バリデーション解説',
@@ -2671,7 +2682,9 @@
         const uiExtraDict = {
             en: {
                 navGen: 'Generator', navResults: 'Results', navGuide: 'Guide', navFaq: 'FAQ',
-                kw1Placeholder: 'e.g. business, coffee, ai', extPlaceholder: '.com, .net, .org, .io, .ai',
+                kw1Placeholder: 'e.g. business, coffee, ai', extPlaceholder: '.com, .net, .io, .ai, .co',
+                extQuickGlobalLabel: 'Global:', extQuickLocalLabel: 'Regional:', extQuickNeutralLabel: 'Quick pick:',
+                extFilterBarLabel: 'Filter ext:', extFilterAllBtn: 'All', extFilterClearTitle: 'Show all extensions',
                 genMicrocopy: '✓ RFC 1035 compliant · ✓ No tracking · ✓ Runs offline in browser',
                 microRfc: '✓ RFC 1035 compliant', microNoTrack: '✓ No tracking', microOffline: '✓ Runs offline in browser',
                 advOptionsLabel: 'Advanced Options',
@@ -2701,8 +2714,9 @@
                 statusFilterLabel: 'Filter by availability status', statusOptAll: 'Select Status: All', statusOptAvailCheck: 'Available & Check', statusOptAvailable: 'Available', statusOptTaken: 'Taken', statusOptCheck: 'Check',
                 selectAllAria: 'Select all visible domains', selectDomainAria: 'Select domain', copyDomainTitle: 'Copy domain',
                 toastSingleCopiedTpl: 'Copied: {domain}',
-                batchSelectedTpl: '{selected} selected', batchAllFallbackTpl: '0 selected · actions apply to all ({total})', batchClearSel: 'Clear',
+                batchSelectedTpl: '{selected} selected', batchClearSel: 'Clear',
                 batchRemoveBtn: 'Remove Selected', batchCopyBtn: 'Copy', batchCopyMdBtn: 'Copy MD', batchExportBtn: 'Export .txt', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'More Tools / Bulk', batchMoreToolsTitle: 'Show or hide advanced bulk tools and status filter',
                 toastBatchRemovedTpl: 'Removed {count} domain(s) from the list.', toastBatchCopiedTpl: 'Copied {count} domain(s) to clipboard.', toastBatchCopiedMdTpl: 'Copied {count} domain(s) as Markdown.',
                 blTitle: 'Ahrefs Backlink Checker', wmTitle: 'Wayback Machine Archive', ggTitle: 'Google Index (site:)',
                 truncNoticeTpl: 'Showing top {shown} shortest domains out of {total} generated to protect browser & script performance.',
@@ -2711,6 +2725,9 @@
                 resetAllBtn: 'Start Over',
                 resetAllTitle: 'Reset all form inputs, filters, and results to default and return to top',
                 toastResetDone: 'Form and results have been reset to default.',
+                resetFormBtn: 'Reset Form',
+                resetFormTitle: 'Clear keyword inputs and reset form fields',
+                toastFormResetDone: 'Form inputs have been cleared.',
                 faqTitle: 'Frequently Asked Questions',
                 faqSub: 'Technical and practical answers for domainers, SEO specialists, startup founders, and developers.',
                 faqs: [
@@ -2731,6 +2748,8 @@
             },
             id: {
                 navGen: 'Generator', navResults: 'Hasil', navGuide: 'Panduan', navFaq: 'FAQ',
+                extQuickGlobalLabel: 'Global:', extQuickLocalLabel: 'Lokal:', extQuickNeutralLabel: 'Pilih cepat:',
+                extFilterBarLabel: 'Filter ekstensi:', extFilterAllBtn: 'Semua', extFilterClearTitle: 'Tampilkan semua ekstensi',
                 genMicrocopy: '✓ Standar RFC 1035 · ✓ Tanpa pelacakan · ✓ Berjalan offline di browser',
                 microRfc: '✓ Standar RFC 1035', microNoTrack: '✓ Tanpa pelacakan', microOffline: '✓ Berjalan offline di browser',
                 advOptionsLabel: 'Opsi Lanjutan',
@@ -2760,8 +2779,9 @@
                 statusFilterLabel: 'Filter berdasarkan status ketersediaan', statusOptAll: 'Pilih Status: Semua', statusOptAvailCheck: 'Available & Check', statusOptAvailable: 'Available', statusOptTaken: 'Taken', statusOptCheck: 'Check',
                 selectAllAria: 'Pilih semua domain yang terlihat', selectDomainAria: 'Pilih domain', copyDomainTitle: 'Salin domain',
                 toastSingleCopiedTpl: 'Disalin: {domain}',
-                batchSelectedTpl: '{selected} dipilih', batchAllFallbackTpl: '0 dipilih · aksi berlaku ke semua ({total})', batchClearSel: 'Batal',
+                batchSelectedTpl: '{selected} dipilih', batchClearSel: 'Batal',
                 batchRemoveBtn: 'Hapus Terpilih', batchCopyBtn: 'Salin', batchCopyMdBtn: 'Salin MD', batchExportBtn: 'Ekspor .txt', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'Alat Lainnya / Bulk', batchMoreToolsTitle: 'Tampilkan atau sembunyikan alat bulk dan filter status lanjutan',
                 toastBatchRemovedTpl: '{count} domain dihapus dari daftar.', toastBatchCopiedTpl: '{count} domain disalin ke clipboard.', toastBatchCopiedMdTpl: '{count} domain disalin sebagai Markdown.',
                 blTitle: 'Cek Backlink Ahrefs', wmTitle: 'Arsip Wayback Machine', ggTitle: 'Indeks Google (site:)',
                 truncNoticeTpl: 'Menampilkan {shown} domain terpendek teratas dari total {total} hasil untuk menjaga kecepatan aplikasi.',
@@ -2770,6 +2790,9 @@
                 resetAllBtn: 'Mulai Ulang',
                 resetAllTitle: 'Kembalikan semua isi formulir, filter, dan hasil ke awal lalu gulir ke atas',
                 toastResetDone: 'Formulir dan hasil telah dikembalikan ke kondisi awal.',
+                resetFormBtn: 'Reset Input',
+                resetFormTitle: 'Kosongkan input kata kunci dan reset kolom formulir',
+                toastFormResetDone: 'Input formulir telah dikosongkan.',
                 faqTitle: 'Pertanyaan yang Sering Diajukan (FAQ)',
                 faqSub: 'Jawaban teknis dan edukatif untuk domainer, spesialis SEO, pendiri startup, maupun pengembang.',
                 faqs: [
@@ -2790,6 +2813,8 @@
             },
             es: {
                 navGen: 'Generador', navResults: 'Resultados', navGuide: 'Guía', navFaq: 'FAQ',
+                extQuickGlobalLabel: 'Global:', extQuickLocalLabel: 'Regional:', extQuickNeutralLabel: 'Selección rápida:',
+                extFilterBarLabel: 'Filtrar ext:', extFilterAllBtn: 'Todas', extFilterClearTitle: 'Mostrar todas las extensiones',
                 genMicrocopy: '✓ Cumple RFC 1035 · ✓ Sin rastreo · ✓ Funciona offline tras cargar',
                 microRfc: '✓ Cumple RFC 1035', microNoTrack: '✓ Sin rastreo', microOffline: '✓ Funciona offline tras cargar',
                 advOptionsLabel: 'Opciones Avanzadas',
@@ -2819,8 +2844,9 @@
                 statusFilterLabel: 'Filtrar por disponibilidad', statusOptAll: 'Elegir Estado: Todos', statusOptAvailCheck: 'Disponible y Check', statusOptAvailable: 'Disponible', statusOptTaken: 'Ocupado', statusOptCheck: 'Check',
                 selectAllAria: 'Seleccionar todos los dominios visibles', selectDomainAria: 'Seleccionar dominio', copyDomainTitle: 'Copiar dominio',
                 toastSingleCopiedTpl: 'Copiado: {domain}',
-                batchSelectedTpl: '{selected} seleccionados', batchAllFallbackTpl: '0 seleccionados · acciones para todos ({total})', batchClearSel: 'Limpiar',
+                batchSelectedTpl: '{selected} seleccionados', batchClearSel: 'Limpiar',
                 batchRemoveBtn: 'Eliminar Selección', batchCopyBtn: 'Copiar', batchCopyMdBtn: 'Copiar MD', batchExportBtn: 'Exportar .txt', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'Más Herramientas / Bulk', batchMoreToolsTitle: 'Mostrar u ocultar herramientas avanzadas y filtro de estado',
                 toastBatchRemovedTpl: 'Se eliminaron {count} dominio(s) de la lista.', toastBatchCopiedTpl: 'Se copiaron {count} dominio(s) al portapapeles.', toastBatchCopiedMdTpl: 'Se copiaron {count} dominio(s) en Markdown.',
                 blTitle: 'Ahrefs Backlink Checker', wmTitle: 'Archivo Wayback Machine', ggTitle: 'Índice Google (site:)',
                 truncNoticeTpl: 'Mostrando los {shown} dominios más cortos de {total} generados para mantener el rendimiento.',
@@ -2829,6 +2855,9 @@
                 resetAllBtn: 'Empezar de Nuevo',
                 resetAllTitle: 'Restablecer todos los campos, filtros y resultados y volver arriba',
                 toastResetDone: 'El formulario y los resultados se restablecieron por completo.',
+                resetFormBtn: 'Limpiar Form',
+                resetFormTitle: 'Limpiar palabras clave y restablecer los campos del formulario',
+                toastFormResetDone: 'Se limpiaron los campos del formulario.',
                 faqTitle: 'Preguntas Frecuentes (FAQ)',
                 faqSub: 'Respuestas técnicas y prácticas para inversores de dominios, especialistas SEO, fundadores de startups y freelancers.',
                 faqs: [
@@ -2849,6 +2878,8 @@
             },
             pt: {
                 navGen: 'Gerador', navResults: 'Resultados', navGuide: 'Guia', navFaq: 'FAQ',
+                extQuickGlobalLabel: 'Globais:', extQuickLocalLabel: 'Regionais:', extQuickNeutralLabel: 'Escolha rápida:',
+                extFilterBarLabel: 'Filtrar ext:', extFilterAllBtn: 'Todas', extFilterClearTitle: 'Mostrar todas as extensões',
                 genMicrocopy: '✓ Padrão RFC 1035 · ✓ Sem rastreamento · ✓ Funciona offline após carregar',
                 microRfc: '✓ Padrão RFC 1035', microNoTrack: '✓ Sem rastreamento', microOffline: '✓ Funciona offline após carregar',
                 advOptionsLabel: 'Opções Avançadas',
@@ -2878,8 +2909,9 @@
                 statusFilterLabel: 'Filtrar por disponibilidade', statusOptAll: 'Selecionar Status: Todos', statusOptAvailCheck: 'Disponível e Check', statusOptAvailable: 'Disponível', statusOptTaken: 'Registrado', statusOptCheck: 'Check',
                 selectAllAria: 'Selecionar todos os domínios visíveis', selectDomainAria: 'Selecionar domínio', copyDomainTitle: 'Copiar domínio',
                 toastSingleCopiedTpl: 'Copiado: {domain}',
-                batchSelectedTpl: '{selected} selecionados', batchAllFallbackTpl: '0 selecionados · ações para todos ({total})', batchClearSel: 'Limpar',
+                batchSelectedTpl: '{selected} selecionados', batchClearSel: 'Limpar',
                 batchRemoveBtn: 'Remover Selecionados', batchCopyBtn: 'Copiar', batchCopyMdBtn: 'Copiar MD', batchExportBtn: 'Exportar .txt', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'Mais Ferramentas / Bulk', batchMoreToolsTitle: 'Mostrar ou ocultar ferramentas avançadas e filtro de status',
                 toastBatchRemovedTpl: '{count} domínio(s) removido(s) da lista.', toastBatchCopiedTpl: '{count} domínio(s) copiado(s).', toastBatchCopiedMdTpl: '{count} domínio(s) copiado(s) em Markdown.',
                 blTitle: 'Ahrefs Backlink Checker', wmTitle: 'Arquivo Wayback Machine', ggTitle: 'Índice Google (site:)',
                 truncNoticeTpl: 'Exibindo os {shown} domínios mais curtos de {total} gerados para preservar o desempenho.',
@@ -2888,6 +2920,9 @@
                 resetAllBtn: 'Recomeçar',
                 resetAllTitle: 'Redefinir todos os campos, filtros e resultados para o padrão e voltar ao topo',
                 toastResetDone: 'O formulário e os resultados foram redefinidos para o padrão.',
+                resetFormBtn: 'Limpar Form',
+                resetFormTitle: 'Limpar palavras-chave e redefinir campos do formulário',
+                toastFormResetDone: 'Os campos do formulário foram limpos.',
                 faqTitle: 'Perguntas Frequentes (FAQ)',
                 faqSub: 'Respostas técnicas e educativas para investidores de domínios, especialistas em SEO, fundadores e freelancers.',
                 faqs: [
@@ -2908,6 +2943,8 @@
             },
             fr: {
                 navGen: 'Générateur', navResults: 'Résultats', navGuide: 'Guide', navFaq: 'FAQ',
+                extQuickGlobalLabel: 'Mondiales :', extQuickLocalLabel: 'Régionales :', extQuickNeutralLabel: 'Choix rapide :',
+                extFilterBarLabel: 'Filtrer ext :', extFilterAllBtn: 'Toutes', extFilterClearTitle: 'Afficher toutes les extensions',
                 genMicrocopy: '✓ Conforme RFC 1035 · ✓ Sans suivi · ✓ Fonctionne hors ligne',
                 microRfc: '✓ Conforme RFC 1035', microNoTrack: '✓ Sans suivi', microOffline: '✓ Fonctionne hors ligne',
                 advOptionsLabel: 'Options Avancées',
@@ -2937,8 +2974,9 @@
                 statusFilterLabel: 'Filtrer par disponibilité', statusOptAll: 'Choisir Statut : Tous', statusOptAvailCheck: 'Disponible & Check', statusOptAvailable: 'Disponible', statusOptTaken: 'Pris', statusOptCheck: 'Check',
                 selectAllAria: 'Sélectionner tous les domaines visibles', selectDomainAria: 'Sélectionner le domaine', copyDomainTitle: 'Copier le domaine',
                 toastSingleCopiedTpl: 'Copié : {domain}',
-                batchSelectedTpl: '{selected} sélectionné(s)', batchAllFallbackTpl: '0 sélectionné · actions sur tous ({total})', batchClearSel: 'Effacer',
+                batchSelectedTpl: '{selected} sélectionné(s)', batchClearSel: 'Effacer',
                 batchRemoveBtn: 'Supprimer la sélection', batchCopyBtn: 'Copier', batchCopyMdBtn: 'Copier MD', batchExportBtn: 'Exporter .txt', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'Plus d’Outils / Bulk', batchMoreToolsTitle: 'Afficher ou masquer les outils avancés et le filtre de statut',
                 toastBatchRemovedTpl: '{count} domaine(s) retiré(s) de la liste.', toastBatchCopiedTpl: '{count} domaine(s) copié(s).', toastBatchCopiedMdTpl: '{count} domaine(s) copié(s) en Markdown.',
                 blTitle: 'Ahrefs Backlink Checker', wmTitle: 'Archives Wayback Machine', ggTitle: 'Index Google (site:)',
                 truncNoticeTpl: 'Affichage des {shown} domaines les plus courts sur {total} générés pour optimiser la réactivité.',
@@ -2947,6 +2985,9 @@
                 resetAllBtn: 'Recommencer',
                 resetAllTitle: 'Réinitialiser tous les champs, filtres et résultats et revenir en haut',
                 toastResetDone: 'Le formulaire et les résultats ont été réinitialisés.',
+                resetFormBtn: 'Vider le Form',
+                resetFormTitle: 'Effacer les mots-clés et réinitialiser les champs du formulaire',
+                toastFormResetDone: 'Les champs du formulaire ont été effacés.',
                 faqTitle: 'Foire Aux Questions (FAQ)',
                 faqSub: 'Réponses techniques et pratiques pour investisseurs de domaines, experts SEO, fondateurs de startups et freelances.',
                 faqs: [
@@ -2967,6 +3008,8 @@
             },
             de: {
                 navGen: 'Generator', navResults: 'Ergebnisse', navGuide: 'Leitfaden', navFaq: 'FAQ',
+                extQuickGlobalLabel: 'Global:', extQuickLocalLabel: 'Regional:', extQuickNeutralLabel: 'Schnellwahl:',
+                extFilterBarLabel: 'Endung:', extFilterAllBtn: 'Alle', extFilterClearTitle: 'Alle Endungen anzeigen',
                 genMicrocopy: '✓ RFC 1035-konform · ✓ Kein Tracking · ✓ Offline nutzbar',
                 microRfc: '✓ RFC 1035-konform', microNoTrack: '✓ Kein Tracking', microOffline: '✓ Offline nutzbar',
                 advOptionsLabel: 'Erweiterte Optionen',
@@ -2996,8 +3039,9 @@
                 statusFilterLabel: 'Nach Verfügbarkeit filtern', statusOptAll: 'Status wählen: Alle', statusOptAvailCheck: 'Frei & Check', statusOptAvailable: 'Frei', statusOptTaken: 'Belegt', statusOptCheck: 'Check',
                 selectAllAria: 'Alle sichtbaren Domains auswählen', selectDomainAria: 'Domain auswählen', copyDomainTitle: 'Domain kopieren',
                 toastSingleCopiedTpl: 'Kopiert: {domain}',
-                batchSelectedTpl: '{selected} ausgewählt', batchAllFallbackTpl: '0 ausgewählt · Aktionen für alle ({total})', batchClearSel: 'Leeren',
+                batchSelectedTpl: '{selected} ausgewählt', batchClearSel: 'Leeren',
                 batchRemoveBtn: 'Auswahl entfernen', batchCopyBtn: 'Kopieren', batchCopyMdBtn: 'MD kopieren', batchExportBtn: '.txt Export', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'Mehr Tools / Bulk', batchMoreToolsTitle: 'Erweiterte Bulk-Tools und Statusfilter ein- oder ausblenden',
                 toastBatchRemovedTpl: '{count} Domain(s) aus der Liste entfernt.', toastBatchCopiedTpl: '{count} Domain(s) kopiert.', toastBatchCopiedMdTpl: '{count} Domain(s) als Markdown kopiert.',
                 blTitle: 'Ahrefs Backlink Checker', wmTitle: 'Wayback Machine Archiv', ggTitle: 'Google-Index (site:)',
                 truncNoticeTpl: 'Es werden die {shown} kürzesten Domains von insgesamt {total} Ergebnissen angezeigt.',
@@ -3006,6 +3050,9 @@
                 resetAllBtn: 'Neu Starten',
                 resetAllTitle: 'Alle Eingaben, Filter und Ergebnisse zurücksetzen und nach oben scrollen',
                 toastResetDone: 'Formular und Ergebnisse wurden auf den Ausgangszustand zurückgesetzt.',
+                resetFormBtn: 'Formular Leeren',
+                resetFormTitle: 'Keywords löschen und Formularfelder zurücksetzen',
+                toastFormResetDone: 'Die Formularfelder wurden geleert.',
                 faqTitle: 'Häufig gestellte Fragen (FAQ)',
                 faqSub: 'Technische und praxisnahe Antworten für Domainer, SEO-Spezialisten, Startup-Gründer und Entwickler.',
                 faqs: [
@@ -3026,6 +3073,8 @@
             },
             ru: {
                 navGen: 'Генератор', navResults: 'Результаты', navGuide: 'Руководство', navFaq: 'FAQ',
+                extQuickGlobalLabel: 'Общие:', extQuickLocalLabel: 'Регион:', extQuickNeutralLabel: 'Быстрый выбор:',
+                extFilterBarLabel: 'Зоны:', extFilterAllBtn: 'Все', extFilterClearTitle: 'Показать все зоны',
                 genMicrocopy: '✓ Стандарт RFC 1035 · ✓ Без отслеживания · ✓ Работает офлайн',
                 microRfc: '✓ Стандарт RFC 1035', microNoTrack: '✓ Без отслеживания', microOffline: '✓ Работает офлайн',
                 advOptionsLabel: 'Расширенные настройки',
@@ -3055,8 +3104,9 @@
                 statusFilterLabel: 'Фильтр по статусу доступности', statusOptAll: 'Выбор статуса: Все', statusOptAvailCheck: 'Свободен и Check', statusOptAvailable: 'Свободен', statusOptTaken: 'Занят', statusOptCheck: 'Check',
                 selectAllAria: 'Выбрать все видимые домены', selectDomainAria: 'Выбрать домен', copyDomainTitle: 'Копировать домен',
                 toastSingleCopiedTpl: 'Скопировано: {domain}',
-                batchSelectedTpl: 'Выбрано: {selected}', batchAllFallbackTpl: 'Выбрано: 0 · действия для всех ({total})', batchClearSel: 'Сброс',
+                batchSelectedTpl: 'Выбрано: {selected}', batchClearSel: 'Сброс',
                 batchRemoveBtn: 'Удалить выбранные', batchCopyBtn: 'Копировать', batchCopyMdBtn: 'Копировать MD', batchExportBtn: 'Экспорт .txt', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: 'Ещё / Bulk', batchMoreToolsTitle: 'Показать или скрыть расширенные инструменты и фильтр статуса',
                 toastBatchRemovedTpl: 'Удалено доменов: {count}.', toastBatchCopiedTpl: 'Скопировано доменов: {count}.', toastBatchCopiedMdTpl: 'Скопировано доменов в Markdown: {count}.',
                 blTitle: 'Проверка обратных ссылок Ahrefs', wmTitle: 'Архив Wayback Machine', ggTitle: 'Индекс Google (site:)',
                 truncNoticeTpl: 'Показаны {shown} самых коротких доменов из {total} сгенерированных для высокой скорости работы.',
@@ -3065,6 +3115,9 @@
                 resetAllBtn: 'Начать заново',
                 resetAllTitle: 'Сбросить все поля, фильтры и результаты в исходное состояние и вернуться вверх',
                 toastResetDone: 'Форма и результаты сброшены в исходное состояние.',
+                resetFormBtn: 'Очистить форму',
+                resetFormTitle: 'Очистить ключевые слова и сбросить поля формы',
+                toastFormResetDone: 'Поля формы очищены.',
                 faqTitle: 'Часто задаваемые вопросы (FAQ)',
                 faqSub: 'Технические и практические ответы для домейнеров, SEO-специалистов, основателей стартапов и разработчиков.',
                 faqs: [
@@ -3085,6 +3138,8 @@
             },
             ja: {
                 navGen: 'ジェネレータ', navResults: '結果一覧', navGuide: 'ガイド', navFaq: 'FAQ',
+                extQuickGlobalLabel: '汎用:', extQuickLocalLabel: '地域:', extQuickNeutralLabel: 'クイック選択:',
+                extFilterBarLabel: '拡張子:', extFilterAllBtn: 'すべて', extFilterClearTitle: 'すべての拡張子を表示',
                 genMicrocopy: '✓ RFC 1035準拠 · ✓ 追跡なし · ✓ 読み込み後はオフライン動作',
                 microRfc: '✓ RFC 1035準拠', microNoTrack: '✓ 追跡なし', microOffline: '✓ 読み込み後はオフライン動作',
                 advOptionsLabel: '詳細オプション',
@@ -3114,8 +3169,9 @@
                 statusFilterLabel: '空き状況で絞り込み', statusOptAll: 'ステータス選択: すべて', statusOptAvailCheck: '取得可能 & Check', statusOptAvailable: '取得可能', statusOptTaken: '登録済', statusOptCheck: 'Check',
                 selectAllAria: '表示中のドメインをすべて選択', selectDomainAria: 'ドメインを選択', copyDomainTitle: 'ドメインをコピー',
                 toastSingleCopiedTpl: 'コピー完了: {domain}',
-                batchSelectedTpl: '{selected} 件選択中', batchAllFallbackTpl: '0 件選択 · 全体（{total} 件）に適用', batchClearSel: '解除',
+                batchSelectedTpl: '{selected} 件選択中', batchClearSel: '解除',
                 batchRemoveBtn: '選択を削除', batchCopyBtn: 'コピー', batchCopyMdBtn: 'MDコピー', batchExportBtn: '.txt保存', batchBulkCheckBtn: 'Bulk Check',
+                batchMoreToolsBtn: '詳細ツール / Bulk', batchMoreToolsTitle: '詳細ツールとステータスフィルターを表示・非表示',
                 toastBatchRemovedTpl: '{count} 件のドメインを削除しました。', toastBatchCopiedTpl: '{count} 件のドメインをコピーしました。', toastBatchCopiedMdTpl: '{count} 件をMarkdown形式でコピーしました。',
                 blTitle: 'Ahrefs バックリンク確認', wmTitle: 'Wayback Machine 履歴', ggTitle: 'Google インデックス (site:)',
                 truncNoticeTpl: 'パフォーマンス維持のため、生成された {total} 件のうち文字数が短い上位 {shown} 件を表示しています。',
@@ -3124,6 +3180,9 @@
                 resetAllBtn: '最初からやり直す',
                 resetAllTitle: 'すべての入力・フィルター・結果を初期状態に戻してページ上部へ移動',
                 toastResetDone: 'フォームと結果を初期状態にリセットしました。',
+                resetFormBtn: '入力をクリア',
+                resetFormTitle: 'キーワード入力を消去してフォーム項目をリセット',
+                toastFormResetDone: 'フォームの入力をクリアしました。',
                 faqTitle: 'よくある質問（FAQ）',
                 faqSub: 'ドメイナー、SEO担当者、スタートアップ創業者、開発者のための技術的・実践的なQ&Aです。',
                 faqs: [
@@ -3442,6 +3501,450 @@
         });
 
         let currentLang = 'en';
+        let explicitLang = null;
+        let activeExtensionFilter = '';
+
+        const LANGUAGE_EXTENSION_CONFIG = {
+            default: {
+                global: ['.com', '.net'],
+                local: []
+            },
+            en: {
+                global: ['.com', '.net', '.io', '.ai', '.co'],
+                local: ['.us', '.co.uk', '.ca', '.au']
+            },
+            id: {
+                global: ['.com', '.net', '.org', '.ai'],
+                local: ['.id', '.co.id', '.my.id', '.web.id']
+            },
+            es: {
+                global: ['.com', '.net', '.org', '.io'],
+                local: ['.es', '.mx', '.com.ar', '.co']
+            },
+            pt: {
+                global: ['.com', '.net', '.org', '.io'],
+                local: ['.com.br', '.pt', '.net.br']
+            },
+            fr: {
+                global: ['.com', '.net', '.org', '.io'],
+                local: ['.fr', '.ca', '.be', '.ch']
+            },
+            de: {
+                global: ['.com', '.net', '.eu', '.io'],
+                local: ['.de', '.at', '.ch']
+            },
+            ru: {
+                global: ['.com', '.net', '.org', '.io'],
+                local: ['.ru', '.рф', '.su', '.by']
+            },
+            ja: {
+                global: ['.com', '.net', '.io', '.ai'],
+                local: ['.jp', '.co.jp', '.ne.jp', '.or.jp']
+            }
+        };
+
+        // Pure RFC 3492 Punycode encoder/decoder for IDN/RFC 1035 compliance (e.g. .рф <-> .xn--p1ai)
+        const PUNYCODE_BASE = 36;
+        const PUNYCODE_TMIN = 1;
+        const PUNYCODE_TMAX = 26;
+        const PUNYCODE_SKEW = 38;
+        const PUNYCODE_DAMP = 700;
+        const PUNYCODE_INITIAL_BIAS = 72;
+        const PUNYCODE_INITIAL_N = 128;
+        const PUNYCODE_DELIMITER = '-';
+        const PUNYCODE_MAX_INT = 0x7fffffff;
+
+        function punycodeAdapt(delta, numPoints, firstTime) {
+            let d = firstTime ? Math.floor(delta / PUNYCODE_DAMP) : (delta >> 1);
+            d += Math.floor(d / numPoints);
+            let k = 0;
+            while (d > (((PUNYCODE_BASE - PUNYCODE_TMIN) * PUNYCODE_TMAX) >> 1)) {
+                d = Math.floor(d / (PUNYCODE_BASE - PUNYCODE_TMIN));
+                k += PUNYCODE_BASE;
+            }
+            return Math.floor(k + (((PUNYCODE_BASE - PUNYCODE_TMIN + 1) * d) / (d + PUNYCODE_SKEW)));
+        }
+
+        function punycodeEncodeDigit(digit) {
+            return String.fromCharCode(digit + 22 + 75 * (digit < 26 ? 1 : 0));
+        }
+
+        function punycodeDecodeDigit(codePoint) {
+            if (codePoint - 0x30 < 0x0a) return codePoint - 0x16;
+            if (codePoint - 0x41 < 0x1a) return codePoint - 0x41;
+            if (codePoint - 0x61 < 0x1a) return codePoint - 0x61;
+            return PUNYCODE_BASE;
+        }
+
+        function punycodeEncode(inputStr) {
+            const input = Array.from(String(inputStr || '').normalize('NFC').toLowerCase()).map(ch => ch.codePointAt(0));
+            const inputLength = input.length;
+            const output = [];
+            let basicLength = 0;
+
+            for (let i = 0; i < inputLength; i++) {
+                if (input[i] < 0x80) {
+                    output.push(String.fromCodePoint(input[i]));
+                    basicLength++;
+                }
+            }
+
+            let handledCPCount = basicLength;
+            if (basicLength > 0) {
+                output.push(PUNYCODE_DELIMITER);
+            }
+
+            let n = PUNYCODE_INITIAL_N;
+            let delta = 0;
+            let bias = PUNYCODE_INITIAL_BIAS;
+
+            while (handledCPCount < inputLength) {
+                let m = PUNYCODE_MAX_INT;
+                for (let i = 0; i < inputLength; i++) {
+                    if (input[i] >= n && input[i] < m) {
+                        m = input[i];
+                    }
+                }
+                if (m - n > Math.floor((PUNYCODE_MAX_INT - delta) / (handledCPCount + 1))) {
+                    return '';
+                }
+                delta += (m - n) * (handledCPCount + 1);
+                n = m;
+
+                for (let i = 0; i < inputLength; i++) {
+                    const cp = input[i];
+                    if (cp < n) {
+                        delta++;
+                        if (delta > PUNYCODE_MAX_INT) return '';
+                    }
+                    if (cp === n) {
+                        let q = delta;
+                        for (let k = PUNYCODE_BASE; ; k += PUNYCODE_BASE) {
+                            const t = k <= bias
+                                ? PUNYCODE_TMIN
+                                : (k >= bias + PUNYCODE_TMAX ? PUNYCODE_TMAX : k - bias);
+                            if (q < t) break;
+                            const qMinusT = q - t;
+                            const baseMinusT = PUNYCODE_BASE - t;
+                            output.push(punycodeEncodeDigit(t + (qMinusT % baseMinusT)));
+                            q = Math.floor(qMinusT / baseMinusT);
+                        }
+                        output.push(punycodeEncodeDigit(q));
+                        bias = punycodeAdapt(delta, handledCPCount + 1, handledCPCount === basicLength);
+                        delta = 0;
+                        handledCPCount++;
+                    }
+                }
+                delta++;
+                n++;
+            }
+            return output.join('');
+        }
+
+        function punycodeDecode(inputStr) {
+            const input = String(inputStr || '').toLowerCase();
+            const output = [];
+            const inputLength = input.length;
+            let basic = input.lastIndexOf(PUNYCODE_DELIMITER);
+            if (basic < 0) basic = 0;
+
+            for (let j = 0; j < basic; j++) {
+                const cp = input.charCodeAt(j);
+                if (cp >= 0x80) return null;
+                output.push(cp);
+            }
+
+            let n = PUNYCODE_INITIAL_N;
+            let i = 0;
+            let bias = PUNYCODE_INITIAL_BIAS;
+            let index = basic > 0 ? basic + 1 : 0;
+
+            while (index < inputLength) {
+                const oldi = i;
+                let w = 1;
+                for (let k = PUNYCODE_BASE; ; k += PUNYCODE_BASE) {
+                    if (index >= inputLength) return null;
+                    const digit = punycodeDecodeDigit(input.charCodeAt(index++));
+                    if (digit >= PUNYCODE_BASE) return null;
+                    if (digit > Math.floor((PUNYCODE_MAX_INT - i) / w)) return null;
+                    i += digit * w;
+                    const t = k <= bias
+                        ? PUNYCODE_TMIN
+                        : (k >= bias + PUNYCODE_TMAX ? PUNYCODE_TMAX : k - bias);
+                    if (digit < t) break;
+                    if (w > Math.floor(PUNYCODE_MAX_INT / (PUNYCODE_BASE - t))) return null;
+                    w *= (PUNYCODE_BASE - t);
+                }
+                const outLen = output.length + 1;
+                bias = punycodeAdapt(i - oldi, outLen, oldi === 0);
+                if (Math.floor(i / outLen) > PUNYCODE_MAX_INT - n) return null;
+                n += Math.floor(i / outLen);
+                i %= outLen;
+                output.splice(i++, 0, n);
+            }
+            try {
+                return String.fromCodePoint(...output);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        const IDN_LABEL_ALLOWED_RE = (() => {
+            try {
+                return new RegExp('^[\\p{L}\\p{N}\\p{M}-]+$', 'u');
+            } catch (e) {
+                return /^[^\s./\\@:]+$/;
+            }
+        })();
+
+        function toAsciiLabel(rawLabel) {
+            const label = String(rawLabel || '').trim().normalize('NFC').toLowerCase().replace(/^-+|-+$/g, '');
+            if (!label) return '';
+            if (/^[\x00-\x7F]+$/.test(label)) {
+                const cleaned = label.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
+                if (!cleaned || cleaned.length > 63 || !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(cleaned)) {
+                    return '';
+                }
+                return cleaned;
+            }
+            if (!IDN_LABEL_ALLOWED_RE.test(label) || /^xn--/i.test(label)) {
+                return '';
+            }
+            const encodedBody = punycodeEncode(label);
+            if (!encodedBody) return '';
+            const ace = `xn--${encodedBody}`;
+            if (ace.length > 63 || !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(ace)) {
+                return '';
+            }
+            return ace;
+        }
+
+        function toAsciiExtension(rawExt) {
+            const norm = normalizeExtensionToken(rawExt);
+            if (!norm) return '';
+            const asciiLabels = norm.slice(1).split('.').map(toAsciiLabel);
+            if (asciiLabels.some(l => !l)) return '';
+            return `.${asciiLabels.join('.')}`;
+        }
+
+        function toAsciiDomain(rawDomain) {
+            const clean = String(rawDomain || '').trim().normalize('NFC').toLowerCase();
+            if (!clean) return '';
+            const labels = clean.split('.');
+            const asciiLabels = labels.map(toAsciiLabel);
+            if (asciiLabels.length < 2 || asciiLabels.some(l => !l)) return '';
+            const joined = asciiLabels.join('.');
+            return joined.length <= 253 ? joined : '';
+        }
+
+        function normalizeExtensionToken(raw) {
+            let clean = String(raw || '').trim().normalize('NFC').toLowerCase();
+            clean = clean.replace(/^\.+|\.+$/g, '').replace(/\.{2,}/g, '.');
+            if (!clean) return '';
+            const rawLabels = clean.split('.');
+            const displayLabels = [];
+            for (let i = 0; i < rawLabels.length; i++) {
+                const part = rawLabels[i].trim().replace(/^-+|-+$/g, '');
+                if (!part) return '';
+                if (/^[\x00-\x7F]+$/.test(part)) {
+                    const cleanedAscii = part.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
+                    if (!cleanedAscii || cleanedAscii.length > 63 || !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(cleanedAscii)) {
+                        return '';
+                    }
+                    displayLabels.push(cleanedAscii);
+                } else {
+                    const ace = toAsciiLabel(part);
+                    if (!ace) return '';
+                    displayLabels.push(part);
+                }
+            }
+            if (displayLabels.length === 0) return '';
+            return `.${displayLabels.join('.')}`;
+        }
+
+        function parseExtensionsInput(rawValue) {
+            const tokens = String(rawValue || '').split(/[\s,;]+/);
+            const out = [];
+            const seenAscii = new Set();
+            for (let i = 0; i < tokens.length; i++) {
+                const norm = normalizeExtensionToken(tokens[i]);
+                if (!norm) continue;
+                const asciiKey = toAsciiExtension(norm) || norm;
+                if (!seenAscii.has(asciiKey)) {
+                    seenAscii.add(asciiKey);
+                    out.push(norm);
+                }
+            }
+            return out;
+        }
+
+        function getActiveQuickPickExtensionConfig() {
+            if (!explicitLang || !LANGUAGE_EXTENSION_CONFIG[explicitLang]) {
+                return LANGUAGE_EXTENSION_CONFIG.default;
+            }
+            return LANGUAGE_EXTENSION_CONFIG[explicitLang];
+        }
+
+        function renderExtensionQuickPicks() {
+            const container = document.getElementById('extQuickPickWrap');
+            if (!container) return;
+            const t = dict[currentLang] || dict.en;
+            const cfg = getActiveQuickPickExtensionConfig();
+            const extInputEl = document.getElementById('extInput');
+            const activeExts = parseExtensionsInput(extInputEl ? extInputEl.value : '');
+            const activeAsciiSet = new Set(activeExts.map(e => toAsciiExtension(e) || e));
+
+            const buildGroupHtml = (labelText, list) => {
+                if (!Array.isArray(list) || list.length === 0) return '';
+                const chipsHtml = list.map((ext) => {
+                    const normExt = normalizeExtensionToken(ext) || ext;
+                    const asciiKey = toAsciiExtension(normExt) || normExt;
+                    const isActive = activeAsciiSet.has(asciiKey);
+                    const btnCls = isActive
+                        ? 'bg-white hover:bg-slate-50 text-[#131354] border-white shadow-sm font-bold'
+                        : 'bg-white/10 hover:bg-white/20 text-white/95 border-white/40 font-medium';
+                    const stateIcon = isActive
+                        ? '<span aria-hidden="true" class="inline-flex items-center justify-center text-[11px] font-extrabold leading-none text-[#131354]">✓</span>'
+                        : '<span aria-hidden="true" class="inline-flex items-center justify-center text-[12px] font-bold leading-none opacity-85">+</span>';
+                    return `<button type="button" data-ext-chip="${escapeHtmlAttr(normExt)}" onclick="toggleExtensionQuickPick(this.getAttribute('data-ext-chip'))" aria-pressed="${isActive ? 'true' : 'false'}" class="inline-flex items-center gap-1.5 min-h-[34px] px-3 py-1 rounded-lg border text-[12px] font-mono transition-all cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-[#B02E24] dark:focus-visible:ring-offset-[#8E241C] ${btnCls}">${stateIcon}<span>${escapeHtmlText(normExt)}</span></button>`;
+                }).join('');
+                return `<div class="flex flex-wrap items-center gap-2"><span class="text-[11px] font-semibold uppercase tracking-wide text-white/90 mr-0.5 shrink-0">${escapeHtmlText(labelText)}</span>${chipsHtml}</div>`;
+            };
+
+            if (!explicitLang) {
+                container.innerHTML = buildGroupHtml(t.extQuickNeutralLabel || 'Quick pick:', cfg.global);
+                return;
+            }
+            const globalHtml = buildGroupHtml(t.extQuickGlobalLabel || 'Global:', cfg.global);
+            const localHtml = buildGroupHtml(t.extQuickLocalLabel || 'Local:', cfg.local);
+            container.innerHTML = `${globalHtml}${localHtml}`;
+        }
+
+        function toggleExtensionQuickPick(rawExt) {
+            const normExt = normalizeExtensionToken(rawExt);
+            if (!normExt) return;
+            const extInputEl = document.getElementById('extInput');
+            if (!extInputEl) return;
+            const current = parseExtensionsInput(extInputEl.value);
+            const targetAscii = toAsciiExtension(normExt) || normExt;
+            const existingIdx = current.findIndex(item => (toAsciiExtension(item) || item) === targetAscii);
+            if (existingIdx !== -1) {
+                current.splice(existingIdx, 1);
+            } else {
+                current.push(normExt);
+            }
+            extInputEl.value = current.join(', ');
+            setActiveGenerateSlot('basic');
+            syncActiveExtensionFilterWithActiveList(current);
+            renderExtensionQuickPicks();
+            generateDomains();
+        }
+
+        function syncActiveExtensionFilterWithActiveList(activeExts) {
+            if (!activeExtensionFilter) return;
+            const targetAscii = toAsciiExtension(activeExtensionFilter) || activeExtensionFilter;
+            const stillPresent = (activeExts || []).some(e => (toAsciiExtension(e) || e) === targetAscii);
+            if (!stillPresent) {
+                const filterInputEl = document.getElementById('analysisFilterInput');
+                if (filterInputEl && (toAsciiExtension(filterInputEl.value.trim()) || filterInputEl.value.trim().toLowerCase()) === targetAscii) {
+                    filterInputEl.value = '';
+                }
+                activeExtensionFilter = '';
+            }
+        }
+
+        function normalizeExtInputField(options) {
+            const extInputEl = document.getElementById('extInput');
+            if (!extInputEl) return;
+            const parsed = parseExtensionsInput(extInputEl.value);
+            const formatted = parsed.join(', ');
+            if (extInputEl.value !== formatted) {
+                extInputEl.value = formatted;
+            }
+            syncActiveExtensionFilterWithActiveList(parsed);
+            renderExtensionQuickPicks();
+            if (!options || options.regenerate !== false) {
+                generateDomains();
+            }
+        }
+
+        function onExtInputChanged() {
+            const extInputEl = document.getElementById('extInput');
+            const parsed = parseExtensionsInput(extInputEl ? extInputEl.value : '');
+            syncActiveExtensionFilterWithActiveList(parsed);
+            renderExtensionQuickPicks();
+            generateDomains();
+        }
+
+        function renderDomainExtShortcuts() {
+            const barEl = document.getElementById('domainExtShortcutBar');
+            if (!barEl) return;
+            const t = dict[currentLang] || dict.en;
+            const extInputEl = document.getElementById('extInput');
+            const activeExts = parseExtensionsInput(extInputEl ? extInputEl.value : '');
+            if (activeExts.length === 0) {
+                barEl.innerHTML = '';
+                barEl.classList.add('hidden');
+                barEl.classList.remove('flex');
+                return;
+            }
+            barEl.classList.remove('hidden');
+            barEl.classList.add('flex');
+            const activeAscii = activeExtensionFilter ? (toAsciiExtension(activeExtensionFilter) || activeExtensionFilter) : '';
+            const allActive = !activeAscii;
+            const allBtnCls = allActive
+                ? 'bg-[#131354] dark:bg-blue-600 text-white border-[#131354] dark:border-blue-500 shadow-sm font-bold'
+                : 'bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-200 border-[#C9D8D8] dark:border-slate-700 hover:bg-[#FFF7ED] dark:hover:bg-slate-700 hover:border-[#EA580C] font-medium';
+            const allLabel = escapeHtmlText(t.extFilterAllBtn || 'All');
+            const clearTitle = escapeHtmlAttr(t.extFilterClearTitle || 'Show all extensions');
+            const barLabel = escapeHtmlText(t.extFilterBarLabel || 'Filter EXT:');
+
+            const extBtns = activeExts.map((ext) => {
+                const asciiKey = toAsciiExtension(ext) || ext;
+                const isSelected = Boolean(activeAscii && activeAscii === asciiKey);
+                const cls = isSelected
+                    ? 'bg-[#EA580C] text-white border-[#EA580C] shadow-sm font-bold'
+                    : 'bg-[#FFFFFF] dark:bg-slate-800 text-[#292929] dark:text-slate-200 border-[#C9D8D8] dark:border-slate-700 hover:bg-[#FFF7ED] dark:hover:bg-slate-700 hover:border-[#EA580C] font-medium';
+                return `<button type="button" data-ext-filter="${escapeHtmlAttr(ext)}" onclick="toggleExtensionShortcutFilter(this.getAttribute('data-ext-filter'))" aria-pressed="${isSelected ? 'true' : 'false'}" class="inline-flex items-center min-h-[32px] sm:min-h-[28px] px-2.5 py-0.5 rounded-md border text-[12px] font-mono transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C] ${cls}">${escapeHtmlText(ext)}</button>`;
+            }).join('');
+
+            barEl.innerHTML = `<span class="text-[11px] uppercase tracking-wider font-semibold text-[#3F3042] dark:text-slate-400 mr-0.5 shrink-0">${barLabel}</span><button type="button" onclick="toggleExtensionShortcutFilter('')" title="${clearTitle}" aria-pressed="${allActive ? 'true' : 'false'}" class="inline-flex items-center min-h-[32px] sm:min-h-[28px] px-2.5 py-0.5 rounded-md border text-[12px] transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#578686] ${allBtnCls}">${allLabel}</button>${extBtns}`;
+        }
+
+        function toggleExtensionShortcutFilter(rawExt) {
+            const filterEl = document.getElementById('analysisFilterInput');
+            const normExt = normalizeExtensionToken(rawExt);
+            if (!normExt) {
+                activeExtensionFilter = '';
+                if (filterEl) filterEl.value = '';
+            } else {
+                const nextAscii = toAsciiExtension(normExt) || normExt;
+                const currentAscii = activeExtensionFilter ? (toAsciiExtension(activeExtensionFilter) || activeExtensionFilter) : '';
+                if (currentAscii && currentAscii === nextAscii) {
+                    activeExtensionFilter = '';
+                    if (filterEl) filterEl.value = '';
+                } else {
+                    activeExtensionFilter = normExt;
+                    if (filterEl) filterEl.value = normExt;
+                }
+            }
+            renderDomainAnalysisList(true);
+        }
+
+        function onAnalysisFilterInput(val) {
+            const trimmed = String(val || '').trim().toLowerCase();
+            if (!trimmed) {
+                activeExtensionFilter = '';
+            } else if (activeExtensionFilter) {
+                const activeAscii = toAsciiExtension(activeExtensionFilter) || activeExtensionFilter;
+                const typedAscii = toAsciiExtension(trimmed) || trimmed;
+                if (typedAscii !== activeAscii) {
+                    activeExtensionFilter = '';
+                }
+            }
+            renderDomainAnalysisList(true);
+        }
+
         let lastGeneratedCount = 0;
         let lastGeneratedTotalRaw = 0;
         let lastGeneratedDomains = [];
@@ -4126,47 +4629,93 @@
         }
 
         function onUserLanguageSelect(lang) {
-            if (!dict[lang]) return;
-            try {
-                localStorage.setItem('preferredLang', lang);
-                localStorage.setItem('preferredLanguage', lang);
-            } catch (e) {}
-            if (isDedicatedRouteMode()) {
-                const { kw, kw2, kw3 } = getActiveKeywords();
-                const targetUrl = getLocalizedHomeUrl(lang, kw, kw2, kw3);
-                if (window.location.href !== targetUrl) {
-                    window.location.assign(targetUrl);
+            const cleanLang = String(lang || '').trim().toLowerCase();
+            if (!cleanLang) {
+                try {
+                    localStorage.removeItem('preferredLangExplicit');
+                } catch (e) {}
+                if (isDedicatedRouteMode() && detectPathLanguage()) {
+                    const { kw, kw2, kw3 } = getActiveKeywords();
+                    const params = new URLSearchParams();
+                    if (kw && kw !== 'business') params.set('kw', kw);
+                    if (kw2) params.set('kw2', kw2);
+                    if (kw3) params.set('kw3', kw3);
+                    const query = params.toString() ? `?${params.toString()}` : '';
+                    window.location.assign(`${window.location.origin}/${query}`);
                     return;
                 }
+                explicitLang = null;
+                changeLanguage('en', { explicit: false });
+                return;
             }
-            changeLanguage(lang);
+            if (!dict[cleanLang]) return;
+            try {
+                localStorage.setItem('preferredLang', cleanLang);
+                localStorage.setItem('preferredLanguage', cleanLang);
+                localStorage.setItem('preferredLangExplicit', cleanLang);
+            } catch (e) {}
+            if (isDedicatedRouteMode()) {
+                const pathLang = detectPathLanguage();
+                const needsRouteChange = (cleanLang === 'en' && Boolean(pathLang)) || (cleanLang !== 'en' && pathLang !== cleanLang);
+                if (needsRouteChange) {
+                    const { kw, kw2, kw3 } = getActiveKeywords();
+                    const targetUrl = getLocalizedHomeUrl(cleanLang, kw, kw2, kw3);
+                    if (window.location.href !== targetUrl) {
+                        window.location.assign(targetUrl);
+                        return;
+                    }
+                }
+            }
+            explicitLang = cleanLang;
+            changeLanguage(cleanLang, { explicit: true });
         }
 
         function selectLanguageFromFooter(event, lang) {
             if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) {
                 return;
             }
+            const cleanLang = String(lang || '').trim().toLowerCase();
+            if (!dict[cleanLang]) return;
+            try {
+                localStorage.setItem('preferredLang', cleanLang);
+                localStorage.setItem('preferredLanguage', cleanLang);
+                localStorage.setItem('preferredLangExplicit', cleanLang);
+            } catch (e) {}
             if (isDedicatedRouteMode()) {
-                try {
-                    localStorage.setItem('preferredLang', lang);
-                    localStorage.setItem('preferredLanguage', lang);
-                } catch (e) {}
-                return;
+                const pathLang = detectPathLanguage();
+                const alreadyOnTargetRoute = (cleanLang === 'en' && !pathLang) || (pathLang === cleanLang);
+                if (!alreadyOnTargetRoute) {
+                    return;
+                }
             }
             if (event) event.preventDefault();
+            explicitLang = cleanLang;
             const selectEl = document.getElementById('langSelect');
-            if (selectEl) selectEl.value = lang;
-            changeLanguage(lang);
+            if (selectEl) selectEl.value = cleanLang;
+            changeLanguage(cleanLang, { explicit: true });
         }
 
-        function changeLanguage(lang) {
+        function changeLanguage(lang, options) {
             if (!dict[lang]) return;
+            if (options && typeof options.explicit === 'boolean') {
+                explicitLang = options.explicit ? lang : null;
+            }
             currentLang = lang;
             const t = dict[lang];
 
+            const langSelectEl = document.getElementById('langSelect');
+            if (langSelectEl) {
+                langSelectEl.value = explicitLang || '';
+            }
+
             try {
-                localStorage.setItem('preferredLang', lang);
-                localStorage.setItem('preferredLanguage', lang);
+                if (explicitLang) {
+                    localStorage.setItem('preferredLang', lang);
+                    localStorage.setItem('preferredLanguage', lang);
+                    localStorage.setItem('preferredLangExplicit', lang);
+                } else {
+                    localStorage.removeItem('preferredLangExplicit');
+                }
                 syncShareParamsToLocation();
             } catch (e) {}
 
@@ -4221,15 +4770,23 @@
             if (t.kw1Placeholder) document.getElementById('keywordInput').setAttribute('placeholder', t.kw1Placeholder);
             if (t.kw2Placeholder) document.getElementById('keyword2Input').setAttribute('placeholder', t.kw2Placeholder);
             if (t.kw3Placeholder) document.getElementById('keyword3Input').setAttribute('placeholder', t.kw3Placeholder);
-            if (t.extPlaceholder) document.getElementById('extInput').setAttribute('placeholder', t.extPlaceholder);
+            const targetDefaultExts = explicitLang ? (t.defaultExts || '.com, .net') : '.com, .net';
+            const targetExtPlaceholder = explicitLang ? (t.extPlaceholder || targetDefaultExts) : '.com, .net';
             const extInputEl = document.getElementById('extInput');
-            if (extInputEl && t.defaultExts) {
-                const currentExtVal = extInputEl.value.trim();
-                const isDefaultExtVal = !currentExtVal || Object.values(dict).some(item => item.defaultExts === currentExtVal);
-                if (isDefaultExtVal) {
-                    extInputEl.value = t.defaultExts;
+            if (extInputEl) {
+                extInputEl.setAttribute('placeholder', targetExtPlaceholder);
+                const currentExtNorm = parseExtensionsInput(extInputEl.value).join(', ');
+                const knownDefaults = new Set(['', '.com, .net']);
+                Object.values(dict).forEach((item) => {
+                    if (item && item.defaultExts) {
+                        knownDefaults.add(parseExtensionsInput(item.defaultExts).join(', '));
+                    }
+                });
+                if (knownDefaults.has(currentExtNorm)) {
+                    extInputEl.value = targetDefaultExts;
                 }
             }
+            renderExtensionQuickPicks();
             if (t.formulaPlaceholder) document.getElementById('formulaInput').setAttribute('placeholder', t.formulaPlaceholder);
 
             document.getElementById('uiClearBtn').innerText = t.clearBtn;
@@ -4318,6 +4875,10 @@
             document.querySelectorAll('.ui-reset-all-btn').forEach((btn) => {
                 if (t.resetAllTitle) btn.setAttribute('title', t.resetAllTitle);
             });
+            const resetFormBtnEl = document.getElementById('uiResetFormBtn');
+            const resetFormLabelEl = document.getElementById('uiResetFormLabel');
+            if (resetFormLabelEl && t.resetFormBtn) resetFormLabelEl.innerText = t.resetFormBtn;
+            if (resetFormBtnEl && t.resetFormTitle) resetFormBtnEl.setAttribute('title', t.resetFormTitle);
             document.getElementById('uiCopyBtn').innerText = t.copyBtn;
             document.getElementById('uiDownloadBtn').innerText = t.downloadBtn;
             document.getElementById('uiDnsBtn').innerText = t.dnsBtn;
@@ -4341,8 +4902,6 @@
 
             const analysisTitleEl = document.getElementById('uiAnalysisTitle');
             if (analysisTitleEl && t.analysisTitle) analysisTitleEl.innerText = t.analysisTitle;
-            const analysisSubEl = document.getElementById('uiAnalysisSub');
-            if (analysisSubEl && t.analysisSub) analysisSubEl.innerText = t.analysisSub;
             const analysisFilterLabelEl = document.getElementById('uiAnalysisFilterLabel');
             if (analysisFilterLabelEl && t.analysisFilterLabel) analysisFilterLabelEl.innerText = t.analysisFilterLabel;
             const analysisFilterInputEl = document.getElementById('analysisFilterInput');
@@ -4387,6 +4946,9 @@
             setElText('uiBatchCopyMdBtn', t.batchCopyMdBtn);
             setElText('uiBatchDownloadBtn', t.batchExportBtn);
             setElText('batchDnsBtn', t.batchBulkCheckBtn);
+            setElText('uiMoreToolsBtnLabel', t.batchMoreToolsBtn);
+            const moreToolsToggleEl = document.getElementById('uiMoreToolsToggleBtn');
+            if (moreToolsToggleEl && t.batchMoreToolsTitle) moreToolsToggleEl.setAttribute('title', t.batchMoreToolsTitle);
             const selectAllEl = document.getElementById('selectAllVisibleCheckbox');
             if (selectAllEl && t.selectAllAria) selectAllEl.setAttribute('aria-label', t.selectAllAria);
             setElText('uiFaqTitle', t.faqTitle);
@@ -4743,37 +5305,50 @@
 
         function validateRfc1035Domain(pat, ext) {
             if (!pat || !ext) return null;
-            let cleanExt = String(ext).trim().toLowerCase();
+            const cleanExt = normalizeExtensionToken(ext);
             if (!cleanExt) return null;
-            if (!cleanExt.startsWith('.')) cleanExt = '.' + cleanExt;
 
             const extLabelsRaw = cleanExt.slice(1).split('.');
             if (extLabelsRaw.length === 0) return null;
 
-            const sanitizedExtLabels = [];
+            const displayExtLabels = [];
+            const asciiExtLabels = [];
             for (const rawExtLabel of extLabelsRaw) {
-                const cleanExtLabel = rawExtLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
-                if (!cleanExtLabel || cleanExtLabel.length > 63 || !/[a-z0-9]/.test(cleanExtLabel)) {
+                const cleanExtLabel = String(rawExtLabel || '').trim().normalize('NFC').toLowerCase().replace(/^-+|-+$/g, '');
+                const asciiExtLabel = toAsciiLabel(cleanExtLabel);
+                if (!cleanExtLabel || !asciiExtLabel || asciiExtLabel.length > 63 || !/[a-z0-9]/.test(asciiExtLabel)) {
                     return null;
                 }
-                sanitizedExtLabels.push(cleanExtLabel);
+                displayExtLabels.push(cleanExtLabel);
+                asciiExtLabels.push(asciiExtLabel);
             }
 
-            const patLabelsRaw = String(pat).toLowerCase().split('.');
-            const sanitizedPatLabels = [];
+            const patLabelsRaw = String(pat).trim().normalize('NFC').toLowerCase().split('.');
+            const displayPatLabels = [];
+            const asciiPatLabels = [];
             for (const rawPatLabel of patLabelsRaw) {
-                const cleanPatLabel = rawPatLabel.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
-                if (!cleanPatLabel || cleanPatLabel.length > 63) {
-                    return null;
+                const trimmedPat = String(rawPatLabel || '').trim().replace(/^-+|-+$/g, '');
+                if (!trimmedPat) return null;
+                if (/^[\x00-\x7F]+$/.test(trimmedPat)) {
+                    const cleanPatLabel = trimmedPat.replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
+                    if (!cleanPatLabel || cleanPatLabel.length > 63 || !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(cleanPatLabel)) {
+                        return null;
+                    }
+                    displayPatLabels.push(cleanPatLabel);
+                    asciiPatLabels.push(cleanPatLabel);
+                } else {
+                    const asciiPatLabel = toAsciiLabel(trimmedPat);
+                    if (!asciiPatLabel) return null;
+                    displayPatLabels.push(trimmedPat);
+                    asciiPatLabels.push(asciiPatLabel);
                 }
-                sanitizedPatLabels.push(cleanPatLabel);
             }
 
-            const finalDomain = sanitizedPatLabels.join('.') + '.' + sanitizedExtLabels.join('.');
-            if (finalDomain.length > 253) {
+            const asciiDomain = asciiPatLabels.join('.') + '.' + asciiExtLabels.join('.');
+            if (asciiDomain.length > 253) {
                 return null;
             }
-            return finalDomain;
+            return displayPatLabels.join('.') + '.' + displayExtLabels.join('.');
         }
 
         function openAdvancedOptionsAndFocus() {
@@ -5212,7 +5787,8 @@
             const activeKeywords = [keyword, keyword2, keyword3].filter(Boolean);
             updatePresetLiveExamples(keyword, keyword2);
 
-            const extensions = document.getElementById('extInput').value.split(',').map(e => e.trim().toLowerCase()).filter(e => e);
+            const extensions = parseExtensionsInput(document.getElementById('extInput').value);
+            syncActiveExtensionFilterWithActiveList(extensions);
             const formula = document.getElementById('formulaInput').value.trim();
             const fullWordPermEl = document.getElementById('fullWordPermCheckbox');
             const includeFullWordPermutations = fullWordPermEl ? fullWordPermEl.checked : true;
@@ -5340,7 +5916,8 @@
                 wordOrderResult.variants.forEach(variant => rawPatternSet.add(variant));
             }
 
-            if (formula) {
+            const FORMULA_USES_KEYWORD_RE = /\[(?:any|primary|keyword|palabra_clave|palavra_chave|mot_cle|schlüsselwort|ключевое_слово|キーワード|secondary|keyword2|palabra_clave2|palavra_chave2|mot_cle2|schlüsselwort2|ключевое_слово2|キーワード2|tertiary|keyword3|palabra_clave3|palavra_chave3|mot_cle3|schlüsselwort3|ключевое_слово3|キーワード3|short4|words-dash|swap-last-vowel|swap-last-cons)\]/i;
+            if (formula && (activeKeywords.length > 0 || !FORMULA_USES_KEYWORD_RE.test(formula))) {
                 const formulaPatterns = (/^\s*\[short4\]\s*\+\s*\[cvc\|vcv\]\s*$/i.test(formula))
                     ? short4CvcVcvCombined
                     : expand(formula);
@@ -5442,10 +6019,11 @@
 
             const dnsBtn = document.getElementById('uiDnsBtn');
             if (dnsBtn) {
+                const dnsDomains = results.map(d => toAsciiDomain(d) || d);
                 dnsBtn.setAttribute(
                     'href',
-                    results.length > 0
-                        ? `https://dnsrobot.net/domain-age-checker?domains=${results.join('%2C')}`
+                    dnsDomains.length > 0
+                        ? `https://dnsrobot.net/domain-age-checker?domains=${dnsDomains.join('%2C')}`
                         : 'https://dnsrobot.net/domain-age-checker'
                 );
             }
@@ -5454,6 +6032,8 @@
             hasDoneInitialAutoCheck = true;
 
             scheduleAutoAvailabilityChecks(results, isImmediateAutoCheck);
+            renderExtensionQuickPicks();
+            renderDomainExtShortcuts();
             if (options && options.showSkeleton) {
                 renderAnalysisSkeleton(document.getElementById('domainAnalysisList'));
                 analysisSkeletonTimer = setTimeout(() => {
@@ -5847,7 +6427,10 @@
             br: 'https://rdap.registro.br/',
             nl: 'https://rdap.sidn.nl/',
             us: 'https://rdap.nic.us/',
-            ch: 'https://rdap.nic.ch/'
+            ch: 'https://rdap.nic.ch/',
+            ru: 'https://rdap.tcinet.ru/',
+            su: 'https://rdap.tcinet.ru/',
+            'xn--p1ai': 'https://rdap.tcinet.ru/'
         };
 
         async function loadIanaRdapMap() {
@@ -5902,7 +6485,8 @@
         }
 
         async function getRdapBaseUrlForDomain(domain) {
-            const parts = String(domain || '').toLowerCase().split('.');
+            const asciiDomain = toAsciiDomain(domain) || String(domain || '').toLowerCase();
+            const parts = asciiDomain.split('.');
             const topTld = parts[parts.length - 1] || '';
             if (KNOWN_RDAP_SERVERS[topTld]) return KNOWN_RDAP_SERVERS[topTld];
             const map = await loadIanaRdapMap();
@@ -5948,7 +6532,8 @@
         }
 
         async function checkNsViaDoh(domain) {
-            const encoded = encodeURIComponent(domain);
+            const asciiDomain = toAsciiDomain(domain) || String(domain || '').toLowerCase();
+            const encoded = encodeURIComponent(asciiDomain);
             const endpoints = [
                 {
                     url: `https://cloudflare-dns.com/dns-query?name=${encoded}&type=NS`,
@@ -5982,11 +6567,12 @@
         }
 
         async function checkRdapAvailability(domain) {
-            const rdapBase = await getRdapBaseUrlForDomain(domain);
+            const asciiDomain = toAsciiDomain(domain) || String(domain || '').toLowerCase();
+            const rdapBase = await getRdapBaseUrlForDomain(asciiDomain);
             if (!rdapBase) {
                 return { status: 'no-rdap', method: 'RDAP' };
             }
-            const rdapUrl = `${rdapBase}domain/${encodeURIComponent(domain)}`;
+            const rdapUrl = `${rdapBase}domain/${encodeURIComponent(asciiDomain)}`;
             for (let attempt = 0; attempt < 2; attempt++) {
                 await waitForRdapHostCooldown(rdapUrl);
                 try {
@@ -6051,7 +6637,7 @@
                 return Boolean(entry && entry.status === 'taken');
             }
             if (statusFilter === 'check') {
-                if (domain.length > MAX_CHECK_DOMAIN_LENGTH) return false;
+                if ((toAsciiDomain(domain) || domain).length > MAX_CHECK_DOMAIN_LENGTH) return false;
                 return !entry || (entry.status !== 'available' && entry.status !== 'taken');
             }
             return true;
@@ -6142,7 +6728,7 @@
             '.us', '.uk', '.co.uk', '.org.uk', '.me.uk', '.ac.uk', '.gov.uk', '.ca', '.au', '.com.au', '.net.au', '.org.au', '.edu.au', '.nz', '.co.nz',
             '.es', '.com.es', '.org.es', '.edu.es', '.mx', '.com.mx', '.org.mx', '.ar', '.com.ar', '.com.co',
             '.pt', '.br', '.com.br', '.org.br', '.net.br', '.edu.br',
-            '.fr', '.be', '.ch', '.de', '.at', '.ru', '.su',
+            '.fr', '.be', '.ch', '.de', '.at', '.eu', '.ru', '.su', '.by', '.рф', '.xn--p1ai',
             '.jp', '.co.jp', '.ac.jp', '.go.jp', '.ne.jp', '.or.jp',
             '.sg', '.com.sg', '.my', '.com.my'
         ]);
@@ -6175,11 +6761,11 @@
                 '.net': 85, '.edu': 84, '.org': 83, '.co': 81, '.online': 79, '.io': 78, '.ai': 76, '.app': 76, '.dev': 76, '.biz': 73, '.me': 72
             },
             de: {
-                '.de': 98, '.com': 95, '.at': 91, '.ch': 90,
+                '.de': 98, '.com': 95, '.at': 91, '.ch': 90, '.eu': 89,
                 '.net': 86, '.edu': 85, '.org': 84, '.co': 81, '.online': 79, '.io': 78, '.ai': 76, '.app': 76, '.dev': 76, '.biz': 73, '.me': 72
             },
             ru: {
-                '.ru': 97, '.com': 94, '.su': 89,
+                '.ru': 97, '.рф': 95, '.xn--p1ai': 95, '.com': 94, '.su': 89, '.by': 86,
                 '.net': 86, '.edu': 84, '.org': 83, '.co': 80, '.online': 78, '.io': 77, '.ai': 75, '.app': 75, '.dev': 75, '.biz': 73, '.me': 72
             },
             ja: {
@@ -6190,13 +6776,17 @@
 
         function computeExtensionLangFitScore(extLower, uiLang) {
             const tierMap = LANG_TLD_FIT_TIERS[uiLang] || LANG_TLD_FIT_TIERS.en;
+            const asciiExt = toAsciiExtension(extLower) || extLower;
             if (Object.prototype.hasOwnProperty.call(tierMap, extLower)) {
                 return tierMap[extLower];
+            }
+            if (Object.prototype.hasOwnProperty.call(tierMap, asciiExt)) {
+                return tierMap[asciiExt];
             }
             if (Object.prototype.hasOwnProperty.call(GLOBAL_SECONDARY_TLD_BASE, extLower)) {
                 return uiLang === 'en' ? GLOBAL_SECONDARY_TLD_BASE[extLower] : GLOBAL_SECONDARY_TLD_BASE[extLower] - 2;
             }
-            if (REGIONAL_CCTLD_EXTENSIONS.has(extLower) || /\.[a-z]{2}$/.test(extLower)) {
+            if (REGIONAL_CCTLD_EXTENSIONS.has(extLower) || REGIONAL_CCTLD_EXTENSIONS.has(asciiExt) || /\.[a-z]{2}$/.test(extLower)) {
                 return uiLang === 'en' ? 54 : 52;
             }
             return uiLang === 'en' ? 60 : 58;
@@ -7384,8 +7974,8 @@
 
         function logAvailableDomainToD1(domain, entry, checkSource) {
             try {
-                const normDomain = normalizeDomainCacheKey(domain);
-                if (!normDomain || normDomain.length > AVAILABLE_DOMAIN_LOG_MAX_LENGTH) return;
+                const asciiDomain = toAsciiDomain(domain) || normalizeDomainCacheKey(domain);
+                if (!asciiDomain || asciiDomain.length > AVAILABLE_DOMAIN_LOG_MAX_LENGTH) return;
                 if (!entry || entry.status !== 'available') return;
                 if (typeof fetch !== 'function') return;
 
@@ -7393,13 +7983,13 @@
                     ? Number(entry.checkedAt)
                     : Date.now();
                 const selectedHeaderLang = getSelectedHeaderLanguageCode();
-                const extension = extractDomainExtension(normDomain);
+                const extension = extractDomainExtension(asciiDomain);
                 const targetKeywords = getScoringTargetKeywords();
-                const scores = computeDomainScores(normDomain, extension, selectedHeaderLang, targetKeywords);
+                const scores = computeDomainScores(asciiDomain, extension, selectedHeaderLang, targetKeywords);
                 const payload = {
-                    domain: normDomain,
+                    domain: asciiDomain,
                     extension,
-                    charLength: normDomain.length,
+                    charLength: asciiDomain.length,
                     lang: selectedHeaderLang,
                     status: 'available',
                     checkMethod: entry.method === 'NS' ? 'NS' : 'RDAP',
@@ -7420,7 +8010,8 @@
 
         async function checkSingleDomainAvailability(domain, forceRecheck, checkSource) {
             const normDomain = normalizeDomainCacheKey(domain);
-            if (!normDomain || normDomain.length > MAX_CHECK_DOMAIN_LENGTH) return;
+            const asciiDomain = toAsciiDomain(normDomain) || normDomain;
+            if (!normDomain || asciiDomain.length > MAX_CHECK_DOMAIN_LENGTH) return;
             const normalizedSource = checkSource === 'auto' ? 'auto' : 'manual';
             if (forceRecheck) {
                 autoCheckPendingDomains.delete(domain);
@@ -7606,14 +8197,15 @@
 
         function isDomainEligibleForAutoCheck(domain, uiLang, targetKeywords) {
             const normDomain = normalizeDomainCacheKey(domain);
-            if (!normDomain || normDomain.length > MAX_CHECK_DOMAIN_LENGTH) return false;
+            const asciiDomain = toAsciiDomain(normDomain) || normDomain;
+            if (!normDomain || asciiDomain.length > MAX_CHECK_DOMAIN_LENGTH) return false;
             const { sld, ext } = splitDomainSldAndExt(normDomain);
             if (!sld || !ext) return false;
             if (!Object.prototype.hasOwnProperty.call(AUTO_CHECK_EXTENSION_MAX_LENGTH_EXCLUSIVE, ext)) {
                 return false;
             }
             const maxLenExclusive = AUTO_CHECK_EXTENSION_MAX_LENGTH_EXCLUSIVE[ext];
-            if (normDomain.length >= maxLenExclusive) {
+            if (asciiDomain.length >= maxLenExclusive) {
                 return false;
             }
             if (ext === '.com') {
@@ -7681,7 +8273,7 @@
         }
 
         function renderAvailabilityCellHtml(domain, globalIdx, t) {
-            const isOverLengthLimit = domain.length > MAX_CHECK_DOMAIN_LENGTH;
+            const isOverLengthLimit = (toAsciiDomain(domain) || domain).length > MAX_CHECK_DOMAIN_LENGTH;
             if (isOverLengthLimit) {
                 const overLimitLabel = escapeHtmlText(t.availOverLimit || '>30 chars');
                 const overLimitTitle = escapeHtmlAttr(t.availOverLimitTitle || 'Availability check is limited to domains up to 30 characters');
@@ -7755,6 +8347,7 @@
         function syncBatchSelectionUi() {
             const t = dict[currentLang] || dict.en;
             const selectAllEl = document.getElementById('selectAllVisibleCheckbox');
+            const badgeWrapEl = document.getElementById('domainSelectionBadgeWrap');
             const statusEl = document.getElementById('domainSelectionStatus');
             const clearBtn = document.getElementById('uiBatchClearSelBtn');
             const removeBtn = document.getElementById('uiBatchRemoveBtn');
@@ -7777,11 +8370,20 @@
 
             const totalActive = lastGeneratedDomains.length;
             const selCount = selectedDomains.size;
+            if (badgeWrapEl) {
+                if (selCount > 0) {
+                    badgeWrapEl.classList.remove('hidden');
+                    badgeWrapEl.classList.add('inline-flex');
+                } else {
+                    badgeWrapEl.classList.add('hidden');
+                    badgeWrapEl.classList.remove('inline-flex');
+                }
+            }
             if (statusEl) {
                 if (selCount > 0) {
                     statusEl.textContent = (t.batchSelectedTpl || '{selected} selected').replace(/\{selected\}/g, String(selCount));
                 } else {
-                    statusEl.textContent = (t.batchAllFallbackTpl || '0 selected · actions apply to all ({total})').replace(/\{total\}/g, String(totalActive));
+                    statusEl.textContent = '';
                 }
             }
 
@@ -7799,7 +8401,7 @@
             if (downloadBtn) downloadBtn.disabled = totalActive === 0;
 
             if (batchDnsBtn) {
-                const targets = getBatchTargetDomains();
+                const targets = getBatchTargetDomains().map(d => toAsciiDomain(d) || d);
                 batchDnsBtn.setAttribute(
                     'href',
                     targets.length > 0
@@ -7916,7 +8518,7 @@
             const kw2 = document.getElementById('keyword2Input')?.value.trim() || '';
             const kw3 = document.getElementById('keyword3Input')?.value.trim() || '';
             const formula = document.getElementById('formulaInput')?.value.trim() || '';
-            const exts = (document.getElementById('extInput')?.value || '').split(',').map(e => e.trim()).filter(Boolean);
+            const exts = parseExtensionsInput(document.getElementById('extInput')?.value || '');
             updateBottomAiNarrative(t, kw, kw2, kw3, formula, exts, remaining);
             updateShareUI();
             renderDomainAnalysisList(false);
@@ -7966,7 +8568,8 @@
             }
             const batchDnsBtn = document.getElementById('batchDnsBtn');
             if (batchDnsBtn) {
-                batchDnsBtn.setAttribute('href', `https://dnsrobot.net/domain-age-checker?domains=${targets.join('%2C')}`);
+                const dnsTargets = targets.map(d => toAsciiDomain(d) || d);
+                batchDnsBtn.setAttribute('href', `https://dnsrobot.net/domain-age-checker?domains=${dnsTargets.join('%2C')}`);
             }
             return true;
         }
@@ -7990,6 +8593,30 @@
             }
         }
 
+        function toggleResultsAdvancedTools(forceOpen) {
+            const panel = document.getElementById('domainAdvancedToolsPanel');
+            const btn = document.getElementById('uiMoreToolsToggleBtn');
+            const chevron = document.getElementById('uiMoreToolsChevron');
+            if (!panel || !btn) return;
+            const isCurrentlyOpen = !panel.classList.contains('hidden');
+            const nextOpen = typeof forceOpen === 'boolean' ? forceOpen : !isCurrentlyOpen;
+            panel.classList.toggle('hidden', !nextOpen);
+            panel.classList.toggle('flex', nextOpen);
+            btn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+            btn.classList.toggle('bg-[#131354]', nextOpen);
+            btn.classList.toggle('dark:bg-blue-600', nextOpen);
+            btn.classList.toggle('text-white', nextOpen);
+            btn.classList.toggle('border-[#131354]', nextOpen);
+            btn.classList.toggle('dark:border-blue-500', nextOpen);
+            btn.classList.toggle('bg-slate-100', !nextOpen);
+            btn.classList.toggle('dark:bg-slate-800', !nextOpen);
+            btn.classList.toggle('text-slate-800', !nextOpen);
+            btn.classList.toggle('dark:text-slate-100', !nextOpen);
+            btn.classList.toggle('border-slate-300', !nextOpen);
+            btn.classList.toggle('dark:border-slate-700', !nextOpen);
+            if (chevron) chevron.classList.toggle('rotate-180', nextOpen);
+        }
+
         function syncAvailableOnlyButton() {
             const btn = document.getElementById('uiAvailOnlyBtn');
             if (!btn) return;
@@ -8000,9 +8627,13 @@
             btn.classList.toggle('text-[#FFFFFF]', isActive);
             btn.classList.toggle('hover:bg-[#095a31]', isActive);
             btn.classList.toggle('bg-[#FFFFFF]', !isActive);
+            btn.classList.toggle('dark:bg-slate-800', !isActive);
             btn.classList.toggle('border-[#C9D8D8]', !isActive);
+            btn.classList.toggle('dark:border-slate-700', !isActive);
             btn.classList.toggle('text-[#292929]', !isActive);
+            btn.classList.toggle('dark:text-slate-100', !isActive);
             btn.classList.toggle('hover:bg-[#ECF2F2]', !isActive);
+            btn.classList.toggle('dark:hover:bg-slate-700', !isActive);
         }
 
         function toggleAvailableOnlyFilter() {
@@ -8015,7 +8646,7 @@
 
         function getDomainAvailabilitySortTier(domain) {
             if (!domain) return 6;
-            if (domain.length > MAX_CHECK_DOMAIN_LENGTH) return 5;
+            if ((toAsciiDomain(domain) || domain).length > MAX_CHECK_DOMAIN_LENGTH) return 5;
             const entry = getAvailabilityCacheEntry(domain);
             if (entry) {
                 if (entry.status === 'available') return 0;
@@ -8164,15 +8795,15 @@
             let html = '';
             for (let i = 0; i < rowCount; i++) {
                 html += `
-                    <tr class="${i % 2 === 1 ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]'} animate-pulse">
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-5 w-16 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-1.5 sm:px-2.5"><div class="h-4 w-4 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-36 sm:w-48 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-10 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-8 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-5 w-12 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-6 w-24 rounded bg-slate-200"></div></td>
-                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-5 rounded bg-slate-200"></div></td>
+                    <tr class="${i % 2 === 1 ? 'bg-[#F8FAFC] dark:bg-slate-800/40' : 'bg-[#FFFFFF] dark:bg-slate-900'} animate-pulse">
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-5 w-16 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-1.5 sm:px-2.5"><div class="h-4 w-4 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-36 sm:w-48 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-10 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-8 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-5 w-12 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-6 w-24 rounded bg-slate-200 dark:bg-slate-700"></div></td>
+                        <td class="py-3 px-2 sm:px-3 md:px-3.5"><div class="h-4 w-5 rounded bg-slate-200 dark:bg-slate-700"></div></td>
                     </tr>
                 `;
             }
@@ -8188,17 +8819,27 @@
             if (resetLimit) analysisRenderLimit = getInitialAnalysisRenderLimit();
             syncAvailableOnlyButton();
             syncAnalysisSortHeaders();
+            renderDomainExtShortcuts();
             const listEl = document.getElementById('domainAnalysisList');
-            const metaEl = document.getElementById('domainAnalysisMeta');
             const moreWrapEl = document.getElementById('domainAnalysisMoreWrap');
             const filterEl = document.getElementById('analysisFilterInput');
             if (!listEl) return;
 
             const t = dict[currentLang] || dict.en;
             const query = filterEl ? filterEl.value.trim().toLowerCase() : '';
+            const activeExtAscii = activeExtensionFilter ? (toAsciiExtension(activeExtensionFilter) || activeExtensionFilter) : '';
+            const queryAsciiExt = query ? (toAsciiExtension(query) || query) : '';
+            const exactExtShortcutActive = Boolean(activeExtAscii && query && queryAsciiExt === activeExtAscii);
             const statusFilter = getAnalysisFilterStatus();
             const filteredRaw = lastGeneratedDomains.filter((d) => {
-                if (query && !d.toLowerCase().includes(query)) return false;
+                if (exactExtShortcutActive) {
+                    const rowExtAscii = toAsciiExtension(extractDomainExtension(d)) || extractDomainExtension(d).toLowerCase();
+                    if (rowExtAscii !== activeExtAscii) return false;
+                } else if (query) {
+                    const dLower = d.toLowerCase();
+                    const dAscii = toAsciiDomain(dLower) || dLower;
+                    if (!dLower.includes(query) && !dAscii.includes(query)) return false;
+                }
                 return matchesAvailabilityFilter(d, statusFilter);
             });
             const filtered = sortAnalysisDomains(filteredRaw);
@@ -8206,8 +8847,7 @@
 
             if (lastGeneratedDomains.length === 0) {
                 lastVisibleAnalysisDomains = [];
-                listEl.innerHTML = `<tr><td colspan="8" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisEmpty || 'No domains generated yet.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
-                if (metaEl) metaEl.textContent = '';
+                listEl.innerHTML = `<tr><td colspan="8" class="p-6 text-[13px] md:text-[14px] text-[#475569] dark:text-slate-300 text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisEmpty || 'No domains generated yet.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] dark:border-slate-700 bg-[#F8FAFC] dark:bg-slate-800 hover:bg-[#FFF7ED] dark:hover:bg-slate-700 hover:border-[#EA580C]/40 text-[#1E293B] dark:text-slate-100 hover:text-[#C2410C] dark:hover:text-orange-300 text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
                 if (moreWrapEl) moreWrapEl.classList.add('hidden');
                 syncBatchSelectionUi();
                 return;
@@ -8215,13 +8855,7 @@
 
             if (filtered.length === 0) {
                 lastVisibleAnalysisDomains = [];
-                listEl.innerHTML = `<tr><td colspan="8" class="p-6 text-[13px] md:text-[14px] text-[#475569] text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisNoMatch || 'No domains match your filter.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] hover:bg-[#FFF7ED] hover:border-[#EA580C]/40 text-[#1E293B] hover:text-[#C2410C] text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
-                if (metaEl) {
-                    metaEl.textContent = (t.analysisShowingTpl || 'Generated {generated} ideas · Showing {shown} of {total}')
-                        .replace(/\{generated\}/g, String(lastGeneratedDomains.length))
-                        .replace(/\{shown\}/g, '0')
-                        .replace(/\{total\}/g, '0');
-                }
+                listEl.innerHTML = `<tr><td colspan="8" class="p-6 text-[13px] md:text-[14px] text-[#475569] dark:text-slate-300 text-center"><div class="flex flex-col items-center gap-3"><span>${escapeHtmlText(t.analysisNoMatch || 'No domains match your filter.')}</span><button type="button" onclick="resetToHome(event)" title="${escapeHtmlAttr(t.resetAllTitle || 'Reset all form inputs, filters, and results to default and return to top')}" class="ui-reset-all-btn inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 py-2 rounded-lg border border-[#E2E8F0] dark:border-slate-700 bg-[#F8FAFC] dark:bg-slate-800 hover:bg-[#FFF7ED] dark:hover:bg-slate-700 hover:border-[#EA580C]/40 text-[#1E293B] dark:text-slate-100 hover:text-[#C2410C] dark:hover:text-orange-300 text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="ui-reset-all-label">${escapeHtmlText(t.resetAllBtn || 'Start Over')}</span></button></div></td></tr>`;
                 if (moreWrapEl) moreWrapEl.classList.add('hidden');
                 syncBatchSelectionUi();
                 return;
@@ -8239,9 +8873,11 @@
             lastGeneratedDomains.forEach((d, i) => domainToGlobalIndex.set(d, i));
 
             listEl.innerHTML = visible.map((domain, idx) => {
+                const asciiDomain = toAsciiDomain(domain) || domain;
                 const encodedDomain = encodeURIComponent(domain);
-                const ahrefsHref = `https://ahrefs.com/backlink-checker/?input=${encodedDomain}&mode=subdomains`;
-                const waybackHref = `https://web.archive.org/web/20260000000000*/${encodedDomain}`;
+                const encodedAsciiDomain = encodeURIComponent(asciiDomain);
+                const ahrefsHref = `https://ahrefs.com/backlink-checker/?input=${encodedAsciiDomain}&mode=subdomains`;
+                const waybackHref = `https://web.archive.org/web/20260000000000*/${encodedAsciiDomain}`;
                 const googleHref = `https://www.google.com/search?q=site:${encodedDomain}`;
                 const safeDomain = escapeHtmlText(domain);
                 const safeDomainAttr = escapeHtmlAttr(domain);
@@ -8249,47 +8885,45 @@
                 const availCellHtml = renderAvailabilityCellHtml(domain, globalIdx, t);
                 const scoreCellHtml = renderDomainScoreCellHtml(domain, t);
                 const extValue = extractDomainExtension(domain) || '-';
+                const asciiExtValue = extValue !== '-' ? (toAsciiExtension(extValue) || extValue) : '-';
+                const isIdn = asciiDomain !== domain.toLowerCase();
+                const idnDomainTitleAttr = isIdn ? ` title="${escapeHtmlAttr('Punycode (RFC 3492): ' + asciiDomain)}"` : '';
+                const idnExtTitleAttr = (asciiExtValue !== extValue) ? ` title="${escapeHtmlAttr('Punycode: ' + asciiExtValue)}"` : '';
                 const safeExtText = escapeHtmlText(extValue);
                 const isSelected = selectedDomains.has(domain);
-                const rowBgClass = idx % 2 === 1 ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]';
+                const rowBgClass = idx % 2 === 1 ? 'bg-[#F8FAFC] dark:bg-slate-800/40' : 'bg-[#FFFFFF] dark:bg-slate-900';
 
                 return `
-                    <tr class="${rowBgClass} hover:bg-[#FFF7ED] transition-colors domain-row-fade-in">
+                    <tr class="${rowBgClass} hover:bg-[#FFF7ED] dark:hover:bg-slate-800 transition-colors domain-row-fade-in">
                         <td data-avail-domain="${safeDomainAttr}" class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left whitespace-nowrap">${availCellHtml}</td>
                         <td class="py-2.5 sm:py-3 px-1.5 sm:px-2.5 w-px text-left whitespace-nowrap">
-                            <input type="checkbox" data-select-domain="${safeDomainAttr}" ${isSelected ? 'checked' : ''} onchange="toggleDomainSelection(this.getAttribute('data-select-domain'), this.checked)" aria-label="${escapeHtmlAttr(selectAriaPrefix + ': ' + domain)}" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-[#CBD5E1] bg-[#FFFFFF] text-[#EA580C] focus:ring-[#EA580C] cursor-pointer align-middle">
+                            <input type="checkbox" data-select-domain="${safeDomainAttr}" ${isSelected ? 'checked' : ''} onchange="toggleDomainSelection(this.getAttribute('data-select-domain'), this.checked)" aria-label="${escapeHtmlAttr(selectAriaPrefix + ': ' + domain)}" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-[#CBD5E1] dark:border-slate-600 bg-[#FFFFFF] dark:bg-slate-800 text-[#EA580C] focus:ring-[#EA580C] cursor-pointer align-middle">
                         </td>
-                        <td class="ui-td-domain py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-sans not-italic text-[14px] sm:text-[15px] md:text-[16px] font-semibold text-[#0F172A] tracking-[-0.01em] whitespace-nowrap leading-[1.4]">
+                        <td class="ui-td-domain py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-sans not-italic text-[14px] sm:text-[15px] md:text-[16px] font-semibold text-[#0F172A] dark:text-slate-100 tracking-[-0.01em] whitespace-nowrap leading-[1.4]">
                             <div class="inline-flex items-center justify-start gap-1.5">
-                                <span>${safeDomain}</span>
-                                <button type="button" data-copy-domain="${safeDomainAttr}" onclick="copySingleDomain(this.getAttribute('data-copy-domain'), this)" title="${copyTitle}" aria-label="${copyTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#64748B] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]">
+                                <span${idnDomainTitleAttr}>${safeDomain}</span>
+                                <button type="button" data-copy-domain="${safeDomainAttr}" onclick="copySingleDomain(this.getAttribute('data-copy-domain'), this)" title="${copyTitle}" aria-label="${copyTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-[#E2E8F0] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#64748B] dark:text-slate-300 hover:border-[#EA580C] hover:text-[#EA580C] dark:hover:text-orange-400 transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C]">
                                     <svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
                             </div>
                         </td>
                         <td data-score-domain="${safeDomainAttr}" class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12px] sm:text-[13px] md:text-[14px] tabular-nums whitespace-nowrap">${scoreCellHtml}</td>
-                        <td class="ui-td-chars py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12.5px] sm:text-[13px] md:text-[14px] font-medium tabular-nums text-[#334155] whitespace-nowrap leading-[1.45]">${domain.length}</td>
+                        <td class="ui-td-chars py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left font-mono text-[12.5px] sm:text-[13px] md:text-[14px] font-medium tabular-nums text-[#334155] dark:text-slate-300 whitespace-nowrap leading-[1.45]">${domain.length}</td>
                         <td class="ui-td-ext py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left whitespace-nowrap">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md border border-slate-200 bg-slate-100 text-slate-700 text-[11px] sm:text-[12px] font-mono font-semibold">${safeExtText}</span>
+                            <span${idnExtTitleAttr} class="inline-flex items-center px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] sm:text-[12px] font-mono font-semibold">${safeExtText}</span>
                         </td>
                         <td class="py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 text-left whitespace-nowrap">
                             <div class="inline-flex items-center justify-start gap-1 sm:gap-1.5">
-                                <a href="${escapeHtmlAttr(ahrefsHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${blTitle}" aria-label="${blTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#EA580C] hover:text-[#EA580C] transition-colors">BL</a>
-                                <a href="${escapeHtmlAttr(waybackHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${wmTitle}" aria-label="${wmTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#578686] hover:text-[#578686] transition-colors">WM</a>
-                                <a href="${escapeHtmlAttr(googleHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${ggTitle}" aria-label="${ggTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] bg-[#FFFFFF] text-[#334155] hover:border-[#0C723F] hover:text-[#0C723F] transition-colors">GG</a>
+                                <a href="${escapeHtmlAttr(ahrefsHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${blTitle}" aria-label="${blTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#334155] dark:text-slate-200 hover:border-[#EA580C] hover:text-[#EA580C] dark:hover:text-orange-400 transition-colors">BL</a>
+                                <a href="${escapeHtmlAttr(waybackHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${wmTitle}" aria-label="${wmTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#334155] dark:text-slate-200 hover:border-[#578686] hover:text-[#578686] dark:hover:text-teal-300 transition-colors">WM</a>
+                                <a href="${escapeHtmlAttr(googleHref)}" target="_blank" rel="nofollow noopener noreferrer" title="${ggTitle}" aria-label="${ggTitle}: ${safeDomainAttr}" class="inline-flex items-center justify-center min-h-[30px] sm:min-h-[32px] min-w-[30px] sm:min-w-[34px] px-1.5 sm:px-2 py-1 text-[11px] md:text-[12px] font-mono font-semibold rounded-md border border-[#E2E8F0] dark:border-slate-700 bg-[#FFFFFF] dark:bg-slate-800 text-[#334155] dark:text-slate-200 hover:border-[#0C723F] hover:text-[#0C723F] dark:hover:text-emerald-400 transition-colors">GG</a>
                             </div>
                         </td>
-                        <td class="ui-td-num py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left text-[12px] md:text-[13px] font-mono tabular-nums text-[#64748B] whitespace-nowrap leading-[1.45]">${idx + 1}</td>
+                        <td class="ui-td-num py-2.5 sm:py-3 px-2 sm:px-3 md:px-3.5 w-px text-left text-[12px] md:text-[13px] font-mono tabular-nums text-[#64748B] dark:text-slate-400 whitespace-nowrap leading-[1.45]">${idx + 1}</td>
                     </tr>
                 `;
             }).join('');
 
-            if (metaEl) {
-                metaEl.textContent = (t.analysisShowingTpl || 'Generated {generated} ideas · Showing {shown} of {total}')
-                    .replace(/\{generated\}/g, String(lastGeneratedDomains.length))
-                    .replace(/\{shown\}/g, String(visible.length))
-                    .replace(/\{total\}/g, String(filtered.length));
-            }
             if (moreWrapEl) {
                 if (filtered.length > visible.length) {
                     const remaining = filtered.length - visible.length;
@@ -8415,7 +9049,7 @@
                 showActionToast(t.toastNoDomains || 'Generate at least one domain first.');
                 return false;
             }
-            const domainsArray = text.split('\n').filter(Boolean);
+            const domainsArray = text.split('\n').filter(Boolean).map(d => toAsciiDomain(d) || d);
             const targetUrl = `https://dnsrobot.net/domain-age-checker?domains=${domainsArray.join('%2C')}`;
             const dnsBtn = document.getElementById('uiDnsBtn');
             if (dnsBtn) dnsBtn.setAttribute('href', targetUrl);
@@ -8479,8 +9113,9 @@
             if (kw1) kw1.value = 'business';
             if (kw2) kw2.value = '';
             if (kw3) kw3.value = '';
-            if (extEl) extEl.value = t.defaultExts || '.com, .net, .org, .io, .ai';
+            if (extEl) extEl.value = explicitLang ? (t.defaultExts || '.com, .net') : '.com, .net';
             if (formulaEl) formulaEl.value = t.defaultFormula || '[any] + [vowel] + [consonant]';
+            activeExtensionFilter = '';
 
             const fullWordPermEl = document.getElementById('fullWordPermCheckbox');
             const perm1El = document.getElementById('wordPerm1Checkbox');
@@ -8524,6 +9159,7 @@
             syncAnalysisSortHeaders();
             if (statusFilterEl) statusFilterEl.value = 'available_or_check';
             syncAvailableOnlyButton();
+            toggleResultsAdvancedTools(false);
             if (filterInputEl) filterInputEl.value = '';
             if (selectAllEl) {
                 selectAllEl.checked = false;
@@ -8541,6 +9177,7 @@
             if (shareIncEl) shareIncEl.checked = true;
             if (shareFbEl) shareFbEl.classList.add('hidden');
 
+            renderExtensionQuickPicks();
             updateDynamicSEO();
             generateDomains();
 
@@ -8554,6 +9191,65 @@
             }
 
             showActionToast(t.toastResetDone || 'Form and results have been reset to default.');
+        }
+
+        function resetFormInputs(event) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            const t = dict[currentLang] || dict.en;
+            const kw1 = document.getElementById('keywordInput');
+            const kw2 = document.getElementById('keyword2Input');
+            const kw3 = document.getElementById('keyword3Input');
+            const extEl = document.getElementById('extInput');
+            const formulaEl = document.getElementById('formulaInput');
+
+            if (kw1) kw1.value = '';
+            if (kw2) kw2.value = '';
+            if (kw3) kw3.value = '';
+            if (extEl) extEl.value = explicitLang ? (t.defaultExts || '.com, .net') : '.com, .net';
+            if (formulaEl) formulaEl.value = t.defaultFormula || '[any] + [vowel] + [consonant]';
+            activeExtensionFilter = '';
+
+            const fullWordPermEl = document.getElementById('fullWordPermCheckbox');
+            const perm1El = document.getElementById('wordPerm1Checkbox');
+            const perm2El = document.getElementById('wordPerm2Checkbox');
+            const perm3El = document.getElementById('wordPerm3Checkbox');
+            const permDashEl = document.getElementById('wordPermDashCheckbox');
+            const permNoDashEl = document.getElementById('wordPermNoDashCheckbox');
+
+            if (fullWordPermEl) fullWordPermEl.checked = true;
+            if (perm1El) perm1El.checked = true;
+            if (perm2El) perm2El.checked = true;
+            if (perm3El) perm3El.checked = false;
+            if (permDashEl) permDashEl.checked = false;
+            if (permNoDashEl) permNoDashEl.checked = true;
+            syncSoftConsonantsCheckboxes(true);
+            resetFormulaCursorTracking();
+            syncActivePresetUi();
+            setActiveGenerateSlot('basic');
+
+            selectedDomains.clear();
+            const filterInputEl = document.getElementById('analysisFilterInput');
+            if (filterInputEl) filterInputEl.value = '';
+            const selectAllEl = document.getElementById('selectAllVisibleCheckbox');
+            if (selectAllEl) {
+                selectAllEl.checked = false;
+                selectAllEl.indeterminate = false;
+            }
+
+            renderExtensionQuickPicks();
+            updateDynamicSEO();
+            generateDomains();
+
+            if (kw1 && typeof kw1.focus === 'function') {
+                try {
+                    kw1.focus({ preventScroll: true });
+                } catch (e) {}
+            }
+
+            showActionToast(t.toastFormResetDone || 'Form inputs have been cleared.');
         }
 
         function renderFaqAccordion(t) {
@@ -8868,7 +9564,7 @@
             generateDomains();
         }
 
-        // Initialize on load (defaults cleanly to 'en' for Global SEO when ?lang= is omitted, supports ?kw=, ?kw2=, ?kw3= and GAS injected params)
+        // Initialize on load (neutral default .com/.net on / unless explicit language is chosen via route, ?lang=, or user selector)
         window.addEventListener('DOMContentLoaded', function() {
             hydrateAvailabilityCacheFromStorage();
             setInterval(function() {
@@ -8879,7 +9575,16 @@
             const gasParams = (typeof window !== 'undefined' && window.__GAS_INIT_PARAMS__) ? window.__GAS_INIT_PARAMS__ : {};
             const staticLang = (typeof window !== 'undefined' && window.__STATIC_PAGE_LANG__) ? String(window.__STATIC_PAGE_LANG__).toLowerCase() : null;
             const pathLang = detectPathLanguage();
-            const langParam = staticLang || pathLang || urlParams.get('lang') || gasParams.lang;
+            let savedExplicitLang = '';
+            try {
+                savedExplicitLang = String(localStorage.getItem('preferredLangExplicit') || '').trim().toLowerCase();
+            } catch (e) {}
+            const urlExplicitLang = urlParams.get('lang') || gasParams.lang;
+            const nonEnStaticLang = (staticLang && staticLang !== 'en') ? staticLang : null;
+            const detectedExplicitLang = [pathLang, urlExplicitLang, nonEnStaticLang, savedExplicitLang]
+                .map(v => (v ? String(v).trim().toLowerCase() : ''))
+                .find(v => v && dict[v]) || null;
+
             const kwParam = urlParams.get('kw') || urlParams.get('keyword') || gasParams.kw || gasParams.keyword;
             const kw2Param = urlParams.get('kw2') || urlParams.get('keyword2') || gasParams.kw2 || gasParams.keyword2;
             const kw3Param = urlParams.get('kw3') || urlParams.get('keyword3') || gasParams.kw3 || gasParams.keyword3;
@@ -8893,13 +9598,13 @@
                 document.getElementById('keyword3Input').value = String(kw3Param).trim();
             }
 
-            if (langParam && dict[langParam]) {
-                currentLang = langParam;
-            } else {
-                currentLang = 'en';
+            explicitLang = detectedExplicitLang;
+            currentLang = explicitLang || (staticLang && dict[staticLang] ? staticLang : 'en');
+            const langSelectEl = document.getElementById('langSelect');
+            if (langSelectEl) {
+                langSelectEl.value = explicitLang || '';
             }
-            document.getElementById('langSelect').value = currentLang;
-            changeLanguage(currentLang);
+            changeLanguage(currentLang, { explicit: Boolean(explicitLang) });
 
             const infoModal = document.getElementById('infoModal');
             if (infoModal) {

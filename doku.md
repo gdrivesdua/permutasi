@@ -194,19 +194,23 @@ Bagian ini merangkum arsitektur antarmuka, optimasi mobile, serta mekanisme cach
 
 ### B. Sistem Warna, Layout Responsif & Token Desain
 1. **Form Generator (`#generatorSection`)**:
-   - **Primary Keyword & Extensions**: Latar `#de3723` teks putih dengan tombol **Generate Domain Names** (`#131354`, rata tengah, lebar sesuai isi tombol, border putih tegas, hover kontras `#FFFFFF` / `#131354`).
+   - **Quick Examples Bar (`#quickExamplesBar`)**: Ditempatkan di bagian atas area utama form (tepat di atas `#primaryKeywordBox` dan sebelum `#advancedOptionsDetails`) agar pengguna mudah mencoba contoh kata kunci cepat dalam satu klik dengan kontras mode terang/gelap yang seimbang.
+   - **Primary Keyword & Extensions (`#primaryKeywordBox`)**: Memakai latar merah matang yang lebih kalem (`#B02E24`, serta `#8E241C` pada mode gelap) dengan border halus dan padding lega; panel quick-pick ekstensi (`#extQuickPickWrap`) diberi bingkai padding tersendiri (`bg-black/15`) dengan perbedaan tegas chip belum dipilih (`+`, border tipis semi-transparan) vs sudah dipilih (`✓`, latar terang solid `#FFFFFF` teks `#131354`). Tombol CTA utama **Generate Domain Names** (`#uiGenBtn`, `#131354`, border putih tegas, hover kontras `#FFFFFF` / `#131354`) disejajarkan simetris tepat di tengah di bawah kedua kolom input dengan pemisah vertikal yang lega.
    - **Mobile Toggle `Add / Customize`**: Latar biru `#2165b3` dengan teks putih.
    - **Secondary & Tertiary Keyword**: Latar `#578686` dengan label putih dan input berlatar `#FFFFFF`.
    - **Shuffle Keywords (Word Count & Separator)**: Latar `#669999` dengan teks putih (`Shuffle Keywords` untuk label bahasa Inggris dari *Acak Urutan Kata Kunci*).
-   - **Add Your Own Patterns**: Latar `#131354` teks putih, tombol sisip placeholder berkode warna berbeda (`+ [primary]`, `+ [secondary]`, `+ [tertiary]`, `+ [dash]`, `+ [number]`, `+ [vowel]`, `+ [consonant]`), serta tombol **Generate Domain Names** oranye tua (`#c83e0c`, rata tengah, lebar sesuai isi tombol, border putih, hover kontras `#FFFFFF` / `#c83e0c`).
+   - **Add Your Own Patterns**: Latar terang lembut (`#F7FAFC`–`#ECF2F2`) teks gelap, tombol sisip placeholder berkode warna berbeda (`+ [primary]`, `+ [secondary]`, `+ [tertiary]`, `+ [dash]`, `+ [number]`, `+ [vowel]`, `+ [consonant]`), serta tombol **Generate Domain Names** oranye tua (`#c83e0c`, rata tengah, lebar sesuai isi tombol, border putih, hover kontras `#FFFFFF` / `#c83e0c`).
    - Kedua tombol **Generate Domain Names** bekerja secara *mutually exclusive* (`activeGenerateSlot: 'basic' | 'pattern'`).
-   - **Tombol `Start Over` / `Mulai Ulang` (`resetToHome`)**: Tersedia di titik-titik rawan kebingungan/friksi — pojok atas form (`#uiResetFormBtn`), bagian bawah panel opsi lanjutan (`#uiResetAdvBtn`), toolbar tabel analisis (`#uiResetAnalysisBtn`), layar tabel kosong/tanpa hasil filter, dan Langkah 5 pada panduan pengetahuan. Mengembalikan semua input kata kunci, ekstensi, checkbox permutasi, formula kustom, filter tabel, seleksi baris, scroll tabel, serta parameter URL ke kondisi awal bersih, lalu menggulir layar kembali ke atas halaman dengan dukungan `prefers-reduced-motion`.
+   - **Pemisahan Tombol Reset (`Reset Form` vs `Start Over`)**:
+     - **Form Reset (`#uiResetFormBtn` → `resetFormInputs`)**: Berada di pojok kanan atas kartu form (`Reset Form` / `Reset Input`) dengan ikon penghapus untuk mengosongkan input kata kunci (`#keywordInput`, `#keyword2Input`, `#keyword3Input`), mengembalikan ekstensi ke default bahasa aktif, dan mereset field formulir tanpa menggulir halaman ke atas atau menghapus cache ketersediaan.
+     - **Global Reset `Start Over` / `Mulai Ulang` (`resetToHome`)**: Tersedia di header atas (`#uiHeaderResetBtn`), bagian bawah panel opsi lanjutan (`#uiResetAdvBtn`), toolbar tabel analisis (`#uiResetAnalysisBtn`), layar tabel kosong/tanpa hasil filter, dan Langkah 5 pada panduan pengetahuan. Mengembalikan seluruh input ke kata kunci default (`business`), ekstensi default, checkbox permutasi, formula kustom, filter tabel, seleksi baris, scroll tabel, serta parameter URL ke kondisi awal bersih, lalu menggulir layar kembali ke atas halaman dengan dukungan `prefers-reduced-motion`.
 2. **Bagian Permutasi & Tabel Analisis (`#domainAnalysisPanel`)**:
    - Blok `#resultsSection` (*Generated Domain Permutations*) disembunyikan secara aman (`hidden`) tanpa menghapus state maupun logika copy/export/bulk-check.
-   - Kotak header **Domain Availability, Backlink, Archive & Index Data** memakai Soft Teal `#ECF2F2` dengan teks gelap `#292929`.
-   - Tabel domain bernuansa oranye: header `#f05422` teks putih dan baris selang-seling `#FFFFFF` dan `#f9e1d9` (hover `#f4cec2`).
-   - Tabel hasil domain (`#domainAnalysisPanel`) menampilkan kolom berurutan `AVAILABILITY` · `[checkbox]` · `DOMAIN NAME` · `SCORE` · `CHARS` · `EXT` (sortable, berisi ekstensi TLD/ccTLD seperti `.com`, `.net`, `.co`, `.id`, `.my.id`, `.co.jp`, dll.) · `INSPECT` (`BL`, `WM`, `GG`) · `#`.
-   - Tombol batch (`Remove Selected`, `Copy`, `Copy MD`, `Export .txt`, `Bulk Check`) tetap aktif penuh dengan tombol `Bulk Check` bergaya netral sepadan `Copy MD`.
+   - Header dan toolbar hasil (`#domainBatchActionBar`) kini disatukan ke dalam satu bar ringkas yang menempel langsung (*flush*) dengan bagian atas tabel hasil, tanpa subjudul panjang `#uiAnalysisSub` maupun hitungan `GENERATED ... · SHOWING ...` (`#domainAnalysisMeta`), serta mendukung mode terang & gelap (*light/dark mode*).
+   - Indikator seleksi (`#domainSelectionBadgeWrap` / `#domainSelectionStatus`) disembunyikan saat `0` item terpilih dan baru muncul (`{selected} selected` + tombol `Clear`) ketika minimal 1 baris dicentang.
+   - Kontrol dasar yang tampil langsung di bar utama meliputi tombol shortcut ekstensi aktif (`#domainExtShortcutBar`), toggle `Available only` (`#uiAvailOnlyBtn`), filter teks cepat (`#analysisFilterInput`), tombol `Copy` (`#uiBatchCopyBtn`), dan tombol toggle `More Tools / Bulk` (`#uiMoreToolsToggleBtn`).
+   - Kontrol lanjutan (*power-user*: `#analysisStatusFilter`, `Remove Selected`, `Copy MD`, `Export .txt`, `Bulk Check`, dan `Start Over`) dirender langsung di dalam HTML DOM statis sejak awal pada container `#domainAdvancedToolsPanel` (default tersembunyi dengan class `hidden` agar tetap terbaca oleh perayap/Googlebot tanpa bergantung pada injeksi JS).
+   - Tabel domain memakai header oranye `#EA580C` (hover `#C2410C` saat kolom disortir) dengan baris selang-seling adaptif terang/gelap (`#FFFFFF`/`#F8FAFC` dan `dark:bg-slate-900`/`dark:bg-slate-800/40`), menampilkan kolom berurutan `AVAILABILITY` · `[checkbox]` · `DOMAIN NAME` · `SCORE` · `CHARS` · `EXT` (sortable, berisi ekstensi TLD/ccTLD seperti `.com`, `.net`, `.co`, `.id`, `.my.id`, `.co.jp`, dll.) · `INSPECT` (`BL`, `WM`, `GG`) · `#`.
 3. **Share & Export Link (`#shareExportSection`)**:
    - Responsif penuh: bertumpuk full-width (`grid-cols-1`) di smartphone, sejajar di tablet/desktop (`sm:flex` / `sm:grid-cols-3` / `md:flex`), dengan tombol berwarna-warni selaras palet halaman (`#0C723F`, `#131354`, `#578686`, `#2165b3`, `#f05422`, `#B87900`, `#de3723`).
 4. **Konten Edukasi, FAQ, & Context Cards (`#editorial-design-tokens`)**:
@@ -529,9 +533,28 @@ Jika Anda mengedit file `lib/lexicon/<lang>.json` langsung di editor teks tanpa 
 
 Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, dan pengecekan ketersediaan sisi klien di `index.html` (yang dikompilasi ke halaman beranda statis 8 bahasa di `dist/`):
 
-#### 1. Ekstensi Default per Bahasa (`defaultExts` & `extPlaceholder`)
-- **Bahasa Indonesia (`id`)**: `.my.id, .web.id, .biz.id, .id, .com`
-- **Bahasa Inggris (`en`)**: `.com, .net, .org, .io, .ai`
+#### 1. Ekstensi Default, Netral vs Bahasa Eksplisit, Quick-Pick Chips & IDN/Punycode (`index.html`)
+- **Mode Netral (Tanpa Pilihan Bahasa Eksplisit / `Auto`)**:
+  Saat pengunjung membuka beranda akar (`/`) tanpa rute bahasa (`/id/`, `/es/`, dst.), tanpa parameter `?lang=`, dan tanpa pilihan bahasa eksplisit tersimpan (`preferredLangExplicit`), dropdown `#langSelect` berada pada posisi netral `Auto` (`value=""`), kolom `#extInput` default ke **`.com, .net`**, dan quick-pick chips (`#extQuickPickWrap`) hanya menampilkan **`.com`** dan **`.net`**.
+- **Pemetaan TLD/ccTLD Dinamis 8 Bahasa (`LANGUAGE_EXTENSION_CONFIG` & `defaultExts`)**:
+  - **EN (English)**: Global `.com, .net, .io, .ai, .co` | Lokal/Regional `.us, .co.uk, .ca, .au`
+  - **ID (Indonesia)**: Global `.com, .net, .org, .ai` | Lokal `.id, .co.id, .my.id, .web.id`
+  - **ES (Español)**: Global `.com, .net, .org, .io` | Lokal `.es, .mx, .com.ar, .co`
+  - **PT (Português)**: Global `.com, .net, .org, .io` | Lokal `.com.br, .pt, .net.br`
+  - **FR (Français)**: Global `.com, .net, .org, .io` | Lokal `.fr, .ca, .be, .ch`
+  - **DE (Deutsch)**: Global `.com, .net, .eu, .io` | Lokal `.de, .at, .ch`
+  - **RU (Русский)**: Global `.com, .net, .org, .io` | Lokal `.ru, .рф, .su, .by`
+  - **JA (日本語)**: Global `.com, .net, .io, .ai` | Lokal `.jp, .co.jp, .ne.jp, .or.jp`
+- **Quick-Pick Chips & Auto-Normalisasi Input (`#extInput` & `#extQuickPickWrap`)**:
+  - Pengguna tetap dapat mengetik bebas pada `#extInput` dengan pemisah koma, spasi, titik koma, maupun `Enter`.
+  - Panel `#extQuickPickWrap` memiliki padding internal (`p-3 sm:p-3.5`) di bawah `#extInput` dengan status visual dua arah yang kontras: tombol belum dipilih menampilkan border tipis semi-transparan dan ikon **`+`**, sedangkan tombol sudah dipilih memakai latar putih solid (`#FFFFFF`, teks `#131354`) dan ikon **`✓`**. Klik chip langsung men-toggle ekstensi masuk/keluar daftar aktif serta memicu regenerasi daftar domain secara instan.
+  - Fungsi `parseExtensionsInput` & `normalizeExtInputField` menormalkan setiap token (memastikan awalan `.`, huruf kecil NFC, trim spasi/titik ganda, serta deduplikasi termasuk ekuivalensi Unicode dan Punycode seperti `.рф` ↔ `.xn--p1ai`) pada saat `blur`, `Enter`, maupun pergantian chip.
+- **Form Card Refinement (`#generatorSection`)**:
+  - `#quickExamplesBar` ditempatkan di bagian atas area utama form (tepat di atas `#primaryKeywordBox`) sebelum `#advancedOptionsDetails`.
+  - Tombol reset form (`#uiResetFormBtn` → `resetFormInputs`, label `Reset Form` / `Reset Input`) dibedakan jelas dari tombol global `Start Over` (`#uiHeaderResetBtn` → `resetToHome`). Saat seluruh keyword dikosongkan, `generateDomains()` menahan ekspansi formula berbasis placeholder kata kunci agar tidak menghasilkan kombinasi 2 huruf acak, melainkan menampilkan state kosong yang bersih.
+- **Dukungan IDN / Punycode (`xn--...`) & Validasi RFC 1035**:
+  - Mesin generator menyertakan encoder/decoder **RFC 3492 Punycode** murni (`punycodeEncode`, `punycodeDecode`, `toAsciiLabel`, `toAsciiExtension`, `toAsciiDomain`) tanpa dependensi eksternal.
+  - `validateRfc1035Domain` memvalidasi setiap label dalam bentuk ASCII/ACE (`xn--...`, panjang label 1–63 karakter, huruf/angka/tanda hubung internal, total panjang ASCII ≤ 253 karakter) sehingga ekstensi non-Latin seperti **`.рф`** (`xn--p1ai`) lolos validasi, tampil rapi dalam bentuk Unicode di tabel, dan otomatis dikonversi ke Punycode untuk lookup RDAP (`rdap.tcinet.ru`), NS DoH, pencatatan D1 (`/api/log-available-domain`), maupun tautan cek massal.
 
 #### 2. Urutan Eksekusi Wajib & Pemeringkatan Berbasis Kealamian Ejaan
 - **Alur Eksekusi (`generateDomains`)**:
@@ -551,13 +574,13 @@ Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, d
 - **Kebijakan Non-Destruktif (Dilarang Menghapus Domain)**:
   Domain berskor rendah **tidak pernah dihapus, difilter keluar, atau disembunyikan** dari daftar hasil—hanya diturunkan peringkatnya agar domain yang lebih alami muncul di posisi teratas terlebih dahulu.
 - **Paritas Skor D1 (`overall_heuristic_score`)**:
-  `computeDomainScores(...)` beserta 7 sub-skornya tetap identik 100% dengan `functions/api/log-available-domain.js` untuk menjaga keselarasan pencatatan skor ke Cloudflare D1.
+  `computeDomainScores(...)` beserta 7 sub-skornya tetap identik 100% dengan `functions/api/log-available-domain.js` (termasuk penambahan `.eu`, `.by`, dan `.xn--p1ai` / `.рф`) untuk menjaga keselarasan pencatatan skor ke Cloudflare D1.
 
 #### 3. Pipeline Pengecekan Ketersediaan Domain (Cache-First, Cap 24 Teratas, RDAP-First & Throttling)
 - **Pra-Cek (Urutkan → Baca Cache → Batas 24 Teratas)**:
   - Kandidat hasil selalu diurutkan lebih dulu berdasarkan skor gabungan **Brand + Natural Spelling** agar domain terbaik menempati 24 posisi teratas.
   - Sebelum melakukan permintaan jaringan, `scheduleAutoAvailabilityChecks` dan `checkSingleDomainAvailability` membaca cache sesi/lokal (`localStorage` + fallback `sessionStorage`) melalui `isCachedDomainReadyForAutoSkip`. Domain yang sudah valid di cache (misalnya setelah ganti filter atau menekan `Start Over`) langsung ditampilkan tanpa memanggil RDAP/DNS ulang.
-  - Auto-check hanya dijalankan pada **24 domain teratas** (`AUTO_CHECK_LIMIT = 24`, indeks `0` sampai `23`, panjang `<= MAX_CHECK_DOMAIN_LENGTH = 30`). Baris tambahan (termasuk hasil klik **Show More (+24)**) tetap berstatus **`Check`** sampai pengguna menekan tombol cek per baris atau **Bulk Check**.
+  - Auto-check hanya dijalankan pada **24 domain teratas** (`AUTO_CHECK_LIMIT = 24`, indeks `0` sampai `23`, panjang ASCII ≤ `MAX_CHECK_DOMAIN_LENGTH = 30`). Baris tambahan (termasuk hasil klik **Show More (+24)**) tetap berstatus **`Check`** sampai pengguna menekan tombol cek per baris atau **Bulk Check**.
 - **Verifikasi Utama (RDAP-First, Lalu NS Sekunder)**:
   - Setiap lookup memanggil **RDAP terlebih dahulu** (`checkRdapAvailability`) sebagai sumber primer status registrasi.
   - Jika RDAP menyatakan domain sudah terdaftar (`taken`), domain langsung ditandai **`Taken`** (`method: 'RDAP'`) dan **tetap `Taken` meskipun tidak memiliki nameserver (NS) aktif**.
@@ -568,12 +591,19 @@ Bagian ini mendokumentasikan aturan aktif pada mesin generator, pemeringkatan, d
   - Antrean auto-check dijalankan dalam batch kecil (`AUTO_CHECK_BATCH_SIZE = 4`) dengan konkurensi ringan (`AUTO_CHECK_CONCURRENCY = 2`, stagger worker `60 ms`, jeda antar-domain `AUTO_CHECK_STAGGER_MS = 120 ms`, jeda antar-batch `AUTO_CHECK_BATCH_PAUSE_MS = 180 ms`), *coalescing* refresh tabel (`60 ms`), serta *backoff* `429`/`503` dan *cooldown* per host RDAP (`rdapHostCooldownUntil`).
   - Klik manual tombol **Check** atau **↻** (**Re-check**) pada baris menjalankan `forceRecheck = true` yang melewati cache untuk domain tersebut, mengambil hasil terbaru dari RDAP/DNS, dan memperbarui data cache.
 
-#### 4. Filter Status Ketersediaan Default (`#analysisStatusFilter`)
+#### 4. Filter Status Ketersediaan Default (`#analysisStatusFilter`), Toolbar Ringkas & Shortcut Filter Ekstensi (`#domainExtShortcutBar`)
+- **Toolbar Ringkas & Pemisahan Kontrol Basic vs Advanced (SEO-Crawlable)**:
+  - Bar utama `#domainBatchActionBar` langsung menampilkan judul `Domain Results`, shortcut filter ekstensi (`#domainExtShortcutBar`), toggle `Available only` (`#uiAvailOnlyBtn`), filter cepat (`#analysisFilterInput`), tombol `Copy` (`#uiBatchCopyBtn`), dan tombol toggle `More Tools / Bulk` (`#uiMoreToolsToggleBtn` → `toggleResultsAdvancedTools()`).
+  - Panel `#domainAdvancedToolsPanel` menampung filter status (`#analysisStatusFilter`), `Remove Selected`, `Copy MD`, `Export .txt`, `Bulk Check`, dan `Start Over` langsung di dalam HTML DOM statis (`class="hidden"` secara default) agar tetap dapat di-crawl Googlebot dan dibuka kapan saja tanpa memakan ruang vertikal awal.
+  - Badge jumlah pilihan (`#domainSelectionBadgeWrap`) hanya muncul saat minimal 1 baris dipilih.
 - **Default Awal & Setelah Generate**: Dropdown filter `#analysisStatusFilter` secara bawaan disetel ke **`"available_or_check"` (`Available & Check`)**, yang menyembunyikan domain berstatus `taken` namun tetap menampilkan domain `available` maupun yang masih berstatus `check` / belum dicek.
 - **Pelestarian Pilihan Pengguna (`userChangedStatusFilter`)**:
   - Selama `userChangedStatusFilter === false`, setiap pemanggilan `generateDomains()` menjaga filter pada `"available_or_check"`.
   - Begitu pengguna mengganti dropdown secara manual (`onchange`) atau mengklik tombol toggle `Available Only`, `userChangedStatusFilter` menjadi `true` sehingga pilihan pengguna tetap dipertahankan saat generate ulang.
-  - Tombol **Start Over / Mulai Ulang (`resetToHome`)** mereset `userChangedStatusFilter = false` dan mengembalikan filter ke `"available_or_check"`.
+  - Tombol **Start Over / Mulai Ulang (`resetToHome`)** mereset `userChangedStatusFilter = false`, menutup `#domainAdvancedToolsPanel`, membersihkan `activeExtensionFilter`, dan mengembalikan filter ke `"available_or_check"`.
+- **Shortcut Filter Ekstensi (`#domainExtShortcutBar`)**:
+  - Di dalam bar `#domainBatchActionBar`, deretan tombol shortcut dirender otomatis berdasarkan ekstensi aktif pada `#extInput` (beserta tombol **All** untuk reset cepat).
+  - Klik salah satu tombol ekstensi menyaring tabel hasil secara **eksak per TLD/ccTLD** (mis. memilih `.co` tidak akan mencocokkan `.com` atau `.co.id`, dan `.id` tidak mencocokkan `.co.id`), menyinkronkan nilai ke `#analysisFilterInput`, serta menandai tombol aktif. Klik ulang tombol aktif atau klik **All** mengembalikan tampilan seluruh ekstensi.
 
 ---
 
